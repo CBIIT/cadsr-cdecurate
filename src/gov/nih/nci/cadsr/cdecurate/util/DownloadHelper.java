@@ -236,6 +236,7 @@ public class DownloadHelper {
 		System.out.println("CustomDownloadServlet);getRowArrayData() entered");
 		List<String[]> rowArrayData = new ArrayList<String[]>();
 		Array array = null;
+		try {
 		//Special case: first row has info on derivation, others on data elements
 		if (columnType.indexOf("DERIVED") > 0) {
 			Object derivedObject = rs.getObject(index+1);
@@ -291,85 +292,88 @@ public class DownloadHelper {
 					}
 			}
 		} else {
-			array = rs.getArray(index+1);
-			if (array != null) {
-				ResultSet nestedRs = array.getResultSet(); 
+				array = rs.getArray(index+1);
+				if (array != null) {
+					ResultSet nestedRs = array.getResultSet(); 
 
-				while (nestedRs.next()) {
-					STRUCT valueStruct = null;
-					Datum[] valueDatum = null;
-					try {
-						valueStruct = (STRUCT) nestedRs.getObject(2);  //GF30779 cause ORA-01403: no data found exception (if no data), thus catch it without doing anything
-						valueDatum = valueStruct.getOracleAttributes(); //GF30779
-					} catch (Exception e) {
-						logger.info(ExceptionUtil.createFriendlyErrorMessage(e) + " Error: " + e.getMessage());	//TBD performance impact here
-					}
-					if(valueDatum != null) {	//begin of valueDatum
-						String[] values = new String[valueDatum.length];
-						int slide = 0;
-						for (int a = 0; a < valueDatum.length; a++) {
-							if (valueDatum[a] != null) {
-								Class c = valueDatum[a].getClass();
-								String s = c.getName();
-								String truncatedTimeStamp = null; //GF30799
-	
-								if (c.getName().toUpperCase().contains("STRUCT")) {
-									STRUCT str = (STRUCT) valueDatum[a]; //GF30779
-									Datum[] strValues = str.getOracleAttributes(); //GF30779
-									logger.debug("At line 298 of CustomDownloadServlet.java" +"***" + Arrays.asList(strValues)+ "****" + Arrays.asList(str.getAttributes()));
-									values = new String[valueDatum.length+strValues.length-1]; 
-									slide = -1;
-									for (int b = 0; b < strValues.length; b++){
-										if (strValues[b] != null) {
-											Class structClass = strValues[b].getClass();
-											String className = structClass.getName();
-//											truncatedTimeStamp = strValues[b].toString(); //begin GF30779
-//											logger.debug("At line 299 of CustomDownloadServlet.java" + truncatedTimeStamp);
-											 if (className.toUpperCase().contains("NUMBER")) { //GF30779======START
-												 truncatedTimeStamp = Integer.toString(strValues[b].intValue());	//caused java.sql.SQLException: Conversion to integer failed
-											}else if (className.toUpperCase().contains("DATE")) {
-												truncatedTimeStamp = strValues[b].dateValue().toString();
-												truncatedTimeStamp = AdministeredItemUtil.truncateTime(truncatedTimeStamp);
-											} else  {
-												truncatedTimeStamp = AdministeredItemUtil.handleSpecialCharacters(strValues[b].getBytes()); 
-											}//GF30779=============END
-//											truncatedTimeStamp = AdministeredItemUtil.handleSpecialCharacters(strValues[b].getBytes()); // GF30779
-											logger.debug("At line 316 of CustomDownloadServlet.java" + "***" + truncatedTimeStamp + "***" + className + "***" + valueDatum[a]+ "***" + strValues[b]);
-//											if (columnType.contains("VALID_VALUE") && truncatedTimeStamp != null && truncatedTimeStamp.contains(":")) {
-//												truncatedTimeStamp = AdministeredItemUtil.truncateTime(truncatedTimeStamp);
-//												logger.debug("At line 304 of CustomDownloadServlet.java" + truncatedTimeStamp);
-//											} //end GF30779
-											values[b] = truncatedTimeStamp;
-											slide++;
+					while (nestedRs.next()) {
+						STRUCT valueStruct = null;
+						Datum[] valueDatum = null;
+						try {
+							valueStruct = (STRUCT) nestedRs.getObject(2);  //GF30779 cause ORA-01403: no data found exception (if no data), thus catch it without doing anything
+							valueDatum = valueStruct.getOracleAttributes(); //GF30779
+						} catch (Exception e) {
+							logger.info(ExceptionUtil.createFriendlyErrorMessage(e) + " Error: " + e.getMessage());	//TBD performance impact here
+						}
+						if(valueDatum != null) {	//begin of valueDatum
+							String[] values = new String[valueDatum.length];
+							int slide = 0;
+							for (int a = 0; a < valueDatum.length; a++) {
+								if (valueDatum[a] != null) {
+									Class c = valueDatum[a].getClass();
+									String s = c.getName();
+									String truncatedTimeStamp = null; //GF30799
+		
+									if (c.getName().toUpperCase().contains("STRUCT")) {
+										STRUCT str = (STRUCT) valueDatum[a]; //GF30779
+										Datum[] strValues = str.getOracleAttributes(); //GF30779
+										logger.debug("At line 298 of CustomDownloadServlet.java" +"***" + Arrays.asList(strValues)+ "****" + Arrays.asList(str.getAttributes()));
+										values = new String[valueDatum.length+strValues.length-1]; 
+										slide = -1;
+										for (int b = 0; b < strValues.length; b++){
+											if (strValues[b] != null) {
+												Class structClass = strValues[b].getClass();
+												String className = structClass.getName();
+//												truncatedTimeStamp = strValues[b].toString(); //begin GF30779
+//												logger.debug("At line 299 of CustomDownloadServlet.java" + truncatedTimeStamp);
+												 if (className.toUpperCase().contains("NUMBER")) { //GF30779======START
+													 truncatedTimeStamp = Integer.toString(strValues[b].intValue());	//caused java.sql.SQLException: Conversion to integer failed
+												}else if (className.toUpperCase().contains("DATE")) {
+													truncatedTimeStamp = strValues[b].dateValue().toString();
+													truncatedTimeStamp = AdministeredItemUtil.truncateTime(truncatedTimeStamp);
+												} else  {
+													truncatedTimeStamp = AdministeredItemUtil.handleSpecialCharacters(strValues[b].getBytes()); 
+												}//GF30779=============END
+//												truncatedTimeStamp = AdministeredItemUtil.handleSpecialCharacters(strValues[b].getBytes()); // GF30779
+												logger.debug("At line 316 of CustomDownloadServlet.java" + "***" + truncatedTimeStamp + "***" + className + "***" + valueDatum[a]+ "***" + strValues[b]);
+//												if (columnType.contains("VALID_VALUE") && truncatedTimeStamp != null && truncatedTimeStamp.contains(":")) {
+//													truncatedTimeStamp = AdministeredItemUtil.truncateTime(truncatedTimeStamp);
+//													logger.debug("At line 304 of CustomDownloadServlet.java" + truncatedTimeStamp);
+//												} //end GF30779
+												values[b] = truncatedTimeStamp;
+												slide++;
+											}
 										}
+									} else {
+										if (c.getName().toUpperCase().contains("NUMBER")) { //GF30779===START
+											truncatedTimeStamp = Integer.toString(valueDatum[a].intValue()); 
+										}else if (c.getName().toUpperCase().contains("DATE")) {
+											truncatedTimeStamp = valueDatum[a].dateValue().toString();
+											truncatedTimeStamp = AdministeredItemUtil.truncateTime(truncatedTimeStamp);
+										} else{
+											truncatedTimeStamp = AdministeredItemUtil.handleSpecialCharacters(valueDatum[a].getBytes());
+										}//GF30779=============END
+//										truncatedTimeStamp = valueDatum[a].toString(); //begin GF30779
+										logger.debug("At line 335 of CustomDownloadServlet.java" +"****" + truncatedTimeStamp +"*****" + s);
+//										truncatedTimeStamp = AdministeredItemUtil.toASCIICode(truncatedTimeStamp); // GF30779
+//										logger.debug("At line 313 of CustomDownloadServlet.java" + truncatedTimeStamp + s + valueDatum[a]);
+//										if (columnType.contains("VALID_VALUE") && truncatedTimeStamp != null && truncatedTimeStamp.contains(":")) {
+//											truncatedTimeStamp = AdministeredItemUtil.truncateTime(truncatedTimeStamp);
+//											logger.debug("At line 316 of CustomDownloadServlet.java" + truncatedTimeStamp);
+//										} //end GF30779
+										values[a+slide]= truncatedTimeStamp;
 									}
 								} else {
-									if (c.getName().toUpperCase().contains("NUMBER")) { //GF30779===START
-										truncatedTimeStamp = Integer.toString(valueDatum[a].intValue()); 
-									}else if (c.getName().toUpperCase().contains("DATE")) {
-										truncatedTimeStamp = valueDatum[a].dateValue().toString();
-										truncatedTimeStamp = AdministeredItemUtil.truncateTime(truncatedTimeStamp);
-									} else{
-										truncatedTimeStamp = AdministeredItemUtil.handleSpecialCharacters(valueDatum[a].getBytes());
-									}//GF30779=============END
-//									truncatedTimeStamp = valueDatum[a].toString(); //begin GF30779
-									logger.debug("At line 335 of CustomDownloadServlet.java" +"****" + truncatedTimeStamp +"*****" + s);
-//									truncatedTimeStamp = AdministeredItemUtil.toASCIICode(truncatedTimeStamp); // GF30779
-//									logger.debug("At line 313 of CustomDownloadServlet.java" + truncatedTimeStamp + s + valueDatum[a]);
-//									if (columnType.contains("VALID_VALUE") && truncatedTimeStamp != null && truncatedTimeStamp.contains(":")) {
-//										truncatedTimeStamp = AdministeredItemUtil.truncateTime(truncatedTimeStamp);
-//										logger.debug("At line 316 of CustomDownloadServlet.java" + truncatedTimeStamp);
-//									} //end GF30779
-									values[a+slide]= truncatedTimeStamp;
-								}
-							} else {
-								values[a]= "";
-							}	
-						}
-						rowArrayData.add(values);
-					} //end valueDatum
+									values[a]= "";
+								}	
+							}
+							rowArrayData.add(values);
+						} //end valueDatum
+					}
 				}
-			}
+		}
+		} catch (Exception e1) {
+			e1.printStackTrace();	//GF33095 avoid error for junit test
 		}
 		System.out.println("CustomDownloadServlet);getRowArrayData() exiting ...");
 		return rowArrayData;

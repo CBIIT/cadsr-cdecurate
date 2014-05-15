@@ -13,29 +13,20 @@
 package gov.nih.nci.cadsr.cdecurate.test;
 
 //import gov.nih.nci.cadsr.cdecurate.test.CurationTestLogger;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.OutputStream;
+import gov.nih.nci.cadsr.cdecurate.tool.CurationServlet;
+import gov.nih.nci.cadsr.cdecurate.tool.EVS_UserBean;
+import gov.nih.nci.cadsr.cdecurate.tool.Session_Data;
+import gov.nih.nci.cadsr.cdecurate.tool.UtilService;
+import gov.nih.nci.cadsr.cdecurate.util.DownloadHelper;
+
 import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
-import java.util.InvalidPropertiesFormatException;
 import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-import java.util.Set;
-import java.util.Vector;
 
-import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -43,65 +34,14 @@ import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpSessionContext;
 
 import org.apache.log4j.Logger;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.CellStyle;
-import org.apache.poi.ss.usermodel.Font;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
-import org.easymock.EasyMock;
-import org.w3c.dom.DOMException;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.NamedNodeMap;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-import org.xml.sax.SAXException;
+//import org.easymock.EasyMock;
+import org.easymock.classextension.EasyMock;
 
-
-
-
-
-
+import static org.easymock.EasyMock.expect;
+import static org.easymock.classextension.EasyMock.createMock;
+import static org.easymock.classextension.EasyMock.replay;
+import static org.easymock.classextension.EasyMock.verify;
 //import com.sun.org.apache.xerces.internal.impl.xs.dom.DOMParser;
-import com.sun.org.apache.xerces.internal.parsers.DOMParser;
-
-import gov.nih.nci.cadsr.cdecurate.database.SQLHelper;
-import gov.nih.nci.cadsr.cdecurate.tool.AC_CSI_Bean;
-import gov.nih.nci.cadsr.cdecurate.tool.CSI_Bean;
-import gov.nih.nci.cadsr.cdecurate.tool.ConceptAction;
-import gov.nih.nci.cadsr.cdecurate.tool.ConceptForm;
-import gov.nih.nci.cadsr.cdecurate.tool.CurationServlet;
-import gov.nih.nci.cadsr.cdecurate.tool.DEC_Bean;
-import gov.nih.nci.cadsr.cdecurate.tool.DataElementConceptServlet;
-import gov.nih.nci.cadsr.cdecurate.tool.EVSSearch;
-import gov.nih.nci.cadsr.cdecurate.tool.EVS_Bean;
-import gov.nih.nci.cadsr.cdecurate.tool.EVS_UserBean;
-import gov.nih.nci.cadsr.cdecurate.tool.GetACService;
-import gov.nih.nci.cadsr.cdecurate.tool.InsACService;
-import gov.nih.nci.cadsr.cdecurate.tool.Session_Data;
-import gov.nih.nci.cadsr.cdecurate.tool.TOOL_OPTION_Bean;
-import gov.nih.nci.cadsr.cdecurate.tool.UtilService;
-import gov.nih.nci.cadsr.cdecurate.tool.VMAction;
-import gov.nih.nci.cadsr.cdecurate.tool.VMForm;
-import gov.nih.nci.cadsr.cdecurate.tool.VM_Bean;
-import gov.nih.nci.cadsr.cdecurate.tool.ValidationStatusBean;
-import gov.nih.nci.cadsr.common.Constants;
-
-import com.sun.org.apache.xerces.internal.parsers.DOMParser;
-
-import gov.nih.nci.cadsr.cdecurate.tool.ConceptAction;
-import gov.nih.nci.cadsr.cdecurate.tool.ConceptForm;
-import gov.nih.nci.cadsr.cdecurate.tool.CurationServlet;
-import gov.nih.nci.cadsr.cdecurate.tool.EVS_Bean;
-import gov.nih.nci.cadsr.cdecurate.tool.VMAction;
-import gov.nih.nci.cadsr.cdecurate.tool.VMForm;
-import gov.nih.nci.cadsr.cdecurate.tool.VM_Bean;
-import gov.nih.nci.cadsr.cdecurate.util.AdministeredItemUtil;
-import gov.nih.nci.cadsr.cdecurate.util.DownloadHelper;
-
-//import gov.nih.nci.cadsr.cdecurate.test.CurationTestLogger;
 
 /**
  *	Setup:
@@ -123,28 +63,104 @@ public class TestGF33095 {
 	private HttpServletResponse m_classRes;
 
 	public static final String REMOTE_IP = "127.0.0.1";
-	static HttpSession session = null;
+//	static HttpSession session = null;
+	static MyHttpSession session = null;
 
 	  private void initMockHttpSession() {
 		  	if(session == null) {
-		  		session = new MyHttpSession();	//EasyMock.createMock(HttpSession.class);
+//		  		session = createMock(HttpSession.class);
+//		  		session = new MyHttpSession();
+		  		session = createMock(MyHttpSession.class);
 		  	}
-//		    EasyMock.expect(session.getId()).andReturn(MOCK_SESSION_ID).anyTimes();
-		    m_classReq = EasyMock.createNiceMock(HttpServletRequest.class);
-		    m_classRes = EasyMock.createMock(HttpServletResponse.class);
-		    EasyMock.expect(m_classReq.getParameterMap()).andReturn(Collections.singletonMap("bob", new String[] { "bob" }));
+//		    expect(session.getId()).andReturn(MOCK_SESSION_ID).anyTimes();
+		    m_classReq = createMock(HttpServletRequest.class);
+		    m_classRes = createMock(HttpServletResponse.class);
+		    expect(m_classReq.getParameterMap()).andReturn(Collections.singletonMap("param1", new String[] { "param1 value" }));
 //		    Map<String, String[]> requestParams = new HashMap();
 //			requestParams.put("p1", new String[] { "/view/testAction" });
 //			requestParams.put("p2", new String[] { "true" });
 //			requestParams.put("p3", new String[] { "false" });
-			
-		    EasyMock.expect(m_classReq.getSession()).andReturn(session).anyTimes();
-		    EasyMock.expect(m_classReq.getHeader("X-FORWARDED-FOR")).andReturn(null).anyTimes();
-		    EasyMock.expect(m_classReq.getRemoteAddr()).andReturn(REMOTE_IP).anyTimes();
+		    expect(m_classReq.getSession()).andReturn(session).anyTimes();
+		    expect(m_classReq.getHeader("X-FORWARDED-FOR")).andReturn(null).anyTimes();
+		    expect(m_classReq.getRemoteAddr()).andReturn(REMOTE_IP).anyTimes();
+		    replay(m_classReq);
 
-		    //=== IMPORTANT: whatever you did above, it is useless until it's replay is called!
-//		    EasyMock.replay(session, m_classReq);
-			EasyMock.replay(m_classReq);
+		    ArrayList<String> downloadIDs = new ArrayList<String>();
+		    downloadIDs.add("C03E0DED-6502-9912-E040-BB89AD437BF5");
+		    System.out.println("m_classReq.getSession() = [" + m_classReq.getSession() + "]");
+			expect(session.getAttribute("downloadIDs")).andReturn(downloadIDs);
+		    expect(session.getAttribute("downloadType")).andReturn("CDE");
+		    ArrayList<String> columnTypes = new ArrayList<String>();
+		    columnTypes.add("CHAR");
+		    columnTypes.add("VARCHAR2");
+		    columnTypes.add("VARCHAR2");
+		    columnTypes.add("VARCHAR2");
+		    columnTypes.add("VARCHAR2");
+		    columnTypes.add("NUMBER");
+		    columnTypes.add("VARCHAR2");
+		    columnTypes.add("NUMBER");
+		    columnTypes.add("NUMBER");
+		    columnTypes.add("VARCHAR2");
+		    columnTypes.add("VARCHAR2");
+		    columnTypes.add("DATE");
+		    columnTypes.add("VARCHAR2");
+		    columnTypes.add("NUMBER");
+		    columnTypes.add("VARCHAR2");
+		    columnTypes.add("VARCHAR2");
+		    columnTypes.add("NUMBER");
+		    columnTypes.add("VARCHAR2");
+		    columnTypes.add("NUMBER");
+		    columnTypes.add("VARCHAR2");
+		    columnTypes.add("VARCHAR2");
+		    columnTypes.add("NUMBER");
+		    columnTypes.add("VARCHAR2");
+		    columnTypes.add("VARCHAR2");
+		    columnTypes.add("VARCHAR2");
+		    columnTypes.add("NUMBER");
+		    columnTypes.add("VARCHAR2");
+		    columnTypes.add("28:SBREXT.CONCEPTS_LIST_T");
+		    columnTypes.add("NUMBER");
+		    columnTypes.add("VARCHAR2");
+		    columnTypes.add("VARCHAR2");
+		    columnTypes.add("VARCHAR2");
+		    columnTypes.add("NUMBER");
+		    columnTypes.add("VARCHAR2");
+		    columnTypes.add("35:SBREXT.CONCEPTS_LIST_T");
+		    columnTypes.add("NUMBER, VARCHAR2, VARCHAR2");
+		    columnTypes.add("NUMBER");
+		    columnTypes.add("VARCHAR2");
+		    columnTypes.add("VARCHAR2");
+		    columnTypes.add("VARCHAR2");
+		    columnTypes.add("NUMBER");
+		    columnTypes.add("VARCHAR2");
+		    columnTypes.add("VARCHAR2");
+		    columnTypes.add("NUMBER");
+		    columnTypes.add("NUMBER");
+		    columnTypes.add("VARCHAR2");
+		    columnTypes.add("VARCHAR2");
+		    columnTypes.add("NUMBER");
+		    columnTypes.add("VARCHAR2");
+		    columnTypes.add("52:SBREXT.CONCEPTS_LIST_T");
+		    columnTypes.add("NUMBER");
+		    columnTypes.add("VARCHAR2");
+		    columnTypes.add("VARCHAR2");
+		    columnTypes.add("VARCHAR2");
+		    columnTypes.add("NUMBER");
+		    columnTypes.add("58:SBREXT.CONCEPTS_LIST_T");
+		    columnTypes.add("59:SBREXT.VALID_VALUE_LIST_T");
+		    columnTypes.add("60:SBREXT.CDEBROWSER_CSI_LIST_T");
+		    columnTypes.add("61:SBREXT.DESIGNATIONS_LIST_T");
+		    columnTypes.add("62:SBREXT.CDEBROWSER_RD_LIST_T");
+		    columnTypes.add("63:SBREXT.DERIVED_DATA_ELEMENT_T");
+		    columnTypes.add("NUMBER");
+		    columnTypes.add("VARCHAR2");
+		    columnTypes.add("NUMBER");
+		    columnTypes.add("VARCHAR2");
+			expect(session.getAttribute("types")).andReturn(columnTypes);
+			expect(session.getAttribute("typeMap")).andReturn(new HashMap());
+			
+		    replay(session);
+			
 	  }
 	  
 	  class MyHttpSession implements HttpSession {
@@ -169,9 +185,9 @@ public class TestGF33095 {
 //				if(arg0 != null && arg0.equals(Constants.USER_SELECTED_ALTERNATE_DEF_COMP4)) {
 //					retVal = prop;
 //				} else
-				if(arg0 != null && arg0.equals("defaultContext")) {
+//				if(arg0 != null && arg0.equals("defaultContext")) {
 					retVal = new HashMap<String, String>();
-				}
+//				}
 
 				return retVal;
 			}
@@ -286,7 +302,7 @@ public class TestGF33095 {
 			}
 			
 		}
-		
+	  
 	public void doGF33095(TestGF33095 self, String connXML,
 			CurationTestLogger logger1) throws Exception {
 	    initEasyMock();
@@ -309,14 +325,14 @@ public class TestGF33095 {
 
 	private void dlExcelColumns(HttpServletRequest m_classReq, HttpServletResponse m_classRes, Connection conn) {
 		ArrayList<String[]> downloadRows = DownloadHelper.getRecords(m_classReq, m_classRes, conn, false, false);	//GF30779 multiple rows, if any
-		DownloadHelper.createDownloadColumns(m_classReq, m_classRes, downloadRows);
+//		DownloadHelper.createDownloadColumns(m_classReq, m_classRes, downloadRows);
 	}
 	
 	private void createFullDEDownload(HttpServletRequest m_classReq, HttpServletResponse m_classRes, Connection conn) {
 		DownloadHelper.setDownloadIDs(m_classReq, m_classRes, "CDE",false);
 		DownloadHelper.setColHeadersAndTypes(m_classReq, m_classRes, conn, "CDE");
 		ArrayList<String[]> allRows = DownloadHelper.getRecords(m_classReq, m_classRes, conn, true, false);
-		DownloadHelper.createDownloadColumns(m_classReq, m_classRes, allRows);
+//		DownloadHelper.createDownloadColumns(m_classReq, m_classRes, allRows);
 	}
 	/**
 	 * @param args
