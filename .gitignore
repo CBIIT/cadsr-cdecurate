@@ -37,4 +37,7 @@ copytest2jboss.cmd
 /m.cmd
 /spy.*
 /*spy*.cmd
-/*.*spy
+/*.*spy*
+.dea/*
+dist/*.war
+spy.log
