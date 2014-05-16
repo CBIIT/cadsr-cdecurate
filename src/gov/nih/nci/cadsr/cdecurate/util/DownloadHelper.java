@@ -675,9 +675,9 @@ public class DownloadHelper {
 		ArrayList<HashMap<String,ArrayList<String[]>>> arrayData = (ArrayList<HashMap<String,ArrayList<String[]>>>) m_classReq.getSession().getAttribute("arrayData"); 
 		HashMap<String, String> arrayColumnTypes = (HashMap<String,String>) m_classReq.getSession().getAttribute("arrayColumnTypes");
 
-		String[] columns = null;
+		String[] columns1 = null;
 		if (colString != null && !colString.trim().equals("")) {
-			columns = colString.split(",");
+			columns1 = colString.split(",");
 		}
 		else {
 			ArrayList<String> defaultHeaders = new ArrayList<String>();
@@ -690,10 +690,18 @@ public class DownloadHelper {
 					defaultHeaders.add(cName);
 				}
 			}
-			columns = defaultHeaders.toArray(new String[defaultHeaders.size()]);	
+			columns1 = defaultHeaders.toArray(new String[defaultHeaders.size()]);	
 	
 		}
 
+		//begin GF33095
+		String[] copyFrom  = columns1;
+		String[] columns    = new String[columns1.length+1];
+		System.out.println(Arrays.toString(copyFrom));
+		//System.arraycopy(copyFrom, 0, columns, 0, copyFrom.length);
+		columns[columns1.length] = "RAI";
+		System.out.println(Arrays.toString(columns));
+		
 		int[] colIndices = new int[columns.length];
 		for (int i=0; i < columns.length; i++) {
 			String colName = columns[i];
