@@ -1,34 +1,34 @@
-1400254800266|-1||debug||com.p6spy.engine.common.P6SpyOptions reloading properties
-1400254800272|-1||info||Using properties file: C:\Apps\jboss-5.1.0.GA\server\default\deploy\cdecurate.war\WEB-INF\classes\spy.properties
-1400254800272|-1||info||No value in environment for: getStackTrace, using: false
-1400254800272|-1||info||No value in environment for: getFilter, using: false
-1400254800272|-1||info||No value in environment for: getAppender, using: com.p6spy.engine.logging.appender.FileLogger
-1400254800272|-1||info||No value in environment for: getAppend, using: true
-1400254800272|-1||info||No value in environment for: getExclude, using: 
-1400254800272|-1||info||No value in environment for: getInclude, using: 
-1400254800272|-1||info||No value in environment for: getDeregisterDrivers, using: false
-1400254800272|-1||info||No value in environment for: getUsePrefix, using: true
-1400254800272|-1||info||No value in environment for: getExecutionThreshold, using: 0
-1400254800272|-1||info||No value in environment for: getAutoflush, using: true
-1400254800273|-1||info||No value in environment for: getExcludecategories, using: info,debug,result,batch
-1400254800273|-1||info||No value in environment for: getIncludecategories, using: 
-1400254800273|-1||info||No value in environment for: getLogfile, using: spy.log
-1400254800273|-1||info||No value in environment for: getRealdriver, using: oracle.jdbc.driver.OracleDriver
-1400254800273|-1||info||No value in environment for: getRealdriver2, using: 
-1400254800273|-1||info||No value in environment for: getRealdriver3, using: 
-1400254800273|-1||info||No value in environment for: getSpydriver, using: com.p6spy.engine.spy.P6SpyDriver
-1400254800273|-1||info||No value in environment for: getDateformat, using: 
-1400254800273|-1||info||No value in environment for: getDateformatter, using: null
-1400254800273|-1||info||No value in environment for: getStringmatcher, using: com.p6spy.engine.common.SubstringMatcher
-1400254800273|-1||info||No value in environment for: getStringMatcherEngine, using: com.p6spy.engine.common.SubstringMatcher@6674f872
-1400254800273|-1||info||No value in environment for: getStackTraceClass, using: 
-1400254800273|-1||info||No value in environment for: getSQLExpression, using: null
-1400254800273|-1||info||No value in environment for: getReloadProperties, using: false
-1400254800273|-1||info||No value in environment for: getReloadPropertiesInterval, using: 60
-1400254800273|-1||info||No value in environment for: getJNDIContextFactory, using: null
-1400254800273|-1||info||No value in environment for: getJNDIContextProviderURL, using: null
-1400254800273|-1||info||No value in environment for: getJNDIContextCustom, using: null
-1400254800273|-1||info||No value in environment for: getRealDataSource, using: null
-1400254800273|-1||info||No value in environment for: getRealDataSourceClass, using: null
-1400254800273|-1||info||No value in environment for: getRealDataSourceProperties, using: null
-1400254801694|98|0|statement||Select sysdate from dual
+1400256739264|-1||debug||com.p6spy.engine.common.P6SpyOptions reloading properties
+1400256739271|-1||info||Using properties file: C:\Apps\jboss-5.1.0.GA\server\default\deploy\cdecurate.war\WEB-INF\classes\spy.properties
+1400256739271|-1||info||No value in environment for: getStackTrace, using: false
+1400256739271|-1||info||No value in environment for: getFilter, using: false
+1400256739271|-1||info||No value in environment for: getAppender, using: com.p6spy.engine.logging.appender.FileLogger
+1400256739271|-1||info||No value in environment for: getAppend, using: true
+1400256739271|-1||info||No value in environment for: getExclude, using: 
+1400256739271|-1||info||No value in environment for: getInclude, using: 
+1400256739271|-1||info||No value in environment for: getDeregisterDrivers, using: false
+1400256739271|-1||info||No value in environment for: getUsePrefix, using: true
+1400256739271|-1||info||No value in environment for: getExecutionThreshold, using: 0
+1400256739271|-1||info||No value in environment for: getAutoflush, using: true
+1400256739272|-1||info||No value in environment for: getExcludecategories, using: info,debug,result,batch
+1400256739272|-1||info||No value in environment for: getIncludecategories, using: 
+1400256739272|-1||info||No value in environment for: getLogfile, using: spy.log
+1400256739272|-1||info||No value in environment for: getRealdriver, using: oracle.jdbc.driver.OracleDriver
+1400256739272|-1||info||No value in environment for: getRealdriver2, using: 
+1400256739272|-1||info||No value in environment for: getRealdriver3, using: 
+1400256739272|-1||info||No value in environment for: getSpydriver, using: com.p6spy.engine.spy.P6SpyDriver
+1400256739272|-1||info||No value in environment for: getDateformat, using: 
+1400256739272|-1||info||No value in environment for: getDateformatter, using: null
+1400256739272|-1||info||No value in environment for: getStringmatcher, using: com.p6spy.engine.common.SubstringMatcher
+1400256739272|-1||info||No value in environment for: getStringMatcherEngine, using: com.p6spy.engine.common.SubstringMatcher@5c35acdc
+1400256739272|-1||info||No value in environment for: getStackTraceClass, using: 
+1400256739272|-1||info||No value in environment for: getSQLExpression, using: null
+1400256739272|-1||info||No value in environment for: getReloadProperties, using: false
+1400256739272|-1||info||No value in environment for: getReloadPropertiesInterval, using: 60
+1400256739272|-1||info||No value in environment for: getJNDIContextFactory, using: null
+1400256739272|-1||info||No value in environment for: getJNDIContextProviderURL, using: null
+1400256739272|-1||info||No value in environment for: getJNDIContextCustom, using: null
+1400256739272|-1||info||No value in environment for: getRealDataSource, using: null
+1400256739272|-1||info||No value in environment for: getRealDataSourceClass, using: null
+1400256739272|-1||info||No value in environment for: getRealDataSourceProperties, using: null
+1400256740009|35|0|statement||Select sysdate from dual
