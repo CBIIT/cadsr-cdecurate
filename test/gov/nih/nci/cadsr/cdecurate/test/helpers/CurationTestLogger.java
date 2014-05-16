@@ -10,7 +10,7 @@
 // $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/test/CurationTestLogger.java,v 1.36 2007-09-10 17:18:20 hebell Exp $
 // $Name: not supported by cvs2svn $
 
-package gov.nih.nci.cadsr.cdecurate.test;
+package gov.nih.nci.cadsr.cdecurate.test.helpers;
 
 import org.apache.log4j.Logger;
 import org.apache.log4j.xml.DOMConfigurator;

@@ -5,7 +5,7 @@
  * See http://ncip.github.com/cadsr-cdecurate/LICENSE.txt for details.
  */
 
-package gov.nih.nci.cadsr.cdecurate.test;
+package gov.nih.nci.cadsr.cdecurate.test.helpers;
 
 //package gov.nih.nci.evs.browser.utils;
 

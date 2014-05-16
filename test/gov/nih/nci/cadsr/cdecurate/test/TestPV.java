@@ -42,6 +42,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
+import gov.nih.nci.cadsr.cdecurate.test.helpers.CurationTestLogger;
 
 /**
  *	Test basic functionalities of PV creation, retrieving, deletion and update.

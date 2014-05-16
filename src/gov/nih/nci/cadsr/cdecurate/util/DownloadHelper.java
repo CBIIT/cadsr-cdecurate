@@ -723,7 +723,7 @@ public class DownloadHelper {
 			Cell cell = headerRow.createCell(i);
 			temp = columns[i];
 			cell.setCellValue(temp);
-			cell.setCellStyle(boldCellStyle); //GF30779
+			cell.setCellStyle(boldCellStyle); //GF30779 GF33095
 		}
 
 		//freeze the first row

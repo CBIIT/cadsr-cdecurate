@@ -27,7 +27,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.InvalidPropertiesFormatException;
 import java.util.Properties;
+
 import oracle.jdbc.pool.OracleDataSource;
+import gov.nih.nci.cadsr.cdecurate.test.helpers.ConnectionUtil;
+import gov.nih.nci.cadsr.cdecurate.test.helpers.CurationTestLogger;
 
 /**
  * Setup:

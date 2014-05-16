@@ -17,6 +17,7 @@ import gov.nih.nci.cadsr.cdecurate.tool.EVS_UserBean;
 import gov.nih.nci.cadsr.cdecurate.tool.GetACService;
 import gov.nih.nci.cadsr.cdecurate.tool.TOOL_OPTION_Bean;
 import gov.nih.nci.system.client.ApplicationServiceProvider;
+
 //import gov.nih.nci.evs.domain.DescLogicConcept;
 import java.io.File;
 import java.io.FileInputStream;
@@ -49,8 +50,8 @@ import org.LexGrid.codingSchemes.CodingScheme;
 import org.junit.Test;
 
 import oracle.jdbc.pool.OracleDataSource;
-
-import gov.nih.nci.cadsr.cdecurate.test.CurationTestLogger;
+import gov.nih.nci.cadsr.cdecurate.test.helpers.ConnectionUtil;
+import gov.nih.nci.cadsr.cdecurate.test.helpers.CurationTestLogger;
 import gov.nih.nci.cadsr.cdecurate.util.DataManager;
 
 /**

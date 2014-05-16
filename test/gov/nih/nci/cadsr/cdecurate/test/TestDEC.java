@@ -76,6 +76,7 @@ import gov.nih.nci.cadsr.cdecurate.tool.EVS_Bean;
 import gov.nih.nci.cadsr.cdecurate.tool.VMAction;
 import gov.nih.nci.cadsr.cdecurate.tool.VMForm;
 import gov.nih.nci.cadsr.cdecurate.tool.VM_Bean;
+import gov.nih.nci.cadsr.cdecurate.test.helpers.CurationTestLogger;
 
 /**
  * @author shegde

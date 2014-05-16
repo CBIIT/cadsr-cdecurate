@@ -52,6 +52,7 @@ import javax.servlet.http.HttpSessionContext;
 import org.apache.log4j.Logger;
 import org.easymock.EasyMock;
 //import com.sun.org.apache.xerces.internal.impl.xs.dom.DOMParser;
+import gov.nih.nci.cadsr.cdecurate.test.helpers.CurationTestLogger;
 
 /**
  * @author shegde

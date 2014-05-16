@@ -1,4 +1,4 @@
-package gov.nih.nci.cadsr.cdecurate.test;
+package gov.nih.nci.cadsr.cdecurate.test.helpers;
 
 import gov.nih.nci.system.client.ApplicationServiceProvider;
 

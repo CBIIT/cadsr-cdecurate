@@ -46,6 +46,8 @@ import org.LexGrid.concepts.Definition;
 import org.LexGrid.concepts.Entity;
 import org.LexGrid.concepts.Presentation;
 import org.junit.Test;
+import gov.nih.nci.cadsr.cdecurate.test.helpers.CurationTestLogger;
+
 //import gov.nih.nci.evs.domain.DescLogicConcept;
 
 /**

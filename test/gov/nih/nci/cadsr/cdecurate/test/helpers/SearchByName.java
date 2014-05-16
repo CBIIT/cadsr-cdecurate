@@ -5,7 +5,7 @@
  * See http://ncip.github.com/cadsr-cdecurate/LICENSE.txt for details.
  */
 
-package gov.nih.nci.cadsr.cdecurate.test;
+package gov.nih.nci.cadsr.cdecurate.test.helpers;
 
 import gov.nih.nci.system.client.ApplicationServiceProvider;
 
@@ -38,21 +38,49 @@ import org.LexGrid.concepts.Entity;
  * 
  * 1. add all libraries under testlib/LexEVS_60_client_lib/
  * 2. add conf/ directory (it needs application-config-client.xml)
- * 3. add the project
  * 
  * Sample output -
  * 
-before calling printProps ...
-	Property name: Contributing_Source text: BRIDG
-	Property name: Legacy_Concept_Name text: Identifier
-	Property name: NHC0 text: C25364
-	Property name: Semantic_Type text: Intellectual Product
-	Property name: UMLS_CUI text: C0600091
-	Property name: primitive text: true
-Version 1
-done calling printProps
+searchByName ... TX
+ALGORITHM: nonLeadingWildcardLiteralSubString
+*** Sort alphabetically...
+Number of matches: 211
+(1) Adenosarcoma pTX TNM Finding v7(C89609)
+(2) Adrenal Cancer pTX TNM Finding v7(C89399)
+(3) Altretamine/Cyclophosphamide/Fluorouracil/Methotrexate(C9598)
+(4) Altretamine/Cyclophosphamide/Methotrexate(C10044)
+(5) Altretamine/Doxorubicin/Methotrexate(C10092)
+(6) Altretamine/Lomustine/Methotrexate(C10061)
+(7) Ampulla of Vater Cancer pTX TNM Finding v7(C90267)
+(8) Anal Cancer pTX TNM Finding(C67536)
+(9) Anti-thymocyte Globulin/Cyclophosphamide(C11298)
+(10) Antineoplaston A10/Methotrexate(C11481)
+(11) Appendiceal Carcinoid pTX TNM Finding v7(C89923)
+(12) Appendiceal Carcinoma pTX TNM Finding v7(C89895)
+(13) Asparaginase/Cyclophosphamide/Cytarabine(C10248)
+(14) Asparaginase/Cyclophosphamide/Cytarabine/Mercaptopurine/Methotrexate(C10300)
+(15) Asparaginase/Cyclophosphamide/Cytarabine/Methotrexate(C10413)
+(16) Asparaginase/Cyclophosphamide/Mercaptopurine/Methotrexate(C10738)
+(17) Asparaginase/Cytarabine/Mercaptopurine/Methotrexate(C11532)
+(18) Asparaginase/Cytarabine/Methotrexate(C11124)
+(19) Asparaginase/Daunorubicin/Dexamethasone/Ifosfamide/Mercaptopurine/Methotrexate/Vindesine(C10682)
+(20) Asparaginase/Ifosfamide/Methotrexate(C9931)
+(21) Asparaginase/Leucovorin Calcium/Mercaptopurine/Methotrexate(C11535)
+(22) Asparaginase/Mercaptopurine/Methotrexate(C10643)
+(23) Asparaginase/Methotrexate(C10024)
+(24) Bladder Cancer pTX TNM Finding(C61205)
+(25) Bleomycin/Cisplatin/Methotrexate(C9609)
+(26) Bleomycin/Cyclophosphamide/Fluorouracil/Methotrexate(C9553)
+(27) Bleomycin/Lomustine/Methotrexate(C9772)
+(28) Bone Cancer pTX TNM Finding v7(C88425)
+(29) Breast Cancer pTX TNM Finding(C48972)
+(30) Busulfan/Ciprofloxacin/Cyclophosphamide/Pentoxifylline(C10790)
+... (truncated for simplicity) ...
+(209) Vaginal Cancer pTX TNM Finding v7(C89458)
+(210) Vulvar Cancer pTX TNM Finding v7(C89419)
+(211) ZIC3 wt Allele(C75543)
  */
-public class SearchPropertiesByConceptCode {
+public class SearchByName {
 
     private static String CODE_SEARCH_ALGORITHM = "exactMatch";
 
@@ -383,7 +411,7 @@ public class SearchPropertiesByConceptCode {
 //                Util.displayMessage(new StringBuffer().append("\tProperty name: ").append(prop.getPropertyName())
 //                        .append(" text: ").append(prop.getValue().getContent()).toString());
               System.out.println(new StringBuffer().append("\tProperty name: ").append(prop.getPropertyName())
-              .append(" Text: ").append(prop.getValue().getContent()).toString());
+              .append(" text: ").append(prop.getValue().getContent()).toString());
             }
 
         } else {
@@ -399,17 +427,54 @@ public class SearchPropertiesByConceptCode {
     }
 
     public static void main(String[] args) {
-        LexBIGService lbSvc =
-                createLexBIGService();
+		String scheme = null;
+		String version = null;
+		String code = null;
 
-    	try {
-        	System.out.println("before calling printProps ...");
-			printProps("C25364", lbSvc, "NCI_Thesaurus", null);		//GF32446 "Semantic Type" empty issue due to sMetaName is empty
-        	System.out.println("done calling printProps");
-		} catch (LBException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		scheme = "NCI Thesaurus";
+		version = "12.10e";
+		code = "C37927";
+
+		String matchText = "TX";	//GF29786 Leading wildcard when searching for EVS concepts for Object Class, Property, Permissible Values does not work properly
+		String matchAlgorithm = "contains";
+		boolean ranking = false;
+		int maxToReturn = 1000;
+
+        try {
+
+			ResolvedConceptReferencesIteratorWrapper wrapper = new SearchByName().searchByName(
+				scheme, version, matchText,
+				matchAlgorithm, ranking, maxToReturn);
+			if (wrapper == null) {
+				System.out.println("wrapper == null???");
+			} else {
+				ResolvedConceptReferencesIterator iterator = wrapper.getIterator();
+				try {
+					int numberRemaining = iterator.numberRemaining();
+					System.out.println("Number of matches: " + numberRemaining);
+					int lcv = 0;
+
+					while (iterator.hasNext()) {
+					    ResolvedConceptReference rcr = iterator.next();
+					    String name = rcr.getEntityDescription().getContent();
+					    String concept_code = rcr.getConceptCode();
+					    lcv++;
+					    System.out.println("(" + lcv + ") " + name + "(" + concept_code + ")");
+					}
+
+
+				} catch (Exception ex) {
+					ex.printStackTrace();
+				}
+
+			}
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
-    
+
+
+
 }
