@@ -1,10 +1,13 @@
 package gov.nih.nci.cadsr.cdecurate.test.junit;
 
 import static org.junit.Assert.assertTrue;
+import gov.nih.nci.cadsr.cdecurate.database.Alternates;
 import gov.nih.nci.cadsr.cdecurate.test.helpers.DBUtil;
+import gov.nih.nci.cadsr.cdecurate.tool.AC_Bean;
 import gov.nih.nci.cadsr.cdecurate.tool.html.RendererUtil;
 import gov.nih.nci.cadsr.common.TestUtil;
 
+import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.Vector;
 
@@ -33,10 +36,14 @@ public class JR1016 {
 	public void start() {
 		boolean ret = false;
 		try {
-			String dec_id = "4191337";
+			String dec_id = "4191717";
 			DBUtil db = new DBUtil(TestUtil.getConnection(userId, password));
 			ret = db.deleteDEC(dec_id);
 	        assertTrue("DEC [" + dec_id + "] delete", ret);
+	        
+	        String def = "Blood circulating throughout the body._A liquid tissue with the primary function of transporting oxygen and carbon dioxide. It supplies the tissues with nutrients, removes waste products, and contains various components of the immune system defending the body against infection.";
+//	        InsACService.java addAlternateDefinition(String def, AC_Bean acb, Connection conn)
+//	        AltNamesDefsSession.java updateAlternatesList(Alternates alt_, boolean sort_)
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

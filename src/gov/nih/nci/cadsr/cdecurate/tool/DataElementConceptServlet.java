@@ -17,6 +17,7 @@ import java.util.Map.Entry;
 import java.util.Vector;
 
 import gov.nih.nci.cadsr.cdecurate.ui.AltNamesDefsSession;
+import gov.nih.nci.cadsr.cdecurate.ui.AltNamesDefsSessionHelper;
 import gov.nih.nci.cadsr.cdecurate.util.AdministeredItemUtil;
 import gov.nih.nci.cadsr.cdecurate.util.DECHelper;
 import gov.nih.nci.cadsr.cdecurate.util.DataManager;
@@ -157,6 +158,12 @@ public class DataElementConceptServlet extends CurationServlet {
         else if (sAction.equals("RemoveSelection"))
         {
         	doRemoveBuildingBlocks();
+        	//TODO begin JR1016
+        	//=== check if it is OC or prop
+        	(new AltNamesDefsSessionHelper()).clearAltDefForOC();
+        	(new AltNamesDefsSessionHelper()).clearAltDefForProp();
+        	//TODO end JR1016
+        	
         	// re work on the naming if new one
         	DEC_Bean dec = (DEC_Bean) session.getAttribute("m_DEC");
         	EVS_Bean nullEVS = null;            
@@ -1061,6 +1068,7 @@ public class DataElementConceptServlet extends CurationServlet {
 				session.removeAttribute("chosenOCCodes");
 				session.removeAttribute("chosenOCDefs");
 				session.removeAttribute("changedOCDefsWarning");
+				session.removeAttribute("vObjectClass");	//JR1016
 			}
 			Vector<EVS_Bean> vProperty = (Vector) session.getAttribute("vProperty");
 //			if(vProperty != null && vProperty.size() > 0) {
@@ -1353,7 +1361,12 @@ public class DataElementConceptServlet extends CurationServlet {
 //				m_DEC = this.updateOCAttribues(vObjectClass, m_DEC);
 //				m_DEC = this.updatePropAttribues(vProperty, m_DEC);
 //			}
-			
+
+			//TODO begin JR1016
+			//=== set the OC or prop
+//        	(new AltNamesDefsSessionHelper()).setAltDefForOC();
+//        	(new AltNamesDefsSessionHelper()).setAltDefForProp();
+			//TODO end JR1016
 			
 			DataManager.setAttribute(session, "m_DEC", m_DEC);	//set the user's selection + data from EVS in the DEC in session (for submission later on)
 			logger.info("DataElementConceptServlet:doDECUseSelection() DEC_Bean = " + m_DEC);
@@ -2207,8 +2220,10 @@ public class DataElementConceptServlet extends CurationServlet {
 		if (m_DEC == null)
 			m_DEC = new DEC_Bean();
 		Vector<EVS_Bean> vObjectClass = (Vector) session.getAttribute("vObjectClass");
-		if (vObjectClass == null)
+		if (vObjectClass == null) {
 			vObjectClass = new Vector<EVS_Bean>();
+		} 
+					
 			//    int iOCSize = vObjectClass.size();
 			Vector<EVS_Bean> vProperty = (Vector) session.getAttribute("vProperty");
 			if (vProperty == null)

@@ -1190,6 +1190,8 @@ public class AltNamesDefsSession implements Serializable
 
         // Sort it into the list
         sortBy(_alts, sort_);
+        
+//        (new AltNamesDefsSessionHelper()).clear(_alts);;	//JR1016 just for test
     }
 
     /**
@@ -1387,7 +1389,7 @@ public class AltNamesDefsSession implements Serializable
 	    	if (!exists) {
 	    		Alternates newAlt = new Alternates(Alternates._INSTANCEDEF, def, "System-generated", "ENGLISH", acb.getIDSEQ(), this.newIdseq(), acb.getContextIDSEQ(), acb.getContextName());
 	            
-	    		updateAlternatesList(newAlt, false);
+	    		updateAlternatesList(newAlt, false);	//JR1016
 	    		ret = true;
 	    	}
     	}

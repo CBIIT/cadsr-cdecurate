@@ -566,7 +566,7 @@ public class SetACService implements Serializable
 		Vector<ValidateBean> vValidate = new Vector<ValidateBean>();
 		try
 		{
-			AltNamesDefsSession altSession = AltNamesDefsSession.getAlternates(req, AltNamesDefsSession._searchDEC);
+			AltNamesDefsSession altSession = AltNamesDefsSession.getAlternates(req, AltNamesDefsSession._searchDEC);	//JR1016 tagged
             InsACService ins=new InsACService(req, res, m_servlet);
 			////System.out.println("setValidatePageValuesDEC");
 			HttpSession session = req.getSession();
@@ -697,6 +697,7 @@ public class SetACService implements Serializable
 				 //GF30796
 			}
 				if(/* begin GF33139 */ chosenDef != null && !chosenDef.trim().equals("") /* end GF33139 */ && !AdministeredItemUtil.isAlternateDefinitionExists(chosenDef, altSession)) {
+					//TODO JR1016 need to see how to replace existing OC/Prop's def if one already exists!
 					altSession.addAlternateDefinition(chosenDef, m_DEC, m_servlet.getConn());	//GF30796
 				}
 				//begin GF32723
@@ -736,7 +737,7 @@ public class SetACService implements Serializable
 				}
 				
 				//end GF32723
-				m_DEC.setAlternates(altSession);
+				m_DEC.setAlternates(altSession);	//JR1016 tagged
 
 				logger.info("At line 693 of SetACService.java");				
 			
