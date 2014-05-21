@@ -12,8 +12,12 @@
 
 package gov.nih.nci.cadsr.cdecurate.ui;
 
+import java.sql.Connection;
+
 import gov.nih.nci.cadsr.cdecurate.database.Alternates;
 import gov.nih.nci.cadsr.cdecurate.database.COMP_TYPE;
+import gov.nih.nci.cadsr.cdecurate.tool.AC_Bean;
+import gov.nih.nci.cadsr.cdecurate.util.DECHelper;
 import gov.nih.nci.cadsr.common.Constants;
 
 import javax.servlet.http.HttpServletRequest;
@@ -62,16 +66,6 @@ public class AltNamesDefsSessionHelper
 		}
 	}
 
-	/** 
-	 *	Main logic to recognize the last OC/Prop alt def(s) saved, retrieve and append them into the altSession before DEC submission.
-	 *	
-	 *	NOTE: The method is supposed to be called only once and IF AND ONLY IF just before DEC submission.
-	 */
-	public void handleFinalAltDefinitionDEC(HttpServletRequest req) throws Exception {
-		AltNamesDefsSession altSession = AltNamesDefsSession.getAlternates(req, AltNamesDefsSession._searchDEC);
-		
-	}
-
 	public void setAltDefForDEC(HttpSession session, String def) throws Exception {
 		if(getCompType(session) == COMP_TYPE.OC_PRIMARY) {
 			setAltDefForOC(session, def);
@@ -112,6 +106,24 @@ public class AltNamesDefsSessionHelper
 			}
 		}
 		_alts = null;
+	}
+
+	/** 
+	 *	Main logic to recognize the last OC/Prop alt def(s) saved, retrieve and append them into the altSession before DEC submission.
+	 *	
+	 *	NOTE: The method is supposed to be called only once and IF AND ONLY IF just before DEC submission.
+	 * @param m_DEC 
+	 * @param m_servlet 
+	 */
+	public void handleFinalAltDefinitionDEC(HttpServletRequest req, AC_Bean m_DEC, Connection conn) throws Exception {
+		AltNamesDefsSession altSession = AltNamesDefsSession.getAlternates(req, AltNamesDefsSession._searchDEC);
+
+        HttpSession session = req.getSession();
+		DECHelper.clearAlternateDefinition(session, altSession);
+
+		String chosenDef = (String)session.getAttribute(Constants.FINAL_ALT_DEF_STRING);
+		altSession.addAlternateDefinition(chosenDef, m_DEC, conn);
+
 	}
 	
 }   
