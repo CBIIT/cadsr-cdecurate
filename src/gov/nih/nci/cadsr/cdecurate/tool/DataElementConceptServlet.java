@@ -158,11 +158,7 @@ public class DataElementConceptServlet extends CurationServlet {
         else if (sAction.equals("RemoveSelection"))
         {
         	doRemoveBuildingBlocks();
-        	//TODO begin JR1016
-        	//=== check if it is OC or prop
-        	(new AltNamesDefsSessionHelper()).clearAltDefForOC();
-        	(new AltNamesDefsSessionHelper()).clearAltDefForProp();
-        	//TODO end JR1016
+        	(new AltNamesDefsSessionHelper()).clearAltDefsDEC(session);		//JR1016
         	
         	// re work on the naming if new one
         	DEC_Bean dec = (DEC_Bean) session.getAttribute("m_DEC");
@@ -490,6 +486,7 @@ public class DataElementConceptServlet extends CurationServlet {
 		m_OCQ = (EVS_Bean) session.getAttribute("m_OCQ");
 		m_PCQ = (EVS_Bean) session.getAttribute("m_PCQ");
 		m_setAC.setValidatePageValuesDEC(m_classReq, m_classRes, m_DEC, m_OC, m_PC, getAC, m_OCQ, m_PCQ);
+		(new AltNamesDefsSessionHelper()).handleFinalAltDefinitionDEC(m_classReq);	//JR1016
 		DataManager.setAttribute(session, "m_DEC", m_DEC);
 		boolean isValid = true;
 		Vector vValidate = new Vector();
@@ -1096,6 +1093,9 @@ public class DataElementConceptServlet extends CurationServlet {
 			String sComp = (String) m_classReq.getParameter("sCompBlocks");
 			if (sComp == null)
 				sComp = "";
+			else
+				(new AltNamesDefsSessionHelper()).setCompType(sComp, session);		//JR1016
+			
 			// get the search bean from the selected row
 			sSelRow = (String) m_classReq.getParameter("selCompBlockRow");
 
@@ -1362,12 +1362,6 @@ public class DataElementConceptServlet extends CurationServlet {
 //				m_DEC = this.updatePropAttribues(vProperty, m_DEC);
 //			}
 
-			//TODO begin JR1016
-			//=== set the OC or prop
-//        	(new AltNamesDefsSessionHelper()).setAltDefForOC();
-//        	(new AltNamesDefsSessionHelper()).setAltDefForProp();
-			//TODO end JR1016
-			
 			DataManager.setAttribute(session, "m_DEC", m_DEC);	//set the user's selection + data from EVS in the DEC in session (for submission later on)
 			logger.info("DataElementConceptServlet:doDECUseSelection() DEC_Bean = " + m_DEC);
 		}

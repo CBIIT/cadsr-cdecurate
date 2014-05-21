@@ -6,9 +6,11 @@
 package gov.nih.nci.cadsr.cdecurate.tool;
 
 import gov.nih.nci.cadsr.cdecurate.database.Alternates;
+import gov.nih.nci.cadsr.cdecurate.database.COMP_TYPE;
 import gov.nih.nci.cadsr.cdecurate.database.SQLHelper;
 import gov.nih.nci.cadsr.cdecurate.ui.AltNamesDefsServlet;
 import gov.nih.nci.cadsr.cdecurate.ui.AltNamesDefsSession;
+import gov.nih.nci.cadsr.cdecurate.ui.AltNamesDefsSessionHelper;
 import gov.nih.nci.cadsr.cdecurate.util.AdministeredItemUtil;
 import gov.nih.nci.cadsr.cdecurate.util.DataManager;
 import gov.nih.nci.cadsr.common.Constants;
@@ -697,8 +699,13 @@ public class SetACService implements Serializable
 				 //GF30796
 			}
 				if(/* begin GF33139 */ chosenDef != null && !chosenDef.trim().equals("") /* end GF33139 */ && !AdministeredItemUtil.isAlternateDefinitionExists(chosenDef, altSession)) {
-					//TODO JR1016 need to see how to replace existing OC/Prop's def if one already exists!
-					altSession.addAlternateDefinition(chosenDef, m_DEC, m_servlet.getConn());	//GF30796
+					//JR1016 do it only for qualifiers
+					AltNamesDefsSessionHelper helper = new AltNamesDefsSessionHelper();
+					if(helper.getCompType(session) == COMP_TYPE.OC_QUALIFIER || helper.getCompType(session) == COMP_TYPE.PROP_QUALIFIER) {
+						altSession.addAlternateDefinition(chosenDef, m_DEC, m_servlet.getConn());	//GF30796
+					} else {
+						helper.setAltDefForDEC(session, chosenDef);
+					}
 				}
 				//begin GF32723
 				String type= req.getParameter("userSelectedVocab");	//m_OC.getEVS_ORIGIN();

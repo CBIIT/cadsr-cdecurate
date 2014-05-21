@@ -13,11 +13,90 @@
 package gov.nih.nci.cadsr.cdecurate.ui;
 
 import gov.nih.nci.cadsr.cdecurate.database.Alternates;
+import gov.nih.nci.cadsr.cdecurate.database.COMP_TYPE;
+import gov.nih.nci.cadsr.common.Constants;
 
-import java.io.Serializable;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
-public class AltNamesDefsSessionHelper implements Serializable
+public class AltNamesDefsSessionHelper
 {
+	public COMP_TYPE getCompType(HttpSession session) throws Exception {
+		if(session == null) {
+			throw new Exception("Session is empty or null!");
+		}
+
+		return (COMP_TYPE)session.getAttribute(Constants.COMP_TYPE);
+	}
+
+	/**
+	 *	Save the component type selected by a user.
+	*/
+	public void setCompType(String identifier, HttpSession session) throws Exception {
+		if(session == null) {
+			throw new Exception("Session is empty or null!");
+		}
+		
+		if(identifier != null) {
+			if(identifier.equals("ObjectClass")) {
+				session.setAttribute(Constants.COMP_TYPE, COMP_TYPE.OC_PRIMARY);
+			} else
+			if(identifier.equals("PropertyClass")) {
+				session.setAttribute(Constants.COMP_TYPE, COMP_TYPE.PROP_PRIMARY);
+			} else
+			if(identifier.equals("ObjectQualifier")) {
+				session.setAttribute(Constants.COMP_TYPE, COMP_TYPE.OC_QUALIFIER);
+			} else
+			if(identifier.equals("PropertyQualifier")) {
+				session.setAttribute(Constants.COMP_TYPE, COMP_TYPE.PROP_QUALIFIER);
+			}
+		}
+	}
+
+	public void clearAltDefsDEC(HttpSession session) throws Exception {
+		if(getCompType(session) == COMP_TYPE.OC_PRIMARY) {
+			session.removeAttribute(Constants.OC_ALT_DEF);
+		} else 
+		if(getCompType(session) == COMP_TYPE.PROP_PRIMARY) {
+			session.removeAttribute(Constants.PROP_ALT_DEF);
+		}
+	}
+
+	/** 
+	 *	Main logic to recognize the last OC/Prop alt def(s) saved, retrieve and append them into the altSession before DEC submission.
+	 *	
+	 *	NOTE: The method is supposed to be called only once and IF AND ONLY IF just before DEC submission.
+	 */
+	public void handleFinalAltDefinitionDEC(HttpServletRequest req) throws Exception {
+		AltNamesDefsSession altSession = AltNamesDefsSession.getAlternates(req, AltNamesDefsSession._searchDEC);
+		
+	}
+
+	public void setAltDefForDEC(HttpSession session, String def) throws Exception {
+		if(getCompType(session) == COMP_TYPE.OC_PRIMARY) {
+			setAltDefForOC(session, def);
+		} else 
+		if(getCompType(session) == COMP_TYPE.PROP_PRIMARY) {
+			setAltDefForProp(session, def);
+		}			
+	}
+
+	private void setAltDefForOC(HttpSession session, String def) throws Exception {
+		if(session == null) {
+			throw new Exception("Session is empty or null!");
+		}
+		
+		session.setAttribute(Constants.OC_ALT_DEF, def);
+	}
+	
+	private void setAltDefForProp(HttpSession session, String def) throws Exception {
+		if(session == null) {
+			throw new Exception("Session is empty or null!");
+		}
+		
+		session.setAttribute(Constants.PROP_ALT_DEF, def);
+	}
+
 	public void clear(Alternates[] _alts) {
 		if(_alts != null) {
 			for(int i=0;i<_alts.length;i++) {
@@ -35,27 +114,4 @@ public class AltNamesDefsSessionHelper implements Serializable
 		_alts = null;
 	}
 	
-	public void clearAltDefForOC() {
-		
-	}
-	
-	public void clearAltDefForProp() {
-		
-	}
-	
-	public void setAltDefForOC() {
-		
-	}
-	
-	public void setAltDefForProp() {
-		
-	}
-
-	public void getAltDefForOC() {
-		
-	}
-	
-	public void getAltDefForProp() {
-		
-	}
 }   

@@ -30,4 +30,8 @@ public class Constants {
 	
 	//GF32153
 	public static final String ERR_LOGON_ISSUE = "Could not validate the User Name and Password, please try again.";
+	//JR1016
+	public static final String COMP_TYPE = "SelectedComponentType";
+	public static final String OC_ALT_DEF = "GeneratedAltDefOC";
+	public static final String PROP_ALT_DEF = "GeneratedAltDefProp";
 }

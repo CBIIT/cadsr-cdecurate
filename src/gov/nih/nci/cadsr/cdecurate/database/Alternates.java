@@ -43,7 +43,7 @@ public class Alternates
     private boolean _delete;
     private boolean _editable;
     private Tree _root;
-    private ALT_TYPE type;	//JR1016
+    private COMP_TYPE type;	//JR1016
 
     private static final String _defHTMLformat1 = "<tr " + TreeNode._nodeName + "=\"{[NAME]}\" " + TreeNode._nodeLevel + "=\"{[NODELEVEL]}\" " + TreeNode._nodeValue + "=\"{[NODEVALUE]}\">\n"
         + "<td class=\"alt0\" title=\"{[NTITLE]}\">"
