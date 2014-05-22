@@ -1,0 +1,8 @@
+Setup:
+
+npm install dalek-cli -g
+npm install dalekjs --save-dev
+
+Run:
+
+dalek [your script].js
