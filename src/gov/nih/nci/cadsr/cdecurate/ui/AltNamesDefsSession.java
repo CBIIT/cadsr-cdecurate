@@ -1193,6 +1193,10 @@ public class AltNamesDefsSession implements Serializable
     	return ret;
     }
 
+    public void purgeAlternateList() {
+    	_alts = null;
+    }
+    
     public void createAlternatesList(Alternates alt_, boolean sort_)
     {
         int pos = -1;	//findAltWithIdseq(alt_.getAltIdseq());

@@ -23,6 +23,8 @@ import gov.nih.nci.cadsr.common.Constants;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.apache.axis.utils.StringUtils;
+
 public class AltNamesDefsSessionHelper
 {
 	public COMP_TYPE getCompType(HttpSession session) throws Exception {
@@ -58,12 +60,14 @@ public class AltNamesDefsSessionHelper
 	}
 
 	public void clearAltDefsDEC(HttpSession session) throws Exception {
-		if(getCompType(session) == COMP_TYPE.OC_PRIMARY) {
-			session.removeAttribute(Constants.OC_ALT_DEF);
-		} else 
-		if(getCompType(session) == COMP_TYPE.PROP_PRIMARY) {
-			session.removeAttribute(Constants.PROP_ALT_DEF);
-		}
+//		if(getCompType(session) == COMP_TYPE.OC_PRIMARY) {
+//			session.removeAttribute(Constants.OC_ALT_DEF);
+//		} else 
+//		if(getCompType(session) == COMP_TYPE.PROP_PRIMARY) {
+//			session.removeAttribute(Constants.PROP_ALT_DEF);
+//		}
+
+
 	}
 
 	public void setAltDefForDEC(HttpSession session, String def) throws Exception {
@@ -118,11 +122,19 @@ public class AltNamesDefsSessionHelper
 	 */
 	public void handleFinalAltDefinitionDEC(HttpServletRequest req, AC_Bean m_DEC, Connection conn) throws Exception {
 		AltNamesDefsSession altSession = AltNamesDefsSession.getAlternates(req, AltNamesDefsSession._searchDEC);
+		altSession.purgeAlternateList();
         HttpSession session = req.getSession();
 //		DECHelper.clearAlternateDefinition(session, altSession);
 		String chosenDef = (String)session.getAttribute(Constants.FINAL_ALT_DEF_STRING);
 //		altSession.addAlternateDefinition(chosenDef, m_DEC, conn);
-		altSession.replaceAlternateDefinition(chosenDef, m_DEC, conn);
+		if(chosenDef != null && !StringUtils.isEmpty(chosenDef) && !chosenDef.trim().equals("null")) {
+			altSession.replaceAlternateDefinition(chosenDef, m_DEC, conn);
+		}
+	}
+
+	public void purgeAlternateListDEC(HttpServletRequest req) throws Exception {
+		AltNamesDefsSession altSession = AltNamesDefsSession.getAlternates(req, AltNamesDefsSession._searchDEC);
+		altSession.purgeAlternateList();
 	}
 	
 }   

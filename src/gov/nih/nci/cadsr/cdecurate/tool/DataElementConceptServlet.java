@@ -158,7 +158,7 @@ public class DataElementConceptServlet extends CurationServlet {
         else if (sAction.equals("RemoveSelection"))
         {
         	doRemoveBuildingBlocks();
-//        	(new AltNamesDefsSessionHelper()).clearAltDefsDEC(session);		//JR1016
+//        	(new AltNamesDefsSessionHelper()).purgeAlternateListDEC(m_classReq);		//JR1016
         	
         	// re work on the naming if new one
         	DEC_Bean dec = (DEC_Bean) session.getAttribute("m_DEC");
