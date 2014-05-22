@@ -699,16 +699,11 @@ public class SetACService implements Serializable
 				 //GF30796
 			}
 				if(/* begin GF33139 */ chosenDef != null && !chosenDef.trim().equals("") /* end GF33139 */ && !AdministeredItemUtil.isAlternateDefinitionExists(chosenDef, altSession)) {
-					//JR1016 do it only for qualifiers
-//					AltNamesDefsSessionHelper helper = new AltNamesDefsSessionHelper();
-//					if(helper.getCompType(session) == COMP_TYPE.OC_QUALIFIER || helper.getCompType(session) == COMP_TYPE.PROP_QUALIFIER) {
-//						altSession.addAlternateDefinition(chosenDef, m_DEC, m_servlet.getConn());	//GF30796
-//					} else {
-//						helper.setAltDefForDEC(session, chosenDef);
-//					}
-					//JR1016 do everything again
+					//altSession.addAlternateDefinition(chosenDef, m_DEC, m_servlet.getConn());	//GF30796
+					//JR1016 begin
 					AltNamesDefsSessionHelper helper = new AltNamesDefsSessionHelper();
 					helper.handleFinalAltDefinitionDEC(req, m_DEC, m_servlet.getConn());
+					//JR1016 end
 				}
 				//begin GF32723
 				String type= req.getParameter("userSelectedVocab");	//m_OC.getEVS_ORIGIN();

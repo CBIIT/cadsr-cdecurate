@@ -16,10 +16,12 @@ import java.io.Serializable;
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.SQLException;
-
+import java.util.Scanner;
 import java.util.Vector;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+
 import gov.nih.nci.cadsr.cdecurate.database.ACTypes;
 import gov.nih.nci.cadsr.cdecurate.database.Alternates;
 import gov.nih.nci.cadsr.cdecurate.database.DBAccess;
@@ -1164,6 +1166,53 @@ public class AltNamesDefsSession implements Serializable
         return _alts[pos];
     }
 
+    //JR1016
+    public boolean replaceAlternateDefinition(String chosenDef, AC_Bean acb, Connection conn) throws ToolException{
+    	boolean ret = false;
+    	boolean exists = false;
+    	if (_alts == null){
+    		DBAccess db = new DBAccess(conn);
+    		this.loadAlternates(db, _sortName);
+    	}
+    	
+		Scanner scanner = new Scanner(chosenDef);
+		scanner.useDelimiter("_");
+		long count = 0;
+		String cDef = null;
+		while (scanner.hasNext()) {
+			cDef = scanner.next();
+			System.out.println("AltNamesDefsSession.java alt[" + count++ + "] = " + cDef);
+	    	
+    		Alternates newAlt = new Alternates(Alternates._INSTANCEDEF, cDef, "System-generated", "ENGLISH", acb.getIDSEQ(), this.newIdseq(), acb.getContextIDSEQ(), acb.getContextName());
+            
+    		createAlternatesList(newAlt, false);
+    		ret = true;
+		}
+		scanner.close();
+    	
+    	return ret;
+    }
+
+    public void createAlternatesList(Alternates alt_, boolean sort_)
+    {
+        int pos = -1;	//findAltWithIdseq(alt_.getAltIdseq());
+        if (pos < 0)
+        {
+            // This is a new one NOT an edit of an existing entry.
+            pos = _alts.length;
+            Alternates[] temp = new Alternates[pos + 1];
+            System.arraycopy(_alts, 0, temp, 0, pos);
+            _alts = temp;
+        }
+
+        // Save the edit buffer to the internal buffer.
+        alt_.display(_showMC);
+        _alts[pos] = alt_;
+
+        // Sort it into the list
+        sortBy(_alts, sort_);
+    }
+    
     /**
      * Update the Alternates list in the session with the given object.
      * 
@@ -1476,6 +1525,5 @@ public class AltNamesDefsSession implements Serializable
     	   	
     	return ret;
     }
-
 
 }   

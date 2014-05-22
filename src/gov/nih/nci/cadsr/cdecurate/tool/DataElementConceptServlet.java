@@ -486,7 +486,10 @@ public class DataElementConceptServlet extends CurationServlet {
 		m_OCQ = (EVS_Bean) session.getAttribute("m_OCQ");
 		m_PCQ = (EVS_Bean) session.getAttribute("m_PCQ");
 		m_setAC.setValidatePageValuesDEC(m_classReq, m_classRes, m_DEC, m_OC, m_PC, getAC, m_OCQ, m_PCQ);
-//		(new AltNamesDefsSessionHelper()).handleFinalAltDefinitionDEC(m_classReq);	//JR1016
+		//JR1016 begin
+		AltNamesDefsSessionHelper helper = new AltNamesDefsSessionHelper();
+		helper.handleFinalAltDefinitionDEC(m_classReq, m_DEC, getConn());
+		//JR1016 end
 		DataManager.setAttribute(session, "m_DEC", m_DEC);
 		boolean isValid = true;
 		Vector vValidate = new Vector();

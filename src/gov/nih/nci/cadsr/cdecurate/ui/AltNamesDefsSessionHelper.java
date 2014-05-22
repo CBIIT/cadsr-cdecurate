@@ -108,6 +108,7 @@ public class AltNamesDefsSessionHelper
 		_alts = null;
 	}
 
+
 	/** 
 	 *	Main logic to recognize the last OC/Prop alt def(s) saved, retrieve and append them into the altSession before DEC submission.
 	 *	
@@ -117,13 +118,11 @@ public class AltNamesDefsSessionHelper
 	 */
 	public void handleFinalAltDefinitionDEC(HttpServletRequest req, AC_Bean m_DEC, Connection conn) throws Exception {
 		AltNamesDefsSession altSession = AltNamesDefsSession.getAlternates(req, AltNamesDefsSession._searchDEC);
-
         HttpSession session = req.getSession();
-		DECHelper.clearAlternateDefinition(session, altSession);
-
+//		DECHelper.clearAlternateDefinition(session, altSession);
 		String chosenDef = (String)session.getAttribute(Constants.FINAL_ALT_DEF_STRING);
-		altSession.addAlternateDefinition(chosenDef, m_DEC, conn);
-
+//		altSession.addAlternateDefinition(chosenDef, m_DEC, conn);
+		altSession.replaceAlternateDefinition(chosenDef, m_DEC, conn);
 	}
 	
 }   
