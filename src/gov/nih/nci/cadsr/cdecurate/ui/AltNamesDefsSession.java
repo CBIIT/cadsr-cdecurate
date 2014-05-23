@@ -530,10 +530,8 @@ public class AltNamesDefsSession implements Serializable
      * @param sort_
      * @throws ToolException
      */
-    public Alternates[] loadAlternates(DBAccess db_, String sort_) throws ToolException
+    public void loadAlternates(DBAccess db_, String sort_) throws ToolException
     {
-    	Alternates[] ret = null;	//JR1016 make it testable
-
         boolean sortBy = (sort_ == null || sort_.equals(_sortName));
         if (_alts == null)
         {
@@ -552,10 +550,6 @@ public class AltNamesDefsSession implements Serializable
         {
             sortBy(_alts, sortBy);
         }
-        
-        ret = _alts;
-        
-        return ret;
     }
 
     /**
@@ -1173,13 +1167,14 @@ public class AltNamesDefsSession implements Serializable
     }
 
     //JR1016
-    public boolean replaceAlternateDefinition(String chosenDef, String acId, String contextId, String contextName, Alternates[] existingAlts) throws ToolException{
+    public int replaceAlternateDefinition(String chosenDef, AC_Bean acb, Connection conn) throws ToolException{
     	boolean ret = false;
     	boolean exists = false;
-//    	if (_alts == null){
-//    		DBAccess db = new DBAccess(conn);
-//    		existingAlts = this.loadAlternates(db, _sortName);
-//    	}
+    	if (_alts == null){
+    		DBAccess db = new DBAccess(conn);
+    		this.loadAlternates(db, _sortName);
+    	}
+    	
 		Scanner scanner = new Scanner(chosenDef);
 		scanner.useDelimiter("_");
 		long count = 0;
@@ -1188,39 +1183,38 @@ public class AltNamesDefsSession implements Serializable
 			cDef = scanner.next();
 			System.out.println("AltNamesDefsSession.java alt[" + count++ + "] = " + cDef);
 	    	
-//    		Alternates newAlt = new Alternates(Alternates._INSTANCEDEF, cDef, "System-generated", "ENGLISH", acb.getIDSEQ(), this.newIdseq(), acb.getContextIDSEQ(), acb.getContextName());
-    		Alternates newAlt = new Alternates(Alternates._INSTANCEDEF, cDef, "System-generated", "ENGLISH", acId, this.newIdseq(), contextId, contextName);
+    		Alternates newAlt = new Alternates(Alternates._INSTANCEDEF, cDef, "System-generated", "ENGLISH", acb.getIDSEQ(), this.newIdseq(), acb.getContextIDSEQ(), acb.getContextName());
             
-    		createAlternatesList(existingAlts, newAlt, false);
+    		createAlternatesList(newAlt, false);
     		ret = true;
 		}
 		scanner.close();
     	
-    	return ret;
+    	return _alts.length;
     }
 
     public void purgeAlternateList() {
     	_alts = null;
     }
     
-    public void createAlternatesList(Alternates[] existingAlts, Alternates alt_, boolean sort_)
+    public void createAlternatesList(Alternates alt_, boolean sort_)
     {
         int pos = -1;	//findAltWithIdseq(alt_.getAltIdseq());
         if (pos < 0)
         {
             // This is a new one NOT an edit of an existing entry.
-            pos = existingAlts.length;
+            pos = _alts.length;
             Alternates[] temp = new Alternates[pos + 1];
-            System.arraycopy(existingAlts, 0, temp, 0, pos);
-            existingAlts = temp;
+            System.arraycopy(_alts, 0, temp, 0, pos);
+            _alts = temp;
         }
 
         // Save the edit buffer to the internal buffer.
         alt_.display(_showMC);
-        existingAlts[pos] = alt_;
+        _alts[pos] = alt_;
 
         // Sort it into the list
-        sortBy(existingAlts, sort_);
+        sortBy(_alts, sort_);
     }
     
     /**
