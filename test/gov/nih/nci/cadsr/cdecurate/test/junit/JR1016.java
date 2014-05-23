@@ -47,7 +47,55 @@ public class JR1016 {
 		AltNamesDefsSession altSession = new AltNamesDefsSession(null);
 		altSession.purgeAlternateList();
 	}
-	
+
+	@Test
+	public void testEmpty() {
+		boolean ret = false;
+		try {
+	        Alternates[] alts = new Alternates[0];	//just an empty shell
+	        AltNamesDefsSession altSession = new AltNamesDefsSession(alts);
+	        String generateAltDef = "";	//empty string
+			String acId = "";
+			String contextId = null;	//D9344734-8CAF-4378-E034-0003BA12F5E7
+			String contextName = null;	//NCIP
+//			Alternates[] existingAlts = new Alternates[0];
+			int count = 0;
+//			altSession.replaceAlternateDefinition(generateAltDef, acId, contextId, contextName, existingAlts);
+			DEC_Bean m_DEC = new DEC_Bean();
+			m_DEC.setDEC_DEC_IDSEQ(acId);
+			m_DEC.setDEC_CONTE_IDSEQ(contextId);
+			m_DEC.setDEC_CONTEXT_NAME(contextName);
+			count = altSession.replaceAlternateDefinition(generateAltDef, m_DEC, conn);
+			assertTrue("Test empty string (create new DEC)", count == 0);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Test
+	public void testNull() {
+		boolean ret = false;
+		try {
+	        Alternates[] alts = new Alternates[0];	//just an empty shell
+	        AltNamesDefsSession altSession = new AltNamesDefsSession(alts);
+	        String generateAltDef = null;	//empty string
+			String acId = "";
+			String contextId = null;	//D9344734-8CAF-4378-E034-0003BA12F5E7
+			String contextName = null;	//NCIP
+//			Alternates[] existingAlts = new Alternates[0];
+			int count = 0;
+//			altSession.replaceAlternateDefinition(generateAltDef, acId, contextId, contextName, existingAlts);
+			DEC_Bean m_DEC = new DEC_Bean();
+			m_DEC.setDEC_DEC_IDSEQ(acId);
+			m_DEC.setDEC_CONTE_IDSEQ(contextId);
+			m_DEC.setDEC_CONTEXT_NAME(contextName);
+			count = altSession.replaceAlternateDefinition(generateAltDef, m_DEC, conn);
+			assertTrue("Test null (create new DEC)", count == 0);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
 	@Test
 	public void testShort() {
 		boolean ret = false;
@@ -66,7 +114,7 @@ public class JR1016 {
 			m_DEC.setDEC_CONTE_IDSEQ(contextId);
 			m_DEC.setDEC_CONTEXT_NAME(contextName);
 			count = altSession.replaceAlternateDefinition(generateAltDef, m_DEC, conn);
-			assertTrue("Test with zero existing alternate def (create new DEC)", count == 3);
+			assertTrue("Test short (create new DEC)", count == 3);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -90,7 +138,7 @@ public class JR1016 {
 			m_DEC.setDEC_CONTE_IDSEQ(contextId);
 			m_DEC.setDEC_CONTEXT_NAME(contextName);
 			count = altSession.replaceAlternateDefinition(generateAltDef, m_DEC, conn);
-			assertTrue("Test with zero existing alternate def but longer def (create new DEC)", count == 4);
+			assertTrue("Test long (create new DEC)", count == 4);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -115,7 +163,7 @@ public class JR1016 {
 			m_DEC.setDEC_CONTE_IDSEQ(contextId);
 			m_DEC.setDEC_CONTEXT_NAME(contextName);
 			count = altSession.replaceAlternateDefinition(generateAltDef, m_DEC, conn);
-			assertTrue("Test with zero existing alternate def but longer def (create new DEC)", count == 5);
+			assertTrue("Test longer (create new DEC)", count == 5);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

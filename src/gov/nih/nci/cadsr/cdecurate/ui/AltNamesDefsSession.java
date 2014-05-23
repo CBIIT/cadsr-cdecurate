@@ -12,26 +12,15 @@
 
 package gov.nih.nci.cadsr.cdecurate.ui;
 
-import java.io.Serializable;
-import java.sql.CallableStatement;
-import java.sql.Connection;
-import java.sql.SQLException;
-import java.util.Scanner;
-import java.util.Vector;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-
 import gov.nih.nci.cadsr.cdecurate.database.ACTypes;
 import gov.nih.nci.cadsr.cdecurate.database.Alternates;
 import gov.nih.nci.cadsr.cdecurate.database.DBAccess;
 import gov.nih.nci.cadsr.cdecurate.database.TreeNodeAlt;
 import gov.nih.nci.cadsr.cdecurate.database.TreeNodeCS;
 import gov.nih.nci.cadsr.cdecurate.tool.AC_Bean;
+import gov.nih.nci.cadsr.cdecurate.tool.CurationServlet;
 import gov.nih.nci.cadsr.cdecurate.tool.DEC_Bean;
 import gov.nih.nci.cadsr.cdecurate.tool.DE_Bean;
-import gov.nih.nci.cadsr.cdecurate.tool.CurationServlet;
-import gov.nih.nci.cadsr.cdecurate.tool.EVS_Bean;
 import gov.nih.nci.cadsr.cdecurate.tool.EVS_Bean;
 import gov.nih.nci.cadsr.cdecurate.tool.PV_Bean;
 import gov.nih.nci.cadsr.cdecurate.tool.VD_Bean;
@@ -40,7 +29,15 @@ import gov.nih.nci.cadsr.cdecurate.util.DataManager;
 import gov.nih.nci.cadsr.cdecurate.util.ToolException;
 import gov.nih.nci.cadsr.cdecurate.util.Tree;
 import gov.nih.nci.cadsr.cdecurate.util.TreeNode;
-import gov.nih.nci.cadsr.common.Constants;
+
+import java.io.Serializable;
+import java.sql.Connection;
+import java.sql.SQLException;
+import java.util.Scanner;
+import java.util.Vector;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 /**
  * This class maps and manges the session data needed for processing Alternate Names and Definitions.
@@ -1175,20 +1172,22 @@ public class AltNamesDefsSession implements Serializable
     		this.loadAlternates(db, _sortName);
     	}
     	
-		Scanner scanner = new Scanner(chosenDef);
-		scanner.useDelimiter("_");
-		long count = 0;
-		String cDef = null;
-		while (scanner.hasNext()) {
-			cDef = scanner.next();
-			System.out.println("AltNamesDefsSession.java alt[" + count++ + "] = " + cDef);
-	    	
-    		Alternates newAlt = new Alternates(Alternates._INSTANCEDEF, cDef, "System-generated", "ENGLISH", acb.getIDSEQ(), this.newIdseq(), acb.getContextIDSEQ(), acb.getContextName());
-            
-    		createAlternatesList(newAlt, false);
-    		ret = true;
-		}
-		scanner.close();
+    	if(chosenDef != null && !chosenDef.equals("")) {
+			Scanner scanner = new Scanner(chosenDef);
+			scanner.useDelimiter("_");
+			long count = 0;
+			String cDef = null;
+			while (scanner.hasNext()) {
+				cDef = scanner.next();
+				System.out.println("AltNamesDefsSession.java alt[" + count++ + "] = " + cDef);
+		    	
+	    		Alternates newAlt = new Alternates(Alternates._INSTANCEDEF, cDef, "System-generated", "ENGLISH", acb.getIDSEQ(), this.newIdseq(), acb.getContextIDSEQ(), acb.getContextName());
+	            
+	    		createAlternatesList(newAlt, false);
+	    		ret = true;
+			}
+			scanner.close();
+    	}
     	
     	return _alts.length;
     }
