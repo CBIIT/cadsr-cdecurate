@@ -16,6 +16,7 @@ import java.sql.Connection;
 
 import gov.nih.nci.cadsr.cdecurate.database.Alternates;
 import gov.nih.nci.cadsr.cdecurate.database.COMP_TYPE;
+import gov.nih.nci.cadsr.cdecurate.database.DBAccess;
 import gov.nih.nci.cadsr.cdecurate.tool.AC_Bean;
 import gov.nih.nci.cadsr.cdecurate.util.DECHelper;
 import gov.nih.nci.cadsr.common.Constants;
@@ -125,10 +126,13 @@ public class AltNamesDefsSessionHelper
 		altSession.purgeAlternateList();
         HttpSession session = req.getSession();
 //		DECHelper.clearAlternateDefinition(session, altSession);
-		String chosenDef = (String)session.getAttribute(Constants.FINAL_ALT_DEF_STRING);
+		String generatedAltDef = (String)session.getAttribute(Constants.FINAL_ALT_DEF_STRING);
 //		altSession.addAlternateDefinition(chosenDef, m_DEC, conn);
-		if(chosenDef != null && !StringUtils.isEmpty(chosenDef) && !chosenDef.trim().equals("null")) {
-			altSession.replaceAlternateDefinition(chosenDef, m_DEC, conn);
+		if(generatedAltDef != null && !StringUtils.isEmpty(generatedAltDef) && !generatedAltDef.trim().equals("null")) {
+	        Alternates[] listFromDB = new Alternates[0];
+    		DBAccess db = new DBAccess(conn);
+    		listFromDB = altSession.loadAlternates(db, AltNamesDefsSession._sortName);
+	    	altSession.replaceAlternateDefinition(generatedAltDef, m_DEC.getIDSEQ(), m_DEC.getContextIDSEQ(), m_DEC.getContextName(), listFromDB);
 		}
 	}
 
