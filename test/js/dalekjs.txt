@@ -1,8 +1,24 @@
 Setup:
 
+Mandatory -
+
 npm install dalek-cli -g
 npm install dalekjs --save-dev
 
-Run:
+Optional -
+
+npm install dalek-browser-chrome --save-dev && npm install dalek-browser-ie --save-dev && npm install dalek-browser-firefox --save-dev
+
+Run (default browser is PhantomJS):
 
 dalek [your script].js
+
+Run with a specific browser:
+
+dalek [your script].js -b chrome
+dalek [your script].js -b ie
+dalek [your script].js -b firefox
+
+For more information:
+
+http://dalekjs.com/pages/getStarted.html
