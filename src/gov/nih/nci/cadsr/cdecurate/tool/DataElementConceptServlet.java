@@ -703,7 +703,7 @@ public class DataElementConceptServlet extends CurationServlet {
 	 *
 	 * @param m_classReq
 	 *            HttpServletRequest object
-	 * @param m_classRes
+	 * @param response
 	 *            HttpServletResponse object
 	 * @param newBean
 	 *            new evs bean
@@ -1448,7 +1448,7 @@ public class DataElementConceptServlet extends CurationServlet {
 	 *
 	 * @param m_classReq
 	 *            HttpServletRequest
-	 * @param m_classRes
+	 * @param response
 	 *            HttpServletResponse
 	 * @param nameAction
 	 *            String naming action
@@ -1518,7 +1518,7 @@ public class DataElementConceptServlet extends CurationServlet {
 	 *
 	 * @param m_classReq
 	 *            HttpServletRequest
-	 * @param m_classRes
+	 * @param response
 	 *            HttpServletResponse
 	 * @param nameAction
 	 *            String naming action
