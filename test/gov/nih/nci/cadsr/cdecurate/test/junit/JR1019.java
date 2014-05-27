@@ -20,7 +20,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 /**
-  * https://tracker.nci.nih.gov/browse/CURATNTOOL-1016
+  * https://tracker.nci.nih.gov/browse/CURATNTOOL-1019
   * 
   * Setup: Enter userId and password in the VM argument (NOT program argument!!!) in the following format:
   * 
@@ -66,7 +66,8 @@ public class JR1019 {
 		m_servlet.setConn(conn);
         GetACSearch getACSearch = new GetACSearch(m_classReq, m_classRes, m_servlet);
 		//=== mocking SearchServlet.java#menuAction.equals("searchForCreate")
-    	session.setAttribute("ApprovedRepTerm", false);
+        boolean initialSearch = false;
+    	session.setAttribute("ApprovedRepTerm", initialSearch);
     	getACSearch.getACSearchForCreate(m_classReq, m_classRes, false);
 	}
 
@@ -91,7 +92,7 @@ public class JR1019 {
 		}
 	}
 
-	@Test
+//	@Test
 	public void testDefinitionDifferentFromEVS() {
 		boolean ret = false;
 		String cadsrDef = "";
@@ -103,7 +104,7 @@ public class JR1019 {
 		}
 	}
 
-	@Test
+//	@Test
 	public void testDefinitionFromNCIt() {
 		boolean ret = false;
 		String def = "abc";

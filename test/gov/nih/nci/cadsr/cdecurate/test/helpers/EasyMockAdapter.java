@@ -30,8 +30,8 @@ public class EasyMockAdapter {
 	protected HttpServletResponse response = null;
 	protected HttpSession session = null;
 	protected SetACService m_setAC = null;
-	ServletConfig servletConfig = null;
-	ServletContext servletContext = null;
+	protected ServletConfig servletConfig = null;
+	protected ServletContext servletContext = null;
 
 	List objectQualifierMap = null;
 	List propertyQualifierMap = null;
@@ -40,7 +40,7 @@ public class EasyMockAdapter {
 	public static final String MOCK_SESSION_ID = "mock session id";
 	public static final String REMOTE_IP = "127.0.0.1";
 
-	class MockHttpSession implements HttpSession {
+	public class MockHttpSession implements HttpSession {
 //		private List objectQualifierMap;
 
 		@Override
