@@ -69,6 +69,7 @@ public class JR1019 {
         boolean initialSearch = false;
     	session.setAttribute("ApprovedRepTerm", initialSearch);
     	getACSearch.getACSearchForCreate(m_classReq, m_classRes, false);
+    	mock.verifyAll();
 	}
 
 	@After
