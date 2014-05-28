@@ -1,16 +1,17 @@
 package gov.nih.nci.cadsr.cdecurate.test.junit;
 
-import static org.junit.Assert.assertTrue;
-import gov.nih.nci.cadsr.cdecurate.test.helpers.DBUtil;
+import static org.easymock.EasyMock.anyObject;
+import static org.easymock.EasyMock.createMock;
+import static org.easymock.EasyMock.eq;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.expectLastCall;
+import static org.easymock.EasyMock.isA;
+import static org.easymock.EasyMock.replay;
+import static org.easymock.EasyMock.verify;
 import gov.nih.nci.cadsr.cdecurate.test.helpers.EasyMockAdapter;
-import gov.nih.nci.cadsr.cdecurate.test.helpers.EasyMockAdapter.MockHttpSession;
 import gov.nih.nci.cadsr.cdecurate.tool.EVS_Bean;
 import gov.nih.nci.cadsr.cdecurate.tool.Session_Data;
-import gov.nih.nci.cadsr.cdecurate.util.DataManager;
-import gov.nih.nci.cadsr.common.TestUtil;
 
-import java.sql.Connection;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Vector;
 
@@ -20,15 +21,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.easymock.classextension.EasyMock;
-import org.junit.After;
-import org.junit.BeforeClass;
-import org.junit.Test;
-
-import com.sun.org.apache.bcel.internal.generic.NEW;
-
-import static org.easymock.EasyMock.*;
-
 public class JR1019Mock extends EasyMockAdapter {
 
 	public JR1019Mock() {
@@ -36,9 +28,9 @@ public class JR1019Mock extends EasyMockAdapter {
 	}
 
 	public void verifyAll() {
-//		verify(request);
+		verify(request);
 //		verify(response);
-//		verify(session);
+		verify(session);
 	}
 
 	@Override
@@ -73,9 +65,9 @@ public class JR1019Mock extends EasyMockAdapter {
 		expect(request.getParameter("nonEnumBox")).andReturn(null);
 		expect(request.getParameter("refEnumBox")).andReturn(null);
 		expect(request.getParameter("listCDName")).andReturn(null);
-		expect(request.getParameterValues("listStatusFilter")).andReturn(null);
-        request.setAttribute("creStatusBlocks", new ArrayList());
-        expectLastCall();
+//		expect(request.getParameterValues("listStatusFilter")).andReturn(null);
+//        request.setAttribute("creStatusBlocks", new ArrayList());
+//        expectLastCall();
 		expect(request.getParameter("listRegStatus")).andReturn(null);
 		expect(request.getParameter("listDeriveType")).andReturn(null);
 		expect(request.getParameter("listDataType")).andReturn(null);
@@ -167,8 +159,8 @@ public class JR1019Mock extends EasyMockAdapter {
 		expectLastCall();
 		session.setAttribute("creCreator", null);
 		expectLastCall();
-		session.setAttribute("NVPConcepts", null);
-		expectLastCall();
+//		session.setAttribute("NVPConcepts", null);
+//		expectLastCall();
 		Vector vNVP = new Vector<String>();
 		vNVP.add("C45255");
 		vNVP.add("C46126");
@@ -210,7 +202,6 @@ public class JR1019Mock extends EasyMockAdapter {
 		expectLastCall();
 		expect(session.getAttribute(Session_Data.SESSION_MENU_ACTION)).andReturn("searchForCreate").anyTimes();
 		expect(session.getAttribute("searchAC")).andReturn("ObjectClass").anyTimes();
-//		expect(session.getAttribute("searchAC")).andReturn("ObjectClass").anyTimes();
 		
 		replay(session);
 
