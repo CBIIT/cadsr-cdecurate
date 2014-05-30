@@ -586,7 +586,9 @@ public class PVServlet implements Serializable
      String chgBD = (String)data.getRequest().getParameter("currentBD");  //edited begom date
      if (chgBD != null && !chgBD.equals(""))
      {
-       if (changeType.equals("changeAll"))
+       if (changeType.equals("changeAll")
+//    	   || changeType.equals("changeOne")	//JR1024
+       )
        {
          //System.out.println("all begin date");
          HttpSession session = data.getRequest().getSession();
@@ -603,8 +605,10 @@ public class PVServlet implements Serializable
      String chgED = (String)data.getRequest().getParameter("currentED");  //edited end date
      if (chgED != null && !chgED.equals(""))
      {
-       if (changeType.equals("changeAll"))
-       {
+         if (changeType.equals("changeAll")
+//             || changeType.equals("changeOne")	//JR1024
+         )
+         {
          //System.out.println("all end date");
          HttpSession session = data.getRequest().getSession();
          VD_Bean vd = (VD_Bean)session.getAttribute(PVForm.SESSION_SELECT_VD);
@@ -638,7 +642,7 @@ public class PVServlet implements Serializable
      //add values to validate bean
      Vector<String> vValString = pvAction.addValidateVDPVS(data);
      //add the vectors to the session
-     data.getRequest().setAttribute("vValidate", vValString);  
+     data.getRequest().setAttribute("vValidate", vValString);  	//JR1024 tagged
      vd = data.getVD();
      data.getRequest().setAttribute(PVForm.SESSION_SELECT_VD, vd);        
      return "/ValidateVDPage.jsp";

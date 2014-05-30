@@ -78,7 +78,7 @@ public class StringUtil {
 		boolean found = false;
 		while (character != CharacterIterator.DONE) {
 			if ((int) character < 32 || (int) character > 126) {
-				result.append(" ");
+				//result.append(" ");		//JR1024 just ignore it instead of converting to whitespace
 				found = true;
 				// System.out.println("Ctrl char detected -"+(int)character+"-, filtered with a space!");
 			} else {
@@ -87,7 +87,7 @@ public class StringUtil {
 			character = iterator.next();
 		}
 		if (found) {
-			System.out.println("Ctrl char detected in str '" + str + "'");
+			System.out.println("Ctrl char detected in the original string [" + str + "] xstring [" + toASCIICode(str) + "] filtered string [" + result + "]");
 		}
 		return result.toString();
 	}

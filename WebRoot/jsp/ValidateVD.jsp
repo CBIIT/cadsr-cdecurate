@@ -207,6 +207,7 @@ newUrl = newUrl + '&idseq=' +idseq+'&type='+type;
       //System.out.println("content " + sContent);
       String sStat = StringUtil.cleanJavascriptAndHtml((String)vValidate.elementAt(i+2));
       String sFont = "#000000";
+      System.out.println("ValidateVD.jsp sItem [" + sItem + "] sContent [" + sContent + "] sStat [" + sStat + "]");     //JR1024
       if (sStat.startsWith("Valid") || sStat.equals("No Change"))
         sFont = "#238E23";
      
