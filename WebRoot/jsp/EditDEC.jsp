@@ -1828,6 +1828,25 @@ String temp =
         loadCSCSI();
         ShowEVSInfo('ObjectQualifier');
         ShowEVSInfo('PropertyQualifier');
+
+        <%
+        //JR705
+        if(sStatus != null && sStatus.equals("RELEASED")) {
+        %>
+        dojo.query('a[href^="javascript:SearchBuildingBlocks"] , a[href^="javascript:RemoveBuildingBlocks"]').forEach(function (node, index, arr) {
+            try {
+                <%--dojo.attr(node, "disabled", true);--%>
+                node.remove();
+                console.log('Search/Remove for components disabled');
+            //alert('Search for components disabled');
+            } catch (e) {
+                console.log('Error: Not able to disable search for components, ' + e);
+            }
+        });
+        <%
+        }
+        %>
+
         </script>
         </form>
         </body>
