@@ -642,7 +642,7 @@ public class PVServlet implements Serializable
      //add values to validate bean
      Vector<String> vValString = pvAction.addValidateVDPVS(data);
      //add the vectors to the session
-     data.getRequest().setAttribute("vValidate", vValString);  	//JR1024 tagged
+     data.getRequest().setAttribute("vValidate", vValString);
      vd = data.getVD();
      data.getRequest().setAttribute(PVForm.SESSION_SELECT_VD, vd);        
      return "/ValidateVDPage.jsp";

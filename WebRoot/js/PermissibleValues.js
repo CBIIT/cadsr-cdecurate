@@ -730,11 +730,20 @@
 		    		parentNode.appendChild(linkSpan);
 		    		//add the calendar image node
 		    		var linkImg = document.createElement("img");
-		    		linkText = "javascript:calendarSetup('" + elmObjName + "', event,'" + curPV + "');";
+//		    		linkText = "calendarSetup('" + elmObjName + "', event,'" + curPV + "');";
 		    		//alert(linkText);
 		    		linkImg.setAttribute("src", "../../cdecurate/images/calendarbutton.gif");
-		    		linkImg.setAttribute("onclick", linkText);
-		    		parentNode.appendChild(linkImg);
+//		    		linkImg.setAttribute("onclick", linkText);
+//                    linkImg.onclick = function(event) {
+//                        calendarSetup(elmObjName , event, curPV);
+//                    };
+                    var imgObject = {
+                        onClick: function(evt){
+                            calendarSetup(elmObjName , evt, curPV);
+                        }
+                    };
+                    dojo.connect(linkImg, "onclick", imgObject.onClick);    //JR1024 cross-browser approach!
+                    parentNode.appendChild(linkImg);
                 }
 		    	else {
 		    		var linkNode = document.createElement("a");		    	
