@@ -743,6 +743,7 @@
                         }
                     };
                     dojo.connect(linkImg, "onclick", imgObject.onClick);    //JR1024 cross-browser approach!
+                    console.log("JR1024 PermissibleValues.js 1");
                     parentNode.appendChild(linkImg);
                 }
 		    	else {
