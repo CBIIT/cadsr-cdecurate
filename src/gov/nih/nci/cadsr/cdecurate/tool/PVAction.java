@@ -927,6 +927,18 @@ public class PVAction implements Serializable {
 					sDate = data.getUtil().getOracleDate(sDate);
 				cstmt.setString(14, sDate); // end date);
 				cstmt.setString(15, parIdseq);
+
+				//JR1025 needs to print out all values of VDPVS here!!!
+				String temp = "";
+				temp += "[" + pvBean.getPV_VDPVS_IDSEQ() + "]";
+				temp += "[" + vdBean.getVD_VD_IDSEQ() + "]";
+				temp += "[" + pvBean.getPV_PV_IDSEQ() + "]";
+				temp += "[" + pvBean.getPV_VALUE_ORIGIN() + "]";
+				temp += "[" + vdBean.getVD_CONTE_IDSEQ() + "]";
+				temp += "[" + pvBean.getPV_BEGIN_DATE() + "]";
+				temp += "[" + pvBean.getPV_END_DATE() + "]";
+				logger.info("PVAction.java: " + temp);
+				
 				//execute the qury
 				cstmt.execute();
 				String retCode = cstmt.getString(2);

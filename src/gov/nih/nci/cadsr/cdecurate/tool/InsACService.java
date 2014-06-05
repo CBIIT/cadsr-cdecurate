@@ -262,7 +262,7 @@ public class InsACService implements Serializable {
 				// to non-enum
 				Vector<PV_Bean> vVDPVs = vd.getRemoved_VDPVList(); // vd.getVD_PV_List();
 				// //(Vector)session.getAttribute("VDPVList");
-				if (!pageVDType.equals("E") && sAction.equals("UPD")
+				if (!pageVDType.equals("E") && sAction.equals("UPD")	//JR1025 pageVDType is E sadly!
 						&& vVDPVs != null && vVDPVs.size() > 0) {
 					PVServlet pvser = new PVServlet(m_classReq, m_classRes,
 							m_servlet);
@@ -632,7 +632,7 @@ public class InsACService implements Serializable {
 										.equals("E"))) {
 							PVServlet pvser = new PVServlet(m_classReq,
 									m_classRes, m_servlet);
-							String sStat = pvser.submitPV(vd);
+							String sStat = pvser.submitPV(vd);		//JR1025 tagged
 							if (sStat != null && !sStat.equals(""))
 								this.storeStatusMsg(sStat);
 							// ********************************
