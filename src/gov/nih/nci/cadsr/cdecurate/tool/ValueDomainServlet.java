@@ -250,7 +250,7 @@ public class ValueDomainServlet extends CurationServlet {
 		if (sMenuAction != null)
 			DataManager.setAttribute(session, Session_Data.SESSION_MENU_ACTION, sMenuAction);
 		String sAction = /* app scan fix */ StringUtil.cleanJavascriptAndHtml( (String) m_classReq.getParameter("pageAction") );
-		if (sAction ==null ) sAction ="";
+		if (sAction ==null ) sAction ="";	//JR1025 focus is "vdpvstab"
 		DataManager.setAttribute(session, "VDPageAction", sAction); // store the page action in attribute
 		String sSubAction = /* app scan fix */ StringUtil.cleanJavascriptAndHtml( (String) m_classReq.getParameter("VDAction") );
 		DataManager.setAttribute(session, "VDAction", sSubAction);
@@ -258,7 +258,7 @@ public class ValueDomainServlet extends CurationServlet {
 		String sSearchAC = (String) session.getAttribute("SearchAC");
 		if (sSearchAC == null)
 			sSearchAC = "";
-		String sOriginAction = (String) session.getAttribute("originAction");
+		String sOriginAction = (String) session.getAttribute("originAction");	//JR1025 EditVD
 		if (sAction.equals("submit"))
 			doSubmitVD();
 		else if (sAction.equals("validate") && sOriginAction.equals("BlockEditVD"))

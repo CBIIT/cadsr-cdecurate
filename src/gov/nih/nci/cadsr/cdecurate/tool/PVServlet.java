@@ -66,8 +66,8 @@ public class PVServlet implements Serializable
          HttpSession session = data.getRequest().getSession();	//TODO might cause NPE
          DataManager.setAttribute(session, "vStatMsg", null);  //reset the status message
          String sAction = (String)data.getRequest().getParameter("pageAction");
-         data.setPageAction(sAction);
-         String sMenuAction = (String)data.getRequest().getParameter("MenuAction");
+         data.setPageAction(sAction);	//JR1025 sAction == "save" is what we focus on (possibly "validate" as well)
+         String sMenuAction = (String)data.getRequest().getParameter("MenuAction");	//JR1025 should be "EditVD"
          if (sMenuAction != null)
            DataManager.setAttribute(session, Session_Data.SESSION_MENU_ACTION, sMenuAction);
          sMenuAction = (String)session.getAttribute(Session_Data.SESSION_MENU_ACTION);
@@ -757,7 +757,7 @@ public class PVServlet implements Serializable
      errMsg = doRemoveVDPV(vd);
      
      //insert or update vdpvs relationship
-     Vector<PV_Bean> vVDPVS = vd.getVD_PV_List();
+     Vector<PV_Bean> vVDPVS = vd.getVD_PV_List();	//JR1025 the total pvvm of the vd
      if (vVDPVS == null) vVDPVS = new Vector<PV_Bean>();
      for (int j=0; j<vVDPVS.size(); j++)
      {
@@ -780,14 +780,23 @@ public class PVServlet implements Serializable
                errMsg += "\\n" + err;
                continue;
              }
-             // create pv
-             err = doSubmitPV(vpAction, pvBean, vm);
-             //capture the message if any
-             if (err != null && !err.equals(""))
-             {
-               errMsg += "\\n" +  err;
-               continue;
+
+             //begin JR1025 fix
+//             boolean pvChanged = false;
+//             if(pvChanged) {
+//            	 vpAction = "UPD";
+//             }
+             if(vpAction != null && vpAction.equals("INS")) {
+	             // create the pv
+	             err = doSubmitPV(vpAction, pvBean, vm);	
+	             //capture the message if any
+	             if (err != null && !err.equals(""))
+	             {
+	               errMsg += "\\n" +  err;
+	               continue;
+	             }
              }
+             //end JR1025
 
              //update pv to vd 
              data.setSelectPV(pvBean);
@@ -811,13 +820,13 @@ public class PVServlet implements Serializable
              //update teh collection
          }
        }  //end loop
-       vd.setVD_PV_List(vVDPVS);
+       vd.setVD_PV_List(vVDPVS);	//JR1025 vVDPVS is the total pvvm of the vd
        data.getRequest().setAttribute("retcode", data.getRetErrorCode()); 
        //log the error message
        if (!errMsg.equals(""))
-         logger.error("ERROR at submit - PV : " + errMsg);
+         logger.error("ERROR at submit - PV : " + errMsg);	//JR1025 should be only a valid validation error
 
-       return errMsg; //data.getStatusMsg();
+       return errMsg; //data.getStatusMsg();	//JR1025 should not have any error message in order to be saved successfully into the database
    }
   
    /**To delete the removed VD PV from the database

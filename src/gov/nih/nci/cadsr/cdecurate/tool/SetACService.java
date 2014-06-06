@@ -4627,7 +4627,7 @@ public class SetACService implements Serializable
 			if(sName == null) sName = "";
 			sName = m_util.removeNewLineChar(sName);   //replace newline with empty string
 			m_PV.setPV_VALUE(sName);
-			m_PV = this.getModifiedPV(m_PV, oldPV, req);   //handle the changed pv
+			m_PV = this.getModifiedPV(m_PV, oldPV, req);   //handle the changed pv	//JR1025 is this the key to the fix?
 
 			//set PV_VERSION
 			sName = StringUtil.cleanJavascriptAndHtml( (String)req.getParameter("selShortMeanings") );
@@ -4696,7 +4696,7 @@ public class SetACService implements Serializable
 				oldPV.setVP_SUBMIT_ACTION("DEL");
 				oldPV.setPV_CHECKED(false);
 				VD_Bean vd = (VD_Bean)session.getAttribute("m_VD");
-				Vector<PV_Bean> vVDPVList = vd.getVD_PV_List();  // (Vector)session.getAttribute("VDPVList");
+				Vector<PV_Bean> vVDPVList = vd.getVD_PV_List();  // (Vector)session.getAttribute("VDPVList");	//JR1025 tagged - the original PV list of the VD from the database
 				if (vVDPVList == null) vVDPVList = new Vector<PV_Bean>();
 				vVDPVList.addElement(oldPV);
 				// DataManager.setAttribute(session, "VDPVList", vVDPVList);
