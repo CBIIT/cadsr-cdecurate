@@ -50,7 +50,9 @@ public class TestUtil {
 			dbserver = "ncidb-dsr-q.nci.nih.gov";
 			dbname = "DSRQA";
 			port = 1551;
+			System.out.println("DB is set to QA");
 		} else {
+			System.out.println("DB is set to DEV");
 		}
 
 		ConnectionUtil cu = new ConnectionUtil();

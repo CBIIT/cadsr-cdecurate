@@ -47,9 +47,10 @@ public class JR1035 {
 	HttpServletResponse m_classRes;
 	private static PLSQLUtil db;
 
-	public static final int DE_WORKFLOW_STATUS_TOTAL = 37;
-	public static final int DEC_WORKFLOW_STATUS_TOTAL = 37;
-	public static final int VD_WORKFLOW_STATUS_TOTAL = 37;
+	public static final int DE_WORKFLOW_STATUS_TOTAL = 12;
+	public static final int DEC_WORKFLOW_STATUS_TOTAL = 12;
+	public static final int VD_WORKFLOW_STATUS_TOTAL = 12;
+	public static final int CD_WORKFLOW_STATUS_TOTAL = 12;
 	
 	@BeforeClass
 	public static void initDB() {
@@ -83,19 +84,21 @@ public class JR1035 {
 	 * @return
 	 * @throws SQLException
 	 */
-	private Vector callGetStatusList(String plsql, String setString1, String setString2) throws SQLException {
+	private Vector callGetStatusList(String plsql, String setString1) throws SQLException {
 		Vector vList1 = new Vector<>();
 		String sql = plsql;
 		CallableStatement cstmt = null;
 		
 		cstmt = conn.prepareCall(sql);
-        cstmt.registerOutParameter(3, OracleTypes.CURSOR);
+        //cstmt.registerOutParameter(3, OracleTypes.CURSOR);
+        cstmt.registerOutParameter(2, OracleTypes.CURSOR);
         cstmt.setString(1, setString1);
-        cstmt.setString(2, setString2);
+        //cstmt.setString(2, setString2);
         // Now we are ready to call the stored procedure
         cstmt.execute();
-        ResultSet rs = (ResultSet) cstmt.getObject(3);
-
+        //ResultSet rs = (ResultSet) cstmt.getObject(3);
+        ResultSet rs = (ResultSet) cstmt.getObject(2);
+        
         String sName = null;
         while (rs.next())
         {
@@ -109,10 +112,10 @@ public class JR1035 {
 		return vList1;
 	}
 
-	private Vector testACWorkflowStatus(String userId, String acType) throws SQLException {
+	private Vector testACWorkflowStatus(String acType) throws SQLException {
 		Vector vList = new Vector();
 		
-		vList = callGetStatusList("{call SBREXT_SS_API.get_write_context_list(?, ?, ?)}", userId, acType);
+		vList = callGetStatusList("{call SBREXT_SS_API.get_status_list(?,?)}", acType);
     	System.out.println("ACType [" + acType + "]");
     	if(vList != null) {
         	Iterator it = vList.iterator();
@@ -130,18 +133,23 @@ public class JR1035 {
 	
 	@Test
 	public void testWorkflowStatusList() {
-		boolean ret1 = false, ret2 = false, ret3 = false;
+		boolean ret1 = false, ret2 = false, ret3 = false, ret4 = false;
 		Vector vList = null;
 		String list = "";
 		try {
-			vList = testACWorkflowStatus(userId, "DATAELEMENT");
+			vList = testACWorkflowStatus("");
+    		System.out.println("total vList [" + vList.size() + "]");
+//			if(vList != null && vList.size() >= DE_WORKFLOW_STATUS_TOTAL) ret1 = true;
+			vList = testACWorkflowStatus("DATAELEMENT");
 			if(vList != null && vList.size() >= DE_WORKFLOW_STATUS_TOTAL) ret1 = true;
-			vList = testACWorkflowStatus(userId, "DE_CONCEPT");
+			vList = testACWorkflowStatus("DE_CONCEPT");
 			if(vList != null && vList.size() >= DEC_WORKFLOW_STATUS_TOTAL) ret2 = true;
-			vList = testACWorkflowStatus(userId, "VALUEDOMAIN");
+			vList = testACWorkflowStatus("VALUEDOMAIN");
 			if(vList != null && vList.size() >= VD_WORKFLOW_STATUS_TOTAL) ret3 = true;
+			vList = testACWorkflowStatus("CONCEPTUALDOMAIN");
+			if(vList != null && vList.size() >= CD_WORKFLOW_STATUS_TOTAL) ret4 = true;
 			
-			assertTrue("Workflow Status ok", ret1 && ret2 && ret3);
+			assertTrue("Workflow Status ok", ret1 && ret2 && ret3 && ret4);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
