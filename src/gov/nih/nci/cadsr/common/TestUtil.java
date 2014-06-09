@@ -27,16 +27,32 @@ public class TestUtil {
 	private String serverName;
 	private int portNumber = -1;
 	private String dbName;
+	public enum TIER {
+		DEV, QA
+	}
+	private static TIER targetTier = TIER.DEV;
 	
+	public static TIER getTargetTier() {
+		return targetTier;
+	}
+
+	public static void setTargetTier(TIER targetTier) {
+		TestUtil.targetTier = targetTier;
+	}
+
 	public static Connection getConnection(String username, String password)
 			throws Exception {
 		String dbtype = "oracle";
-//		String dbserver = "ncidb-dsr-q.nci.nih.gov";
-//		String dbname = "DSRQA";
-//		int port = 1551;
 		String dbserver = "137.187.181.4";
 		String dbname = "DSRDEV";
 		int port = 1551;
+		if(targetTier == TIER.QA) {
+			dbserver = "ncidb-dsr-q.nci.nih.gov";
+			dbname = "DSRQA";
+			port = 1551;
+		} else {
+		}
+
 		ConnectionUtil cu = new ConnectionUtil();
 		cu.setUserName(username);
 		cu.setPassword(password);

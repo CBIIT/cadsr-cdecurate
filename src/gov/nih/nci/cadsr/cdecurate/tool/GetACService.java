@@ -456,6 +456,13 @@ public class GetACService implements Serializable
     {
         try
         {
+        	logger.info("ACType [" + ACType + "]");
+        	Iterator it = vList.iterator();
+        	String val = null;
+        	while(it.hasNext()) {
+        		val = (String)it.next();
+        		logger.debug("vList [" + val + "]");
+        	}
             String sAPI = "{call SBREXT_SS_API.get_status_list(?,?)}";
             getDataListStoreProcedure(vList, null, null, null, sAPI, ACType, "", 2);
         }
@@ -1043,7 +1050,7 @@ public class GetACService implements Serializable
                 {
                     while (rs.next())
                     {
-                        sName = rs.getString(1);
+                        sName = rs.getString(1);	//JR1035 this should be not null e.g. APPRVD FOR TRIAL USE, DRAFT NEW, RELEASED etc
                         if (sName == null)
                             sName = "";
                         vList1.addElement(sName);
