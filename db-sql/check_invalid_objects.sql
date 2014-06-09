@@ -1,3 +1,5 @@
+-- Run this with sysdba
+
 COLUMN object_name FORMAT A30
 SELECT owner,
        object_type,
