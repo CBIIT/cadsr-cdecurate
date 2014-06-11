@@ -4627,7 +4627,7 @@ public class SetACService implements Serializable
 			if(sName == null) sName = "";
 			sName = m_util.removeNewLineChar(sName);   //replace newline with empty string
 			m_PV.setPV_VALUE(sName);
-			m_PV = this.getModifiedPV(m_PV, oldPV, req);   //handle the changed pv	//JR1025 is this the key to the fix?
+			m_PV = this.getModifiedPV(m_PV, oldPV, req);   //handle the changed pv	//JR1025 tagged
 
 			//set PV_VERSION
 			sName = StringUtil.cleanJavascriptAndHtml( (String)req.getParameter("selShortMeanings") );

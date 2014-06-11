@@ -3,15 +3,19 @@ package gov.nih.nci.cadsr.cdecurate.test.junit;
 import static org.junit.Assert.assertTrue;
 import gov.nih.nci.cadsr.cdecurate.test.helpers.DBUtil;
 import gov.nih.nci.cadsr.cdecurate.tool.CurationServlet;
+import gov.nih.nci.cadsr.cdecurate.tool.EVS_Bean;
 import gov.nih.nci.cadsr.cdecurate.tool.EVS_UserBean;
 import gov.nih.nci.cadsr.cdecurate.tool.InsACService;
 import gov.nih.nci.cadsr.cdecurate.tool.PVServlet;
+import gov.nih.nci.cadsr.cdecurate.tool.PV_Bean;
 import gov.nih.nci.cadsr.cdecurate.tool.Session_Data;
 import gov.nih.nci.cadsr.cdecurate.tool.VD_Bean;
+import gov.nih.nci.cadsr.cdecurate.tool.VM_Bean;
 import gov.nih.nci.cadsr.cdecurate.tool.ValueDomainServlet;
 import gov.nih.nci.cadsr.common.TestUtil;
 
 import java.sql.Connection;
+import java.util.Vector;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -27,7 +31,7 @@ import org.junit.Test;
   * 
   * Setup: Enter userId and password in the VM argument (NOT program argument!!!) in the following format:
   * 
-  * -Du=SBREXT -Dp=[replace with the password]
+-Du=SBREXT -Dp=[replace with the password]
   * 
   */
 public class JR1025 {
@@ -70,10 +74,10 @@ public class JR1025 {
 		CurationServlet servlet = new CurationServlet();
 		servlet.setConn(conn);
 		//ValueDomainServlet servlet = new ValueDomainServlet();
-		PVServlet pvServlet = new PVServlet(m_classReq, m_classRes, servlet);
+//		PVServlet pvServlet = new PVServlet(m_classReq, m_classRes, servlet);
 		
 		//=== mocking ValueDomainServlet.java#doUpdateVDAction->InsACService.java#setVD("UPD", VDBean, "Edit", oldVDBean)->PVServlet.java#submitPV(vd)
-		HttpSession session = m_classReq.getSession();
+/*		HttpSession session = m_classReq.getSession();
 		VD_Bean VDBean = (VD_Bean) session.getAttribute("m_VD");
 		VD_Bean oldVDBean = (VD_Bean) session.getAttribute("oldVDBean");
 		InsACService insAC = new InsACService(m_classReq, m_classRes, servlet);
@@ -86,7 +90,7 @@ public class JR1025 {
 		pvServlet.submitPV(VDBean);
 
         mock.verifyAll();
-	}
+*/	}
 
 	@After
 	public void cleanup() {
@@ -95,7 +99,6 @@ public class JR1025 {
 	@Test
 	public void testVDBeanDifference() {
 		boolean ret = false;
-		String evsDef = "";
 		try {
 			assertTrue("VD has changed", true);
 		} catch (Exception e) {

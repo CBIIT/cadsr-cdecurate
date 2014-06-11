@@ -458,9 +458,13 @@ public class PVAction implements Serializable {
 						pvBean.setPV_VALUE(rs.getString("value"));
 						pvBean.setPV_SHORT_MEANING(rs
 								.getString("short_meaning"));
-						if (sAction.equals("NewUsing"))
-							pvBean.setPV_VDPVS_IDSEQ("");
-						else
+						/*
+						//begin JR1032 this is assuming that for "New/Using Existing" requires a non-empty PV_VDPVS_IDSEQ to display PVVM list
+//						if (sAction.equals("NewUsing"))
+//							pvBean.setPV_VDPVS_IDSEQ("");
+//						else
+						//end JR1032 this is assuming that for "New/Using Existing" requires a non-empty PV_VDPVS_IDSEQ to display PVVM list
+						*/
 							pvBean.setPV_VDPVS_IDSEQ(rs.getString("vp_idseq"));
 /*
 						pvBean.setPV_MEANING_DESCRIPTION(rs

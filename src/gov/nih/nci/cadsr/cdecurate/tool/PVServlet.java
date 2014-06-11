@@ -15,6 +15,7 @@ package gov.nih.nci.cadsr.cdecurate.tool;
 import gov.nih.nci.cadsr.cdecurate.database.Alternates;
 import gov.nih.nci.cadsr.cdecurate.ui.AltNamesDefsServlet;
 import gov.nih.nci.cadsr.cdecurate.util.DataManager;
+import gov.nih.nci.cadsr.cdecurate.util.PVHelper;
 
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
@@ -60,7 +61,7 @@ public class PVServlet implements Serializable
    */
   public String doEditPVActions()
   {
-      String retData = "/PermissibleValue.jsp";
+	  String retData = "/PermissibleValue.jsp";
       try
       {
          HttpSession session = data.getRequest().getSession();	//TODO might cause NPE
@@ -219,9 +220,34 @@ public class PVServlet implements Serializable
    {
      HttpSession session = (HttpSession)data.getRequest().getSession(); 
      VD_Bean vd = (VD_Bean)session.getAttribute(PVForm.SESSION_SELECT_VD);
+     //begin JR1025
+ 	   PVHelper pHelp = new PVHelper();
+// 	   String uniqueKey = "TODO";
+// 	   PV_Bean changedPV = new PV_Bean();
+//	   System.out.println("JR1025 VD [" + vd + "]");
+//	   try {
+//		   pHelp.replacePVBean(uniqueKey, vd, changedPV);
+//	   } catch (Exception e) {
+//		   // TODO Auto-generated catch block
+//		   e.printStackTrace();
+//	   }
+ 	   //end JR1025
      Vector<PV_Bean> vVDPV = null;
-     if (vd != null) 
+     if (vd != null) {
     	 vVDPV = vd.getVD_PV_List();  // (Vector<PV_Bean>)session.getAttribute("VDPVList");
+ 	     System.out.println("JR1025 original pv list [" + pHelp.toString(vVDPV) + "]");
+     } //JR1025 end of getting the original pv list
+     Vector<PV_Bean> changedVDPV = (Vector<PV_Bean>)session.getAttribute("VDPVList");
+     System.out.println("JR1025 changed pv list [" + pHelp.toString(changedVDPV) + "]");
+//     try {
+//    	 openVMPageEdit();
+//    	 int pvInd = (Integer)session.getAttribute(PVForm.SESSION_PV_INDEX);
+//		 savePVAttributes();
+//	} catch (Exception e) {
+//		// TODO Auto-generated catch block
+//		e.printStackTrace();
+//	}
+     
      if (vVDPV == null) vVDPV = new Vector<PV_Bean>();
      String[] vwTypes = data.getRequest().getParameterValues("PVViewTypes"); 
      if (vwTypes != null)
@@ -229,6 +255,7 @@ public class PVServlet implements Serializable
        pvAction.doResetViewTypes(vVDPV, vwTypes);
       // DataManager.setAttribute(session, "VDPVList", vVDPV);
        vd.setVD_PV_List(vVDPV);
+
        DataManager.setAttribute(session, PVForm.SESSION_SELECT_VD, vd);
      }
    }
@@ -781,7 +808,7 @@ public class PVServlet implements Serializable
                continue;
              }
 
-             //begin JR1025 fix
+             //begin JR1025
 //             boolean pvChanged = false;
 //             if(pvChanged) {
 //            	 vpAction = "UPD";
