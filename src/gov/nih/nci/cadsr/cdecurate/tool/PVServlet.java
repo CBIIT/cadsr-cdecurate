@@ -236,18 +236,18 @@ public class PVServlet implements Serializable
      if (vd != null) {
     	 vVDPV = vd.getVD_PV_List();  // (Vector<PV_Bean>)session.getAttribute("VDPVList");
  	     System.out.println("JR1025 original pv list [" + pHelp.toString(vVDPV) + "]");
-     } //JR1025 end of getting the original pv list
+     } //end of getting the original pv list
+     
      Vector<PV_Bean> changedVDPV = (Vector<PV_Bean>)session.getAttribute("VDPVList");
      System.out.println("JR1025 changed pv list [" + pHelp.toString(changedVDPV) + "]");
-//     try {
-//    	 openVMPageEdit();
-//    	 int pvInd = (Integer)session.getAttribute(PVForm.SESSION_PV_INDEX);
-//		 savePVAttributes();
-//	} catch (Exception e) {
-//		// TODO Auto-generated catch block
-//		e.printStackTrace();
-//	}
-     
+     try {
+		savePVAttributesBeginDateEndDate();
+     } catch (Exception e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+     }
+     //JR1025 end of getting the original pv list
+
      if (vVDPV == null) vVDPV = new Vector<PV_Bean>();
      String[] vwTypes = data.getRequest().getParameterValues("PVViewTypes"); 
      if (vwTypes != null)
@@ -260,7 +260,63 @@ public class PVServlet implements Serializable
      }
    }
    
-   /**to reset the data for canceling out the New PV edits
+   private String savePVAttributesBeginDateEndDate() throws Exception {
+       int pvInd = getSelectedPV();
+       if (pvInd < 0) throw new Exception("PV index is null or empty!");
+	       
+	     HttpSession session = data.getRequest().getSession();
+	     PV_Bean selPV = data.getSelectPV();
+	     //set the attributes
+	     DataManager.setAttribute(session, VMForm.SESSION_SELECT_PV, selPV);
+	     DataManager.setAttribute(session, PVForm.SESSION_PV_INDEX, pvInd);
+	//	         DataManager.setAttribute(session, VMForm.SESSION_VM_TAB_FOCUS, VMForm.ELM_ACT_DETAIL_TAB);
+	//	         DataManager.setAttribute(session, VMForm.SESSION_RET_PAGE, VMForm.ACT_BACK_PV);
+	   
+	        //add pv other attribtutes 
+	    addPVOtherAttributes(null, "changeOne", "pv" + pvInd);
+	    PV_Bean selectPV = data.getSelectPV();
+	    //get the pv name from teh page
+	    String chgName = (String)data.getRequest().getParameter("txtpv" + pvInd + "Value");  //pvName  
+	    chgName = chgName.trim();
+	    //handle pv changes
+	    VM_Bean useVM = this.getDuplicateVMUse();
+	    if (useVM == null)
+	    {
+	      VMServlet vmser = new VMServlet(data.getRequest(), data.getResponse(), data.getCurationServlet());
+	      //go back it vm was not changed
+	      VM_Bean newVM = new VM_Bean().copyVMBean(selectPV.getPV_VM());
+	      String editVM = (String)data.getRequest().getParameter("currentVM");
+	      if (editVM != null && !editVM.equals(""))
+	      {
+	        vmser.readDataForCreate(selectPV, pvInd);
+	        newVM = vmser.vmData.getVMBean();
+	        data.setStatusMsg(data.getStatusMsg() + vmser.vmData.getStatusMsg());
+	      }
+	      if (newVM.getVM_SUBMIT_ACTION().equals(VMForm.CADSR_ACTION_INS))
+	        newVM._alts = null;
+	      data.setNewVM(newVM);
+	      selectPV = pvAction.changePVAttributes(chgName, pvInd, data);
+	    }
+	    else
+	        selectPV.setPV_VM(useVM);
+	    
+	    String erVM = (String)data.getRequest().getAttribute("ErrMsgAC");
+	    if (erVM == null || erVM.equals(""))
+	        updateVDPV(selectPV, pvInd);
+	    else
+	    {
+	        //store it in the session
+	        DataManager.setAttribute(session, PVForm.SESSION_SELECT_VD, data.getVD());
+	        data.getRequest().setAttribute(PVForm.REQUEST_FOCUS_ELEMENT, "pv" + pvInd);  //"pv" + pvInd + "View");
+	    }
+	    //status messae
+	    if (!data.getStatusMsg().equals(""))
+	      logger.info("PV Status " + data.getStatusMsg());
+	
+	    return "/PermissibleValue.jsp";
+   }
+
+/**to reset the data for canceling out the New PV edits
    * @return String JSP to forward to
    */
   @SuppressWarnings("unchecked")
