@@ -35,6 +35,7 @@ copytest2jboss.cmd
 /copytest2jboss.cmd
 /m.cmd
 /spy.*
+/spy.log
 /*spy*.cmd
 /*.*spybuild.properties 
 /build.properties
