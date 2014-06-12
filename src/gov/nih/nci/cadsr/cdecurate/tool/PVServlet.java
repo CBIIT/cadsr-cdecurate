@@ -220,33 +220,9 @@ public class PVServlet implements Serializable
    {
      HttpSession session = (HttpSession)data.getRequest().getSession(); 
      VD_Bean vd = (VD_Bean)session.getAttribute(PVForm.SESSION_SELECT_VD);
-     //begin JR1025
- 	   PVHelper pHelp = new PVHelper();
-// 	   String uniqueKey = "TODO";
-// 	   PV_Bean changedPV = new PV_Bean();
-//	   System.out.println("JR1025 VD [" + vd + "]");
-//	   try {
-//		   pHelp.replacePVBean(uniqueKey, vd, changedPV);
-//	   } catch (Exception e) {
-//		   // TODO Auto-generated catch block
-//		   e.printStackTrace();
-//	   }
- 	   //end JR1025
      Vector<PV_Bean> vVDPV = null;
-     if (vd != null) {
-    	 vVDPV = vd.getVD_PV_List();  // (Vector<PV_Bean>)session.getAttribute("VDPVList");
- 	     System.out.println("JR1025 original pv list [" + pHelp.toString(vVDPV) + "]");
-     } //end of getting the original pv list
-     
-     Vector<PV_Bean> changedVDPV = (Vector<PV_Bean>)session.getAttribute("VDPVList");
-     System.out.println("JR1025 changed pv list [" + pHelp.toString(changedVDPV) + "]");
-     try {
-		savePVAttributesBeginDateEndDate();
-     } catch (Exception e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-     }
-     //JR1025 end of getting the original pv list
+
+//     handlePVDates(session, vd);	//JR1025
 
      if (vVDPV == null) vVDPV = new Vector<PV_Bean>();
      String[] vwTypes = data.getRequest().getParameterValues("PVViewTypes"); 
@@ -259,7 +235,39 @@ public class PVServlet implements Serializable
        DataManager.setAttribute(session, PVForm.SESSION_SELECT_VD, vd);
      }
    }
-   
+
+   private void handlePVDates(HttpSession session, VD_Bean vd) {
+	     Vector<PV_Bean> vVDPV = null;
+	     String sAction = (String)data.getRequest().getParameter("pageAction");
+	     if(sAction != null && sAction.equals("save")) {
+		 	   PVHelper pHelp = new PVHelper();
+		// 	   String uniqueKey = "TODO";
+		// 	   PV_Bean changedPV = new PV_Bean();
+		//	   System.out.println("JR1025 VD [" + vd + "]");
+		//	   try {
+		//		   pHelp.replacePVBean(uniqueKey, vd, changedPV);
+		//	   } catch (Exception e) {
+		//		   // TODO Auto-generated catch block
+		//		   e.printStackTrace();
+		//	   }
+		 	   //end JR1025
+		     if (vd != null) {
+		    	 vVDPV = vd.getVD_PV_List();  // (Vector<PV_Bean>)session.getAttribute("VDPVList");
+		 	     System.out.println("JR1025 original pv list [" + pHelp.toString(vVDPV) + "]");
+		     } //end of getting the original pv list
+		     
+		     Vector<PV_Bean> changedVDPV = (Vector<PV_Bean>)session.getAttribute("VDPVList");
+		     System.out.println("JR1025 changed pv list [" + pHelp.toString(changedVDPV) + "]");
+		     try {
+				savePVAttributesBeginDateEndDate();
+		     } catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+		     }
+	     }
+	     //end of getting the original pv list
+   }
+
    private String savePVAttributesBeginDateEndDate() throws Exception {
        int pvInd = getSelectedPV();
        if (pvInd < 0) throw new Exception("PV index is null or empty!");
@@ -670,7 +678,7 @@ public class PVServlet implements Serializable
      if (chgBD != null && !chgBD.equals(""))
      {
        if (changeType.equals("changeAll")
-//    	   || changeType.equals("changeOne")	//JR1024
+    	   || changeType.equals("changeOne")	//JR1025
        )
        {
          //System.out.println("all begin date");
@@ -689,7 +697,7 @@ public class PVServlet implements Serializable
      if (chgED != null && !chgED.equals(""))
      {
          if (changeType.equals("changeAll")
-//             || changeType.equals("changeOne")	//JR1024
+             || changeType.equals("changeOne")	//JR1025
          )
          {
          //System.out.println("all end date");
