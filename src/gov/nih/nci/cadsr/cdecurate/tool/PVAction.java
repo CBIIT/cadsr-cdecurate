@@ -23,6 +23,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -458,13 +459,10 @@ public class PVAction implements Serializable {
 						pvBean.setPV_VALUE(rs.getString("value"));
 						pvBean.setPV_SHORT_MEANING(rs
 								.getString("short_meaning"));
-						/*
-						//begin JR1032 this is assuming that for "New/Using Existing" requires a non-empty PV_VDPVS_IDSEQ to display PVVM list
-//						if (sAction.equals("NewUsing"))
-//							pvBean.setPV_VDPVS_IDSEQ("");
-//						else
-						//end JR1032 this is assuming that for "New/Using Existing" requires a non-empty PV_VDPVS_IDSEQ to display PVVM list
-						*/
+												 
+						if (sAction.equals("NewUsing"))
+							pvBean.setPV_VDPVS_IDSEQ("");
+						else
 							pvBean.setPV_VDPVS_IDSEQ(rs.getString("vp_idseq"));
 /*
 						pvBean.setPV_MEANING_DESCRIPTION(rs
@@ -497,7 +495,10 @@ public class PVAction implements Serializable {
 						this.doSetParentAttributes(sCon, pvBean, data);
 
 						//begin GF7680
-						String formWorkflow = getCRFWorkflowStatus(data, pvBean.getPV_VDPVS_IDSEQ());	//rs.getString("WORKFLOW");
+						//begin JR1032 Replaced pvBean.getPV_VDPVS_IDSEQ() with rs.getString("vp_idseq") as it always gets null for "New/Using Existing" 
+					//	String formWorkflow = getCRFWorkflowStatus(data, pvBean.getPV_VDPVS_IDSEQ());	//rs.getString("WORKFLOW");
+						String formWorkflow = getCRFWorkflowStatus(data, rs.getString("vp_idseq"));	//rs.getString("WORKFLOW");
+						//end JR1032 
 						pvBean.setCRF_WORKFLOW(formWorkflow);
 						//end GF7680
 						

@@ -258,6 +258,8 @@ public class PVServlet implements Serializable
       // DataManager.setAttribute(session, "VDPVList", vVDPV);
        vd.setVD_PV_List(vVDPV);
 
+       handlePVDates(session, vd);	//JR1025
+       
        DataManager.setAttribute(session, PVForm.SESSION_SELECT_VD, vd);
      }
    }
@@ -613,8 +615,6 @@ public class PVServlet implements Serializable
     	   data.setSelectPV(selectPV);
 		} else {
 			System.out.println("PVServlet: delete PV, nothing is done as PV value is empty or null!");		//GF30800 added message to ease 
-
-troubleshooting
 		}
      }
      else
