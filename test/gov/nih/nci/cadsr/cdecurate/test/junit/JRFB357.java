@@ -47,14 +47,27 @@ public class JRFB357 {
 	HttpServletRequest m_classReq;
 	HttpServletResponse m_classRes;
 	private static PLSQLUtil db;
-	
+
+	String parentId = null;
+	String p_version = null;
+	String p_preferred_name = null;
+	String p_long_name = null;
+	String p_preferred_definition = null;
+	String p_conte_idseq = null;
+	String p_proto_idseq = null;
+	String p_asl_name = null;
+	String p_vp_idseq = null;
+	String p_created_by = null;
+	int p_display_order = -1;
+	String p_meaning_text = null;
+
 	@BeforeClass
 	public static void initDB() {
 		userId = System.getProperty("u");
 		password = System.getProperty("p");
 		boolean ret;
 		try {
-			TestUtil.setTargetTier(TestUtil.TIER.QA);
+//			TestUtil.setTargetTier(TestUtil.TIER.QA);
 			conn = TestUtil.getConnection(userId, password);
 			db = new PLSQLUtil(conn);
 		} catch (Exception e) {
@@ -80,25 +93,24 @@ public class JRFB357 {
 	 * @return
 	 * @throws SQLException
 	 */
-	private boolean insertValues() throws SQLException {
+	private boolean insertValues(
+			String parentId,
+			String p_version,
+			String p_preferred_name,
+			String p_long_name,
+			String p_preferred_definition,
+			String p_conte_idseq,
+			String p_proto_idseq,
+			String p_asl_name,
+			String p_vp_idseq,
+			String p_created_by,
+			int p_display_order,
+			String p_meaning_text
+			) throws SQLException {
+		String plsql = "{call sbrext_form_builder_pkg.ins_value(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}";
 		boolean ret = false;
 
 		//there are 16 parameters, 4 of them are of OUT type
-		String plsql = "{call sbrext_form_builder_pkg.ins_value(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}";
-		String parentId = "FBB87FA3-3B6C-A451-E040-BB8921B62D33";
-		String p_version = "1.0";
-		String p_preferred_name = "1.0";
-		String p_long_name = "1.0";
-		String p_preferred_definition = "Notest";
-		String p_conte_idseq = "29A8FB18-0AB1-11D6-A42F-0010A4C1E842";
-		String p_proto_idseq = null;
-		String p_asl_name = "DRAFT NEW";
-		String p_vp_idseq = "C37A1BEB-7590-B6C9-E040-BB89AD434179";
-		String p_created_by = "GUEST";
-		int p_display_order = 0;
-		/** 4 OUTS */
-		String p_meaning_text = "TEST";
-//		String p_meaning_text = null;
 		
 		Vector vList1 = new Vector<>();
 		CallableStatement cstmt = null;
@@ -130,8 +142,8 @@ public class JRFB357 {
 			String p_return_desc;
 			p_val_idseq = cstmt.getString(12);
 			p_qr_idseq = cstmt.getString(13);
-			p_return_code = cstmt.getString(14);
 			p_return_desc = cstmt.getString(15);
+			p_return_code = cstmt.getString(14);
 			System.out.println("JRFB357.java#insertValues() p_val_idseq [" + p_val_idseq + "]");
 			System.out.println("JRFB357.java#insertValues() p_qr_idseq [" + p_qr_idseq + "]");
 			System.out.println("JRFB357.java#insertValues() p_return_code [" + p_return_code + "]");
@@ -148,10 +160,68 @@ public class JRFB357 {
 	}
 
 	@Test
-	public void testFormBuildInsertValue() throws SQLException {
+	public void testFormBuildDuplicatedInsertValues() throws SQLException {
 		boolean ret;
 		
-		ret = insertValues();
+		parentId = "FB81675C-C002-9780-E040-BB8921B67C8C";  //This is a valid and existing question seq id
+		p_version = "1.0";
+		p_preferred_name = "1.0";
+		p_long_name = "1.0";
+		p_preferred_definition = "MLH1-expressed";
+		p_conte_idseq = "99BA9DC8-2095-4E69-E034-080020C9C0E0";
+		p_proto_idseq = null;
+		p_asl_name = "DRAFT NEW";
+		p_vp_idseq = "883459F6-7300-BB39-E040-BB89AD4355D3";
+		p_created_by = null;
+		p_display_order = 0;
+		p_meaning_text = null;
+		
+		ret = insertValues(
+				parentId,
+				p_version,
+				p_preferred_name,
+				p_long_name,
+				p_preferred_definition,
+				p_conte_idseq,
+				p_proto_idseq,
+				p_asl_name,
+				p_vp_idseq,
+				p_created_by,
+				p_display_order,
+				p_meaning_text);
+		Assert.assertTrue(!ret);
+	}
+	
+	@Test
+	public void testFormBuildFaultyInsertValues() throws SQLException {
+		boolean ret;
+
+		parentId = "FBB87FA3-3B6C-A451-E040-BB8921B62D33";
+		p_version = "1.0";
+		p_preferred_name = "1.0";
+		p_long_name = "1.0";
+		p_preferred_definition = "Notest";
+		p_conte_idseq = "29A8FB18-0AB1-11D6-A42F-0010A4C1E842";
+		p_proto_idseq = null;
+		p_asl_name = "DRAFT NEW";
+		p_vp_idseq = "C37A1BEB-7590-B6C9-E040-BB89AD434179";
+		p_created_by = "GUEST";
+		p_display_order = 0;
+		p_meaning_text = "TEST";
+		ret = insertValues(
+				parentId,
+				p_version,
+				p_preferred_name,
+				p_long_name,
+				p_preferred_definition,
+				p_conte_idseq,
+				p_proto_idseq,
+				p_asl_name,
+				p_vp_idseq,
+				p_created_by,
+				p_display_order,
+				p_meaning_text);
 		Assert.assertTrue(ret);
 	}
+
 }
