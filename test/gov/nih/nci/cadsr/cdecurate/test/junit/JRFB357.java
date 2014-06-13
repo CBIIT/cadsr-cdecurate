@@ -54,7 +54,7 @@ public class JRFB357 {
 		password = System.getProperty("p");
 		boolean ret;
 		try {
-//			TestUtil.setTargetTier(TestUtil.TIER.QA);
+			TestUtil.setTargetTier(TestUtil.TIER.QA);
 			conn = TestUtil.getConnection(userId, password);
 			db = new PLSQLUtil(conn);
 		} catch (Exception e) {
@@ -98,45 +98,47 @@ public class JRFB357 {
 		int p_display_order = 0;
 		/** 4 OUTS */
 		String p_meaning_text = "TEST";
+//		String p_meaning_text = null;
 		
 		Vector vList1 = new Vector<>();
-		String sql = plsql;
 		CallableStatement cstmt = null;
 		
-		cstmt = conn.prepareCall(sql);
-        cstmt.setString(16, p_meaning_text);
-        cstmt.registerOutParameter(15, OracleTypes.VARCHAR);
-        cstmt.registerOutParameter(14, OracleTypes.VARCHAR);
-        cstmt.registerOutParameter(13, OracleTypes.VARCHAR);
-        cstmt.registerOutParameter(12, OracleTypes.VARCHAR);
-        cstmt.setInt(11, p_display_order);
-        cstmt.setString(10, p_created_by);
-        cstmt.setString(9, p_vp_idseq);
-        cstmt.setString(8, p_asl_name);
-        cstmt.setString(7, p_proto_idseq);
-        cstmt.setString(6, p_conte_idseq);
-        cstmt.setString(5, p_preferred_definition);
-        cstmt.setString(4, p_long_name);
-        cstmt.setString(3, p_preferred_name);
-        cstmt.setString(2, p_version);
+		cstmt = conn.prepareCall(plsql);
         cstmt.setString(1, parentId);
+        cstmt.setString(2, p_version);
+        cstmt.setString(3, p_preferred_name);
+        cstmt.setString(4, p_long_name);
+        cstmt.setString(5, p_preferred_definition);
+        cstmt.setString(6, p_conte_idseq);
+        cstmt.setString(7, p_proto_idseq);
+        cstmt.setString(8, p_asl_name);
+        cstmt.setString(9, p_vp_idseq);
+        cstmt.setString(10, p_created_by);
+        cstmt.setInt(11, p_display_order);
+        cstmt.registerOutParameter(12, OracleTypes.VARCHAR);
+        cstmt.registerOutParameter(13, OracleTypes.VARCHAR);
+        cstmt.registerOutParameter(14, OracleTypes.VARCHAR);
+        cstmt.registerOutParameter(15, OracleTypes.VARCHAR);
+        cstmt.setString(16, p_meaning_text);
         
         // Now we are ready to call the stored procedure
         try {
-			ResultSet rs = cstmt.executeQuery();
+			cstmt.execute();
 			String p_val_idseq;
 			String p_qr_idseq;
 			String p_return_code;
 			String p_return_desc;
-			p_val_idseq = rs.getString(12);
-			p_qr_idseq = rs.getString(13);
-			p_return_code = rs.getString(14);
-			p_return_desc = rs.getString(15);
+			p_val_idseq = cstmt.getString(12);
+			p_qr_idseq = cstmt.getString(13);
+			p_return_code = cstmt.getString(14);
+			p_return_desc = cstmt.getString(15);
 			System.out.println("JRFB357.java#insertValues() p_val_idseq [" + p_val_idseq + "]");
 			System.out.println("JRFB357.java#insertValues() p_qr_idseq [" + p_qr_idseq + "]");
 			System.out.println("JRFB357.java#insertValues() p_return_code [" + p_return_code + "]");
 			System.out.println("JRFB357.java#insertValues() p_return_desc [" + p_return_desc + "]");
-			ret = true;
+			if(p_return_code == null && p_return_desc == null) {
+				ret = true;
+			}
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
