@@ -258,7 +258,7 @@ public class PVServlet implements Serializable
       // DataManager.setAttribute(session, "VDPVList", vVDPV);
        vd.setVD_PV_List(vVDPV);
 
-       handlePVDates(session, vd);	//JR1025
+//       handlePVDates(session, vd);	//JR1025
        
        DataManager.setAttribute(session, PVForm.SESSION_SELECT_VD, vd);
      }
@@ -296,6 +296,7 @@ public class PVServlet implements Serializable
 	     //end of getting the original pv list
    }
 
+   /** Not used - please keep for future development! */
    private String savePVAttributesBeginDateEndDate() throws Exception  {
        int pvInd = getSelectedPV();
        if (pvInd < 0) throw new Exception("PV index is null or  empty!");

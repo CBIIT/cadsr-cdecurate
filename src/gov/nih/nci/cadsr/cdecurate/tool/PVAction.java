@@ -960,7 +960,7 @@ public class PVAction implements Serializable {
 							&& retCode.equals("API_VDPVS_006")) {
 						sMsg += "\\t This Value Domain is used by a form. "
 								+ "Create a new version of the Value Domain to remove permissible value "
-								+ sPValue + ".";
+								+ sPValue + ".";	//JR1025 this validation has been commented out in SBREXT_SET_ROW.SET_VD_PVS
 					} else if (!sAction.equals("DEL")
 							&& !retCode.equals("API_VDPVS_005"))
 						sMsg += "\\t " + retCode
