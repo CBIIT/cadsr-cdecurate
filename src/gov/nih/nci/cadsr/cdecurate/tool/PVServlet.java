@@ -15,6 +15,8 @@ package gov.nih.nci.cadsr.cdecurate.tool;
 import gov.nih.nci.cadsr.cdecurate.database.Alternates;
 import gov.nih.nci.cadsr.cdecurate.ui.AltNamesDefsServlet;
 import gov.nih.nci.cadsr.cdecurate.util.DataManager;
+//import gov.nih.nci.cadsr.cdecurate.util.PVHelper;
+
 import gov.nih.nci.cadsr.cdecurate.util.PVHelper;
 
 import java.io.Serializable;
@@ -221,7 +223,7 @@ public class PVServlet implements Serializable
      HttpSession session = (HttpSession)data.getRequest().getSession(); 
      VD_Bean vd = (VD_Bean)session.getAttribute(PVForm.SESSION_SELECT_VD);
      //begin JR1025
- 	   PVHelper pHelp = new PVHelper();
+// 	   PVHelper pHelp = new PVHelper();
 // 	   String uniqueKey = "TODO";
 // 	   PV_Bean changedPV = new PV_Bean();
 //	   System.out.println("JR1025 VD [" + vd + "]");
@@ -235,19 +237,19 @@ public class PVServlet implements Serializable
      Vector<PV_Bean> vVDPV = null;
      if (vd != null) {
     	 vVDPV = vd.getVD_PV_List();  // (Vector<PV_Bean>)session.getAttribute("VDPVList");
- 	     System.out.println("JR1025 original pv list [" + pHelp.toString(vVDPV) + "]");
-     } //end of getting the original pv list
-     
+// 	     System.out.println("JR1025 original pv list [" + pHelp.toString(vVDPV) + "]");
+     } //JR1025 end of getting the original pv list
      Vector<PV_Bean> changedVDPV = (Vector<PV_Bean>)session.getAttribute("VDPVList");
-     System.out.println("JR1025 changed pv list [" + pHelp.toString(changedVDPV) + "]");
-     try {
-		savePVAttributesBeginDateEndDate();
-     } catch (Exception e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-     }
-     //JR1025 end of getting the original pv list
-
+//     System.out.println("JR1025 changed pv list [" + pHelp.toString(changedVDPV) + "]");
+//     try {
+//    	 openVMPageEdit();
+//    	 int pvInd = (Integer)session.getAttribute(PVForm.SESSION_PV_INDEX);
+//		 savePVAttributes();
+//	} catch (Exception e) {
+//		// TODO Auto-generated catch block
+//		e.printStackTrace();
+//	}
+     
      if (vVDPV == null) vVDPV = new Vector<PV_Bean>();
      String[] vwTypes = data.getRequest().getParameterValues("PVViewTypes"); 
      if (vwTypes != null)
@@ -256,58 +258,93 @@ public class PVServlet implements Serializable
       // DataManager.setAttribute(session, "VDPVList", vVDPV);
        vd.setVD_PV_List(vVDPV);
 
+//       handlePVDates(session, vd);	//JR1025
+       
        DataManager.setAttribute(session, PVForm.SESSION_SELECT_VD, vd);
      }
    }
-   
-   private String savePVAttributesBeginDateEndDate() throws Exception {
+  
+   private void handlePVDates(HttpSession session, VD_Bean vd) {
+	     Vector<PV_Bean> vVDPV = null;
+	     String sAction = (String)data.getRequest().getParameter ("pageAction");
+	     if(sAction != null && sAction.equals("save")) {
+		 	   PVHelper pHelp = new PVHelper();
+		// 	   String uniqueKey = "TODO";
+		// 	   PV_Bean changedPV = new PV_Bean();
+		//	   System.out.println("JR1025 VD [" + vd +  "]");
+		//	   try {
+		//		   pHelp.replacePVBean(uniqueKey, vd,  changedPV);
+		//	   } catch (Exception e) {
+		//		   // TODO Auto-generated catch block
+		//		   e.printStackTrace();
+		//	   }
+		 	   //end JR1025
+		     if (vd != null) {
+		    	 vVDPV = vd.getVD_PV_List();  //  (Vector<PV_Bean>)session.getAttribute("VDPVList");
+		 	     System.out.println("JR1025 original pv  list [" + pHelp.toString(vVDPV) + "]");
+		     } //end of getting the original pv list
+		     
+		     Vector<PV_Bean> changedVDPV = (Vector<PV_Bean>) session.getAttribute("VDPVList");
+		     System.out.println("JR1025 changed pv list [" +  pHelp.toString(changedVDPV) + "]");
+		     try {
+				savePVAttributesBeginDateEndDate();
+		     } catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+		     }
+	     }
+	     //end of getting the original pv list
+   }
+
+   /** Not used - please keep for future development! */
+   private String savePVAttributesBeginDateEndDate() throws Exception  {
        int pvInd = getSelectedPV();
-       if (pvInd < 0) throw new Exception("PV index is null or empty!");
+       if (pvInd < 0) throw new Exception("PV index is null or  empty!");
 	       
 	     HttpSession session = data.getRequest().getSession();
 	     PV_Bean selPV = data.getSelectPV();
 	     //set the attributes
-	     DataManager.setAttribute(session, VMForm.SESSION_SELECT_PV, selPV);
-	     DataManager.setAttribute(session, PVForm.SESSION_PV_INDEX, pvInd);
-	//	         DataManager.setAttribute(session, VMForm.SESSION_VM_TAB_FOCUS, VMForm.ELM_ACT_DETAIL_TAB);
-	//	         DataManager.setAttribute(session, VMForm.SESSION_RET_PAGE, VMForm.ACT_BACK_PV);
+	     DataManager.setAttribute(session,  VMForm.SESSION_SELECT_PV, selPV);
+	     DataManager.setAttribute(session,  PVForm.SESSION_PV_INDEX, pvInd);
+	//	         DataManager.setAttribute(session,  VMForm.SESSION_VM_TAB_FOCUS, VMForm.ELM_ACT_DETAIL_TAB);
+	//	         DataManager.setAttribute(session,  VMForm.SESSION_RET_PAGE, VMForm.ACT_BACK_PV);
 	   
 	        //add pv other attribtutes 
 	    addPVOtherAttributes(null, "changeOne", "pv" + pvInd);
 	    PV_Bean selectPV = data.getSelectPV();
 	    //get the pv name from teh page
-	    String chgName = (String)data.getRequest().getParameter("txtpv" + pvInd + "Value");  //pvName  
+	    String chgName = (String)data.getRequest().getParameter ("txtpv" + pvInd + "Value");  //pvName  
 	    chgName = chgName.trim();
 	    //handle pv changes
 	    VM_Bean useVM = this.getDuplicateVMUse();
 	    if (useVM == null)
 	    {
-	      VMServlet vmser = new VMServlet(data.getRequest(), data.getResponse(), data.getCurationServlet());
+	      VMServlet vmser = new VMServlet(data.getRequest(),  data.getResponse(), data.getCurationServlet());
 	      //go back it vm was not changed
-	      VM_Bean newVM = new VM_Bean().copyVMBean(selectPV.getPV_VM());
-	      String editVM = (String)data.getRequest().getParameter("currentVM");
+	      VM_Bean newVM = new VM_Bean().copyVMBean (selectPV.getPV_VM());
+	      String editVM = (String)data.getRequest().getParameter ("currentVM");
 	      if (editVM != null && !editVM.equals(""))
 	      {
 	        vmser.readDataForCreate(selectPV, pvInd);
 	        newVM = vmser.vmData.getVMBean();
-	        data.setStatusMsg(data.getStatusMsg() + vmser.vmData.getStatusMsg());
+	        data.setStatusMsg(data.getStatusMsg() +  vmser.vmData.getStatusMsg());
 	      }
-	      if (newVM.getVM_SUBMIT_ACTION().equals(VMForm.CADSR_ACTION_INS))
+	      if (newVM.getVM_SUBMIT_ACTION().equals (VMForm.CADSR_ACTION_INS))
 	        newVM._alts = null;
 	      data.setNewVM(newVM);
-	      selectPV = pvAction.changePVAttributes(chgName, pvInd, data);
+	      selectPV = pvAction.changePVAttributes(chgName, pvInd,  data);
 	    }
 	    else
 	        selectPV.setPV_VM(useVM);
 	    
-	    String erVM = (String)data.getRequest().getAttribute("ErrMsgAC");
+	    String erVM = (String)data.getRequest().getAttribute ("ErrMsgAC");
 	    if (erVM == null || erVM.equals(""))
 	        updateVDPV(selectPV, pvInd);
 	    else
 	    {
 	        //store it in the session
-	        DataManager.setAttribute(session, PVForm.SESSION_SELECT_VD, data.getVD());
-	        data.getRequest().setAttribute(PVForm.REQUEST_FOCUS_ELEMENT, "pv" + pvInd);  //"pv" + pvInd + "View");
+	        DataManager.setAttribute(session,  PVForm.SESSION_SELECT_VD, data.getVD());
+	        data.getRequest().setAttribute (PVForm.REQUEST_FOCUS_ELEMENT, "pv" + pvInd);  //"pv" + pvInd +  "View");
 	    }
 	    //status messae
 	    if (!data.getStatusMsg().equals(""))
@@ -315,8 +352,8 @@ public class PVServlet implements Serializable
 	
 	    return "/PermissibleValue.jsp";
    }
-
-/**to reset the data for canceling out the New PV edits
+ 
+   /**to reset the data for canceling out the New PV edits
    * @return String JSP to forward to
    */
   @SuppressWarnings("unchecked")
@@ -578,7 +615,7 @@ public class PVServlet implements Serializable
        if (selectPV != null && selectPV.getPV_VALUE() != null && !selectPV.getPV_VALUE().equals("")) {
     	   data.setSelectPV(selectPV);
 		} else {
-			System.out.println("PVServlet: delete PV, nothing is done as PV value is empty or null!");		//GF30800 added message to ease troubleshooting
+			System.out.println("PVServlet: delete PV, nothing is done as PV value is empty or null!");		//GF30800 added message to ease 
 		}
      }
      else
