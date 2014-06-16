@@ -15,6 +15,8 @@ import gov.nih.nci.cadsr.cdecurate.database.DBAccess;
 import gov.nih.nci.cadsr.cdecurate.database.SQLHelper;
 import gov.nih.nci.cadsr.cdecurate.util.DataManager;
 import gov.nih.nci.cadsr.common.Constants;
+import gov.nih.nci.cadsr.common.Database;
+import gov.nih.nci.cadsr.common.PropertyHelper;
 import gov.nih.nci.cadsr.persist.concept.Con_Derivation_Rules_Ext_Mgr;
 import gov.nih.nci.cadsr.persist.de.DeComp;
 import gov.nih.nci.cadsr.persist.de.DeErrorCodes;
@@ -44,6 +46,9 @@ import java.util.Vector;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+
+
+
 
 //import oracle.jdbc.driver.OracleTypes;
 import oracle.jdbc.OracleTypes;		//GF30779
@@ -627,7 +632,7 @@ public class InsACService implements Serializable {
 										.equals("E"))) {
 							PVServlet pvser = new PVServlet(m_classReq,
 									m_classRes, m_servlet);
-							String sStat = pvser.submitPV(vd);
+							String sStat = pvser.submitPV(vd);		//JR1025 tagged
 							if (sStat != null && !sStat.equals(""))
 								this.storeStatusMsg(sStat);
 							// ********************************
@@ -1130,19 +1135,20 @@ public class InsACService implements Serializable {
 				}
 				// insert newly created row into hold vector
 				if (sReturnCode != null && sAction.equals("INS")){
+					//begin GF33182 commented check based on long name didn't work, just tagged the following lines
 					if (sReturnCode.equalsIgnoreCase("API_DEC_300")) {//GF30681
 						//Place the reuse logic here.
 						logger.debug("DEC already exists with DEC_Id"+sDEC_ID);
 						this.storeStatusMsg("Data Element Concept Name : ["
-								+ dec.getDEC_LONG_NAME() + "] already exists");
+								+ dec.getDEC_LONG_NAME() + "] already exists. Error [" + sReturnCode + "]");	//TODO GF33178 (tagged, to continue from here)
 					}else{
 						logger.debug("sReturnCode at 1063 of InsACService.java is" + sReturnCode);
 						this
 								.storeStatusMsg("\\t "
 										+ sReturnCode
-										+ " : Unable to create new Data Element Concept Successfully.");
+										+ " : Unable to create new Data Element Concept Successfully. Error [" + sReturnCode + "]");
 					}
-					
+					//end GF33182
 				}
 				else if ((sReturnCode == null || (sReturnCode != null && sAction
 						.equals("UPD")))
@@ -1322,7 +1328,7 @@ public class InsACService implements Serializable {
 					+ e.toString(), e);
 			m_classReq.setAttribute("retcode", "Exception");
 			this
-					.storeStatusMsg("\\t Exception : Unable to update Data Element Concept attributes.");
+					.storeStatusMsg("\\t Exception : Unable to update Data Element Concept attributes.");	//GF33182 tagged
 		}
 		finally{
 			rs = SQLHelper.closeResultSet(rs);
@@ -1556,6 +1562,10 @@ public class InsACService implements Serializable {
 		HttpSession session = m_classReq.getSession();
 		ResultSet rs = null;
 		CallableStatement cstmt = null;
+		Database mon = new Database();
+		mon.setEnabled(true);
+		mon.trace(m_servlet.getConn());
+
 		String sReturnCode = "";
 		String sOCL_IDSEQ = "";
 		try {
@@ -1637,7 +1647,7 @@ public class InsACService implements Serializable {
 					cstmt = m_servlet
 							.getConn()
 							.prepareCall(
-									"{call SBREXT_SET_ROW.SET_OC_CONDR(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}");
+									"{call SBREXT_SET_ROW.SET_OC_CONDR(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}");
 					// cstmt.registerOutParameter(1, java.sql.Types.VARCHAR); //
 					// ua_name
 					cstmt.registerOutParameter(4, java.sql.Types.VARCHAR); // return
@@ -1673,6 +1683,7 @@ public class InsACService implements Serializable {
 					cstmt.setString(2, sOCCondrString); // comma-delimited con
 					// idseqs
 					cstmt.setString(3, sContextID);
+					cstmt.setString(24, PropertyHelper.getDefaultContextName());	//GF32649
 					cstmt.execute();
 					sReturnCode = cstmt.getString(4);
 					sOCL_IDSEQ = cstmt.getString(5);
@@ -1714,6 +1725,9 @@ public class InsACService implements Serializable {
 			rs = SQLHelper.closeResultSet(rs);
 			cstmt = SQLHelper.closeCallableStatement(cstmt);
         	}
+		System.out.println("-------------------------- InsACService: 1 ---------------------------");
+		mon.show();
+		
 		return dec;
 	}
 
@@ -1744,6 +1758,9 @@ public class InsACService implements Serializable {
 		// Connection conn = null;
 		ResultSet rs = null;
 		CallableStatement cstmt = null;
+		Database mon = new Database();
+		mon.setEnabled(true);
+		mon.trace(m_servlet.getConn());
 		String sReturnCode = "";
 		String sPROPL_IDSEQ = "";
 		try {
@@ -1826,7 +1843,7 @@ public class InsACService implements Serializable {
 					cstmt = m_servlet
 							.getConn()
 							.prepareCall(
-									"{call SBREXT_SET_ROW.SET_PROP_CONDR(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}");
+									"{call SBREXT_SET_ROW.SET_PROP_CONDR(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}");		//GF32649
 					// cstmt.registerOutParameter(1, java.sql.Types.VARCHAR); //
 					// ua_name
 					cstmt.registerOutParameter(4, java.sql.Types.VARCHAR); // return
@@ -1860,6 +1877,7 @@ public class InsACService implements Serializable {
 					// idseqs
 					cstmt.setString(3, sContextID);
 					// Now we are ready to call the stored procedure
+					cstmt.setString(24, PropertyHelper.getDefaultContextName());	//GF32649
 					cstmt.execute();
 					sReturnCode = cstmt.getString(4);
 					sPROPL_IDSEQ = cstmt.getString(5);
@@ -1897,6 +1915,9 @@ public class InsACService implements Serializable {
 			rs = SQLHelper.closeResultSet(rs);
 			cstmt = SQLHelper.closeCallableStatement(cstmt);
         	}
+		System.out.println("-------------------------- InsACService: 2 ---------------------------");
+		mon.show();
+		
 		return dec;
 	}
 
@@ -1926,6 +1947,9 @@ public class InsACService implements Serializable {
 		HttpSession session = m_classReq.getSession();
 		ResultSet rs = null;
 		CallableStatement cstmt = null;
+		Database mon = new Database();
+		mon.setEnabled(true);
+		mon.trace(m_servlet.getConn());
 		String sReturnCode = "";
 		try {
 			String sREPName = "";
@@ -2007,7 +2031,7 @@ public class InsACService implements Serializable {
 						cstmt = m_servlet
 								.getConn()
 								.prepareCall(
-										"{call SBREXT_SET_ROW.SET_REP_CONDR(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}");
+										"{call SBREXT_SET_ROW.SET_REP_CONDR(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}");	//GF32649
 						cstmt.registerOutParameter(4, java.sql.Types.VARCHAR); // return
 						// code
 						cstmt.registerOutParameter(5, java.sql.Types.VARCHAR); // OCL
@@ -2040,6 +2064,7 @@ public class InsACService implements Serializable {
 						cstmt.setString(2, sOCCondrString); // comma-delimited
 						// con idseqs
 						cstmt.setString(3, sContextID);
+						cstmt.setString(24, PropertyHelper.getDefaultContextName());	//GF32649
 						cstmt.execute();
 						sReturnCode = cstmt.getString(4);
 
@@ -2080,6 +2105,9 @@ public class InsACService implements Serializable {
 			rs = SQLHelper.closeResultSet(rs);
 			cstmt = SQLHelper.closeCallableStatement(cstmt);
 			}
+		System.out.println("-------------------------- InsACService: 3 ---------------------------");
+		mon.show();
+		
 		return sReturnCode;
 	}
 
@@ -2264,7 +2292,7 @@ public class InsACService implements Serializable {
 	    *
 	    * @param m_classReq
 	    *            The HttpServletRequest from the client
-	    * @param m_classRes
+	    * @param response
 	    *            The HttpServletResponse back to the client
 	    * @param DECBeanSR
 	    *            dec attribute bean.
@@ -5217,6 +5245,9 @@ public class InsACService implements Serializable {
 			EVS_Bean evsBean) {
 		ResultSet rs = null;
 		CallableStatement cstmt = null;
+		Database mon = new Database();
+		mon.setEnabled(true);
+		mon.trace(m_servlet.getConn());
 		HttpSession session = m_classReq.getSession();
 		String conIdseq = "";
 		try {
@@ -5242,7 +5273,7 @@ public class InsACService implements Serializable {
 					cstmt = m_servlet
 							.getConn()
 							.prepareCall(
-									"{call SBREXT_SET_ROW.SET_CONCEPT(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}");
+									"{call SBREXT_SET_ROW.SET_CONCEPT(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}");
 					// register the Out parameters
 					cstmt.registerOutParameter(2, java.sql.Types.VARCHAR); // return
 					// code
@@ -5316,7 +5347,7 @@ public class InsACService implements Serializable {
 					// Now we are ready to call the stored procedure
 					// logger.info("setConcept " +
 					// evsBean.getCONCEPT_IDENTIFIER());
-
+					cstmt.setString(23, PropertyHelper.getDefaultContextName());	//GF32649
 					cstmt.execute();
 					sReturnCode = cstmt.getString(2);
 					conIdseq = cstmt.getString(4);
@@ -5345,11 +5376,14 @@ public class InsACService implements Serializable {
 					+ e.toString(), e);
 			m_classReq.setAttribute("retcode", "Exception");
 			this
-					.storeStatusMsg("\\t Exception : Unable to update Concept attributes.");
+					.storeStatusMsg("\\t Exception : Unable to update Concept attributes. (2)");
 		}finally{
 			rs = SQLHelper.closeResultSet(rs);
 			cstmt = SQLHelper.closeCallableStatement(cstmt);
 			}
+		System.out.println("-------------------------- InsACService: 4 ---------------------------");
+		mon.show();
+
 		return conIdseq;
 	} // end concept
 
@@ -5373,6 +5407,9 @@ public class InsACService implements Serializable {
 		ResultSet rs = null;
 		String sCON_IDSEQ = "";
 		CallableStatement cstmt = null;
+		Database mon = new Database();
+		mon.setEnabled(true);
+		mon.trace(m_servlet.getConn());
 		try {
 			HttpSession session = (HttpSession) m_classReq.getSession();
 			if (m_servlet.getConn() == null)
@@ -5381,7 +5418,7 @@ public class InsACService implements Serializable {
 				cstmt = m_servlet
 						.getConn()
 						.prepareCall(
-								"{call SBREXT_GET_ROW.GET_CON(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}");
+								"{call SBREXT.SBREXT_GET_ROW.GET_CON(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}");	//GF32649
 				cstmt.registerOutParameter(1, java.sql.Types.VARCHAR); // return
 				// code
 				cstmt.registerOutParameter(2, java.sql.Types.VARCHAR); // con
@@ -5426,9 +5463,10 @@ public class InsACService implements Serializable {
 
 				cstmt.setString(2, evsBean.getIDSEQ()); // con idseq
 				cstmt.setString(3, evsBean.getCONCEPT_IDENTIFIER()); // concept
-				logger.debug("EVS Bean at Line 5252 of InsACService.java IDSEQ"+evsBean.getIDSEQ()+"CONCEPT_IDENTIFIER"+evsBean.getCONCEPT_IDENTIFIER());
+				System.out.println("InsACService.java IDSEQ"+evsBean.getIDSEQ()+"CONCEPT_IDENTIFIER"+evsBean.getCONCEPT_IDENTIFIER());
 				// code
 				// Now we are ready to call the stored procedure
+				cstmt.setString(22, PropertyHelper.getDefaultContextName());	//GF32649
 				cstmt.execute();
 				sCON_IDSEQ = (String) cstmt.getObject(2);
 				evsBean.setIDSEQ(sCON_IDSEQ);
@@ -5477,11 +5515,14 @@ public class InsACService implements Serializable {
 				}
 			}
 		} catch (Exception e) {
+			System.out.println("InsACSevice getConcept error: " + e);
 			logger.error("ERROR in InsACService- getConcept for exception : "
 					+ e.toString(), e);
 		}finally{
 			rs = SQLHelper.closeResultSet(rs);
 			cstmt = SQLHelper.closeCallableStatement(cstmt);
+			System.out.println("-------------------------- InsACService: 5 ---------------------------");
+			mon.show();
 		}
 		return sCON_IDSEQ; // TODO check what is parent concept id
 	} // end get concept
@@ -6183,148 +6224,211 @@ public class InsACService implements Serializable {
 		   return name;
    }
 
-	public String doSetDEC(String sAction, DEC_Bean dec, String sInsertFor, DEC_Bean oldDEC){
+	public String doSetDEC(String sAction, DEC_Bean dec, String sInsertFor,
+			DEC_Bean oldDEC) {
 		String sReturnCode = "";
-	    HttpSession session = m_classReq.getSession();
+		HttpSession session = m_classReq.getSession();
 		ValidationStatusBean ocStatusBean = new ValidationStatusBean();
-        ValidationStatusBean propStatusBean = new ValidationStatusBean();
+		ValidationStatusBean propStatusBean = new ValidationStatusBean();
 		Vector vObjectClass = (Vector) session.getAttribute("vObjectClass");
 		Vector vProperty = (Vector) session.getAttribute("vProperty");
-	    String userName = (String)session.getAttribute("Username");
-		HashMap<String, String> defaultContext = (HashMap)session.getAttribute("defaultContext");
-		String conteIdseq= (String)defaultContext.get("idseq");
-		String checkValidityOC = (String)session.getAttribute("checkValidityOC");
-        String checkValidityProp = (String)session.getAttribute("checkValidityProp");
-		try{
-		    m_classReq.setAttribute("retcode", "");
-    		if (checkValidityOC.equals("Yes")){
-		      if ((vObjectClass != null && vObjectClass.size()>0) && (defaultContext != null && defaultContext.size()>0)){
-        	     ocStatusBean = this.evsBeanCheck(vObjectClass, defaultContext, "", "Object Class");
-         	  }
-    		}
-         	if (checkValidityProp.equals("Yes")){
-    		  if ((vProperty != null && vProperty.size()>0) && (defaultContext != null && defaultContext.size()>0)){
-        	    propStatusBean = this.evsBeanCheck(vProperty, defaultContext, "", "Property");
-         	  }
-         	}
-         	
-    		//GF30681 ---- begin new CDR rule !!!
-            //use the existing DEC if exists based on the new CDR for DEC
-     		//DEC_Bean m_DEC = (DEC_Bean) session.getAttribute("m_DEC");
-			String strInValid = checkDECUniqueCDRName((String)session.getAttribute(Constants.DEC_CDR_NAME));
-			if (strInValid != null && !strInValid.equals("")) {
-//				statusBean.setStatusMessage(strInValid);
-//				statusBean.setCondrExists(true);
-//				statusBean.setCondrIDSEQ(condrIDSEQ);
-//				statusBean.setEvsBeanExists(true);
-//				statusBean.setEvsBeanIDSEQ(idseq);
-				sReturnCode = strInValid;
+		String userName = (String) session.getAttribute("Username");
+		HashMap<String, String> defaultContext = (HashMap) session
+				.getAttribute("defaultContext");
+		String conteIdseq = (String) defaultContext.get("idseq");
+		String checkValidityOC = (String) session
+				.getAttribute("checkValidityOC");
+		String checkValidityProp = (String) session
+				.getAttribute("checkValidityProp");
+		try {
+			m_classReq.setAttribute("retcode", "");
+			if (checkValidityOC.equals("Yes")) {
+				if ((vObjectClass != null && vObjectClass.size() > 0)
+						&& (defaultContext != null && defaultContext.size() > 0)) {
+					ocStatusBean = this.evsBeanCheck(vObjectClass,
+							defaultContext, "", "Object Class");
+				}
 			}
-    		//GF30681 ---- end new CDR rule !!!
-         	
-         	
-         	if(sReturnCode != null && !sReturnCode.equals("")) {	//begin of GF30681 final duplicate check (new)
-         		//do nothing
-         		logger.info("Exising DEC found with CDR!");
-         	} else {	//existing check continues
-         	if (checkValidityOC.equals("Yes")){
-         	//set OC if it is null
-         	if ((vObjectClass != null && vObjectClass.size()>0)){
-         	 if (!ocStatusBean.isEvsBeanExists()){
-        				if (ocStatusBean.isCondrExists()) {
-							dec.setDEC_OC_CONDR_IDSEQ(ocStatusBean.getCondrIDSEQ());
-						    // Create Object Class
-							String ocIdseq = this.createEvsBean(userName, ocStatusBean.getCondrIDSEQ(), conteIdseq, "Object Class");
-							if (ocIdseq != null && !ocIdseq.equals("")) {
-								dec.setDEC_OCL_IDSEQ(ocIdseq);
-								logger.debug("At Line 6044 of InsACService.java DEC_OCL_IDSEQ"+ocIdseq+"DEC_OC_CONDR_IDSEQ"+ocStatusBean.getCondrIDSEQ());
-							}
-						} else {
-							// Create Condr
-							String condrIdseq = this.createCondr(vObjectClass, ocStatusBean.isAllConceptsExists());
-							String ocIdseq = "";
-							// Create Object Class
-							if (condrIdseq != null && !condrIdseq.equals("")) {
-								dec.setDEC_OC_CONDR_IDSEQ(condrIdseq);
-								logger.debug("At Line 6053 DEC_OC_CONDR_IDSEQ"+condrIdseq);
-								ocIdseq = this.createEvsBean(userName, condrIdseq, conteIdseq, "Object Class");
-							}
-							if (ocIdseq != null && !ocIdseq.equals("")) {
-								dec.setDEC_OCL_IDSEQ(ocIdseq);
-								logger.debug("At Line 6058 of InsACService.java DEC_OCL_IDSEQ"+ocIdseq);
-							}
-						}
+			if (checkValidityProp.equals("Yes")) {
+				if ((vProperty != null && vProperty.size() > 0)
+						&& (defaultContext != null && defaultContext.size() > 0)) {
+					propStatusBean = this.evsBeanCheck(vProperty,
+							defaultContext, "", "Property");
+				}
+			}
 
-           	 }else{
-           		if (ocStatusBean.isNewVersion()) {
-         	        if (ocStatusBean.getEvsBeanIDSEQ() != null && !ocStatusBean.getEvsBeanIDSEQ().equals("")){
-         	             String newID = "";
-         	             newID = this.setOC_PROP_REP_VERSION(ocStatusBean.getEvsBeanIDSEQ(), "ObjectClass");
-         	             if (newID != null && !newID.equals("")){
-         	            	dec.setDEC_OC_CONDR_IDSEQ(ocStatusBean.getCondrIDSEQ());
-         	                dec.setDEC_OCL_IDSEQ(newID);
-         	             }
-         	          }
-				} else {
-           		      dec.setDEC_OC_CONDR_IDSEQ(ocStatusBean.getCondrIDSEQ());
-           		      dec.setDEC_OCL_IDSEQ(ocStatusBean.getEvsBeanIDSEQ());
+			// GF30681 ---- begin new CDR rule !!!
+			// use the existing DEC if exists based on the new CDR for DEC
+			// DEC_Bean m_DEC = (DEC_Bean) session.getAttribute("m_DEC");
+			String cdrName = (String) session
+					.getAttribute(Constants.DEC_CDR_NAME);
+			if(cdrName != null) {	//avoid NPE during DEC update
+				String strInValid = checkDECUniqueCDRName(cdrName);
+				if (strInValid != null && !strInValid.equals("")) {
+					sReturnCode = strInValid;
 				}
-           	 }
-         	}
-         	}
-         	if (checkValidityProp.equals("Yes")){
-         	//set property if it is null
-            if ((vProperty != null && vProperty.size()>0)){
-         	 if (!propStatusBean.isEvsBeanExists()){
-       				if (propStatusBean.isCondrExists()) {
-							dec.setDEC_PROP_CONDR_IDSEQ(propStatusBean.getCondrIDSEQ());
-						    // Create Property
-							String propIdseq = this.createEvsBean(userName, propStatusBean.getCondrIDSEQ(), conteIdseq, "Property");
-							if (propIdseq != null && !propIdseq.equals("")) {
-								dec.setDEC_PROPL_IDSEQ(propIdseq);
-								logger.debug("At Line 6089 of InsACService.java DEC_PROPL_IDSEQ"+propIdseq+"DEC_PROP_CONDR_IDSEQ"+propStatusBean.getCondrIDSEQ());
+				// GF30681 ---- end new CDR rule !!!
+				// begin GF33178
+				else {
+					cdrName = cdrName.replaceAll("::", ":");
+					strInValid = checkDECUniqueCDRName(cdrName);
+					if (strInValid != null && !strInValid.equals("")) {
+						sReturnCode = strInValid;
+					}
+				}
+				// end GF33178
+			}
+
+			if (sReturnCode != null && !sReturnCode.equals("")) { // begin of
+																	// GF30681
+																	// final
+																	// duplicate
+																	// check
+																	// (new)
+				// do nothing
+				logger.info("Exising DEC found with CDR!");
+			} else { // existing check continues
+				if (checkValidityOC.equals("Yes")) {
+					// set OC if it is null
+					if ((vObjectClass != null && vObjectClass.size() > 0)) {
+						if (!ocStatusBean.isEvsBeanExists()) {
+							if (ocStatusBean.isCondrExists()) {
+								dec.setDEC_OC_CONDR_IDSEQ(ocStatusBean
+										.getCondrIDSEQ());
+								// Create Object Class
+								String ocIdseq = this.createEvsBean(userName,
+										ocStatusBean.getCondrIDSEQ(),
+										conteIdseq, "Object Class");
+								if (ocIdseq != null && !ocIdseq.equals("")) {
+									dec.setDEC_OCL_IDSEQ(ocIdseq);
+									logger.debug("At Line 6044 of InsACService.java DEC_OCL_IDSEQ"
+											+ ocIdseq
+											+ "DEC_OC_CONDR_IDSEQ"
+											+ ocStatusBean.getCondrIDSEQ());
+								}
+							} else {
+								// Create Condr
+								String condrIdseq = this.createCondr(
+										vObjectClass,
+										ocStatusBean.isAllConceptsExists());
+								String ocIdseq = "";
+								// Create Object Class
+								if (condrIdseq != null
+										&& !condrIdseq.equals("")) {
+									dec.setDEC_OC_CONDR_IDSEQ(condrIdseq);
+									logger.debug("At Line 6053 DEC_OC_CONDR_IDSEQ"
+											+ condrIdseq);
+									ocIdseq = this.createEvsBean(userName,
+											condrIdseq, conteIdseq,
+											"Object Class");
+								}
+								if (ocIdseq != null && !ocIdseq.equals("")) {
+									dec.setDEC_OCL_IDSEQ(ocIdseq);
+									logger.debug("At Line 6058 of InsACService.java DEC_OCL_IDSEQ"
+											+ ocIdseq);
+								}
 							}
+
 						} else {
-							// Create Condr
-							String condrIdseq = this.createCondr(vProperty, propStatusBean.isAllConceptsExists());
-							String propIdseq = "";
-							// Create Property
-							if (condrIdseq != null && !condrIdseq.equals("")) {
-								dec.setDEC_PROP_CONDR_IDSEQ(condrIdseq);
-								logger.debug("At Line 6098 of InsACService.java DEC_PROP_CONDR_IDSEQ"+condrIdseq);
-								propIdseq = this.createEvsBean(userName, condrIdseq, conteIdseq,"Property");
-							}
-							if (propIdseq != null && !propIdseq.equals("")) {
-								dec.setDEC_PROPL_IDSEQ(propIdseq);
-								logger.debug("At Line 6103 of InsACService.java DEC_PROPL_IDSEQ"+propIdseq);
+							if (ocStatusBean.isNewVersion()) {
+								if (ocStatusBean.getEvsBeanIDSEQ() != null
+										&& !ocStatusBean.getEvsBeanIDSEQ()
+												.equals("")) {
+									String newID = "";
+									newID = this.setOC_PROP_REP_VERSION(
+											ocStatusBean.getEvsBeanIDSEQ(),
+											"ObjectClass");
+									if (newID != null && !newID.equals("")) {
+										dec.setDEC_OC_CONDR_IDSEQ(ocStatusBean
+												.getCondrIDSEQ());
+										dec.setDEC_OCL_IDSEQ(newID);
+									}
+								}
+							} else {
+								dec.setDEC_OC_CONDR_IDSEQ(ocStatusBean
+										.getCondrIDSEQ());
+								dec.setDEC_OCL_IDSEQ(ocStatusBean
+										.getEvsBeanIDSEQ());
 							}
 						}
-	       	 }else{
-           		if (propStatusBean.isNewVersion()) {
-         	        if (propStatusBean.getEvsBeanIDSEQ() != null && !propStatusBean.getEvsBeanIDSEQ().equals("")){
-         	             String newID = "";
-         	             newID = this.setOC_PROP_REP_VERSION(propStatusBean.getEvsBeanIDSEQ(), "Property");
-         	             if (newID != null && !newID.equals("")){
-         	            	dec.setDEC_PROP_CONDR_IDSEQ(propStatusBean.getCondrIDSEQ());
-         	                dec.setDEC_PROPL_IDSEQ(newID);
-         	             }
-         	          }
-				} else {
-           		     dec.setDEC_PROP_CONDR_IDSEQ(propStatusBean.getCondrIDSEQ());
-           		     dec.setDEC_PROPL_IDSEQ(propStatusBean.getEvsBeanIDSEQ());
+					}
 				}
-           	 }
-         }
-         }
-    	 sReturnCode = this.setDEC(sAction, dec, sInsertFor, oldDEC);
-		} 	//end of GF30681 final duplicate check (new)
-    	}catch(Exception e){
-    		logger.error("ERROR in InsACService-setDEC for other : "+ e.toString(), e);
+				if (checkValidityProp.equals("Yes")) {
+					// set property if it is null
+					if ((vProperty != null && vProperty.size() > 0)) {
+						if (!propStatusBean.isEvsBeanExists()) {
+							if (propStatusBean.isCondrExists()) {
+								dec.setDEC_PROP_CONDR_IDSEQ(propStatusBean
+										.getCondrIDSEQ());
+								// Create Property
+								String propIdseq = this.createEvsBean(userName,
+										propStatusBean.getCondrIDSEQ(),
+										conteIdseq, "Property");
+								if (propIdseq != null && !propIdseq.equals("")) {
+									dec.setDEC_PROPL_IDSEQ(propIdseq);
+									logger.debug("At Line 6089 of InsACService.java DEC_PROPL_IDSEQ"
+											+ propIdseq
+											+ "DEC_PROP_CONDR_IDSEQ"
+											+ propStatusBean.getCondrIDSEQ());
+								}
+							} else {
+								// Create Condr
+								String condrIdseq = this.createCondr(vProperty,
+										propStatusBean.isAllConceptsExists());
+								String propIdseq = "";
+								// Create Property
+								if (condrIdseq != null
+										&& !condrIdseq.equals("")) {
+									dec.setDEC_PROP_CONDR_IDSEQ(condrIdseq);
+									logger.debug("At Line 6098 of InsACService.java DEC_PROP_CONDR_IDSEQ"
+											+ condrIdseq);
+									propIdseq = this.createEvsBean(userName,
+											condrIdseq, conteIdseq, "Property");
+								}
+								if (propIdseq != null && !propIdseq.equals("")) {
+									dec.setDEC_PROPL_IDSEQ(propIdseq);
+									logger.debug("At Line 6103 of InsACService.java DEC_PROPL_IDSEQ"
+											+ propIdseq);
+								}
+							}
+						} else {
+							if (propStatusBean.isNewVersion()) {
+								if (propStatusBean.getEvsBeanIDSEQ() != null
+										&& !propStatusBean.getEvsBeanIDSEQ()
+												.equals("")) {
+									String newID = "";
+									newID = this.setOC_PROP_REP_VERSION(
+											propStatusBean.getEvsBeanIDSEQ(),
+											"Property");
+									if (newID != null && !newID.equals("")) {
+										dec.setDEC_PROP_CONDR_IDSEQ(propStatusBean
+												.getCondrIDSEQ());
+										dec.setDEC_PROPL_IDSEQ(newID);
+									}
+								}
+							} else {
+								dec.setDEC_PROP_CONDR_IDSEQ(propStatusBean
+										.getCondrIDSEQ());
+								dec.setDEC_PROPL_IDSEQ(propStatusBean
+										.getEvsBeanIDSEQ());
+							}
+						}
+					}
+				}
+				sReturnCode = this.setDEC(sAction, dec, sInsertFor, oldDEC);
+			} // end of GF30681 final duplicate check (new)
+		} catch (Exception e) {
+			logger.error(
+					"ERROR in InsACService-setDEC for other : " + e.toString(),
+					e);
+			System.out.println("InsACService doSetDEC() exception: " + e);
 			m_classReq.setAttribute("retcode", "Exception");
-			this.storeStatusMsg("\\t Exception : Unable to update Data Element Concept attributes.");
-    	}
-    	return sReturnCode;
+			this.storeStatusMsg("\\t Exception : Unable to update Data Element Concept attributes."); // GF33182
+																										// tagged
+		}
+		return sReturnCode;
 	}
+
 	public String createCondr(Vector vConceptList, boolean isAllConceptsExists){
 		String condrIdseq = "";
 		try {
@@ -6335,7 +6439,7 @@ public class InsACService implements Serializable {
 		} catch (DBException e) {
 			logger.error("ERROR in InsACService-createCondr: "+ e.toString(), e);
 			m_classReq.setAttribute("retcode", "Exception");
-			this.storeStatusMsg("Exception Error : Unable to create Condr");
+			this.storeStatusMsg("Exception Error : Unable to create Condr. (3)");
 		}
 		return condrIdseq;
 	}
@@ -6422,7 +6526,7 @@ public class InsACService implements Serializable {
 			}
 			//if nothing found, create new oc or prop or rep term
 			if (resultList == null || resultList.size() < 1) {
-				statusBean.setStatusMessage("**  Creating a new "+type + " in " + Constants.DEFAULT_CONTEXT);	//caBIG to NCIP + GF32649
+				statusBean.setStatusMessage("**  Creating a new "+type + " in " + PropertyHelper.getDefaultContextName());	//GF32649
 				statusBean.setCondrExists(false);
 				statusBean.setEvsBeanExists(false);
 				logger.info("At Line 6222 of InsACService.java");
@@ -6470,7 +6574,7 @@ public class InsACService implements Serializable {
 					//if none are found in different context and condr exists, create new (oc or prop or rep term) in NCI
 					ResultVO vo = resultList.get(0);
 					if (vo.getCondr_IDSEQ() != null) {
-							statusBean.setStatusMessage("**  Creating a new "+type + " in " + Constants.DEFAULT_CONTEXT);	//caBIG to NCIP + GF32649
+							statusBean.setStatusMessage("**  Creating a new "+type + " in " + PropertyHelper.getDefaultContextName());	//GF32649
 							statusBean.setCondrExists(true);
 							statusBean.setCondrIDSEQ(vo.getCondr_IDSEQ());
 							statusBean.setEvsBeanExists(false);
@@ -6542,7 +6646,7 @@ public class InsACService implements Serializable {
 			
 			
 		} else {//if all the concepts does not exist
-			statusBean.setStatusMessage("**  Creating a new "+type + " in " + Constants.DEFAULT_CONTEXT);	//caBIG to NCIP + GF32649
+			statusBean.setStatusMessage("**  Creating a new "+type + " in " + PropertyHelper.getDefaultContextName());	//GF32649
 		}
          
         return statusBean;

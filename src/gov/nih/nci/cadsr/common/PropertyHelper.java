@@ -4,6 +4,7 @@ import gov.nih.nci.cadsr.cdecurate.util.CurationToolProperties;
 import gov.nih.nci.ncicb.cadsr.common.CaDSRUtil;
 
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.sql.Connection;
 import java.util.Map;
 import java.util.Properties;
@@ -24,8 +25,9 @@ public class PropertyHelper {
 	public static String LOGO_LINK;
 	public static String EMAIL_ID;
 	public static String EMAIL_PWD;
-	public static String DEFAULT_RAI = "'2.16.840.1.113883.3.26.2'";
-	
+	//GF32679
+	public static String DEFAULT_CONTEXT_NAME;
+
 	public static String getHELP_LINK() {
 		return HELP_LINK;
 	}
@@ -105,22 +107,23 @@ public class PropertyHelper {
         _logger.debug("PropertyHelper: " + _user + " property loaded.");
     }
     */
-	
+
 	/**
-	 * GF33095 NCI RAI for curation tool
+	 * GF32649 Default Context change for curation tool
 	 */
-	public static String getNciRegistryId() {
-		if(DEFAULT_RAI == null) {
+	public static String getDefaultContextName() {
+		if(DEFAULT_CONTEXT_NAME == null) {
 			try {
-				DEFAULT_RAI = CaDSRUtil.getNciRegistryIdNoCache();
-			} catch (Exception e) {
+				DEFAULT_CONTEXT_NAME = CaDSRUtil.getDefaultContextNameNoCache();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
 
-		System.out.println("****** DEFAULT_RAI = [" + DEFAULT_RAI + "] from cadsrutil.properties ******");
+		System.out.println("****** DEFAULT_CONTEXT_NAME = [" + DEFAULT_CONTEXT_NAME + "] from cadsrutil.properties ******");
 
-		return DEFAULT_RAI;
+		return DEFAULT_CONTEXT_NAME;
 	}
 
 }
