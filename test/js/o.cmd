@@ -1,1 +1,1 @@
-start /D.
+start /D"%~dp0"
