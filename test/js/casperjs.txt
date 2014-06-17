@@ -1,0 +1,22 @@
+Setup:
+
+Mandatory -
+
+https://www.python.org/ftp/python/2.7.7/python-2.7.7.msi
+cinst casperjs
+
+Optional -
+
+https://github.com/ebrehault/resurrectio
+
+Run (default browser is PhantomJS):
+
+casperjs [your script].js
+
+Run with a specific browser:
+
+N/A
+
+For more information:
+
+http://casperjs.readthedocs.org/en/latest/quickstart.html
