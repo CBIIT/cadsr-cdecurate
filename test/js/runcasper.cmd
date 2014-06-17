@@ -1,1 +1,1 @@
-casperjs functions-cas.js
+casperjs test functions-cas.js
