@@ -12,8 +12,8 @@ casper.on('page.error', function(msg, trace) {
     }
 });
 casper.test.begin('Resurrectio test', function(test) {
-//    casper.start('http://localhost:8080/cdecurate');
-    casper.start('https://cdecurate-dev.nci.nih.gov');
+    casper.start('http://localhost:8080/cdecurate');
+//    casper.start('https://cdecurate-dev.nci.nih.gov');
     casper.waitForSelector("#listSearchFor",
         function success() {
             test.assertExists("#listSearchFor");

@@ -50,3 +50,4 @@ ss.*
 *ds.xml
 DEV.build.properties
 sql.*
+test/js/runcasper.cmd
