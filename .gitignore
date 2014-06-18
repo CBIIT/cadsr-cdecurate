@@ -47,6 +47,7 @@ ss.*
 ?
 ??
 *.cmd
+*.cmd~
 *ds.xml
 DEV.build.properties
 sql.*
