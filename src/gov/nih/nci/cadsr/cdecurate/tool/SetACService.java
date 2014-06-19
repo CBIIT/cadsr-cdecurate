@@ -650,7 +650,7 @@ public class SetACService implements Serializable
 				DEC_Bean oldDEC = (DEC_Bean)session.getAttribute("oldDECBean");
 				if (oldDEC != null && sDECAction.equals("Edit"))
 				{
-					String oName = oldDEC.getDEC_PREFERRED_NAME();
+					String oName = oldDEC.getDEC_LONG_NAME();	//oldDEC.getDEC_PREFERRED_NAME();	//JR1036 do not use preferred name!
 					String oStatus = oldDEC.getDEC_ASL_NAME();
 					strInValid = strInValid + checkNameDiffForReleased(oName, s, oStatus);
 				}
