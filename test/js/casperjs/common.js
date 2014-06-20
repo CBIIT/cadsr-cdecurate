@@ -91,7 +91,7 @@ exports.connect = function(caspermod, user) {
         });
     casper.waitForSelector("form[name=LoginForm] input[type=submit][value='Login']",
         function success() {
-            casper.test.assertExists("form[name=LoginForm] input[type=submit][value='Login']", "Login STEP 4");
+            casper.test.assertExists("form[name=LoginForm] input[type=submit][value='Login']", "Login STEP 4 Logged in!");
             this.click("form[name=LoginForm] input[type=submit][value='Login']");
         },
         function fail() {

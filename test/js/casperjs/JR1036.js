@@ -18,8 +18,6 @@ cdecurate.init(caspermod, utils, user);
 casper.test.begin('JR1036 test', function(test) {
     var x = caspermod.selectXPath;
 
-//    casper.wait(1000);
-//    casper.echo("clicking on the menu ...");
     casper
         .then(function() {
             cdecurate.connect(caspermod, user);

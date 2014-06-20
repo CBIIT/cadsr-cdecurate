@@ -2,17 +2,40 @@
 /* Casper generated Thu Jun 19 2014 15:12:48 GMT-0400 (Eastern Daylight Time) */
 /*==============================================================================*/
 
-var x = require('casper').selectXPath;
-casper.options.viewportSize = {width: 1517, height: 714};
-casper.on('page.error', function(msg, trace) {
-    this.echo('Error: ' + msg, 'ERROR');
-    for(var i=0; i<trace.length; i++) {
-        var step = trace[i];
-        this.echo('   ' + step.file + ' (line ' + step.line + ')', 'ERROR');
-    }
-});
+var host, uri;
+var user = {
+    id: '',
+    password: '',
+    tier: ''
+};
+var caspermod = require('casper');
+var utils = require("utils");
+var cdecurate = require("./common.js");
+
+cdecurate.init(caspermod, utils, user);
+
 casper.test.begin('Resurrectio test', function(test) {
-    casper.start('https://cdecurate-dev.nci.nih.gov/cdecurate/NCICurationServlet?reqType=homePage');
+    casper
+        .then(function() {
+            cdecurate.connect(caspermod, user);
+        })
+        .then(function() {
+            this.capture('login.png', {
+                top: 0,
+                left: 0,
+                width: casper.options.viewportSize.width,
+                height: casper.options.viewportSize.height
+            });
+            //===click on the "Create" menu
+            //this.click(x("/html/body/div[3]/table/tbody/tr[1]/td[2]/table/tbody/tr/td[2]"));  //===#deprecated - only for production as at 6/19/2014
+        })
+        .then(function() {
+            //===click on the "Data Element Concept" menu item
+//            this.click(x('//*[@id="createMenu"]/dl[2]/dt[2]'));
+        })
+    ;
+
+//    casper.start('https://cdecurate-dev.nci.nih.gov/cdecurate/NCICurationServlet?reqType=homePage');
     casper.waitForSelector("#listSearchFor",
         function success() {
             test.assertExists("#listSearchFor");
@@ -54,30 +77,8 @@ casper.test.begin('Resurrectio test', function(test) {
         });
     casper.waitForSelector("input[name='keyword']",
         function success() {
+            this.capture('v.png');
             this.sendKeys("input[name='keyword']", "*\r");
-        },
-        function fail() {
-            test.assertExists("input[name='keyword']");
-        });
-    casper.waitForSelector("form[name=searchParmsForm] input[name='keyword']",
-        function success() {
-            test.assertExists("form[name=searchParmsForm] input[name='keyword']");
-            this.click("form[name=searchParmsForm] input[name='keyword']");
-        },
-        function fail() {
-            test.assertExists("form[name=searchParmsForm] input[name='keyword']");
-        });
-    casper.waitForSelector("form[name=searchParmsForm] input[name='keyword']",
-        function success() {
-            test.assertExists("form[name=searchParmsForm] input[name='keyword']");
-            this.click("form[name=searchParmsForm] input[name='keyword']");
-        },
-        function fail() {
-            test.assertExists("form[name=searchParmsForm] input[name='keyword']");
-        });
-    casper.waitForSelector("input[name='keyword']",
-        function success() {
-            this.sendKeys("input[name='keyword']", "\r");
         },
         function fail() {
             test.assertExists("input[name='keyword']");
