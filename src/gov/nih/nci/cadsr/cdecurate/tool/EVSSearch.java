@@ -4375,10 +4375,15 @@ public class EVSSearch implements Serializable {
                                         AssociatedConcept[] acl = assoc.getAssociatedConcepts().getAssociatedConcept();
                                         for (int j = 0; j < acl.length; j++) {
                                             AssociatedConcept ac = acl[j];
-                                            if (resolveConcepts)
-                                                ret.put(ac.getCode(), ac);
-                                            else
-                                                ret.put(ac.getCode(), ac.getEntityDescription().getContent());
+                                            if(ac != null && ac.getCode() != null) {	//JR1040 nothing to do with the ticket, just avoiding NPE
+	                                            if (resolveConcepts)
+	                                                ret.put(ac.getCode(), ac);
+	                                            else {
+	                                            	if(ac.getEntityDescription() != null && ac.getEntityDescription().getContent() != null) {	//JR1040 nothing to do with the ticket, just avoiding NPE
+	                                            		ret.put(ac.getCode(), ac.getEntityDescription().getContent());
+	                                            	}
+	                                            }
+                                            }
                                         }
                                 }
                             }    
