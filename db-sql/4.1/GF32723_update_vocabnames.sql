@@ -21,8 +21,8 @@ Update sbrext.tool_options_view_ext set VALUE = 'ZFIN' where TOOL_NAME = 'CURATI
 Insert into SBREXT.TOOL_OPTIONS_VIEW_EXT (TOOL_NAME,PROPERTY,VALUE) values ('CURATION','EVS.VOCAB.42.DISPLAY','MA');
 Update sbrext.tool_options_view_ext set VALUE = 'MA' where TOOL_NAME = 'CURATION' and PROPERTY = 'EVS.VOCAB.42.DISPLAY';
 
-Insert into SBREXT.TOOL_OPTIONS_VIEW_EXT (TOOL_NAME,PROPERTY,VALUE) values ('CURATION','EVS.VOCAB.44.DISPLAY','CIBI');
-Update sbrext.tool_options_view_ext set VALUE = 'CIBI' where TOOL_NAME = 'CURATION' and PROPERTY = 'EVS.VOCAB.44.DISPLAY';
+Insert into SBREXT.TOOL_OPTIONS_VIEW_EXT (TOOL_NAME,PROPERTY,VALUE) values ('CURATION','EVS.VOCAB.44.DISPLAY','ChEBI');
+Update sbrext.tool_options_view_ext set VALUE = 'ChEBI' where TOOL_NAME = 'CURATION' and PROPERTY = 'EVS.VOCAB.44.DISPLAY';
 
 commit;
 
