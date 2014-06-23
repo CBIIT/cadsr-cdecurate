@@ -17,7 +17,7 @@ SQL> @GF32723_update_vocabnames.sql
 1 row updated.
 
 
-1 row updated.
+0 rows updated.
 
 
 1 row updated.
@@ -54,6 +54,21 @@ SQL> @GF32723_update_vocabnames.sql
 
 
 1 row updated.
+
+
+1 row updated.
+
+
+1 row updated.
+
+
+1 row created.
+
+
+1 row updated.
+
+
+1 row created.
 
 
 1 row updated.
@@ -230,13 +245,37 @@ PROPERTY
 VALUE
 --------------------------------------------------------------------------------
 
-ICD10CM
+ICD-10-CM
 
 CURATION
 EVS.VOCAB.18.DISPLAY
 LNC
 
+CURATION
 
-18 rows selected.
+TOOL_NAME
+------------------------------
+PROPERTY
+--------------------------------------------------------------------------------
+
+VALUE
+--------------------------------------------------------------------------------
+
+EVS.VOCAB.42.DISPLAY
+MA
+
+CURATION
+EVS.VOCAB.44.DISPLAY
+CIBI
+
+
+21 rows selected.
+
+
+DECODE(A.COUNT,21,'PASSED:)','FAILED-THERESHOULDBE21ENTRIESBUT'||A.COUNT||'WERER
+
+--------------------------------------------------------------------------------
+
+PASSED :)
 
 SQL>
