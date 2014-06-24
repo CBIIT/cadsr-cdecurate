@@ -10,20 +10,16 @@ Oracle Database 10g Enterprise Edition Release 10.2.0.5.0 - 64bit Production
 With the Partitioning, Data Mining and Real Application Testing options
 
 SQL> @GF32723_update_vocabnames.sql
-
-1 row updated.
-
-
-1 row updated.
-
-
-0 rows updated.
+tool_options_view_ext_backup as
+*
+ERROR at line 2:
+ORA-00955: name is already used by an existing object
 
 
-1 row updated.
-
-
-1 row updated.
+tool_options_ext_backup as
+*
+ERROR at line 2:
+ORA-00955: name is already used by an existing object
 
 
 1 row updated.
@@ -31,6 +27,45 @@ SQL> @GF32723_update_vocabnames.sql
 
 1 row updated.
 
+Insert into SBREXT.TOOL_OPTIONS_VIEW_EXT (TOOL_NAME,PROPERTY,VALUE) values ('CUR
+ATION','EVS.VOCAB.10.DISPLAY','HL7')
+*
+ERROR at line 1:
+ORA-00001: unique constraint (SBREXT.TOOL_OPTIONS_UNIQ) violated
+
+
+
+1 row updated.
+
+
+0 rows deleted.
+
+
+1 row updated.
+
+Insert into SBREXT.TOOL_OPTIONS_VIEW_EXT (TOOL_NAME,PROPERTY,VALUE) values ('CUR
+ATION','EVS.VOCAB.08.DISPLAY','HGNC')
+*
+ERROR at line 1:
+ORA-00001: unique constraint (SBREXT.TOOL_OPTIONS_UNIQ) violated
+
+
+
+1 row updated.
+
+
+1 row updated.
+
+
+1 row updated.
+
+Insert into SBREXT.TOOL_OPTIONS_VIEW_EXT (TOOL_NAME,PROPERTY,VALUE) values ('CUR
+ATION','EVS.VOCAB.16.DISPLAY','ICD-10-CM')
+*
+ERROR at line 1:
+ORA-00001: unique constraint (SBREXT.TOOL_OPTIONS_UNIQ) violated
+
+
 
 1 row updated.
 
@@ -62,13 +97,38 @@ SQL> @GF32723_update_vocabnames.sql
 1 row updated.
 
 
-1 row created.
+1 row updated.
+
+Insert into SBREXT.TOOL_OPTIONS_VIEW_EXT (TOOL_NAME,PROPERTY,VALUE) values ('CUR
+ATION','EVS.VOCAB.42.DISPLAY','MA')
+*
+ERROR at line 1:
+ORA-00001: unique constraint (SBREXT.TOOL_OPTIONS_UNIQ) violated
+
+
+Insert into SBREXT.TOOL_OPTIONS_VIEW_EXT (TOOL_NAME,PROPERTY,VALUE) values ('CUR
+ATION','EVS.VOCAB.42.EVSNAME','Anatomical Dictionary for the Adult Mouse')
+*
+ERROR at line 1:
+ORA-00001: unique constraint (SBREXT.TOOL_OPTIONS_UNIQ) violated
+
 
 
 1 row updated.
 
+Insert into SBREXT.TOOL_OPTIONS_VIEW_EXT (TOOL_NAME,PROPERTY,VALUE) values ('CUR
+ATION','EVS.VOCAB.44.DISPLAY','ChEBI')
+*
+ERROR at line 1:
+ORA-00001: unique constraint (SBREXT.TOOL_OPTIONS_UNIQ) violated
 
-1 row created.
+
+Insert into SBREXT.TOOL_OPTIONS_VIEW_EXT (TOOL_NAME,PROPERTY,VALUE) values ('CUR
+ATION','EVS.VOCAB.44.EVSNAME','Chemical Entities of Biological Interest')
+*
+ERROR at line 1:
+ORA-00001: unique constraint (SBREXT.TOOL_OPTIONS_UNIQ) violated
+
 
 
 1 row updated.
@@ -201,7 +261,7 @@ EVS.VOCAB.06.DISPLAY
 GO
 
 CURATION
-EVS.VOCAB.09.DISPLAY
+EVS.VOCAB.08.DISPLAY
 HGNC
 
 
@@ -214,29 +274,13 @@ VALUE
 --------------------------------------------------------------------------------
 
 CURATION
-EVS.VOCAB.08.DISPLAY
-HUGO
-
-CURATION
 EVS.VOCAB.12.DISPLAY
-ICD9CM
-
-TOOL_NAME
-------------------------------
-PROPERTY
---------------------------------------------------------------------------------
-
-VALUE
---------------------------------------------------------------------------------
-
+ICD-9-CM
 
 CURATION
 EVS.VOCAB.14.DISPLAY
 ICD10
 
-CURATION
-EVS.VOCAB.16.DISPLAY
-
 TOOL_NAME
 ------------------------------
 PROPERTY
@@ -245,11 +289,27 @@ PROPERTY
 VALUE
 --------------------------------------------------------------------------------
 
+
+CURATION
+EVS.VOCAB.16.DISPLAY
 ICD-10-CM
 
 CURATION
 EVS.VOCAB.18.DISPLAY
+
+TOOL_NAME
+------------------------------
+PROPERTY
+--------------------------------------------------------------------------------
+
+VALUE
+--------------------------------------------------------------------------------
+
 LNC
+
+CURATION
+EVS.VOCAB.42.DISPLAY
+MA
 
 CURATION
 
@@ -261,12 +321,12 @@ PROPERTY
 VALUE
 --------------------------------------------------------------------------------
 
-EVS.VOCAB.42.DISPLAY
-MA
+EVS.VOCAB.44.DISPLAY
+ChEBI
 
 CURATION
-EVS.VOCAB.44.DISPLAY
-CIBI
+EVS.VOCAB.10.DISPLAY
+HL7
 
 
 21 rows selected.
