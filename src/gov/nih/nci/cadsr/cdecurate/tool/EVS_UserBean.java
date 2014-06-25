@@ -19,6 +19,7 @@ import gov.nih.nci.system.applicationservice.EVSApplicationService;*/
 import gov.nih.nci.system.client.ApplicationServiceProvider;
 
 import java.io.Serializable;
+import java.util.Arrays;
 import java.util.Hashtable;
 import java.util.Vector;
 
@@ -954,17 +955,19 @@ public final class EVS_UserBean implements Serializable
       }
 
       //get vocab names from the evs and make sure they match with the cadsr.
-      java.util.List arrEVSVocab = this.getEVSVocabs(eURL);
+      java.util.List arrEVSVocab = this.getEVSVocabs(eURL);		//JR1040 must be part of this list
       if (vocabname != null && arrEVSVocab != null)
       {
         for (int i = 0; i<vocabname.size(); i++)
         {
           String sVocab = (String)vocabname.elementAt(i);
           //compare with evs vocab names  and also the vocab name that only does meta search
+          System.out.println("Comparing [" + sVocab + "] against [" +  Arrays.toString(arrEVSVocab.toArray()) + "]");
+          System.out.println("Comparing [" + sVocab + "] against [" +  Arrays.toString(metavocab.toArray()) + "]");
           if (!arrEVSVocab.contains(sVocab) && !metavocab.contains(sVocab))
           {
             logger.error(sVocab + " from caDSR does not contain in EVS Vocab list.");
-            vocabname.removeElement(sVocab);  //put this back later
+            vocabname.removeElement(sVocab);  //put this back later //JR1040 should not be removed
             vocabdisp.removeElementAt(i);
           }
         }
@@ -1054,7 +1057,7 @@ public final class EVS_UserBean implements Serializable
           hvoc.put(sVocab, vBean);
         }
       }
-      this.setVocab_Attr(hvoc);
+      this.setVocab_Attr(hvoc);			//JR1040 vocab name must be in this list for it to be displayed!!!
       servlet.sessionData.EvsUsrBean = this;    //session.setAttribute("EvsUserBean", this);
 
     }
