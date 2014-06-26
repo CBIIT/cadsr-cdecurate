@@ -20,7 +20,11 @@ import gov.nih.nci.system.client.ApplicationServiceProvider;
 
 import java.io.Serializable;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Hashtable;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.Vector;
 
 import javax.servlet.http.HttpServletRequest;
@@ -28,8 +32,11 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.LexGrid.LexBIG.DataModel.Collections.CodingSchemeRenderingList;
 import org.LexGrid.LexBIG.DataModel.Core.CodingSchemeSummary;
+import org.LexGrid.LexBIG.DataModel.Core.CodingSchemeVersionOrTag;
 import org.LexGrid.LexBIG.DataModel.InterfaceElements.CodingSchemeRendering;
+import org.LexGrid.LexBIG.Extensions.Generic.MappingExtension;
 import org.LexGrid.LexBIG.LexBIGService.LexBIGService;
+import org.LexGrid.codingSchemes.CodingScheme;
 import org.apache.log4j.Logger;
 
 /**
@@ -823,9 +830,91 @@ public final class EVS_UserBean implements Serializable
     //after getting this out of hashtable, check if the key exists for each vocab before
   } */
 
+  	/**
+  	 * LexEVS 6.x style coding scheme retrieval.
+  	 * @param eURL
+  	 * @return
+  	 */
+	public List getFormalName2CodingSchemeNameMap(String eURL) {
+		java.util.List<String> vocabList = null;
+
+		long ms = System.currentTimeMillis();
+		//HashMap map = new HashMap();
+		boolean includeInactive = false;
+		try {
+			LexBIGService lbSvc = (LexBIGService) ApplicationServiceProvider.getApplicationServiceFromUrl(eURL, "EvsServiceInfo");
+			if (lbSvc == null) {
+				System.out.println("WARNING: Unable to connect to instantiate LexBIGService ???");
+				return null;
+			}
+			CodingSchemeRenderingList csrl = lbSvc.getSupportedCodingSchemes();
+			int count = csrl.getCodingSchemeRenderingCount();
+			System.out.println("CodingSchemeRenderingList count: " + count);
+			for (int i = 0; i < count; i++) {
+				int j = i + 1;
+				CodingSchemeRendering csr = csrl.getCodingSchemeRendering(i);
+				CodingSchemeSummary css = csr.getCodingSchemeSummary();
+				boolean ismapping = isMapping(eURL, css.getFormalName(), css.getRepresentsVersion());
+				if (!ismapping) {
+					CodingScheme cs = null;
+					boolean isResolvedValueSet = false;
+					try {
+						CodingSchemeVersionOrTag vt = new CodingSchemeVersionOrTag();
+						vt.setVersion(css.getRepresentsVersion());
+						cs = lbSvc.resolveCodingScheme(css.getFormalName(), vt);
+						if (cs != null) {
+							// isResolvedValueSet =
+							// isResolvedValueSetCodingScheme(cs) ;
+							if (!isResolvedValueSet) {
+								//map.put(css.getFormalName(), cs.getCodingSchemeName() + " (URI: " + css.getCodingSchemeURI() + ")");
+								vocabList.add(css.getFormalName());
+								System.out.println(css.getFormalName() + " --> " + cs.getCodingSchemeName() + " (URI: " + css.getCodingSchemeURI() + ")");
+							}
+						}
+					} catch (Exception ex) {
+						ex.printStackTrace();
+						isResolvedValueSet = false;
+					}
+				}
+			}
+			//dumpHashMap(map);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		System.out.println("Run time (ms): " + (System.currentTimeMillis() - ms));
+		return vocabList;
+	}
+
+	public boolean isMapping(String eURL, String scheme, String version) {
+		CodingSchemeVersionOrTag csvt = new CodingSchemeVersionOrTag();
+		if (version != null)
+			csvt.setVersion(version);
+		try {
+			LexBIGService distributed = (LexBIGService) ApplicationServiceProvider.getApplicationServiceFromUrl(eURL, "EvsServiceInfo");
+			MappingExtension mappingExtension = (MappingExtension) distributed.getGenericExtension("MappingExtension");
+			boolean isMappingCS = mappingExtension.isMappingCodingScheme(scheme, csvt);
+			return isMappingCS;
+		} catch (Exception ex) {
+			return false;
+		}
+	}
+
+	private static void dumpHashMap(HashMap<String, String> hmap) {
+		if (hmap == null)
+			return;
+		int k = 0;
+		System.out.println("\n");
+		Set<Map.Entry<String, String>> set = hmap.entrySet();
+		for (Map.Entry<String, String> me : set) {
+			k = k + 1;
+			System.out.println("$$$$$$$$$ dumpHasMap $$$$$$$$$ (" + k + ")" + me.getKey() + ": " + me.getValue());
+		}
+	}
 
   public java.util.List getEVSVocabs(String eURL)
   {
+	  //HashMap newHM = getFormalName2CodingSchemeNameMap(eURL);	//JR1040 keep for test
+	  
       //ApplicationService evsService = ApplicationService.getRemoteInstance(eURL);
 	  java.util.List<String> vocabList = null;
 	  try
@@ -955,7 +1044,7 @@ public final class EVS_UserBean implements Serializable
       }
 
       //get vocab names from the evs and make sure they match with the cadsr.
-      java.util.List arrEVSVocab = this.getEVSVocabs(eURL);		//JR1040 must be part of this list
+      java.util.List arrEVSVocab = getFormalName2CodingSchemeNameMap(eURL);	//this.getEVSVocabs(eURL);		//JR1040 replaced with 6.x codes
       if (vocabname != null && arrEVSVocab != null)
       {
         for (int i = 0; i<vocabname.size(); i++)
