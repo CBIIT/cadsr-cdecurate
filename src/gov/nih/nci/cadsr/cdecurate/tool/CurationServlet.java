@@ -406,7 +406,7 @@ public class CurationServlet
             String errMsg = getDBConnectMessage("Session Terminated");
 			DataManager.setAttribute(session, "ErrorMessage", errMsg);
 			// get the menu action from request
-			String mnReq = (String) m_classReq.getParameter("serMenuAct");
+			String mnReq = /*SECURITYTEAM-299*/StringUtil.cleanJavascriptAndHtml((String) m_classReq.getParameter("serMenuAct"));
 			if (mnReq == null)
 			mnReq = "";
 			DataManager.setAttribute(session, "serMenuAct", mnReq);
@@ -607,7 +607,7 @@ public class CurationServlet
                                                                                     // internal processing error.";
                         DataManager.setAttribute(session, "ErrorMessage", errMsg);
                         // get the menu action from request
-                        String mnReq = (String) m_classReq.getParameter("serMenuAct");
+                        String mnReq = /*SECURITYTEAM-299*/StringUtil.cleanJavascriptAndHtml((String) m_classReq.getParameter("serMenuAct"));
                         if (mnReq == null)
                             mnReq = "";
                         DataManager.setAttribute(session, "serMenuAct", mnReq);
@@ -2385,7 +2385,7 @@ public class CurationServlet
                     String conOrder = (String) req.getParameter("rank");
                     if (conOrder != null && !conOrder.equals(""))
                         accBean.setRANK_ORDER(conOrder);
-                    String conPer = (String) req.getParameter("selPer");
+                    String conPer = /*SECURITYTEAM-299*/StringUtil.cleanJavascriptAndHtml((String) req.getParameter("selPer"));
                     if (conPer == null)
                         conPer = "";
                     accBean.setPERSON_IDSEQ(conPer);

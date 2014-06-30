@@ -149,4 +149,13 @@ public class StringUtil {
 		
 		return stringToClean;
 	}
+	
+	public static String[] cleanJavascriptAndHtmlArray(String[] stringToClean) {
+		if(stringToClean != null && stringToClean.length > 0) {
+			for(int i=0;i<stringToClean.length;i++) {
+				stringToClean[i] = cleanJavascriptAndHtml(stringToClean[i]);
+			}
+		}
+		return stringToClean;
+	}
 }

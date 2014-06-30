@@ -1318,7 +1318,7 @@ public class SearchServlet extends CurationServlet {
         String sKeyword = (String) m_classReq.getParameter("keyword"); // the keyword
         String sContext = (String) m_classReq.getParameter("listContextFilter"); // filter by context
         String sContextUse = (String) m_classReq.getParameter("rContextUse"); // filter by contextUse
-        String sVersion = (String) m_classReq.getParameter("rVersion"); // filter by version
+        String sVersion = /*SECURITYTEAM-299*/StringUtil.cleanJavascriptAndHtml((String) m_classReq.getParameter("rVersion")); // filter by version
         String sVDTypeEnum = (String) m_classReq.getParameter("typeEnum"); // filter by value domain type enumerated
         String sVDTypeNonEnum = (String) m_classReq.getParameter("typeNonEnum"); // filter by value domain type non
                                                                             // enumerated

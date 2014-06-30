@@ -152,7 +152,7 @@ public class GetACSearch implements Serializable
                 if (sContextUse == null)
                     sContextUse = "";
                 // filter by version
-                String sVersion = (String) req.getParameter("rVersion");
+                String sVersion = /*SECURITYTEAM-299*/StringUtil.cleanJavascriptAndHtml((String) req.getParameter("rVersion"));
                 DataManager.setAttribute(session, "serVersion", sVersion);
                 // get the version number if other
                 String txVersion = "";
@@ -2537,9 +2537,9 @@ public class GetACSearch implements Serializable
             Vector vStatusCD = (Vector) session.getAttribute("vStatusCD");
             String sSelectList[] = null;
             if (sAttr.equals("WFStatus"))
-                sSelectList = m_classReq.getParameterValues("listStatusFilter");
+                sSelectList = /*SECURITYTEAM-299*/StringUtil.cleanJavascriptAndHtmlArray(m_classReq.getParameterValues("listStatusFilter"));
             else
-                sSelectList = m_classReq.getParameterValues("listMultiContextFilter");
+                sSelectList = /*SECURITYTEAM-299*/StringUtil.cleanJavascriptAndHtmlArray(m_classReq.getParameterValues("listMultiContextFilter"));
             boolean bAllValues = false;
             boolean bNoTestValues = false;
             if (sSelectList == null)
@@ -2654,7 +2654,7 @@ public class GetACSearch implements Serializable
             Vector vStatusVD = (Vector) session.getAttribute("vStatusVD");
             Vector vStatusVM = (Vector) session.getAttribute("vStatusVM");
             Vector vStatusCD = (Vector) session.getAttribute("vStatusCD");
-            String sStatusList[] = req.getParameterValues("listStatusFilter");
+            String sStatusList[] = /*SECURITYTEAM-299*/StringUtil.cleanJavascriptAndHtmlArray(req.getParameterValues("listStatusFilter"));
             boolean bAllStatus = false;
             if (sStatusList == null)
                 bAllStatus = true;

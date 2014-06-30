@@ -183,7 +183,7 @@ public class VMServlet extends GenericServlet
     
     //get the keyword for filter
     String menuAction = (String) session.getAttribute(Session_Data.SESSION_MENU_ACTION);
-    String sKeyword = (String)req.getParameter("keyword");
+    String sKeyword = /*SECURITYTEAM-299*/StringUtil.cleanJavascriptAndHtml((String)req.getParameter("keyword"));
       if (sKeyword == null)
             sKeyword = "";
       if (sKeyword.equals("") && !menuAction.equals("searchForCreate"))
@@ -251,7 +251,7 @@ private void setVersionValues(VMForm vmData,HttpServletRequest req, HttpSession 
 {
 	SetACService setAC = new SetACService(vmData.getCurationServlet());
 	// filter by version
-	String sVersion = (String) req.getParameter("rVersion");
+	String sVersion = /*SECURITYTEAM-299*/StringUtil.cleanJavascriptAndHtml((String) req.getParameter("rVersion"));
 	DataManager.setAttribute(session, "serVersion", sVersion);
 	// get the version number if other
 	String txVersion = "";

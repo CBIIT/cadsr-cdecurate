@@ -28,6 +28,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import gov.nih.nci.cadsr.common.Constants;
+import gov.nih.nci.cadsr.common.StringUtil;
 import gov.nih.nci.cadsr.common.TestUtil;
 import oracle.net.aso.e;
 
@@ -403,7 +404,7 @@ public class DataElementConceptServlet extends CurationServlet {
 		DataManager.setAttribute(session, "m_DE", m_DE);
 		this.clearBuildingBlockSessionAttributes(m_classReq, m_classRes);
 		String sDEC_ID = null;
-		String sDECid[] = m_classReq.getParameterValues("selDEC");
+		String sDECid[] = /*SECURITYTEAM-299*/StringUtil.cleanJavascriptAndHtmlArray(m_classReq.getParameterValues("selDEC"));
 		if (sDECid != null)
 			sDEC_ID = sDECid[0];
 		// get the dec bean for this id

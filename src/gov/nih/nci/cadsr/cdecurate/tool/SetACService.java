@@ -3664,7 +3664,7 @@ public class SetACService implements Serializable
 			{
 				m_DE.setDE_MIN_CDE_ID(sID);
 			}
-			String sDECid[] = req.getParameterValues("selDEC");
+			String sDECid[] = /*SECURITYTEAM-299*/StringUtil.cleanJavascriptAndHtmlArray(req.getParameterValues("selDEC"));
 			if(sDECid != null)
 			{
 				sID = sDECid[0];

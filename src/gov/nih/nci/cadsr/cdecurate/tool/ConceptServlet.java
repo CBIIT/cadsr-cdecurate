@@ -13,12 +13,15 @@
 package gov.nih.nci.cadsr.cdecurate.tool;
 
 import gov.nih.nci.cadsr.cdecurate.util.DataManager;
+import gov.nih.nci.cadsr.common.StringUtil;
 
 import java.io.Serializable;
 import java.util.Vector;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+
 import org.apache.log4j.Logger;
 
 /**
@@ -89,11 +92,11 @@ public class ConceptServlet implements Serializable
       data.setContextName(sContext);
       
       //get work flow status filter
-      String sStatusList[] = req.getParameterValues("listStatusFilter");
+      String sStatusList[] = /*SECURITYTEAM-299*/StringUtil.cleanJavascriptAndHtmlArray(req.getParameterValues("listStatusFilter"));
       data.setASLNameList(sStatusList);
       
       //get the keyword for filter
-      String sKeyword = (String)req.getParameter("keyword");
+      String sKeyword = /*SECURITYTEAM-299*/StringUtil.cleanJavascriptAndHtml((String)req.getParameter("keyword"));
       if (sKeyword == null) sKeyword = "";
       if (sSearchIn.equals("publicID"))
         data.setConID(sKeyword);
