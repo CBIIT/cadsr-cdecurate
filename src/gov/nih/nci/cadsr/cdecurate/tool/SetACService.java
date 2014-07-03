@@ -2915,8 +2915,9 @@ public class SetACService implements Serializable
         	//GF32788
         	sSQL="SELECT COUNT(*) FROM DATA_ELEMENT_CONCEPTS_VIEW DEC, CONTEXTS_VIEW CV" +
             	" WHERE DEC.CONTE_IDSEQ = CV.CONTE_IDSEQ AND DEC.VERSION = '" + sVersion + "' AND CV.NAME = '" + sContext + "' AND DEC.DEC_ID = '" + decID+"'"  +editSQL;
-        	retValue="Combination of Object Class, Property and context exists with different short name";
-        	//GF32788
+        	//retValue="Combination of Object Class, Property and context exists with different short name";
+        	retValue=""; //JR676 blank out due to https://tracker.nci.nih.gov/browse/CURATNTOOL-676
+        	//GF32788/https://tracker.nci.nih.gov/browse/CURATNTOOL-697
         }
         else 
 		//end GF33182
