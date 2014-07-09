@@ -9,9 +9,9 @@ package gov.nih.nci.cadsr.cdecurate.util;
 
 import gov.nih.nci.cadsr.cdecurate.database.Alternates;
 import gov.nih.nci.cadsr.cdecurate.ui.AltNamesDefsSession;
+import gov.nih.nci.cadsr.common.Constants;
 
 import java.io.BufferedReader;
-
 import java.io.BufferedReader;
 import java.text.CharacterIterator;
 import java.text.StringCharacterIterator;
@@ -135,5 +135,19 @@ public class AdministeredItemUtil {
 		}
 
 		return retVal;
+	}
+	
+	public static boolean isCreateNewVersionAction(String sAction, String sInsertFor, String hidAction) {
+		//String match1 = "INS";
+		//String match2 = "New";
+		String match3 = "newVersion";
+		boolean ret = false;
+		
+		if(//sAction != null && sInsertFor != null && sAction.equals(match1) && sInsertFor.equals(match2) && 
+				hidAction != null && hidAction.equals(match3)) {
+			ret = true;
+		}
+		
+		return ret;
 	}
 }

@@ -433,6 +433,7 @@ public class SearchServlet extends CurationServlet {
         	doAction();
         }
     	HttpSession session = m_classReq.getSession();
+    	session.setAttribute(Constants.NEW_VERSION_HID_ACTION, hidaction);	//GF33178 save it for JR676
         String actType = (String) m_classReq.getParameter("actSelected");
         String sSearchAC = (String) session.getAttribute("searchAC"); // get the selected component
         String sAction = (String) m_classReq.getParameter("pageAction");

@@ -13,6 +13,7 @@ package gov.nih.nci.cadsr.cdecurate.tool;
 import gov.nih.nci.cadsr.cdecurate.database.Alternates;
 import gov.nih.nci.cadsr.cdecurate.database.DBAccess;
 import gov.nih.nci.cadsr.cdecurate.database.SQLHelper;
+import gov.nih.nci.cadsr.cdecurate.util.AdministeredItemUtil;
 import gov.nih.nci.cadsr.cdecurate.util.DataManager;
 import gov.nih.nci.cadsr.common.Constants;
 import gov.nih.nci.cadsr.common.Database;
@@ -28,6 +29,7 @@ import gov.nih.nci.cadsr.persist.exception.DBException;
 import gov.nih.nci.cadsr.persist.oc.Object_Classes_Ext_Mgr;
 import gov.nih.nci.cadsr.persist.prop.Properties_Ext_Mgr;
 import gov.nih.nci.cadsr.persist.rep.Representations_Ext_Mgr;
+import gov.nih.nci.ncicb.cadsr.common.persistence.bc4j.AdministeredComponentsImpl;
 
 import java.io.Serializable;
 import java.sql.CallableStatement;
@@ -46,6 +48,8 @@ import java.util.Vector;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+
+
 
 
 
@@ -6260,24 +6264,27 @@ public class InsACService implements Serializable {
 			// GF30681 ---- begin new CDR rule !!!
 			// use the existing DEC if exists based on the new CDR for DEC
 			// DEC_Bean m_DEC = (DEC_Bean) session.getAttribute("m_DEC");
-			String cdrName = (String) session
-					.getAttribute(Constants.DEC_CDR_NAME);
-			if(cdrName != null) {	//avoid NPE during DEC update
-				String strInValid = checkDECUniqueCDRName(cdrName);
-				if (strInValid != null && !strInValid.equals("")) {
-					sReturnCode = strInValid;
-				}
-				// GF30681 ---- end new CDR rule !!!
-				// begin GF33178
-				else {
-					cdrName = cdrName.replaceAll("::", ":");
-					strInValid = checkDECUniqueCDRName(cdrName);
+			String hidAction = (String)session.getAttribute(Constants.NEW_VERSION_HID_ACTION);
+			if(!AdministeredItemUtil.isCreateNewVersionAction(sAction, sInsertFor, hidAction)) {
+				String cdrName = (String) session
+						.getAttribute(Constants.DEC_CDR_NAME);
+				if(cdrName != null) {	//avoid NPE during DEC update
+					String strInValid = checkDECUniqueCDRName(cdrName);
 					if (strInValid != null && !strInValid.equals("")) {
 						sReturnCode = strInValid;
 					}
+					// GF30681 ---- end new CDR rule !!!
+					// begin GF33178
+					else {
+						cdrName = cdrName.replaceAll("::", ":");
+						strInValid = checkDECUniqueCDRName(cdrName);
+						if (strInValid != null && !strInValid.equals("")) {
+							sReturnCode = strInValid;
+						}
+					}
+					// end GF33178
 				}
-				// end GF33178
-			}
+			} //end JR676 not related to the ticket but broken
 
 			if (sReturnCode != null && !sReturnCode.equals("")) { // begin of
 																	// GF30681

@@ -34,4 +34,7 @@ public class Constants {
 	public static final String COMP_TYPE = "SelectedComponentType";
 	public static final String OC_ALT_DEF = "GeneratedAltDefOC";
 	public static final String PROP_ALT_DEF = "GeneratedAltDefProp";
+	//JR676/GF33178
+	public static final String NEW_VERSION_HID_ACTION = "hidaction";
+
 }
