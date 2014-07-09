@@ -1,0 +1,31 @@
+SQL*Plus: Release 12.1.0.1.0 Production on Mon Jul 7 11:29:57 2014
+
+Copyright (c) 1982, 2013, Oracle.  All rights reserved.
+
+
+Connected to:
+Oracle Database 10g Enterprise Edition Release 10.2.0.5.0 - 64bit Production
+With the Partitioning, Data Mining and Real Application Testing options
+
+SQL> @update_evs_url.sql
+
+1 row updated.
+
+
+TOOL_NAME
+------------------------------
+PROPERTY
+--------------------------------------------------------------------------------
+
+VALUE
+--------------------------------------------------------------------------------
+
+EVSAPI
+URL
+http://lexevsapi61.nci.nih.gov/lexevsapi61
+
+
+
+Commit complete.
+
+SQL>
