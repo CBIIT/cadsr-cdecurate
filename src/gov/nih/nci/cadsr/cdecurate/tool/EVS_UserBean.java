@@ -16,6 +16,7 @@ package gov.nih.nci.cadsr.cdecurate.tool;
 /*import gov.nih.nci.evs.query.EVSQuery;
 import gov.nih.nci.evs.query.EVSQueryImpl;
 import gov.nih.nci.system.applicationservice.EVSApplicationService;*/
+import gov.nih.nci.cadsr.common.Security;
 import gov.nih.nci.evs.security.SecurityToken;
 import gov.nih.nci.system.client.ApplicationServiceProvider;
 
@@ -847,18 +848,27 @@ public final class EVS_UserBean implements Serializable
  }
 
  private static boolean isResolvedValueSetCodingScheme(CodingScheme cs) {
-     for (Property prop: cs.getProperties().getProperty()) {
-      if (prop.getPropertyName().equalsIgnoreCase(LexEVSValueSetDefinitionServices.RESOLVED_AGAINST_CODING_SCHEME_VERSION)) {
-       return true;
-      }
+     //6.1 version of the code
+//     for (Property prop: cs.getProperties().getProperty()) {
+//      if (prop.getPropertyName().equalsIgnoreCase(LexEVSValueSetDefinitionServices.RESOLVED_AGAINST_CODING_SCHEME_VERSION)) {
+//       return true;
+//      }
+//     }
+//     return false;
+    
+     //6.0 version of the code
+     String version=  cs.getRepresentsVersion();
+     //Resolved ValueSet versions are generated as 32 hex value of its MD5
+     if (version.length()==32) {
+         return true;
      }
-     return false;
+     return false;     
     }
-
+ 
  
  private static LexEVSApplicationService registerMeddraSecurityToken(
          LexEVSApplicationService lbSvc) {
-     String token = "10382";
+     String token = Security.MEDDRA_TOKEN;
 
      lbSvc = registerSecurityToken(lbSvc, "MedDRA", token);
      lbSvc = registerSecurityToken(lbSvc, "MedDRA (Medical Dictionary for Regulatory Activities Terminology)", token);
