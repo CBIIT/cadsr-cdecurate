@@ -16,7 +16,7 @@ package gov.nih.nci.cadsr.cdecurate.tool;
 /*import gov.nih.nci.evs.query.EVSQuery;
 import gov.nih.nci.evs.query.EVSQueryImpl;
 import gov.nih.nci.system.applicationservice.EVSApplicationService;*/
-import gov.nih.nci.cadsr.common.Security;
+import gov.nih.nci.cadsr.cdecurate.common.Security;
 import gov.nih.nci.evs.security.SecurityToken;
 import gov.nih.nci.system.client.ApplicationServiceProvider;
 
@@ -789,13 +789,114 @@ public final class EVS_UserBean implements Serializable
   }
 
 
-  
+/*  /**
+   * The setvocab_attr method sets the vocab searchin, concept name property and concept Definition property specific to the vocab.
+   * key is vocab_attr and values are stored as objects. if attr doesn't exist for the selected vocab, go get the  attr.
+   *
+   * @param vocabName name of the vocabulary
+   * @param vSearchIn vector of searchin for the vocabulary
+   * @param conProp string concept name property
+   * @param defProp string definition property
+   */
+/*  public void setVocab_Attr(String vocabName, Vector vSearchIn, String conProp, String conPropDisp,
+    String defProp, String retConProp, String semProp, String hdSynProp,
+    String retSearch, String sMeta, String vocabType)
+  {
+    m_vocab_attr = new Hashtable();
+    //try storing vocabName"_SearchIn" as key and vSearchIn as value
+    if (vSearchIn != null && vSearchIn.size() > 0)
+      m_vocab_attr.put(vocabName + "_SearchIn", vSearchIn);
+    //and vocabName"_PropNameIn" as key and conProp as value
+    if (conProp != null && !conProp.equals(""))
+      m_vocab_attr.put(vocabName + "_PropNameIN", conProp);
+    //and vocabName"_PropNameDisp" as key and conProp as value
+    if (conPropDisp != null && !conPropDisp.equals(""))
+      m_vocab_attr.put(vocabName + "_PropNameDisp", conPropDisp);
+    //and vocabName"_PropDefinition" as key and defProp as value
+    if (defProp != null && !defProp.equals(""))
+      m_vocab_attr.put(vocabName + "_PropDefinition", defProp);
+    //and vocabName"_PropRetCon" as key and retConProp as value
+    if (retConProp != null && !retConProp.equals(""))
+      m_vocab_attr.put(vocabName + "_PropRetCon", retConProp);
+    //and vocabName"_PropSemantic" as key and semProp as value
+    if (semProp != null && !semProp.equals(""))
+      m_vocab_attr.put(vocabName + "_PropSemantic", semProp);
+    //and vocabName"_PropHDSyn" as key and hdSynProp as value
+    if (hdSynProp != null && !hdSynProp.equals(""))
+      m_vocab_attr.put(vocabName + "_PropHDSyn", hdSynProp);
+    //and vocabName"_RetSearch" as key and retSearch as value
+    if (retSearch != null && !retSearch.equals(""))
+      m_vocab_attr.put(vocabName + "_RetSearch", retSearch);
+    //and vocabName"_IncludeMeta" as key and sMeta as value
+    if (sMeta != null && !sMeta.equals(""))
+      m_vocab_attr.put(vocabName + "_IncludeMeta", sMeta);
+    //and vocabName"_VocabType" as key and vocabType as value
+    if (vocabType != null && !vocabType.equals(""))
+      m_vocab_attr.put(vocabName + "_VocabType", vocabType);
+    //after getting this out of hashtable, check if the key exists for each vocab before
+  } */
+
+  	/**
+  	 * LexEVS 6.0 style coding scheme retrieval.
+  	 * @param eURL
+  	 * @return
+  	 */
+	public List getFormalName2CodingSchemeNameMap(String eURL) {
+	     java.util.List<String> vocabList = null;	//yes, this needs to be null! :(
+
+		long ms = System.currentTimeMillis();
+		//HashMap map = new HashMap();
+		boolean includeInactive = false;
+		try {
+			LexBIGService lbSvc = (LexBIGService) ApplicationServiceProvider.getApplicationServiceFromUrl(eURL, "EvsServiceInfo");
+			if (lbSvc == null) {
+				System.out.println("WARNING: Unable to connect to instantiate LexBIGService ???");
+				return null;
+			}
+			CodingSchemeRenderingList csrl = lbSvc.getSupportedCodingSchemes();
+			int count = csrl.getCodingSchemeRenderingCount();
+			System.out.println("CodingSchemeRenderingList count: " + count);
+			for (int i = 0; i < count; i++) {
+				int j = i + 1;
+				CodingSchemeRendering csr = csrl.getCodingSchemeRendering(i);
+				CodingSchemeSummary css = csr.getCodingSchemeSummary();
+				boolean ismapping = isMapping(eURL, css.getFormalName(), css.getRepresentsVersion());
+				if (!ismapping) {
+					CodingScheme cs = null;
+					boolean isResolvedValueSet = false;
+					try {
+						CodingSchemeVersionOrTag vt = new CodingSchemeVersionOrTag();
+						vt.setVersion(css.getRepresentsVersion());
+						cs = lbSvc.resolveCodingScheme(css.getFormalName(), vt);
+						if (cs != null) {
+							isResolvedValueSet = isResolvedValueSetCodingScheme(cs) ;
+							if (!isResolvedValueSet) {
+								//map.put(css.getFormalName(), cs.getCodingSchemeName() + " (URI: " + css.getCodingSchemeURI() + ")");
+								vocabList.add(css.getFormalName());
+								System.out.println(css.getFormalName() + " --> " + cs.getCodingSchemeName() + " (URI: " + css.getCodingSchemeURI() + ")");
+							}
+						}
+					} catch (Exception ex) {
+						ex.printStackTrace();
+						isResolvedValueSet = false;
+					}
+				}
+			}
+			//dumpHashMap(map);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		System.out.println("Run time (ms): " + (System.currentTimeMillis() - ms));
+		return vocabList;
+	}
+
   /**
-  * LexEVS 6.x style coding scheme retrieval.
+  * LexEVS 6.1 style coding scheme retrieval.
   * @param eURL
   * @return
+  * @comment Currently not used due to "missing" vocabs https://tracker.nci.nih.gov/browse/CURATNTOOL-1040 (JR1040)
   */
- public List getFormalName2CodingSchemeNameMap(String eURL) {
+ public List getFormalName2CodingSchemeNameMapForLexEVS61(String eURL) {
      java.util.List<String> vocabList = new ArrayList<String>();
 
      long ms = System.currentTimeMillis();
@@ -906,9 +1007,21 @@ public final class EVS_UserBean implements Serializable
          return false;
      }
  }
-   
-  
-  
+
+	public boolean isMapping(String eURL, String scheme, String version) {
+		CodingSchemeVersionOrTag csvt = new CodingSchemeVersionOrTag();
+		if (version != null)
+			csvt.setVersion(version);
+		try {
+			LexBIGService distributed = (LexBIGService) ApplicationServiceProvider.getApplicationServiceFromUrl(eURL, "EvsServiceInfo");
+			MappingExtension mappingExtension = (MappingExtension) distributed.getGenericExtension("MappingExtension");
+			boolean isMappingCS = mappingExtension.isMappingCodingScheme(scheme, csvt);
+			return isMappingCS;
+		} catch (Exception ex) {
+			return false;
+		}
+	}
+
 	private static void dumpHashMap(HashMap<String, String> hmap) {
 		if (hmap == null)
 			return;
@@ -1246,5 +1359,3 @@ public final class EVS_UserBean implements Serializable
   }
 
 }
-
-
