@@ -915,7 +915,7 @@ public class CurationServlet
         if (vContext == null)
             vContext = new Vector();
         // add alternate names
-        String selName = (String) req.getParameter("txtAltName");
+        String selName = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml((String) m_classReq.getParameter("txtAltName"));
         if (selName == null)
             selName = "";
         selName = selName.trim();
@@ -931,14 +931,14 @@ public class CurationServlet
         Vector<String> vACName = (Vector) session.getAttribute("vACName");
         if (vACName == null)
             vACName = new Vector<String>();
-        String sContID = (String) req.getParameter("selContext");
-        String sContext = (String) req.getParameter("contextName");
+        String sContID = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml((String) m_classReq.getParameter("selContext"));
+        String sContext = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml((String) m_classReq.getParameter("contextName"));
         if (sContID != null)
             req.setAttribute("desContext", sContID);
-        String sLang = (String) req.getParameter("dispLanguage");
+        String sLang = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml((String) m_classReq.getParameter("dispLanguage"));
         if (sLang != null)
             req.setAttribute("desLang", sLang);
-        String selType = (String) req.getParameter("selAltType");
+        String selType = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml((String) m_classReq.getParameter("selAltType"));
         // handle the context and ac name for new AC (DE, DEC and VD)
         if (vACId.size() < 1)
             vACId.addElement("new");
@@ -1085,7 +1085,7 @@ public class CurationServlet
     {
         HttpSession session = req.getSession();
        // InsACService insAC = new InsACService(m_classReq, m_classRes, this);
-        String selName = (String) req.getParameter("txtRefName");
+        String selName = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml((String) m_classReq.getParameter("txtRefName"));
         if (selName == null)
             selName = "";
         selName = selName.trim();
@@ -1107,16 +1107,16 @@ public class CurationServlet
         if (vContext == null)
             vContext = new Vector();
         // get request attributes
-        String sContID = (String) req.getParameter("selContext");
-        String sContext = (String) req.getParameter("contextName");
+        String sContID = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml((String) m_classReq.getParameter("selContext"));
+        String sContext = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml((String) m_classReq.getParameter("contextName"));
         if (sContID != null)
             req.setAttribute("desContext", sContID);
-        String sLang = (String) req.getParameter("dispLanguage");
+        String sLang = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml((String) m_classReq.getParameter("dispLanguage"));
         if (sLang != null)
             req.setAttribute("desLang", sLang);
-        String selType = (String) req.getParameter("selRefType");
-        String selText = (String) req.getParameter("txtRefText");
-        String selUrl = (String) req.getParameter("txtRefURL");
+        String selType = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml((String) m_classReq.getParameter("selRefType"));
+        String selText = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml((String) m_classReq.getParameter("txtRefText"));
+        String selUrl = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml((String) m_classReq.getParameter("txtRefURL"));
         // handle the context and ac name for new AC (DE, DEC and VD)
         if (vACId.size() < 1)
             vACId.addElement("new");
@@ -1549,14 +1549,14 @@ public class CurationServlet
     private void doNonEVSPageAction(HttpServletRequest req, HttpServletResponse res) throws Exception
     {
         HttpSession session = req.getSession();
-        String sPageAct = (String) req.getParameter("actSelect");
+        String sPageAct = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml((String) m_classReq.getParameter("actSelect"));
         if (sPageAct.equals("viewParent"))
         {
             VD_Bean vd = (VD_Bean) session.getAttribute("m_VD");
             Vector<EVS_Bean> vParentCon = vd.getReferenceConceptList(); // (Vector)session.getAttribute("VDParentConcept");
             if (vParentCon != null)
             {
-                String selName = (String) req.getParameter("txtRefName");
+                String selName = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml((String) m_classReq.getParameter("txtRefName"));
                 for (int i = 0; i < vParentCon.size(); i++)
                 {
                     EVS_Bean eBean = (EVS_Bean) vParentCon.elementAt(i);
@@ -2099,13 +2099,13 @@ public class CurationServlet
             // evs.openTreeToParentConcept(reqType);
             else if (reqType.equals("term") || reqType.equals("tree"))
             {
-                String dtsVocab = req.getParameter("listContextFilterVocab");
+                String dtsVocab = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml((String) m_classReq.getParameter("listContextFilterVocab"));
                 evs.doCollapseAllNodes(dtsVocab);
                 evs.doTreeSearch(reqType, "Blocks");
             }
             else if (reqType.equals("defaultBlock"))
             {
-                String dtsVocab = req.getParameter("listContextFilterVocab");
+                String dtsVocab = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml((String) m_classReq.getParameter("listContextFilterVocab"));
                 evs.doCollapseAllNodes(dtsVocab);
             }
             else if (reqType.equals("showConceptInTree"))
@@ -2283,7 +2283,7 @@ public class CurationServlet
             AC_CONTACT_Bean accBean = new AC_CONTACT_Bean();
             if (sAct.equals("removeContact"))
             {
-                sCont = (String) req.getParameter("selContact");
+                sCont = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml((String) m_classReq.getParameter("selContact"));
                 if (sCont != null && !sCont.equals("") && hConts.containsKey(sCont))
                     accBean = accBean.copyContacts((AC_CONTACT_Bean) hConts.get(sCont));
                 accBean.setACC_SUBMIT_ACTION("DEL");
@@ -2346,13 +2346,13 @@ public class CurationServlet
         if (hConts == null)
             hConts = new Hashtable();
         // get the page action
-        String sPgAct = (String) req.getParameter("pageAction");
+        String sPgAct = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml((String) m_classReq.getParameter("pageAction"));
         if (sPgAct != null && !sPgAct.equals(""))
         {
             try
             {
                 // get request and session attributes
-                String sContAct = (String) req.getParameter("contAction");
+                String sContAct = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml((String) m_classReq.getParameter("contAction"));
                 if (sContAct == null || sContAct.equals(""))
                     sContAct = "new";
                 AC_CONTACT_Bean accBean = (AC_CONTACT_Bean) session.getAttribute("selACContact");
@@ -2363,7 +2363,7 @@ public class CurationServlet
                 {
                     if (sContAct.equals("view")) // edit contact
                     {
-                        String selCont = (String) req.getParameter("selContact");
+                        String selCont = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml((String) m_classReq.getParameter("selContact"));
                         if (selCont != null && hConts.containsKey(selCont))
                         {
                             accBean = accBean.copyContacts((AC_CONTACT_Bean) hConts.get(selCont));
@@ -2382,25 +2382,25 @@ public class CurationServlet
                 else
                 // if (!sPgAct.equals("openPage")) //if not opening the page store the changed data in teh bean
                 {
-                    String conOrder = (String) req.getParameter("rank");
+                    String conOrder = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml((String) m_classReq.getParameter("rank"));
                     if (conOrder != null && !conOrder.equals(""))
                         accBean.setRANK_ORDER(conOrder);
                     String conPer = /*SECURITYTEAM-299*/StringUtil.cleanJavascriptAndHtml((String) req.getParameter("selPer"));
                     if (conPer == null)
                         conPer = "";
                     accBean.setPERSON_IDSEQ(conPer);
-                    String conOrg = (String) req.getParameter("selOrg");
+                    String conOrg = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml((String) m_classReq.getParameter("selOrg"));
                     if (conOrg == null)
                         conOrg = "";
                     accBean.setORG_IDSEQ(conOrg);
-                    String conRole = (String) req.getParameter("selRole");
+                    String conRole = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml((String) m_classReq.getParameter("selRole"));
                     if (conRole != null && !conRole.equals(""))
                         accBean.setCONTACT_ROLE(conRole);
                 }
                 // change the radio button action
                 if (sPgAct.equals("changeType"))
                 {
-                    String sType = (String) req.getParameter("rType");
+                    String sType = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml((String) m_classReq.getParameter("rType"));
                     if (sType != null && !sType.equals(""))
                         req.setAttribute("TypeSelected", sType);
                 }
@@ -2471,7 +2471,8 @@ public class CurationServlet
             int selInd = -1;
             for (int j = 0; j < vComm.size(); j++) // loop through existing lists
             {
-                String rSel = (String) req.getParameter("com" + j);
+//                String rSel = (String) req.getParameter("com" + j);
+                String rSel = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml((String) m_classReq.getParameter("com" + j));
                 // check if this id is selected
                 if (rSel != null)
                 {
@@ -2496,13 +2497,13 @@ public class CurationServlet
             else if (sAct.equals("addComm")) // udpate or adding new
             {
                 // get the attributes from the page
-                String cType = (String) req.getParameter("selCommType");
+                String cType = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml((String) m_classReq.getParameter("selCommType"));
                 if (cType == null)
                     cType = "";
-                String cOrd = (String) req.getParameter("comOrder");
+                String cOrd = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml((String) m_classReq.getParameter("comOrder"));
                 if (cOrd == null)
                     cOrd = "";
-                String cCyber = (String) req.getParameter("comCyber");
+                String cCyber = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml((String) m_classReq.getParameter("comCyber"));
                 if (cCyber == null)
                     cCyber = "";
                 String sCommName = cType + "_" + cOrd + "_" + cCyber;
@@ -2586,7 +2587,8 @@ public class CurationServlet
             int selInd = -1;
             for (int j = 0; j < vAddr.size(); j++) // loop through existing lists
             {
-                String rSel = (String) req.getParameter("addr" + j);
+//                String rSel = (String) req.getParameter("addr" + j);
+                String rSel = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml((String) m_classReq.getParameter("addr" + j));
                 // check if this id is selected
                 if (rSel != null)
                 {
@@ -2611,28 +2613,28 @@ public class CurationServlet
             else if (sAct.equals("addAddr")) // udpate or adding new
             {
                 // get the attributes from the page
-                String aType = (String) req.getParameter("selAddrType");
+                String aType = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml((String) m_classReq.getParameter("selAddrType"));
                 if (aType == null)
                     aType = "";
-                String aOrd = (String) req.getParameter("txtPrimOrder");
+                String aOrd = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml((String) m_classReq.getParameter("txtPrimOrder"));
                 if (aOrd == null)
                     aOrd = "";
-                String aAddr1 = (String) req.getParameter("txtAddr1");
+                String aAddr1 = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml((String) m_classReq.getParameter("txtAddr1"));
                 if (aAddr1 == null)
                     aAddr1 = "";
-                String aAddr2 = (String) req.getParameter("txtAddr2");
+                String aAddr2 = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml((String) m_classReq.getParameter("txtAddr2"));
                 if (aAddr2 == null)
                     aAddr2 = "";
-                String aCity = (String) req.getParameter("txtCity");
+                String aCity = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml((String) m_classReq.getParameter("txtCity"));
                 if (aCity == null)
                     aCity = "";
-                String aState = (String) req.getParameter("txtState");
+                String aState = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml((String) m_classReq.getParameter("txtState"));
                 if (aState == null)
                     aState = "";
-                String aCntry = (String) req.getParameter("txtCntry");
+                String aCntry = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml((String) m_classReq.getParameter("txtCntry"));
                 if (aCntry == null)
                     aCntry = "";
-                String aPost = (String) req.getParameter("txtPost");
+                String aPost = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml((String) m_classReq.getParameter("txtPost"));
                 if (aPost == null)
                     aPost = "";
                 String selAddrName = aType + "_" + aOrd + "_" + aAddr1 + "_" + aAddr2 + "_" + aCity + "_" + aState
@@ -3854,7 +3856,7 @@ public class CurationServlet
             // get action type
             if ((String) req.getParameter("newRefDocPageAction") != null)
             {
-                sAction = (String) req.getParameter("newRefDocPageAction");
+                sAction = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml((String) m_classReq.getParameter("newRefDocPageAction"));
             }
             else
             {
