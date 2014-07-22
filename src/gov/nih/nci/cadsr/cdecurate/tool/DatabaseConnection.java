@@ -71,7 +71,7 @@ public class DatabaseConnection extends HttpServlet
       {
         con = ds.getConnection(stUser, stPswd);
         stmt = con.createStatement();
-        rset = stmt.executeQuery("Select sysdate from dual");
+        rset = stmt.executeQuery("Select sysdate from dual");	//JR1046 checked
         if (rset.next()) rset.getString(1);
         else throw (new Exception("DBPool connection test failed."));
         hashOracleOCIConnectionPool.put(stAppContext, ds);

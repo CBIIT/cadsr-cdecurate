@@ -857,7 +857,7 @@ public class DBAccess
         {
             // Retrieve the hierarchy and add a CS record at the top of each new branch.
             stmt = _conn.createStatement();
-            rs = stmt.executeQuery(select);
+            rs = stmt.executeQuery(select);		//JR1046 checked
             
             Vector<CSIData> test = new Vector<CSIData>();
             String lastCS = "";

@@ -4523,10 +4523,13 @@ public class InsACService implements Serializable {
 			if (m_servlet.getConn() == null)
 				m_servlet.ErrorLogin(m_classReq, m_classRes);
 			else {
-				cstmt = m_servlet.getConn().createStatement();
-				rs = cstmt
-						.executeQuery("SELECT ar_idseq FROM sbr.ac_registrations_view WHERE  ac_idseq = '"
-								+ ac_id + "'");
+//				cstmt = m_servlet.getConn().createStatement();
+//				rs = cstmt.executeQuery("SELECT ar_idseq FROM sbr.ac_registrations_view WHERE  ac_idseq = '"
+//								+ ac_id + "'");
+				/* JR1046 */
+				PreparedStatement stmt = m_servlet.getConn().prepareStatement("SELECT ar_idseq FROM sbr.ac_registrations_view WHERE ac_idseq = ?");
+				stmt.setString(1, ac_id);
+				rs = stmt.executeQuery();
 				// loop through to printout the outstrings
 				while (rs.next()) {
 					regID = rs.getString(1);

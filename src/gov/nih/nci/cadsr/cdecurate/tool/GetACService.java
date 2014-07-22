@@ -862,7 +862,7 @@ public class GetACService implements Serializable
             else
             {
                 cstmt = m_servlet.getConn().createStatement();
-                rs = cstmt.executeQuery(sql);
+                rs = cstmt.executeQuery(sql);	//JR1046 reviewed
                 String s;
                 // loop through to printout the outstrings
                 while (rs.next())
@@ -906,7 +906,7 @@ public class GetACService implements Serializable
             else
             {
                 cstmt = m_servlet.getConn().createStatement();
-                rs = cstmt.executeQuery(sSQL);
+                rs = cstmt.executeQuery(sSQL);	//JR1046 reviewed
                 String sName = "";
                 // loop through to printout the outstrings
                 while (rs.next())
@@ -1087,7 +1087,7 @@ public class GetACService implements Serializable
                 m_servlet.ErrorLogin(m_classReq, m_classRes);
             else
             {
-                cstmt = m_servlet.getConn().createStatement();
+                cstmt = m_servlet.getConn().createStatement();	//JR1046 reviewed
                 rs = cstmt.executeQuery(sSQL);
                 int iCount = 0;
                 // loop through to printout the outstrings
@@ -1129,7 +1129,7 @@ public class GetACService implements Serializable
             else
             {
                 cstmt = m_servlet.getConn().createStatement();
-                rs = cstmt.executeQuery(sSQL);
+                rs = cstmt.executeQuery(sSQL);	//JR1046 reviewed
                 int i = 0;
                 // loop through to printout the outstrings
                 while (rs.next())
@@ -1690,7 +1690,7 @@ public class GetACService implements Serializable
     		//get the default count from tool_options_view
     		String sqlDefaultCount = "select value from sbrext.tool_options_view_ext where property like 'DEFAULT.SEARCH.COUNT'"; 
     		stmt =m_servlet.getConn().createStatement();
-    		rs = stmt.executeQuery(sqlDefaultCount);
+    		rs = stmt.executeQuery(sqlDefaultCount);	//JR1046 reviewed
     		while(rs.next())
     		{
     			defaultCount = rs.getInt(1);
@@ -1701,7 +1701,7 @@ public class GetACService implements Serializable
     		//get DE count
     		String sqlDECount = "select count(*) from sbr.data_elements_view";
     		stmt =m_servlet.getConn().createStatement();
-    		rs = stmt.executeQuery(sqlDECount);
+    		rs = stmt.executeQuery(sqlDECount);	//JR1046 reviewed
     		while(rs.next())
     		{
     			int deCount = rs.getInt(1);
@@ -1715,7 +1715,7 @@ public class GetACService implements Serializable
     		//get DEC count
     		String sqlDECCount = "select count(*) from sbr.data_element_Concepts_view";
     		stmt =m_servlet.getConn().createStatement();
-    		rs = stmt.executeQuery(sqlDECCount);
+    		rs = stmt.executeQuery(sqlDECCount);	//JR1046 reviewed
     		while(rs.next())
     		{
     			int decCount = rs.getInt(1);
@@ -1730,7 +1730,7 @@ public class GetACService implements Serializable
     		//get VD count
     		String sqlVDCount = "select count(*) from sbr.value_domains_view";
     		stmt =m_servlet.getConn().createStatement();
-    		rs = stmt.executeQuery(sqlVDCount);
+    		rs = stmt.executeQuery(sqlVDCount);	//JR1046 reviewed
     		while(rs.next())
     		{
     			int vdCount = rs.getInt(1);
@@ -1760,7 +1760,7 @@ public class GetACService implements Serializable
     		//get CD count
     		String sqlCDCount = "select count(*) from sbr.conceptual_domains_view";
     		stmt =m_servlet.getConn().createStatement();
-    		rs = stmt.executeQuery(sqlCDCount);
+    		rs = stmt.executeQuery(sqlCDCount);	//JR1046 reviewed
     		while(rs.next())
     		{
     			int cdCount = rs.getInt(1);
@@ -1775,7 +1775,7 @@ public class GetACService implements Serializable
     		//get PV count
     		String sqlPVCount = "select count(*) from sbr.permissible_values_view";
     		stmt =m_servlet.getConn().createStatement();
-    		rs = stmt.executeQuery(sqlPVCount);
+    		rs = stmt.executeQuery(sqlPVCount);	//JR1046 reviewed
     		while(rs.next())
     		{
     			int pvCount = rs.getInt(1);
@@ -1790,7 +1790,7 @@ public class GetACService implements Serializable
     		//get OC count
     		String sqlOCCount = "select count(*) from sbrext.object_classes_view_ext";
     		stmt =m_servlet.getConn().createStatement();
-    		rs = stmt.executeQuery(sqlOCCount);
+    		rs = stmt.executeQuery(sqlOCCount);	//JR1046 reviewed
     		while(rs.next())
     		{
     			int ocCount = rs.getInt(1);
@@ -1805,7 +1805,7 @@ public class GetACService implements Serializable
     		//get Property count
     		String sqlPropertyCount = "select count(*) from sbrext.properties_view_ext";
     		stmt =m_servlet.getConn().createStatement();
-    		rs = stmt.executeQuery(sqlPropertyCount);
+    		rs = stmt.executeQuery(sqlPropertyCount);	//JR1046 reviewed
     		while(rs.next())
     		{
     			int propCount = rs.getInt(1);
@@ -1820,7 +1820,7 @@ public class GetACService implements Serializable
     		//get Concept Class count
     		String sqlCCCount = "select count(*) from sbrext.concepts_view_ext";
     		stmt =m_servlet.getConn().createStatement();
-    		rs = stmt.executeQuery(sqlCCCount);
+    		rs = stmt.executeQuery(sqlCCCount);	//JR1046 reviewed
     		while(rs.next())
     		{
     			int ccCount = rs.getInt(1);
@@ -1835,7 +1835,7 @@ public class GetACService implements Serializable
     		//get CSI count
     		String sqlCSICount = "select count(*) from sbr.cs_items_view";
     		stmt =m_servlet.getConn().createStatement();
-    		rs = stmt.executeQuery(sqlCSICount);
+    		rs = stmt.executeQuery(sqlCSICount);	//JR1046 reviewed
     		while(rs.next())
     		{
     			int csiCount = rs.getInt(1);

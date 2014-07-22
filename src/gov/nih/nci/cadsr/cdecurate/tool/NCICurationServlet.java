@@ -164,7 +164,7 @@ public class NCICurationServlet extends HttpServlet
             {
                 con = curser.getConnFromDS();
                 stmt = con.createStatement();
-                rset = stmt.executeQuery("Select sysdate from dual");
+                rset = stmt.executeQuery("Select sysdate from dual");	/* JR1046 checked */
                 if (rset.next())
                     {
                 	 rset.getString(1);

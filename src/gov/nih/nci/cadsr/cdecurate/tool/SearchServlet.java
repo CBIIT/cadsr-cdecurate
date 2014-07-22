@@ -1901,7 +1901,7 @@ public class SearchServlet extends CurationServlet {
         {
             String sQuery = "select value from sbrext.tool_options_view_ext where property like 'REPTERM.DEFAULT.CONTEXT'";
             stm = m_conn.createStatement();
-			rs = stm.executeQuery(sQuery);
+			rs = stm.executeQuery(sQuery);	//JR1046 reviewed
 			while(rs.next())
 			{
 				defaultContext= rs.getString(1);

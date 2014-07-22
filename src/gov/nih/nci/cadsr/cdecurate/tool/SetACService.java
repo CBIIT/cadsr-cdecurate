@@ -2153,8 +2153,10 @@ public class SetACService implements Serializable
 		{
 			String sOC_WFS = "";
 			String sProp_WFS = "";
-			String sOCSQL = "Select asl_name from object_classes_view_ext where oc_idseq = '" + oc_idseq + "'";
-			String sPropSQL = "Select asl_name from PROPERTIES_EXT where prop_idseq = '" + prop_idseq + "'";
+//			String sOCSQL = "Select asl_name from object_classes_view_ext where oc_idseq = '" + oc_idseq + "'";
+			String sOCSQL = "Select asl_name from object_classes_view_ext where oc_idseq = ?";
+//			String sPropSQL = "Select asl_name from PROPERTIES_EXT where prop_idseq = '" + prop_idseq + "'";
+			String sPropSQL = "Select asl_name from PROPERTIES_EXT where prop_idseq = ?";
 
 			if (oc_idseq == null) oc_idseq = "";
 			if (prop_idseq == null) prop_idseq = "";
@@ -2167,7 +2169,10 @@ public class SetACService implements Serializable
 					if(!oc_idseq.equals(""))
 					{
 						cstmt = m_servlet.getConn().createStatement();
-						rs = cstmt.executeQuery(sOCSQL);
+//						rs = cstmt.executeQuery(sOCSQL);
+						PreparedStatement stmt = m_servlet.getConn().prepareStatement(sOCSQL);	//JR1046
+						stmt.setString(1, oc_idseq);
+						rs = stmt.executeQuery();
 						//loop through to printout the outstrings
 						while(rs.next())
 						{
@@ -2182,8 +2187,11 @@ public class SetACService implements Serializable
 					else if(!prop_idseq.equals(""))
 					{
 						// Now check Property WFStatus
-						cstmt = m_servlet.getConn().createStatement();
-						rs = cstmt.executeQuery(sPropSQL);
+//						cstmt = m_servlet.getConn().createStatement();
+//						rs = cstmt.executeQuery(sPropSQL);
+						PreparedStatement stmt = m_servlet.getConn().prepareStatement(sPropSQL);	//JR1046
+						stmt.setString(1, prop_idseq);
+						rs = stmt.executeQuery();
 						while(rs.next())
 						{
 							sProp_WFS = rs.getString(1);
@@ -2225,16 +2233,22 @@ public class SetACService implements Serializable
 		ResultSet rs = null;
 		Statement cstmt = null;
 		String pvIdseq = "";
-		String sSQL = "Select pv_idseq from permissible_values where value = '" + sValue + "'" +
-		" and short_meaning = '" + sMeaning + "'";
+//		String sSQL = "Select pv_idseq from permissible_values where value = '" + sValue + "'" +
+//		" and short_meaning = '" + sMeaning + "'";
+		String sSQL = "Select pv_idseq from permissible_values where value = ?" +
+		" and short_meaning = ?";
 		try
 		{
 			if (m_servlet.getConn() == null)  // still null to login page
 				m_servlet.ErrorLogin(req, res);
 			else
 			{
-				cstmt = m_servlet.getConn().createStatement();
-				rs = cstmt.executeQuery(sSQL);
+//				cstmt = m_servlet.getConn().createStatement();
+//				rs = cstmt.executeQuery(sSQL);
+				PreparedStatement stmt = m_servlet.getConn().prepareStatement(sSQL);	//JR1046
+				stmt.setString(1, sValue);
+				stmt.setString(2, sMeaning);
+				rs = stmt.executeQuery();
 				//loop through to printout the outstrings
 				while(rs.next())
 				{
