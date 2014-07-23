@@ -12,11 +12,13 @@
 
 package gov.nih.nci.cadsr.cdecurate.database;
 
+import gov.nih.nci.cadsr.cdecurate.common.NO_SQL_CHECK;
 import gov.nih.nci.cadsr.cdecurate.tool.AC_Bean;
 import gov.nih.nci.cadsr.cdecurate.util.DesignationHelper;
 import gov.nih.nci.cadsr.cdecurate.util.ToolException;
 import gov.nih.nci.cadsr.cdecurate.util.Tree;
 import gov.nih.nci.cadsr.cdecurate.util.TreeNode;
+
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -28,6 +30,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Vector;
+
 import org.apache.log4j.Logger;
 
 /**
@@ -843,6 +846,7 @@ public class DBAccess
      * 
      * @return the CSI tree for the entire caDSR
      */
+    @NO_SQL_CHECK
     public Tree getCSI(String[] contexts_) throws ToolException
     {
         // Because the CSI is a hierarchy we can not sort it in the SQL. The Tree.add() methods will ensure the

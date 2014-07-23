@@ -11,6 +11,7 @@
 
 package gov.nih.nci.cadsr.cdecurate.tool;
 
+import gov.nih.nci.cadsr.cdecurate.common.NO_SQL_CHECK;
 import gov.nih.nci.cadsr.cdecurate.database.SQLHelper;
 import gov.nih.nci.cadsr.cdecurate.util.AddOns;
 import gov.nih.nci.cadsr.cdecurate.util.DataManager;
@@ -23,13 +24,13 @@ import java.util.*;
 import java.sql.*;
 
 import oracle.jdbc.driver.*;
-
 import oracle.jdbc.OracleTypes;
 
 import javax.servlet.*;
 import javax.servlet.http.*;
 
 import java.io.*;
+
 import org.apache.log4j.*;
 
 /**
@@ -39,6 +40,7 @@ import org.apache.log4j.*;
  * @author Joe Zhou, Sumana Hegde, Tom Phillips
  * 
  */
+@NO_SQL_CHECK
 public class GetACService implements Serializable
 {
     /**

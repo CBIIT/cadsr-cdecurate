@@ -13,6 +13,7 @@
 package gov.nih.nci.cadsr.cdecurate.tool;
 
 // import files
+import gov.nih.nci.cadsr.cdecurate.common.NO_SQL_CHECK;
 import gov.nih.nci.cadsr.cdecurate.database.SQLHelper;
 import gov.nih.nci.cadsr.cdecurate.util.ClockTime;
 import gov.nih.nci.cadsr.common.TimeWatch;
@@ -144,6 +145,7 @@ public class NCICurationServlet extends HttpServlet
     /**
      * initilize the oracle connect
      */
+    @NO_SQL_CHECK
     private void initOracleConnect()
     {
         try

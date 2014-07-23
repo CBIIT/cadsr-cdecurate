@@ -123,7 +123,7 @@ private Logger logger = Logger.getLogger(this.getClass());
 			sqlBuff.append(") ");
 			sqlBuff.append(sql);
 			statement = conn.createStatement();
-			rs = statement.executeQuery(sqlBuff.toString());
+			rs = statement.executeQuery(sqlBuff.toString());	//JR1046 reviewed
 			while (rs.next()) {
 				ResultVO  vo = new ResultVO();
 				vo.setCondr_IDSEQ(rs.getString("CONDR_IDSEQ"));

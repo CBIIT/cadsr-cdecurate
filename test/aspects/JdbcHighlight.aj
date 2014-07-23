@@ -3,11 +3,15 @@ package aspects;
 public aspect JdbcHighlight {
 	public static final boolean ON = false;
 	pointcut showAllSourceWithConnection(): call(* java.sql.Connection.*(*)) && !within(JdbcHighlight);
-	pointcut showAllSourceWithStatement(): call(* java.sql.Statement.*(*)) 
+
+//	pointcut NCICurationServlet() : call(private void gov.nih.nci.cadsr.cdecurate.tool.NCICurationServlet.*.*(..));	//anything in NCICurationServlet
+//	pointcut initOracleMethod() : call(* *.*(..));
+	pointcut showAllSourceWithStatement():call(* java.sql.Statement.*(*)) 
+	&& !within(@gov.nih.nci.cadsr.cdecurate.common.NO_SQL_CHECK *) && !withincode(@gov.nih.nci.cadsr.cdecurate.common.NO_SQL_CHECK * *+(..))
 	&& !within(JdbcHighlight)
 //	&& !execution(* DBAccess.getCSI.*(*))
-//	&& !execution(* NCICurationServlet.initOracleConnect.*(*))
-//	&& !execution(* @(IGNORED_SQLINJECT))
+//	&& NCICurationServlet() && !cflowbelow(initOracleMethod())
+//	&& !cflow(initOracleMethod())
 	;
 
 	//declare error : showAllSourceWithJDBC() : "This source uses JDBC directly.";

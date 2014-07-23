@@ -12,6 +12,7 @@
 
 package gov.nih.nci.cadsr.cdecurate.tool;
 
+import gov.nih.nci.cadsr.cdecurate.common.NO_SQL_CHECK;
 import gov.nih.nci.cadsr.cdecurate.database.SQLHelper;
 import gov.nih.nci.cadsr.cdecurate.util.DataManager;
 import gov.nih.nci.cadsr.common.Database;
@@ -149,6 +150,7 @@ public class ConceptAction implements Serializable
    * @param data ConceptForm object
    * @return String condr idseq
    */
+  @NO_SQL_CHECK
   public String getConDerivation(ConceptForm data)
   {
     String condr = "";

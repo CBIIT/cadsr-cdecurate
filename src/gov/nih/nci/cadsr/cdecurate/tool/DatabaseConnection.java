@@ -11,6 +11,7 @@
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
+import gov.nih.nci.cadsr.cdecurate.common.NO_SQL_CHECK;
 import gov.nih.nci.cadsr.cdecurate.database.SQLHelper;
 import gov.nih.nci.cadsr.cdecurate.util.DataManager;
 
@@ -40,6 +41,7 @@ public class DatabaseConnection extends HttpServlet
   /**
    * @param serCon 
    */
+  @NO_SQL_CHECK
   public void initOracleConnect(ServletConfig serCon)
   {
     try
