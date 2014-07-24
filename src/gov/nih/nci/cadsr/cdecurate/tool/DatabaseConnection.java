@@ -11,6 +11,7 @@
 // $Name: not supported by cvs2svn $
 
 package gov.nih.nci.cadsr.cdecurate.tool;
+import gov.nih.nci.cadsr.cdecurate.common.NO_REQUEST_CHECK;
 import gov.nih.nci.cadsr.cdecurate.common.NO_SQL_CHECK;
 import gov.nih.nci.cadsr.cdecurate.database.SQLHelper;
 import gov.nih.nci.cadsr.cdecurate.util.DataManager;
@@ -141,6 +142,7 @@ public class DatabaseConnection extends HttpServlet
    * sets user bean using login info and verifies the connection
    * @param req HttpServletRequest
    */
+  @NO_REQUEST_CHECK
   public void setUserBean(HttpServletRequest req)
   {
     try

@@ -1,7 +1,6 @@
 package aspects;
 
 public aspect JdbcHighlight {
-	public static final boolean ON = false;
 	pointcut showAllSourceWithConnection(): call(* java.sql.Connection.*(*)) && !within(JdbcHighlight);
 
 //	pointcut NCICurationServlet() : call(private void gov.nih.nci.cadsr.cdecurate.tool.NCICurationServlet.*.*(..));	//anything in NCICurationServlet
