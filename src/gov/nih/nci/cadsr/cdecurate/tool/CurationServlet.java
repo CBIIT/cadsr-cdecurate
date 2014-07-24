@@ -291,6 +291,7 @@ public class CurationServlet
      * @param res
      * @param session
      */
+//    @NO_REQUEST_CHECK
     private void login(HttpServletRequest req, HttpServletResponse res,HttpSession session)throws Exception
     {
     	String username = req.getParameter("Username").toUpperCase();
@@ -432,7 +433,7 @@ public class CurationServlet
                      	sessionData = new Session_Data();
             else
         	m_conn = connectDB();
-            String reqType = m_classReq.getParameter("reqType");
+            String reqType = StringUtil.cleanJavascriptAndHtml(m_classReq.getParameter("reqType"));
             m_classReq.setAttribute("LatestReqType", reqType);
             if (reqType != null)
             {
@@ -1017,7 +1018,7 @@ public class CurationServlet
         Vector<String> vContext = (Vector) session.getAttribute("vWriteContextDE");
         if (vContext == null)
             vContext = new Vector<String>();
-        String sContID = (String) req.getParameter("selContext");
+        String sContID = StringUtil.cleanJavascriptAndHtml((String) req.getParameter("selContext"));
         if (sContID != null)
             req.setAttribute("desContext", sContID);
         int j = -1; // to keep track of number of items on the page
@@ -1195,7 +1196,7 @@ public class CurationServlet
         Vector vContext = (Vector) session.getAttribute("vWriteContextDE");
         if (vContext == null)
             vContext = new Vector();
-        String sContID = (String) req.getParameter("selContext");
+        String sContID = StringUtil.cleanJavascriptAndHtml((String) req.getParameter("selContext"));
         if (sContID != null)
             req.setAttribute("desContext", sContID);
         int j = -1; // to keep track of number of items on the page
@@ -1217,7 +1218,7 @@ public class CurationServlet
                     vRefAttrs.addElement(curRefAttr);
                     j += 1; // increase the count
                 }
-                String ckItem = (String) req.getParameter("RCK" + j);
+                String ckItem = StringUtil.cleanJavascriptAndHtml((String) req.getParameter("RCK" + j));
                 // get the right selected item to mark as deleted
                 if (ckItem != null)
                 {
@@ -2840,7 +2841,7 @@ public class CurationServlet
                 try
                 {
                     vCheckList = new Vector<String>();
-                    String unCheckedRowId = (String) m_classReq.getParameter("unCheckedRowId");
+                    String unCheckedRowId = StringUtil.cleanJavascriptAndHtml((String) m_classReq.getParameter("unCheckedRowId"));
                     if (unCheckedRowId != null && !(unCheckedRowId == "")){
                         int selectedRowID = new Integer(unCheckedRowId);
                         AC_Bean bean = (AC_Bean) vSRows.elementAt(selectedRowID);
@@ -2960,7 +2961,7 @@ public class CurationServlet
             }
             // Get list of selected AC's.
             Vector<String> list = new Vector<String>();
-            String unCheckedRowId = (String) m_classReq.getParameter("unCheckedRowId");
+            String unCheckedRowId = StringUtil.cleanJavascriptAndHtml((String) m_classReq.getParameter("unCheckedRowId"));
             if (unCheckedRowId != null && !(unCheckedRowId == "")){
                 int selectedRowID = new Integer(unCheckedRowId);
                 AC_Bean bean = (AC_Bean) vSRows.elementAt(selectedRowID);
@@ -3060,7 +3061,7 @@ public class CurationServlet
         else
         {
             // using designation hidden fields to get the selected value & meanings
-            String sPVID = (String) req.getParameter("desName");
+            String sPVID = StringUtil.cleanJavascriptAndHtml((String) req.getParameter("desName"));
             if (sPVID != null)
                 m_PV.setPV_PV_IDSEQ(sPVID);
             String sPValue = (String) req.getParameter("desContext");
@@ -3727,7 +3728,7 @@ public class CurationServlet
           	DataManager.setAttribute(session, "Username", null);
           	sessionData.UsrBean = null;
           	session.setAttribute("vWriteContextDE", null);
-          	String prevReq = m_classReq.getParameter("previousReqType");
+          	String prevReq = StringUtil.cleanJavascriptAndHtml(m_classReq.getParameter("previousReqType"));
           	if (flag)
           	{
                 RequestDispatcher rd = this.m_servletContext.getRequestDispatcher("/NCICurationServlet?reqType=homePage");
@@ -3854,7 +3855,7 @@ public class CurationServlet
         else
         {
             // get action type
-            if ((String) req.getParameter("newRefDocPageAction") != null)
+            if (StringUtil.cleanJavascriptAndHtml((String) req.getParameter("newRefDocPageAction")) != null)
             {
                 sAction = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml((String) m_classReq.getParameter("newRefDocPageAction"));
             }
@@ -3940,7 +3941,7 @@ public class CurationServlet
     	String sVersion =null;
     	String actlReq = null;
     	boolean  flag = false;
-		String acIDSEQ = m_classReq.getParameter("idseq");
+		String acIDSEQ = StringUtil.cleanJavascriptAndHtml(m_classReq.getParameter("idseq"));
 		try {
 			if (acIDSEQ == null) {
 				sPublicId = m_classReq.getParameter("publicId");

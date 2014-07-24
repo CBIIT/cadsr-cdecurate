@@ -483,9 +483,9 @@ public class SetACService implements Serializable
 			//HttpSession session = req.getSession();
 			String sDDERepTypes[] = req.getParameterValues("selRepType");
 			String sRepType = sDDERepTypes[0];
-			String sRule = (String)req.getParameter("DDERule");
-			String sMethod = (String)req.getParameter("DDEMethod");
-			String sConcatChar = (String)req.getParameter("DDEConcatChar");
+			String sRule = StringUtil.cleanJavascriptAndHtml((String)req.getParameter("DDERule"));
+			String sMethod = StringUtil.cleanJavascriptAndHtml((String)req.getParameter("DDEMethod"));
+			String sConcatChar = StringUtil.cleanJavascriptAndHtml((String)req.getParameter("DDEConcatChar"));
 
 			if(sRepType == null || sRepType.length() < 1)
 				return;
@@ -707,7 +707,7 @@ public class SetACService implements Serializable
 					//JR1016 end
 				}
 				//begin GF32723
-				String type= req.getParameter("userSelectedVocab");	//m_OC.getEVS_ORIGIN();
+				String type= StringUtil.cleanJavascriptAndHtml(req.getParameter("userSelectedVocab"));	//m_OC.getEVS_ORIGIN();
 				if(m_OC != null) {
 					if(type == null || type.equals("")) type = "NCI Thesaurus";
 					String name= m_OC.getCONCEPT_IDENTIFIER();
@@ -3330,9 +3330,9 @@ public class SetACService implements Serializable
 		String returnString3;
 		String sTmp1, sTmp2, sTmp3;
 
-		sTmp1 = (String)req.getParameter("selObjectClass");
-		sTmp2 = (String)req.getParameter("selPropertyClass");
-		sTmp3 = (String)req.getParameter("RepTerm");
+		sTmp1 = StringUtil.cleanJavascriptAndHtml((String)req.getParameter("selObjectClass"));
+		sTmp2 = StringUtil.cleanJavascriptAndHtml((String)req.getParameter("selPropertyClass"));
+		sTmp3 = StringUtil.cleanJavascriptAndHtml((String)req.getParameter("RepTerm"));
 
 		if (sTmp1 != null && !(sTmp1.equals("")))
 			returnString1 = "";
@@ -4903,7 +4903,7 @@ public class SetACService implements Serializable
 						if (pvAct != null && pvAct.equals("DEL"))
 							continue;
 						//check if this id is selected
-						String rSel = (String)req.getParameter("ck"+iPVLoop);
+						String rSel = StringUtil.cleanJavascriptAndHtml((String)req.getParameter("ck"+iPVLoop));
 						//increase the pvloop count
 						iPVLoop += 1;
 						if (rSel != null)

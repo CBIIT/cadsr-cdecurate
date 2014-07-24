@@ -157,7 +157,7 @@ public class GetACSearch implements Serializable
                 // get the version number if other
                 String txVersion = "";
                 if (sVersion != null && sVersion.equals("Other"))
-                    txVersion = (String) req.getParameter("tVersion");
+                    txVersion = StringUtil.cleanJavascriptAndHtml((String) req.getParameter("tVersion"));
                 if (txVersion == null)
                     txVersion = "";
                 DataManager.setAttribute(session, "serVersionNum", txVersion);
@@ -905,7 +905,7 @@ public class GetACSearch implements Serializable
             if (actType.equals("Attribute"))
                 setAttributeValues(req, res, sSearchAC, menuAction);
             // store the append action in the session to handle new search
-            String sAppendAct = (String) req.getParameter("AppendAction");
+            String sAppendAct = StringUtil.cleanJavascriptAndHtml((String) req.getParameter("AppendAction"));
             if (sAppendAct != null)
             {
                 DataManager.setAttribute(session, "AppendAction", sAppendAct);
@@ -1048,7 +1048,7 @@ public class GetACSearch implements Serializable
             HttpSession session = req.getSession();
             EVSSearch evs = new EVSSearch(m_classReq, m_classRes, m_servlet);
             // get the sort string parameter
-            String sSortType = (String) req.getParameter("sortType");
+            String sSortType = StringUtil.cleanJavascriptAndHtml((String) req.getParameter("sortType"));
             if (sSortType != null)
                 DataManager.setAttribute(session, "sortType", sSortType);
             String sMenuAction = (String) session.getAttribute(Session_Data.SESSION_MENU_ACTION);
@@ -2914,7 +2914,7 @@ public class GetACSearch implements Serializable
         {
             HttpSession session = req.getSession();
             String menuAction = (String) session.getAttribute(Session_Data.SESSION_MENU_ACTION);
-            String actType = (String) req.getParameter("actSelected");
+            String actType = StringUtil.cleanJavascriptAndHtml((String) req.getParameter("actSelected"));
             if (actType == null)
                 actType = "";
             if (menuAction == null)
@@ -3503,7 +3503,7 @@ public class GetACSearch implements Serializable
             // Vector vSearchASL2 = (Vector)session.getAttribute("SearchASL");
             Vector vSelAttr = new Vector();
             Vector vRSel = new Vector();
-            String actType = (String) req.getParameter("actSelected");
+            String actType = StringUtil.cleanJavascriptAndHtml((String) req.getParameter("actSelected"));
             if (actType == null)
                 actType = "";
             if (menuAction.equals("searchForCreate"))
@@ -3650,7 +3650,7 @@ public class GetACSearch implements Serializable
             String menuAction = (String) session.getAttribute(Session_Data.SESSION_MENU_ACTION);
             Vector vSelAttr = new Vector();
             Vector vRSel = new Vector();
-            String actType = (String) req.getParameter("actSelected");
+            String actType = StringUtil.cleanJavascriptAndHtml((String) req.getParameter("actSelected"));
             if (actType == null)
                 actType = "";
             if (menuAction.equals("searchForCreate"))
@@ -4297,7 +4297,7 @@ public class GetACSearch implements Serializable
             // Vector vAC = (Vector)session.getAttribute("vACSearch");
             Vector vSelRows = new Vector();
             Vector vSRows = new Vector();
-            String rNumSel = (String) req.getParameter("numSelected");
+            String rNumSel = StringUtil.cleanJavascriptAndHtml((String) req.getParameter("numSelected"));
             String sMenu = (String) session.getAttribute(Session_Data.SESSION_MENU_ACTION);
             String sSearchAC = "";
             // get the searched results according to the menu action
@@ -4311,7 +4311,7 @@ public class GetACSearch implements Serializable
                 sSearchAC = (String) session.getAttribute("searchAC");
                 vSRows = (Vector) session.getAttribute("vSelRows");
             }
-            String actType = (String) req.getParameter("actSelected");
+            String actType = StringUtil.cleanJavascriptAndHtml((String) req.getParameter("actSelected"));
             if (actType == null)
                 actType = "";
             Vector vCheckList = new Vector();
@@ -4480,7 +4480,7 @@ public class GetACSearch implements Serializable
             session.setAttribute("designateMenu", sMenuAction);
             session.setAttribute("designateBE", "");
             Vector selectedRows = new Vector();
-            String unCheckedRowId = (String) m_classReq.getParameter("unCheckedRowId");
+            String unCheckedRowId = StringUtil.cleanJavascriptAndHtml((String) m_classReq.getParameter("unCheckedRowId"));
             if (unCheckedRowId != null && !(unCheckedRowId == "")){
                 int selectedRowID = new Integer(unCheckedRowId);
                 selectedRows.add(vSRows.elementAt(selectedRowID));
@@ -4700,7 +4700,7 @@ public class GetACSearch implements Serializable
                     for (int m = 0; m < (vSRows.size()); m++)
                     {
                         String ckName2 = ("CK" + m);
-                        String rSel2 = (String) req.getParameter(ckName2);
+                        String rSel2 = StringUtil.cleanJavascriptAndHtml((String) req.getParameter(ckName2));
                         if (rSel2 != null)
                             vCheckList.addElement(ckName2);
                     }
@@ -5633,7 +5633,7 @@ public class GetACSearch implements Serializable
                 vSRows = (Vector) session.getAttribute("vACSearch");
             else
                 vSRows = (Vector) session.getAttribute("vSelRows");
-            String sortField = (String) req.getParameter("sortType");
+            String sortField = StringUtil.cleanJavascriptAndHtml((String) req.getParameter("sortType"));
             if (sortField == null)
                 sortField = (String) session.getAttribute("sortType");
             if (sortField != null && !sortField.equalsIgnoreCase("referenceDoc"))
@@ -5937,7 +5937,7 @@ public class GetACSearch implements Serializable
                 vSRows = (Vector) session.getAttribute("vACSearch");
             else
                 vSRows = (Vector) session.getAttribute("vSelRows");
-            String sortField = (String) req.getParameter("sortType");
+            String sortField = StringUtil.cleanJavascriptAndHtml((String) req.getParameter("sortType"));
             if (sortField == null)
                 sortField = (String) session.getAttribute("sortType");
             if (sortField != null)
@@ -6122,7 +6122,7 @@ public class GetACSearch implements Serializable
                 vSRows = (Vector) session.getAttribute("vACSearch");
             else
                 vSRows = (Vector) session.getAttribute("vSelRows");
-            String sortField = (String) req.getParameter("sortType");
+            String sortField = StringUtil.cleanJavascriptAndHtml((String) req.getParameter("sortType"));
             if (sortField == null)
                 sortField = (String) session.getAttribute("sortType");
             if (sortField != null)
@@ -6138,7 +6138,7 @@ public class GetACSearch implements Serializable
                             VD_Bean VDBean = (VD_Bean) vSRows.elementAt(i);
                             // check if the row is checked
                             String ckName = ("CK" + i);
-                            String rSel = (String) req.getParameter(ckName);
+                            String rSel = StringUtil.cleanJavascriptAndHtml((String) req.getParameter(ckName));
                             if (rSel != null)
                                 VDBean.setVD_CHECKED(true);
                             else
@@ -6328,7 +6328,7 @@ public class GetACSearch implements Serializable
                 vSRows = (Vector) session.getAttribute("vACSearch");
             else
                 vSRows = (Vector) session.getAttribute("vSelRows");
-            String sortField = (String) req.getParameter("sortType");
+            String sortField = StringUtil.cleanJavascriptAndHtml((String) req.getParameter("sortType"));
             if (sortField == null)
                 sortField = (String) session.getAttribute("sortType");
             if (sortField != null)
@@ -6644,7 +6644,7 @@ public class GetACSearch implements Serializable
                 vSRows = (Vector) session.getAttribute("vACSearch");
             else
                 vSRows = (Vector) session.getAttribute("vSelRows");
-            String sortField = (String) req.getParameter("sortType");
+            String sortField = StringUtil.cleanJavascriptAndHtml((String) req.getParameter("sortType"));
             if (sortField == null)
                 sortField = (String) session.getAttribute("sortType");
             if (sortField != null)
@@ -7109,7 +7109,7 @@ public class GetACSearch implements Serializable
                 vSRows = (Vector) session.getAttribute("vACSearch");
             else
                 vSRows = (Vector) session.getAttribute("vSelRows");
-            String sortField = (String) req.getParameter("sortType");
+            String sortField = StringUtil.cleanJavascriptAndHtml((String) req.getParameter("sortType"));
             if (sortField == null)
                 sortField = (String) session.getAttribute("sortType");
             if (sortField != null)
@@ -7125,7 +7125,7 @@ public class GetACSearch implements Serializable
                             PV_Bean PVBean = (PV_Bean) vSRows.elementAt(i);
                             // check if the row is checked
                             String ckName = ("CK" + i);
-                            String rSel = (String) req.getParameter(ckName);
+                            String rSel = StringUtil.cleanJavascriptAndHtml((String) req.getParameter(ckName));
                             if (rSel != null)
                                 PVBean.setPV_CHECKED(true);
                             else
@@ -7573,7 +7573,7 @@ public class GetACSearch implements Serializable
     {
         EVSSearch evs = new EVSSearch(m_classReq, m_classRes, m_servlet);
         Vector vRes = new Vector();
-        String actType = (String) m_classReq.getParameter("actSelect");
+        String actType = StringUtil.cleanJavascriptAndHtml((String) m_classReq.getParameter("actSelect"));
         if (sSearchFor != null)
         {
             if (sSearchFor.equals("DataElement"))
@@ -8105,7 +8105,7 @@ public class GetACSearch implements Serializable
             else if (sSearchAC.equals("PermissibleValue"))
             {
                 // store the CRFValue id in the session
-                String crfValueID = req.getParameter("QCValueIDseq");
+                String crfValueID = StringUtil.cleanJavascriptAndHtml(req.getParameter("QCValueIDseq"));
                 String crfValueName = req.getParameter("QCValueName");
                 if (crfValueID != null && !crfValueID.equals(""))
                 {
@@ -8173,7 +8173,7 @@ public class GetACSearch implements Serializable
             }
             else if (sSearchAC.equals("ParentConcept"))
             {
-                String sConteIdseq = (String) req.getParameter("sConteIdseq");
+                String sConteIdseq = StringUtil.cleanJavascriptAndHtml((String) req.getParameter("sConteIdseq"));
                 if (sConteIdseq == null)
                     sConteIdseq = "";
                 sKeyword = (String) session.getAttribute("creKeyword");
@@ -8221,7 +8221,7 @@ public class GetACSearch implements Serializable
             }
             else if (sSearchAC.equals("Property"))
             {
-                String sConteIdseq = (String) req.getParameter("sConteIdseq");
+                String sConteIdseq = StringUtil.cleanJavascriptAndHtml((String) req.getParameter("sConteIdseq"));
                 if (sConteIdseq == null)
                     sConteIdseq = "";
                 if (sSearchIn.equals("publicID"))
@@ -8243,8 +8243,8 @@ public class GetACSearch implements Serializable
             }
             else if (sSearchAC.equals("RepTerm"))
             {
-                String sConteIdseq = (String) req.getParameter("sConteIdseq");
-                String nonEVSSearchInd = (String)req.getParameter("nonEVSRepTermSearch");
+                String sConteIdseq = StringUtil.cleanJavascriptAndHtml((String) req.getParameter("sConteIdseq"));
+                String nonEVSSearchInd = StringUtil.cleanJavascriptAndHtml((String)req.getParameter("nonEVSRepTermSearch"));
                // System.out.println(nonEVSSearchInd);
                 if (sConteIdseq == null)
                     sConteIdseq = "";
@@ -8274,7 +8274,7 @@ public class GetACSearch implements Serializable
             }
             else if (sSearchAC.equals("ObjectQualifier"))
             {
-                String sConteIdseq = (String) req.getParameter("sConteIdseq");
+                String sConteIdseq = StringUtil.cleanJavascriptAndHtml((String) req.getParameter("sConteIdseq"));
                 if (sConteIdseq == null)
                     sConteIdseq = "";
                 if (sSearchIn.equals("publicID"))
@@ -8332,7 +8332,7 @@ public class GetACSearch implements Serializable
 
     private void markNVPForPrimaryConcept(Vector<EVS_Bean> vAC)
     {
-        String totalCon = m_classReq.getParameter("vmConOrder");
+        String totalCon = StringUtil.cleanJavascriptAndHtml(m_classReq.getParameter("vmConOrder"));
         if (totalCon == null || totalCon.equals("0"))
         {
             for (int i = 0; i < vAC.size(); i++)
@@ -8545,7 +8545,7 @@ public class GetACSearch implements Serializable
                         EVS_Bean EVSBean = (EVS_Bean) vSRows.elementAt(i);
                         // check if the row is checked
                         String ckName = ("CK" + i);
-                        String rSel = (String) m_classReq.getParameter(ckName);
+                        String rSel = StringUtil.cleanJavascriptAndHtml((String) m_classReq.getParameter(ckName));
                         if (rSel != null)
                             EVSBean.setCHECKED(true);
                         else
@@ -8780,7 +8780,7 @@ public class GetACSearch implements Serializable
                 vSRows = (Vector) session.getAttribute("vACSearch");
             else
                 vSRows = (Vector) session.getAttribute("vSelRows");
-            String sortField = (String) req.getParameter("blockSortType");
+            String sortField = StringUtil.cleanJavascriptAndHtml((String) req.getParameter("blockSortType"));
             if (sortField == null)
                 sortField = (String) req.getParameter("sortType");
             else if (sortField == null)
@@ -8967,7 +8967,7 @@ public class GetACSearch implements Serializable
                 vSRows = (Vector) session.getAttribute("vACSearch");
             else
                 vSRows = (Vector) session.getAttribute("vSelRows");
-            String sortField = (String) req.getParameter("blockSortType");
+            String sortField = StringUtil.cleanJavascriptAndHtml((String) req.getParameter("blockSortType"));
             if (sortField == null)
                 sortField = (String) req.getParameter("sortType");
             else if (sortField == null)
@@ -9269,7 +9269,7 @@ public class GetACSearch implements Serializable
                 vSRows = (Vector) session.getAttribute("vACSearch");
             else
                 vSRows = (Vector) session.getAttribute("vSelRows");
-            String sortField = (String) req.getParameter("sortType");
+            String sortField = StringUtil.cleanJavascriptAndHtml((String) req.getParameter("sortType"));
             if (sortField == null)
                 sortField = (String) session.getAttribute("sortType");
             if (sortField != null)
@@ -9572,7 +9572,7 @@ public class GetACSearch implements Serializable
             // get the selected rows
             String menuAction = (String) session.getAttribute(Session_Data.SESSION_MENU_ACTION);
             vSRows = (Vector) session.getAttribute("vQuestValue");
-            String sortField = (String) req.getParameter("sortType");
+            String sortField = StringUtil.cleanJavascriptAndHtml((String) req.getParameter("sortType"));
             if (sortField == null)
                 sortField = (String) session.getAttribute("sortType");
             if (sortField != null)
@@ -10269,7 +10269,7 @@ public class GetACSearch implements Serializable
             Vector vSRows = (Vector) session.getAttribute("vSelRows");
             Vector vCheckList = new Vector();
             int selectedRowID = -1;
-            String unCheckedRowId = (String) m_classReq.getParameter("unCheckedRowId");
+            String unCheckedRowId = StringUtil.cleanJavascriptAndHtml((String) m_classReq.getParameter("unCheckedRowId"));
             if (unCheckedRowId != null && !(unCheckedRowId == "")){
                 selectedRowID = new Integer(unCheckedRowId);
            }
@@ -10307,7 +10307,7 @@ public class GetACSearch implements Serializable
                 for (int m = 0; m < (vSRows.size()); m++)
                 {
                     String ckName2 = ("CK" + m);
-                    String rSel2 = (String) req.getParameter(ckName2);
+                    String rSel2 = StringUtil.cleanJavascriptAndHtml((String) req.getParameter(ckName2));
                     if (rSel2 != null)
                         vCheckList.addElement(ckName2);
                 }
@@ -10391,7 +10391,7 @@ public class GetACSearch implements Serializable
         PreparedStatement pstmt = null;
         String sCUIString = "";
         String compType = "";
-        conID = m_classReq.getParameter("conid");
+        conID = StringUtil.cleanJavascriptAndHtml(m_classReq.getParameter("conid"));
         if (ASLName.equals("")) ASLName=new String("%"); 
         try
         {
