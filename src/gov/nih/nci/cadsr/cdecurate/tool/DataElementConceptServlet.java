@@ -131,12 +131,12 @@ public class DataElementConceptServlet extends CurationServlet {
 	private void doCreateDECActions() throws Exception
 	{
 		HttpSession session = m_classReq.getSession();
-		String sMenuAction = (String) m_classReq.getParameter("MenuAction");
+		String sMenuAction = StringUtil.cleanJavascriptAndHtml((String) m_classReq.getParameter("MenuAction"));
 		if (sMenuAction != null)
 			DataManager.setAttribute(session, Session_Data.SESSION_MENU_ACTION, sMenuAction);
-		String sAction = (String) m_classReq.getParameter("pageAction");
+		String sAction = StringUtil.cleanJavascriptAndHtml((String) m_classReq.getParameter("pageAction"));
 		DataManager.setAttribute(session, "DECPageAction", sAction); // store the page action in attribute
-		String sSubAction = (String) m_classReq.getParameter("DECAction");
+		String sSubAction = StringUtil.cleanJavascriptAndHtml((String) m_classReq.getParameter("DECAction"));
 		DataManager.setAttribute(session, "DECAction", sSubAction);
 		String sOriginAction = (String) session.getAttribute("originAction");
 		/* if (sAction.equals("changeContext"))
@@ -249,7 +249,7 @@ public class DataElementConceptServlet extends CurationServlet {
 	private void doEditDECActions() throws Exception
 	{
 		HttpSession session = m_classReq.getSession();
-		String sMenuAction = (String) m_classReq.getParameter("MenuAction");
+		String sMenuAction = StringUtil.cleanJavascriptAndHtml((String) m_classReq.getParameter("MenuAction"));
 		if (sMenuAction != null)
 			DataManager.setAttribute(session, Session_Data.SESSION_MENU_ACTION, sMenuAction);
 		String sAction = (String) m_classReq.getParameter("pageAction");
@@ -363,7 +363,7 @@ public class DataElementConceptServlet extends CurationServlet {
 		String sSysName = pageDEC.getAC_SYS_PREF_NAME();
 		String sAbbName = pageDEC.getAC_ABBR_PREF_NAME();
 		String sUsrName = pageDEC.getAC_USER_PREF_NAME();
-		String sNameType = (String) m_classReq.getParameter("rNameConv");
+		String sNameType = StringUtil.cleanJavascriptAndHtml((String) m_classReq.getParameter("rNameConv"));
 		if (sNameType == null || sNameType.equals(""))
 			sNameType = "SYS"; // default
 		// logger.debug(sSysName + " name type " + sNameType);

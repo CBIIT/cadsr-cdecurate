@@ -11,6 +11,7 @@ import java.util.Vector;
 
 import gov.nih.nci.cadsr.cdecurate.ui.AltNamesDefsSession;
 import gov.nih.nci.cadsr.cdecurate.util.DataManager;
+import gov.nih.nci.cadsr.common.StringUtil;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
@@ -119,7 +120,7 @@ public class DataElementServlet extends CurationServlet{
     private void doCreateDEActions() throws Exception
     {
         HttpSession session = m_classReq.getSession();
-        String sPageAction = (String) m_classReq.getParameter("pageAction");
+        String sPageAction = StringUtil.cleanJavascriptAndHtml((String) m_classReq.getParameter("pageAction"));
         if (sPageAction != null)
             DataManager.setAttribute(session, "sCDEAction", sPageAction);
         String sMenuAction = (String) m_classReq.getParameter("MenuAction");
@@ -247,7 +248,7 @@ public class DataElementServlet extends CurationServlet{
     private void doEditDEActions() throws Exception
     {
         HttpSession session = m_classReq.getSession();
-        String sPageAction = (String) m_classReq.getParameter("pageAction");
+        String sPageAction = StringUtil.cleanJavascriptAndHtml((String) m_classReq.getParameter("pageAction"));
         if (sPageAction != null)
             DataManager.setAttribute(session, "sCDEAction", sPageAction);
         String sMenuAction = (String) m_classReq.getParameter("MenuAction");
@@ -403,7 +404,7 @@ public class DataElementServlet extends CurationServlet{
             selNameType = "";
         if (sOrigin.equals("Search") || sOrigin.equals("Remove"))
         {
-            selNameType = (String) m_classReq.getParameter("rNameConv");
+            selNameType = StringUtil.cleanJavascriptAndHtml((String) m_classReq.getParameter("rNameConv"));
             if (selNameType == null)
                 selNameType = "";
             String sPrefName = (String) m_classReq.getParameter("txtPreferredName");
@@ -539,7 +540,7 @@ public class DataElementServlet extends CurationServlet{
         String sSysName = pageDE.getAC_SYS_PREF_NAME();
         String sAbbName = pageDE.getAC_ABBR_PREF_NAME();
        // String sUsrName = pageDE.getAC_USER_PREF_NAME();
-        String sNameType = (String) m_classReq.getParameter("rNameConv");
+        String sNameType = StringUtil.cleanJavascriptAndHtml((String) m_classReq.getParameter("rNameConv"));
         if (sNameType == null)
             sNameType = "";
         // logger.debug(sSysName + " name abb " + sAbbName + " name usr " + sUsrName);
@@ -769,7 +770,7 @@ public class DataElementServlet extends CurationServlet{
         DataManager.setAttribute(session, Session_Data.SESSION_STATUS_MESSAGE, "");
         Vector vStat = new Vector();
         DataManager.setAttribute(session, "vStatMsg", vStat);
-        String sAction = (String) m_classReq.getParameter("ValidateDEPageAction");
+        String sAction = StringUtil.cleanJavascriptAndHtml((String) m_classReq.getParameter("ValidateDEPageAction"));
         String sDEEditAction = (String) session.getAttribute("DEEditAction");
         if (sDEEditAction == null)
             sDEEditAction = "";
@@ -1470,7 +1471,7 @@ public class DataElementServlet extends CurationServlet{
     private void doOpenDEPageFromDEComp() throws Exception
     {
         HttpSession session = m_classReq.getSession();
-        String sPageAction = (String) m_classReq.getParameter("pageAction");
+        String sPageAction = StringUtil.cleanJavascriptAndHtml((String) m_classReq.getParameter("pageAction"));
         DataManager.setAttribute(session, "DDEAction", "nothing"); // reset from "CreateNewDEFComp"
         // set primary DE back
         DE_Bean pDEBean = new DE_Bean();
@@ -1561,9 +1562,9 @@ public class DataElementServlet extends CurationServlet{
         // DDE rules
         String sDDERepTypes[] = m_classReq.getParameterValues("selRepType");
         String sRepType = sDDERepTypes[0];
-        String sRule = (String) m_classReq.getParameter("DDERule");
-        String sMethod = (String) m_classReq.getParameter("DDEMethod");
-        String sConcatChar = (String) m_classReq.getParameter("DDEConcatChar");
+        String sRule = StringUtil.cleanJavascriptAndHtml((String) m_classReq.getParameter("DDERule"));
+        String sMethod = StringUtil.cleanJavascriptAndHtml((String) m_classReq.getParameter("DDEMethod"));
+        String sConcatChar = StringUtil.cleanJavascriptAndHtml((String) m_classReq.getParameter("DDEConcatChar"));
         if (sRepType != null)
             DataManager.setAttribute(session, "sRepType", sRepType);
         else
@@ -1625,9 +1626,9 @@ public class DataElementServlet extends CurationServlet{
     {
         HttpSession session = (HttpSession) m_classReq.getSession();
         GetACSearch getAC = new GetACSearch(m_classReq, m_classRes, this);
-        String acID = m_classReq.getParameter("acID");
-        String acName = m_classReq.getParameter("acName"); // de name for DDE
-        String searchType = m_classReq.getParameter("itemType"); // dde type
+        String acID = StringUtil.cleanJavascriptAndHtml(m_classReq.getParameter("acID"));
+        String acName = StringUtil.cleanJavascriptAndHtml(m_classReq.getParameter("acName")); // de name for DDE
+        String searchType = StringUtil.cleanJavascriptAndHtml(m_classReq.getParameter("itemType")); // dde type
         // split acID into list if more then one existed
         if (searchType != null && searchType.equals("Component")) // (acID.indexOf(',') > 0)
         {

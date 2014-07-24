@@ -4563,7 +4563,7 @@ public class InsACService implements Serializable {
 		Vector<String> vACID = (Vector) session.getAttribute("vACId");
 		Vector<String> vNames = (Vector) session.getAttribute("vACName");
 		DE_Bean deBean = (DE_Bean) session.getAttribute("m_DE");
-		String sContextID = (String) m_classReq.getParameter("selContext");
+		String sContextID = StringUtil.cleanJavascriptAndHtml((String) m_classReq.getParameter("selContext"));
 		Vector vContName = (Vector) session.getAttribute("vWriteContextDE");
 		Vector vContID = (Vector) session.getAttribute("vWriteContextDE_ID");
 		String sContext = m_util.getNameByID(vContName, vContID, sContextID);
@@ -4752,7 +4752,7 @@ public class InsACService implements Serializable {
 		// designate used by context if not exists before
 		String refreshAct = "";
 		Vector vUsedCont = (Vector) deBean.getDE_USEDBY_CONTEXT_ID();
-		String sLang = (String) m_classReq.getParameter("dispLanguage");
+		String sLang = StringUtil.cleanJavascriptAndHtml((String) m_classReq.getParameter("dispLanguage"));
 		if (sLang == null || sLang.equals(""))
 			sLang = "ENGLISH";
 		if ((vUsedCont == null || !vUsedCont.contains(useCont))

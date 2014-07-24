@@ -29,6 +29,7 @@ import gov.nih.nci.cadsr.cdecurate.util.DataManager;
 import gov.nih.nci.cadsr.cdecurate.util.ToolException;
 import gov.nih.nci.cadsr.cdecurate.util.Tree;
 import gov.nih.nci.cadsr.cdecurate.util.TreeNode;
+import gov.nih.nci.cadsr.common.StringUtil;
 
 import java.io.Serializable;
 import java.sql.Connection;
@@ -394,7 +395,7 @@ public class AltNamesDefsSession implements Serializable
     {
         // We identify the VM for the VD by an index value.
         AltNamesDefsSession altSess = null;
-        String vmID = req_.getParameter(_beanVMID);
+        String vmID = StringUtil.cleanJavascriptAndHtml(req_.getParameter(_beanVMID));
         if (vmID == null)
         {
             throw new Exception("Missing required request parameter \"" + _beanVMID + "\".");
@@ -717,7 +718,7 @@ public class AltNamesDefsSession implements Serializable
     {
         // Ok this logic has nothing to do with EVS. The current field name used by
         // the curation tool is referenced for consistency.
-        String launch = req_.getParameter(_searchEVS);
+        String launch = StringUtil.cleanJavascriptAndHtml(req_.getParameter(_searchEVS));
 
         // This would be a problem, the environment is not right for this request.
         if (launch == null)

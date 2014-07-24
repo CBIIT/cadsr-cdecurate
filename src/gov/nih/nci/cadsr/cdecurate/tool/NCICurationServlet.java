@@ -238,7 +238,7 @@ public class NCICurationServlet extends HttpServlet
         ClockTime clock = new ClockTime();
         try
         {
-        	String reqType = req.getParameter("reqType");
+        	String reqType = StringUtil.cleanJavascriptAndHtml(req.getParameter("reqType"));
         	HttpSession session = req.getSession();
         	String menuAction = (String) session.getAttribute(Session_Data.SESSION_MENU_ACTION);
         	if((menuAction == null) 

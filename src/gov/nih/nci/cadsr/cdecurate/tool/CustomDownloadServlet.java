@@ -8,6 +8,7 @@
 package gov.nih.nci.cadsr.cdecurate.tool;
 
 import gov.nih.nci.cadsr.cdecurate.util.AdministeredItemUtil;
+import gov.nih.nci.cadsr.common.StringUtil;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -46,7 +47,6 @@ import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
-
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Text;
@@ -159,7 +159,7 @@ public class CustomDownloadServlet extends CurationServlet {
 				}
 			}
 		} else {
-			String searchIDCSV= (String) this.m_classReq.getParameter("SearchID");			
+			String searchIDCSV= StringUtil.cleanJavascriptAndHtml((String) this.m_classReq.getParameter("SearchID"));			
 			String[] ids = searchIDCSV.split(",");
 			for(String id: ids) 
 				downloadID.add(id);
@@ -710,7 +710,7 @@ public class CustomDownloadServlet extends CurationServlet {
 	private void createXMLDownload(ArrayList<String[]> allRows) {
 		//Limited columns?  If xmlColumns is not null
 		//Setup columns
-		String colString = (String) this.m_classReq.getParameter("cdlColumns");
+		String colString = StringUtil.cleanJavascriptAndHtml((String) this.m_classReq.getParameter("cdlColumns"));
 		ArrayList<String> allHeaders = (ArrayList<String>) m_classReq.getSession().getAttribute("headers");
 		ArrayList<String> allExpandedHeaders = (ArrayList<String>) m_classReq.getSession().getAttribute("allExpandedHeaders");
 		ArrayList<String> allTypes = (ArrayList<String>) m_classReq.getSession().getAttribute("types");

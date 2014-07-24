@@ -166,7 +166,7 @@ public class VMServlet extends GenericServlet
     HttpSession session = req.getSession();
     //get the cd id to filter
     String sCDid = ""; 
-    sCDid = (String)req.getParameter("listCDName");    //get selected cd
+    sCDid = StringUtil.cleanJavascriptAndHtml((String)req.getParameter("listCDName"));    //get selected cd
     if(sCDid == null || sCDid.equals("All Domains")) 
     		sCDid = "";       
     DataManager.setAttribute(session, "creSelectedCD", sCDid);
@@ -338,8 +338,8 @@ private void setVersionValues(VMForm vmData,HttpServletRequest req, HttpSession 
       String sVMD = "";
       if (pvInd == -1)
       {
-        sVM = (String)req.getParameter("pvNewVM");  //vm name
-        sVMD = (String)req.getParameter("pvNewVMD");  //vm desc  
+        sVM = StringUtil.cleanJavascriptAndHtml((String)req.getParameter("pvNewVM"));  //vm name
+        sVMD = StringUtil.cleanJavascriptAndHtml((String)req.getParameter("pvNewVMD"));  //vm desc  
         vm.setVM_SUBMIT_ACTION(VMForm.CADSR_ACTION_INS);
      // System.out.println(sVM + " new " + sVMD);
       }
@@ -592,9 +592,9 @@ private void setVersionValues(VMForm vmData,HttpServletRequest req, HttpSession 
         HttpSession session = httpRequest.getSession();
         VM_Bean vm = (VM_Bean)session.getAttribute(VMForm.SESSION_SELECT_VM);
       //check if user entered alt def exists
-        String sLongName = (String)httpRequest.getParameter(VMForm.ELM_LONG_NAME);
+        String sLongName = StringUtil.cleanJavascriptAndHtml((String)httpRequest.getParameter(VMForm.ELM_LONG_NAME));
         //check if user entered alt def exists
-        String sDef = (String)httpRequest.getParameter(VMForm.ELM_DEFINITION);
+        String sDef = StringUtil.cleanJavascriptAndHtml((String)httpRequest.getParameter(VMForm.ELM_DEFINITION));
         if (sDef != null)
         {
           if (sDef.equals(""))  //this helps to keeps to create default alt defintion only when going from user defined vm to concept vm
