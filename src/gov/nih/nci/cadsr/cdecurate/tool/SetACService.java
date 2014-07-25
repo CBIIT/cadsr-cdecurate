@@ -4043,8 +4043,8 @@ public class SetACService implements Serializable
 			}
 
 			//cs-csi relationship
-			String[] sNAMEs = req.getParameterValues("selCSNAMEHidden");
-			m_DEC.setAC_CS_NAME(this.getSelectionFromPage(sNAMEs));
+            String[] sNAMEs = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtmlArray(req.getParameterValues("selCSNAMEHidden"));
+            m_DEC.setAC_CS_NAME(this.getSelectionFromPage(sNAMEs));
 
 			//get associated ac-csi
 			Vector<String> vCSCSIs = new Vector<String>(), vACCSIs = new Vector<String>();
@@ -4052,9 +4052,11 @@ public class SetACService implements Serializable
 			String[] sIDs, sACCSIs, sACs;
 			String sACCSI, sAC;
 			//get selected cs-csi
-			sIDs = req.getParameterValues("selCSCSIHidden");
-			sACCSIs = req.getParameterValues("selACCSIHidden");
-			sACs = req.getParameterValues("selACHidden");
+            sIDs = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtmlArray(req.getParameterValues("selCSCSIHidden"));
+            
+            sACCSIs = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtmlArray(req.getParameterValues("selACCSIHidden"));
+
+            sACs = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtmlArray(req.getParameterValues("selACHidden"));
 			Vector vNames = (Vector)session.getAttribute("vACName");
 			Vector vIDs = (Vector)session.getAttribute("vACId");
 
@@ -4091,11 +4093,11 @@ public class SetACService implements Serializable
 			m_DEC.setAC_AC_CSI_VECTOR(vList);
 
 			//get associated ac-csi
-			sIDs = req.getParameterValues("selACCSIHidden");
+			sIDs = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtmlArray(req.getParameterValues("selACCSIHidden"));
 			m_DEC.setAC_AC_CSI_ID(this.getSelectionFromPage(sIDs));
 
 			//get associated cs-id
-			sIDs = req.getParameterValues("selectedCS");
+            sIDs = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtmlArray(req.getParameterValues("selectedCS"));
 			m_DEC.setAC_CS_ID(this.getSelectionFromPage(sIDs));
 		}
 		catch (Exception e)
@@ -4230,9 +4232,11 @@ public class SetACService implements Serializable
 			String[] sIDs, sACCSIs, sACs;
 			String sACCSI, sAC, sID;
 			//get selected cs-csi
-			sIDs = req.getParameterValues("selCSCSIHidden");
-			sACCSIs = req.getParameterValues("selACCSIHidden");
-			sACs = req.getParameterValues("selACHidden");
+            sIDs = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtmlArray(req.getParameterValues("selCSCSIHidden"));
+
+            sACCSIs = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtmlArray(req.getParameterValues("selACCSIHidden"));
+			
+            sACs = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtmlArray(req.getParameterValues("selACHidden"));
 			Vector vNames = (Vector)session.getAttribute("vACName");
 			Vector vIDs = (Vector)session.getAttribute("vACId");
 
@@ -4270,11 +4274,11 @@ public class SetACService implements Serializable
 			deBean.setAC_AC_CSI_VECTOR(vList);//req.setAttribute("vACCSIList", vACCSIList);
 
 			//get associated ac-csi
-			sIDs = req.getParameterValues("selACCSIHidden");
+			sIDs = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtmlArray(req.getParameterValues("selACCSIHidden"));
 			deBean.setAC_AC_CSI_ID(this.getSelectionFromPage(sIDs));
 
 			//get associated cs-id
-			sIDs = req.getParameterValues("selectedCS");
+            sIDs = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtmlArray(req.getParameterValues("selectedCS"));
 			deBean.setAC_CS_ID(this.getSelectionFromPage(sIDs));
 			// System.out.println(" leaving setacservice_setdecscsivaluefrompage ");
 		}
@@ -4536,7 +4540,7 @@ public class SetACService implements Serializable
 			}
 
 			//cs-csi relationship
-			String[] sNAMEs = req.getParameterValues("selCSNAMEHidden");
+            String[] sNAMEs = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtmlArray(req.getParameterValues("selCSNAMEHidden"));
 			m_VD.setAC_CS_NAME(this.getSelectionFromPage(sNAMEs));
 
 			//get associated ac-csi
@@ -4545,9 +4549,11 @@ public class SetACService implements Serializable
 			String[] sIDs, sACCSIs, sACs;
 			String sACCSI, sAC;
 			//get selected cs-csi
-			sIDs = req.getParameterValues("selCSCSIHidden");
-			sACCSIs = req.getParameterValues("selACCSIHidden");
-			sACs = req.getParameterValues("selACHidden");
+            sIDs = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtmlArray(req.getParameterValues("selCSCSIHidden"));
+
+            sACCSIs = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtmlArray(req.getParameterValues("selACCSIHidden"));
+            
+            sACs = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtmlArray(req.getParameterValues("selACHidden"));
 			Vector vNames = (Vector)session.getAttribute("vACName");
 			Vector vIDs = (Vector)session.getAttribute("vACId");
 
@@ -4597,11 +4603,11 @@ public class SetACService implements Serializable
 
 
 			//get associated ac-csi
-			sIDs = req.getParameterValues("selACCSIHidden");
+			sIDs = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtmlArray(req.getParameterValues("selACCSIHidden"));
 			m_VD.setAC_AC_CSI_ID(this.getSelectionFromPage(sIDs));
 
 			//get associated cs-id
-			sIDs = req.getParameterValues("selectedCS");
+            sIDs = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtmlArray(req.getParameterValues("selectedCS"));
 			m_VD.setAC_CS_ID(this.getSelectionFromPage(sIDs));
 		}
 		catch (Exception e)

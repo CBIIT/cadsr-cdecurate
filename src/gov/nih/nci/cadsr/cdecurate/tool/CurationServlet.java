@@ -459,8 +459,8 @@ public class CurationServlet
 							}
 						}
 						if ((userName != null) || ((userName == null) && (!cancelLogin.equals("No")))) {
-							String prevReq = m_classReq.getParameter("previousReqType");
-							if (prevReq == null)
+	                        String prevReq = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml((String) m_classReq.getParameter("previousReqType"));
+	                        if (prevReq == null)
 								prevReq = "/SearchResultsPage.jsp";
 							ForwardJSP(m_classReq, m_classRes, prevReq);
 						}
@@ -1452,7 +1452,7 @@ public class CurationServlet
         if (vRSel == null)
             vRSel = new Vector();
         // get the array from teh hidden list
-        String selRows[] = req.getParameterValues("hiddenSelRow");
+        String selRows[] = StringUtil.cleanJavascriptAndHtmlArray(req.getParameterValues("hiddenSelRow"));
         if (selRows == null)
             storeStatusMsg("Unable to select Concept, please try again");
         else
@@ -1499,7 +1499,7 @@ public class CurationServlet
         if (vRSel == null)
             vRSel = new Vector();
         // get the array from teh hidden list
-        String selRows[] = req.getParameterValues("hiddenSelRow");
+        String selRows[] = StringUtil.cleanJavascriptAndHtmlArray(req.getParameterValues("hiddenSelRow"));
         if (selRows == null)
             storeStatusMsg("Unable to select Concept, please try again");
         else
@@ -3944,15 +3944,15 @@ public class CurationServlet
 		String acIDSEQ = StringUtil.cleanJavascriptAndHtml(m_classReq.getParameter("idseq"));
 		try {
 			if (acIDSEQ == null) {
-				sPublicId = m_classReq.getParameter("publicId");
-				for (int i=0; i<sPublicId.length(); i++){
+                sPublicId = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml((String) m_classReq.getParameter("publicId"));
+                for (int i=0; i<sPublicId.length(); i++){
 					if (Character.isLetter(sPublicId.charAt(i))){
 						flag = true;
 						break;
 					}
 				}
-				sVersion = m_classReq.getParameter("version");
-				for (int i=0; i<sVersion.length(); i++){
+                sVersion = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml((String) m_classReq.getParameter("Version"));
+                for (int i=0; i<sVersion.length(); i++){
 					if (Character.isLetter(sVersion.charAt(i))){
 						flag = true;
 						break;

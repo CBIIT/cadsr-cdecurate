@@ -416,7 +416,8 @@ public class ValueDomainServlet extends CurationServlet {
 		DataManager.setAttribute(session, "m_DE", m_DE);
 		this.clearBuildingBlockSessionAttributes(m_classReq, m_classRes);
 		String sVDID = null;
-		String sVDid[] = m_classReq.getParameterValues("selVD");
+		String sVDid[] = /* CURATNTOOL-1046 */ StringUtil.cleanJavascriptAndHtmlArray(m_classReq.getParameterValues("selVD"));
+		
 		if (sVDid != null)
 			sVDID = sVDid[0];
 		// get the dec bean for this id

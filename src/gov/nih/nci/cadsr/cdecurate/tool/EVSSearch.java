@@ -8,6 +8,7 @@ package gov.nih.nci.cadsr.cdecurate.tool;
 import gov.nih.nci.cadsr.cdecurate.util.DataManager;
 import gov.nih.nci.cadsr.cdecurate.util.LexEVSHelper;
 import gov.nih.nci.cadsr.common.Constants;
+import gov.nih.nci.cadsr.common.StringUtil;
 import gov.nih.nci.evs.security.SecurityToken;
 import gov.nih.nci.system.client.ApplicationServiceProvider;
 
@@ -2748,7 +2749,7 @@ public class EVSSearch implements Serializable {
         HttpSession session = m_classReq.getSession();
         System.out.println("$$$$$$$$$$ EVS URL = [" + m_eUser.getEVSConURL() + "] $$$$$$$$$$$");
         //=== get it from the UI instead
-        String lookupVocabName = (String)m_classReq.getParameter("userSelectedVocab");
+        String lookupVocabName = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml((String) m_classReq.getParameter("userSelectedVocab"));
         if(lookupVocabName == null) lookupVocabName = (String) session.getAttribute("userSelectedVocab");
         session.setAttribute(Constants.DEC_EVS_LOOKUP_FLAG, String.valueOf(false));
         lexAPI.getMetathesaurusMapping(evsService, termStr, lookupVocabName);
@@ -2969,9 +2970,9 @@ public class EVSSearch implements Serializable {
         public void doGetSuperConcepts() throws Exception {
                 try {
                         HttpSession session = m_classReq.getSession();
-                        String sConceptName = (String) m_classReq.getParameter("nodeName");
-                        String sConceptCode = (String) m_classReq.getParameter("nodeCode");
-                        String dtsVocab = (String) m_classReq.getParameter("vocab");
+                        String sConceptName = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml((String) m_classReq.getParameter("nodeName"));
+                        String sConceptCode = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml((String) m_classReq.getParameter("nodeCode"));
+                        String dtsVocab = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml((String) m_classReq.getParameter("vocab"));
                         String sUISearchType = (String) m_classReq
                         .getParameter("UISearchType");
                         if (sUISearchType == null || sUISearchType.equals("nothing"))
@@ -3058,13 +3059,13 @@ public class EVSSearch implements Serializable {
                         if (sComp == null)
                                 sComp = "";
                         DataManager.setAttribute(session, "creSearchAC", sComp);
-                        String sCCodeDB = (String) m_classReq.getParameter("OCCCodeDB");
+                        String sCCodeDB = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml((String) m_classReq.getParameter("OCCCodeDB"));
                         Vector vVocabList = m_eUser.getVocabNameList();
                         if (vVocabList == null)
                                 vVocabList = new Vector();
-                        String sCCode = (String) m_classReq.getParameter("OCCCode");
-                        String sCCodeName = (String) m_classReq.getParameter("OCCCodeName");
-                        String sNodeID = (String) m_classReq.getParameter("nodeID");
+                        String sCCode = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml((String) m_classReq.getParameter("OCCCode"));
+                        String sCCodeName = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml((String) m_classReq.getParameter("OCCCodeName"));
+                        String sNodeID = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml((String) m_classReq.getParameter("nodeID"));
                         String dtsVocab = m_eBean.getVocabAttr(m_eUser, sCCodeDB,
                                         EVSSearch.VOCAB_DBORIGIN, EVSSearch.VOCAB_NAME); // "vocabDBOrigin", "vocabName");
                         if (sCCode == null || sCCode.equals(""))
@@ -3189,9 +3190,9 @@ public class EVSSearch implements Serializable {
                 String sUISearchType = (String) m_classReq.getAttribute("UISearchType");
                 if (sUISearchType == null || sUISearchType.equals("nothing"))
                         sUISearchType = "tree";
-                String sKeywordID = (String) m_classReq.getParameter("keywordID");
-                String sKeywordName = (String) m_classReq.getParameter("keywordName");
-                String conLevel = (String) m_classReq.getParameter("nodeLevel");
+                String sKeywordID = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml((String) m_classReq.getParameter("keywordID"));
+                String sKeywordName = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml((String) m_classReq.getParameter("keywordName"));
+                String conLevel = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml((String) m_classReq.getParameter("nodeLevel"));
                 int iLevel = -1;
                 if (conLevel != null && !conLevel.equals(""))
                         iLevel = Integer.parseInt(conLevel);
@@ -3201,10 +3202,9 @@ public class EVSSearch implements Serializable {
                         sKeywordName = sConceptName;
                 //since dtsvocab is empty, get it from url vocab, otherwise get it from dropdown
                 if (dtsVocab == null || dtsVocab.equals(""))
-                        dtsVocab = (String) m_classReq.getParameter("vocab");
+                    dtsVocab = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml((String) m_classReq.getParameter("vocab"));
                 if (dtsVocab == null || dtsVocab.equals(""))
-                        dtsVocab = (String) m_classReq
-                        .getParameter("listContextFilterVocab");
+                    dtsVocab = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml((String) m_classReq.getParameter("listContextFilterVocab"));
                 if (dtsVocab == null)
                         dtsVocab = ""; //dtsVocab;
                 if (sKeywordID.equals("") && !sKeywordName.equals(""))
@@ -3300,7 +3300,7 @@ public class EVSSearch implements Serializable {
         public void doTreeSearch(String actType, String searchType)
         throws Exception {
                 HttpSession session = m_classReq.getSession();
-                String dtsVocab = m_classReq.getParameter("listContextFilterVocab");
+                String dtsVocab = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml((String) m_classReq.getParameter("listContextFilterVocab"));
                 if (actType.equals("term") || actType.equals(""))
                         m_classReq.setAttribute("UISearchType", "term");
                 else if (actType.equals("tree")) {
@@ -3336,7 +3336,7 @@ public class EVSSearch implements Serializable {
          */
         public void doTreeRefreshRequest() throws Exception {
                 HttpSession session = m_classReq.getSession();
-                String vocab = m_classReq.getParameter("vocab");
+                String vocab = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml((String) m_classReq.getParameter("vocab"));
                 vocab = m_eBean.getVocabAttr(m_eUser, vocab, EVSSearch.VOCAB_DISPLAY,
                                 EVSSearch.VOCAB_NAME); // "vocabDisplay", "vocabName");
                 DataManager.setAttribute(session, "dtsVocab", vocab);
@@ -3368,10 +3368,10 @@ public class EVSSearch implements Serializable {
                         Vector vResult = getACSearch.refreshSearchPage(sSearchAC);
                         DataManager.setAttribute(session, "results", vResult);
                 }
-                String nodeName = m_classReq.getParameter("nodeName");
-                String nodeCode = m_classReq.getParameter("nodeCode");
-                String nodeID = m_classReq.getParameter("nodeID");
-                String vocab = m_classReq.getParameter("vocab");
+                String nodeName = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml((String) m_classReq.getParameter("nodeName")); 
+                String nodeCode = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml((String) m_classReq.getParameter("nodeCode"));
+                String nodeID = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml((String) m_classReq.getParameter("nodeID"));
+                String vocab = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml((String) m_classReq.getParameter("vocab"));
                 if (vocab == null)
                         vocab = m_eUser.getPrefVocab();
                 DataManager.setAttribute(session, "dtsVocab", vocab);
@@ -3405,9 +3405,9 @@ public class EVSSearch implements Serializable {
                         Vector vResult = getACSearch.refreshSearchPage(sSearchAC);
                         DataManager.setAttribute(session, "results", vResult);
                 }
-                String nodeName = m_classReq.getParameter("nodeName");
-                String vocab = m_classReq.getParameter("vocab");
-                String nodeID = m_classReq.getParameter("nodeID");
+                String nodeName = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml((String) m_classReq.getParameter("nodeName"));
+                String vocab = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml((String) m_classReq.getParameter("vocab"));
+                String nodeID = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml((String) m_classReq.getParameter("nodeID"));
                 if (vocab == null)
                         vocab = m_eUser.getPrefVocab();
                 DataManager.setAttribute(session, "dtsVocab", vocab);
@@ -3428,9 +3428,9 @@ public class EVSSearch implements Serializable {
          */
         public void doGetSubConcepts() throws Exception {
                 HttpSession session = m_classReq.getSession();
-                String sConceptName = (String) m_classReq.getParameter("nodeName");
-                String sConceptCode = (String) m_classReq.getParameter("nodeCode");
-                String dtsVocab = (String) m_classReq.getParameter("vocab");
+                String sConceptName = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml((String) m_classReq.getParameter("nodeName"));
+                String sConceptCode = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml((String) m_classReq.getParameter("nodeCode"));
+                String dtsVocab = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml((String) m_classReq.getParameter("vocab"));
                 if (dtsVocab == null)
                         dtsVocab = "";
                 dtsVocab = m_eBean.getVocabAttr(m_eUser, dtsVocab,
@@ -3549,10 +3549,10 @@ public class EVSSearch implements Serializable {
         public void openTreeToConcept(String actType) {
                 try {
                         HttpSession session = (HttpSession) m_classReq.getSession();
-                        String sCCodeDB = (String) m_classReq.getParameter("sCCodeDB");
-                        String sCCode = (String) m_classReq.getParameter("sCCode");
-                        String sCCodeName = (String) m_classReq.getParameter("sCCodeName");
-                        String sNodeID = (String) m_classReq.getParameter("nodeID");
+                        String sCCodeDB = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml((String) m_classReq.getParameter("sCCodeDB"));
+                        String sCCode = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml((String) m_classReq.getParameter("sCCode"));
+                        String sCCodeName = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml((String) m_classReq.getParameter("sCCodeName"));
+                        String sNodeID = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml((String) m_classReq.getParameter("nodeID"));
                         String dtsVocab = m_eBean.getVocabAttr(m_eUser, sCCodeDB,
                                         EVSSearch.VOCAB_DBORIGIN, EVSSearch.VOCAB_NAME); // "vocabDBOrigin", "vocabName");
                         Vector vVocabs = m_eUser.getVocabNameList();
@@ -3601,10 +3601,10 @@ public class EVSSearch implements Serializable {
         private void openTreeToParentConcept(String actType) {
                 try {
                         HttpSession session = m_classReq.getSession();
-                        String sCCodeDB = (String) m_classReq.getParameter("sCCodeDB");
-                        String sCCode = (String) m_classReq.getParameter("sCCode");
-                        String sCCodeName = (String) m_classReq.getParameter("sCCodeName");
-                        String sNodeID = (String) m_classReq.getParameter("nodeID");
+                        String sCCodeDB = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml((String) m_classReq.getParameter("sCCodeDB"));
+                        String sCCode = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml((String) m_classReq.getParameter("sCCode"));
+                        String sCCodeName = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml((String) m_classReq.getParameter("sCCodeName"));
+                        String sNodeID = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml((String) m_classReq.getParameter("nodeID"));
                         String treeName = "parentTree" + sCCodeName;
                         DataManager.setAttribute(session, "SelectedParentName", sCCodeName);
                         DataManager.setAttribute(session, "SelectedParentCC", sCCode);
@@ -3761,8 +3761,8 @@ public class EVSSearch implements Serializable {
                    String eDB = eBean.getEVS_DATABASE();
                    //GF32723
                    if(eDB == null || eDB.trim().equals("")) {
-                         eDB = (String) m_classReq.getParameter("userSelectedVocab");                     
-                         logger.info("==========$ EVSSearch:getThesaurusConcept() eDB is replaced with the userSelectedVocab (request parameter) [" + eDB + "] $==========");
+                       eDB = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml((String) m_classReq.getParameter("userSelectedVocab"));
+                       logger.info("==========$ EVSSearch:getThesaurusConcept() eDB is replaced with the userSelectedVocab (request parameter) [" + eDB + "] $==========");
                    }
                    String metaName = m_eUser.getMetaDispName();
                    String nciVocab = this.getMetaVocabName(metaName);
@@ -4192,8 +4192,8 @@ public class EVSSearch implements Serializable {
     		System.out.println("getThesaurusConceptBean: called");
     		Vector<EVS_Bean>  vEvsBeann = new Vector<EVS_Bean>();
     		if (vEvsBean != null){  
-				String vocabName=(String)m_classReq.getParameter("userSelectedVocab");
-    			for (int i = 0; i < vEvsBean.size(); i++) {
+                String vocabName = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml((String) m_classReq.getParameter("userSelectedVocab"));
+                for (int i = 0; i < vEvsBean.size(); i++) {
     				EVS_Bean eBean = (EVS_Bean) vEvsBean.elementAt(i);
     				//begin GF32723
     				if(LexEVSHelper.isOtherVocabulary(vocabName)) {

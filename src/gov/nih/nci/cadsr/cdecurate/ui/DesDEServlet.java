@@ -124,7 +124,7 @@ public class DesDEServlet
         Vector<String> vACName = (Vector) session.getAttribute("vACName");
         if (vACName == null)
             vACName = new Vector<String>();
-        String sContID = (String) req.getParameter("selContext");
+        String sContID = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml((String) req.getParameter("selContext"));
         String sContext = (String) req.getParameter("contextName");
         if (sContID != null)
             req.setAttribute("desContext", sContID);
@@ -223,7 +223,7 @@ public class DesDEServlet
         if (vContext == null)
             vContext = new Vector();
         // get request attributes
-        String sContID = (String) req.getParameter("selContext");
+        String sContID = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml((String) req.getParameter("selContext"));
         String sContext = (String) req.getParameter("contextName");
         if (sContID != null)
             req.setAttribute("desContext", sContID);
@@ -310,7 +310,7 @@ public class DesDEServlet
         Vector<String> vContext = (Vector) session.getAttribute("vWriteContextDE");
         if (vContext == null)
             vContext = new Vector<String>();
-        String sContID = (String) req.getParameter("selContext");
+        String sContID = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml((String) req.getParameter("selContext"));
         if (sContID != null)
             req.setAttribute("desContext", sContID);
         int j = -1;
@@ -381,7 +381,7 @@ public class DesDEServlet
         Vector vContext = (Vector) session.getAttribute("vWriteContextDE");
         if (vContext == null)
             vContext = new Vector();
-        String sContID = (String) req.getParameter("selContext");
+        String sContID = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml((String) req.getParameter("selContext"));
         if (sContID != null)
             req.setAttribute("desContext", sContID);
         int j = -1;

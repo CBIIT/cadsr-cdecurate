@@ -41,6 +41,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 
+
 //import oracle.jdbc.driver.OracleTypes;
 import oracle.jdbc.OracleTypes;		//GF30779
 
@@ -212,7 +213,7 @@ public class GetACSearch implements Serializable
                     sSchemes = "";
                 DataManager.setAttribute(session, "selCS", sSchemes);
                 String sCDid = "";
-                sCDid = (String) req.getParameter("listCDName");
+                sCDid = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml((String) m_classReq.getParameter("listCDName"));
                 DataManager.setAttribute(session, "serSelectedCD", sCDid);
                 if (sCDid != null && sCDid.equalsIgnoreCase("All Domains"))
                     sCDid = "";
@@ -334,7 +335,7 @@ public class GetACSearch implements Serializable
                 else if (sSearchIn.equals("CRFName"))
                 {
                     // do the keyword search for the selected component
-                    String sProtoID = (String) req.getParameter("protoKeyword");
+                    String sProtoID = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml((String) m_classReq.getParameter("protoKeyword"));
                     DataManager.setAttribute(session, "serProtoID", sProtoID);
                     sProtoID = util.parsedStringSingleQuoteOracle(sProtoID);
                     // crf name is keyword
@@ -895,7 +896,7 @@ public class GetACSearch implements Serializable
             String sSearchAC = "";
             String menuAction = (String) session.getAttribute(Session_Data.SESSION_MENU_ACTION);
             // do the keyword search for the selected component
-            String sKeyword = (String) req.getParameter("keyword");
+            String sKeyword = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml((String) m_classReq.getParameter("keyword"));
             // String sComponent = "";
             if (menuAction.equals("searchForCreate"))
                 sSearchAC = (String) session.getAttribute("creSearchAC");
@@ -926,7 +927,7 @@ public class GetACSearch implements Serializable
                 getRowSelected(req, res, false);
             EVSSearch evs = new EVSSearch(m_classReq, m_classRes, m_servlet);
             boolean isBlockSearch = false;
-            String dtsVocab = req.getParameter("listContextFilterVocab");
+            String dtsVocab = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml((String) m_classReq.getParameter("listContextFilterVocab"));
             if (dtsVocab != null && !dtsVocab.equals(""))
                 isBlockSearch = true;
             // call method to get the final result vector
@@ -9648,9 +9649,9 @@ public class GetACSearch implements Serializable
             HttpSession session = req.getSession();
             Vector vAC = new Vector();
             Vector vResult = new Vector();
-            String termStr = req.getParameter("tfSearchTerm");
+            String termStr = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml((String) m_classReq.getParameter("tfSearchTerm")); 
             // get the search in data
-            String dtsVocab = req.getParameter("listContextFilterVocab");
+            String dtsVocab = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml((String) m_classReq.getParameter("listContextFilterVocab"));
             if (dtsVocab == null)
                 dtsVocab = "";
             // DataManager.setAttribute(session, "dtsVocab", dtsVocab);

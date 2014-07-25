@@ -16,6 +16,7 @@ package gov.nih.nci.cadsr.cdecurate.tool;
 import gov.nih.nci.cadsr.cdecurate.common.NO_SQL_CHECK;
 import gov.nih.nci.cadsr.cdecurate.database.SQLHelper;
 import gov.nih.nci.cadsr.cdecurate.util.ClockTime;
+import gov.nih.nci.cadsr.common.StringUtil;
 import gov.nih.nci.cadsr.common.TimeWatch;
 
 import java.io.InputStream;

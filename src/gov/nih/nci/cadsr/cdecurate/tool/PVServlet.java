@@ -18,6 +18,7 @@ import gov.nih.nci.cadsr.cdecurate.util.DataManager;
 //import gov.nih.nci.cadsr.cdecurate.util.PVHelper;
 
 import gov.nih.nci.cadsr.cdecurate.util.PVHelper;
+import gov.nih.nci.cadsr.common.StringUtil;
 
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
@@ -1273,7 +1274,7 @@ public class PVServlet implements Serializable
        if (vRSel == null) vRSel = new Vector<VM_Bean>();
 
        //get the array from teh hidden list
-       String selRows[] = data.getRequest().getParameterValues("hiddenSelRow");  //("hiddenSelRow");
+       String selRows[] = StringUtil.cleanJavascriptAndHtmlArray(data.getRequest().getParameterValues("hiddenSelRow"));  //("hiddenSelRow");
        if (selRows == null)
          data.setStatusMsg(data.getStatusMsg() + "\\tUnable to select value meaning, please try again");    
        else
@@ -1353,7 +1354,7 @@ public class PVServlet implements Serializable
        Vector<EVS_Bean> vRSel = (Vector)session.getAttribute("vACSearch");
        if (vRSel == null) vRSel = new Vector<EVS_Bean>();
        //get the array from teh hidden list
-       String selRows[] = data.getRequest().getParameterValues("hiddenSelRow");
+       String selRows[] = StringUtil.cleanJavascriptAndHtmlArray(data.getRequest().getParameterValues("hiddenSelRow"));
        if (selRows != null)
          pvAction.getEVSSelRowVector(vRSel, selRows, data);
 
@@ -1476,7 +1477,7 @@ public class PVServlet implements Serializable
 	   String vmIdseq = null;
 	   HttpSession session = data.getRequest().getSession();
 	   int pvInd = -1;
-	   String id = (String) data.getRequest().getParameter("id"); 
+       String id = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml((String) data.getRequest().getParameter("id"));
 	   String selPVInd = (String) data.getRequest().getParameter("viewPVInd"); //index
 	   if (selPVInd != null && !selPVInd.equals("")) {
 			selPVInd = selPVInd.substring(2);
@@ -1500,7 +1501,7 @@ public class PVServlet implements Serializable
     }
    public String doViewPVActions(){
 	   String action = data.getRequest().getParameter("action");
-	   String id = data.getRequest().getParameter("id");
+       String id = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml((String) data.getRequest().getParameter("id"));
 	   String path = "";
 	   HttpSession session = data.getRequest().getSession();
 	   

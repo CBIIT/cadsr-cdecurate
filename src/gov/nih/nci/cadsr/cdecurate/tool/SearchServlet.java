@@ -334,7 +334,7 @@ public class SearchServlet extends CurationServlet {
             actType = "";
         String sSearchFor = StringUtil.cleanJavascriptAndHtml( (String) m_classReq.getParameter("listSearchFor") );
         String sKeyword = StringUtil.cleanJavascriptAndHtml( (String) m_classReq.getParameter("keyword") );
-        String dtsVocab = m_classReq.getParameter("listContextFilterVocab");
+        String dtsVocab = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml((String) m_classReq.getParameter("listContextFilterVocab"));
         // String sSearchInEVS = "";
        // String sUISearchType = "";
         String menuAction = (String) session.getAttribute(Session_Data.SESSION_MENU_ACTION);
@@ -560,8 +560,8 @@ public class SearchServlet extends CurationServlet {
     {
        // HttpSession session = m_classReq.getSession();
         GetACSearch getACSearch = new GetACSearch(m_classReq, m_classRes, this);
-        String acID = (String) m_classReq.getParameter("acID");
-        String acName = (String) m_classReq.getParameter("acName");
+        String acID = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml((String) m_classReq.getParameter("acID"));
+        String acName = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml((String) m_classReq.getParameter("acName"));
         if (acName == null || acName.equals(""))
             acName = "doneSearch";
         Vector vList = new Vector();
@@ -1317,8 +1317,8 @@ public class SearchServlet extends CurationServlet {
         String sSearchAC = "";
         Vector vDocType = new Vector();
         // store the all the attributes in search parameter jsp
-        String sProtoID = (String) m_classReq.getParameter("protoKeyword");
-        String sKeyword = (String) m_classReq.getParameter("keyword"); // the keyword
+        String sProtoID = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml((String) m_classReq.getParameter("protoKeyword"));
+        String sKeyword = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml((String) m_classReq.getParameter("keyword"));
         String sContext = (String) m_classReq.getParameter("listContextFilter"); // filter by context
         String sContextUse = (String) m_classReq.getParameter("rContextUse"); // filter by contextUse
         String sVersion = /*SECURITYTEAM-299*/StringUtil.cleanJavascriptAndHtml((String) m_classReq.getParameter("rVersion")); // filter by version
@@ -2448,8 +2448,8 @@ public class SearchServlet extends CurationServlet {
     private void doRefDocSearchActions() throws Exception
     {
         GetACSearch getAC = new GetACSearch(m_classReq, m_classRes, this);
-        String acID = m_classReq.getParameter("acID");
-        String itemType = m_classReq.getParameter("itemType");
+        String acID = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml((String) m_classReq.getParameter("acID"));
+        String itemType = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml((String) m_classReq.getParameter("itemType"));
         @SuppressWarnings("unused") Vector vRef = getAC.doRefDocSearch(acID, itemType, "open");
         ForwardJSP(m_classReq, m_classRes, "/ReferenceDocumentWindow.jsp");
     }
@@ -2468,11 +2468,11 @@ public class SearchServlet extends CurationServlet {
     private void doAltNameSearchActions() throws Exception
     {
         GetACSearch getAC = new GetACSearch(m_classReq, m_classRes, this);
-        String acID = m_classReq.getParameter("acID");
+        String acID = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml((String) m_classReq.getParameter("acID"));
         String CD_ID = m_classReq.getParameter("CD_ID");
         if (CD_ID == null)
             CD_ID = "";
-        String itemType = m_classReq.getParameter("itemType");
+        String itemType = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml((String) m_classReq.getParameter("itemType"));
         if (itemType != null && itemType.equals("ALL"))
             itemType = "";
         @SuppressWarnings("unused") Vector vAlt = getAC.doAltNameSearch(acID, itemType, CD_ID, "other", "open");
@@ -2493,8 +2493,8 @@ public class SearchServlet extends CurationServlet {
     private void doPermValueSearchActions() throws Exception
     {
       //  GetACSearch getAC = new GetACSearch(req, res, this);
-        String acID = m_classReq.getParameter("acID");
-        String acName = m_classReq.getParameter("itemType"); // ac name for pv
+        String acID = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml((String) m_classReq.getParameter("acID"));
+        String acName = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml((String) m_classReq.getParameter("itemType")); // ac name for pv
         if (acName != null && acName.equals("ALL"))
             acName = "-";
         String sConteIdseq = (String) m_classReq.getParameter("sConteIdseq");
@@ -2518,10 +2518,10 @@ public class SearchServlet extends CurationServlet {
     private void doConClassSearchActions() throws Exception
     {
         GetACSearch getAC = new GetACSearch(m_classReq, m_classRes, this);
-        String acID = m_classReq.getParameter("acID"); // dec id
-        String ac2ID = m_classReq.getParameter("ac2ID"); // vd id
+        String acID = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml((String) m_classReq.getParameter("acID"));	//dec id
+        String ac2ID = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml((String) m_classReq.getParameter("ac2ID"));
         //String acType = req.getParameter("acType"); // actype to search
-        String acName = m_classReq.getParameter("acName"); // ac name for pv
+        String acName = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml((String) m_classReq.getParameter("acName"));
         // call the api to return concept attributes according to ac type and ac idseq
         Vector<EVS_Bean> conList = new Vector<EVS_Bean>();
         conList = getAC.do_ConceptSearch("", "", "", "", "", acID, ac2ID, conList, "0");
@@ -2543,7 +2543,7 @@ public class SearchServlet extends CurationServlet {
     private void doConDomainSearchActions() throws Exception
     {
         GetACSearch getAC = new GetACSearch(m_classReq, m_classRes, this);
-        String sVM = m_classReq.getParameter("acName"); // ac name for pv
+        String sVM = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml((String) m_classReq.getParameter("acName"));
         // call the api to return concept attributes according to ac type and ac idseq
         Vector cdList = new Vector();
         cdList = getAC.doCDSearch("", "", "", "", "", "", "", "", "", "", "", "", "", "", 0, "", "", sVM, cdList, "0"); 
@@ -2567,8 +2567,8 @@ public class SearchServlet extends CurationServlet {
     private void doProtoCRFSearchActions() throws Exception
     {
         GetACSearch getAC = new GetACSearch(m_classReq, m_classRes, this);
-        String acID = m_classReq.getParameter("acID");
-        String acName = m_classReq.getParameter("itemType"); // ac name for proto crf
+        String acID = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml((String) m_classReq.getParameter("acID"));
+        String acName = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml((String) m_classReq.getParameter("itemType")); // ac name for proto crf
         if (acName != null && acName.equals("ALL"))
             acName = "-";
         @SuppressWarnings("unused") Integer pvCount = getAC.doProtoCRFSearch(acID, acName);
@@ -2577,8 +2577,8 @@ public class SearchServlet extends CurationServlet {
 
     private void doShowUsedBy() throws Exception
     {
-    	String idseq = m_classReq.getParameter("idseq");
-    	String type = m_classReq.getParameter("type");
+        String idseq = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml((String) m_classReq.getParameter("idseq"));
+        String type = m_classReq.getParameter("type");
     	
     	m_classReq.getSession().setAttribute("usedByResults", null);
     	HashMap<String,ArrayList<String[]>> crfResults = null;

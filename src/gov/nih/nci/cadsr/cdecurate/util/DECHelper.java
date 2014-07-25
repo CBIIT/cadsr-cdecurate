@@ -2,6 +2,7 @@ package gov.nih.nci.cadsr.cdecurate.util;
 
 import gov.nih.nci.cadsr.cdecurate.ui.AltNamesDefsSession;
 import gov.nih.nci.cadsr.common.Constants;
+import gov.nih.nci.cadsr.common.StringUtil;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -24,8 +25,8 @@ public class DECHelper {
 	 */
 	public static void createFinalAlternateDefinition(HttpServletRequest request, String userSelectedDef) throws Exception {
 		HttpSession session = request.getSession();
-		String sComp = (String) request.getParameter("sCompBlocks");
-		if (sComp == null) {
+        String sComp = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml((String) request.getParameter("sCompBlocks"));
+        if (sComp == null) {
 			sComp = (String) request.getAttribute("sCompBlocks1");	//from EditDEC.jsp
 		}
 		if (sComp == null) {

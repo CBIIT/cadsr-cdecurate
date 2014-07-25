@@ -18,6 +18,7 @@ import gov.nih.nci.cadsr.cdecurate.util.DataManager;
 import gov.nih.nci.cadsr.common.Constants;
 import gov.nih.nci.cadsr.common.Database;
 import gov.nih.nci.cadsr.common.PropertyHelper;
+import gov.nih.nci.cadsr.common.StringUtil;
 import gov.nih.nci.cadsr.persist.concept.Con_Derivation_Rules_Ext_Mgr;
 import gov.nih.nci.cadsr.persist.de.DeComp;
 import gov.nih.nci.cadsr.persist.de.DeErrorCodes;
@@ -48,6 +49,7 @@ import java.util.Vector;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+
 
 
 
@@ -5021,8 +5023,8 @@ public class InsACService implements Serializable {
 		String oneAltName = "";
 		try {
 			HttpSession session = m_classReq.getSession();
-			String sCont = m_classReq.getParameter("selContext");
-			if (sCont == null)
+            String sCont = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml((String) m_classReq.getParameter("selContext"));
+            if (sCont == null)
 				sCont = "";
 			Vector vAllAltName = (Vector) session
 					.getAttribute("AllAltNameList");
@@ -5101,7 +5103,7 @@ public class InsACService implements Serializable {
 		String oneRD = "";
 		try {
 			HttpSession session = m_classReq.getSession();
-			String sCont = m_classReq.getParameter("selContext");
+            String sCont = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml((String) m_classReq.getParameter("selContext"));
 			if (sCont == null)
 				sCont = "";
 			// get reference doc attributes

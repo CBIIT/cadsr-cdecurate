@@ -256,7 +256,7 @@ private void setVersionValues(VMForm vmData,HttpServletRequest req, HttpSession 
 	// get the version number if other
 	String txVersion = "";
 	if (sVersion != null && sVersion.equals("Other"))
-		txVersion = (String) req.getParameter("tVersion");
+        txVersion = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml((String) req.getParameter("tVersion"));
 	if (txVersion == null)
 		txVersion = "";
 	DataManager.setAttribute(session, "serVersionNum", txVersion);
@@ -625,7 +625,7 @@ private void setVersionValues(VMForm vmData,HttpServletRequest req, HttpSession 
         	}
         }
         //Check if user entered new version
-        String sVersion = (String)httpRequest.getParameter("Version");
+        String sVersion = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml((String) httpRequest.getParameter("Version"));
         if (sVersion != null)
         { 
           if (sVersion.equals(""))
@@ -639,7 +639,7 @@ private void setVersionValues(VMForm vmData,HttpServletRequest req, HttpSession 
           vm.setVM_VERSION(sVersion);
         }
         //Check if user selected new workflow
-        String sWorkflow = (String)httpRequest.getParameter("selStatus");
+        String sWorkflow = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml((String) httpRequest.getParameter("selStatus"));
         if (sWorkflow != null)
         { 
           vm.setASL_NAME(sWorkflow);
@@ -1073,8 +1073,8 @@ public void doOpenViewPage() throws Exception{
 	VmVO vmVO = new VmVO();
     HttpServletRequest req = httpRequest;
    	HttpSession session = req.getSession();
-	String acID = (String) req.getParameter("idseq");
-	if (acID == null){
+    String acID = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml((String) req.getParameter("idseq"));
+    if (acID == null){
 		acID = (String) req.getAttribute("acIdseq");
 	}
 	try{
@@ -1132,9 +1132,9 @@ public void doOpenViewPage() throws Exception{
 }
 public void doViewVMActions(){
 	HttpSession session = httpRequest.getSession();
-	String from = httpRequest.getParameter("from");
-	String action = httpRequest.getParameter("action");
-	String id = httpRequest.getParameter("id");
+    String from = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml((String) httpRequest.getParameter("from"));
+    String action = httpRequest.getParameter("action");
+    String id = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml((String) httpRequest.getParameter("id"));
 	String viewVM = "viewVM"+id;
 	VM_Bean vm = (VM_Bean)session.getAttribute(viewVM);
 	String title = "CDE Curation View VM "+vm.getVM_LONG_NAME()+ " [" + vm.getVM_ID() + "v" + vm.getVM_VERSION() +"]";
