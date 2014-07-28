@@ -14,10 +14,10 @@ public aspect JdbcHighlight {
 	;
 
 	//declare error : showAllSourceWithJDBC() : "This source uses JDBC directly.";
-//	Object around() : showAllSourceWithConnection() {
-//		   return proceed();
-//	}
-	Object around() : showAllSourceWithStatement() {
+	Object around() : showAllSourceWithConnection() {
 		   return proceed();
 	}
+//	Object around() : showAllSourceWithStatement() {
+//		   return proceed();
+//	}
 }
