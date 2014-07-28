@@ -15,8 +15,6 @@ package gov.nih.nci.cadsr.cdecurate.ui;
 import gov.nih.nci.cadsr.cdecurate.database.Alternates;
 import gov.nih.nci.cadsr.cdecurate.database.DBAccess;
 import gov.nih.nci.cadsr.cdecurate.util.Tree;
-import gov.nih.nci.cadsr.common.StringUtil;
-
 import javax.servlet.http.HttpServletRequest;
 
 /**
@@ -46,12 +44,12 @@ public class AltNamesDefsForm
      */
     private void read()
     {
-        String _action = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml((String) _req.getParameter("AltNamesDefsServlet._actionTag"));
-        _prevAction = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml((String) _req.getParameter("_prevActionTag"));        
-        _mode = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml((String) _req.getParameter("_modeFlag"));
-        _targetIdseq = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml((String) _req.getParameter("_parmIdseq"));
+        _action = _req.getParameter(AltNamesDefsServlet._actionTag);
+        _prevAction = _req.getParameter(AltNamesDefsServlet._prevActionTag);
+        _mode = _req.getParameter(AltNamesDefsServlet._modeFlag);
+        _targetIdseq = _req.getParameter(AltNamesDefsServlet._parmIdseq);
         
-        _nameDef = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml((String) _req.getParameter("_parmNameDef"));
+        _nameDef = _req.getParameter(AltNamesDefsServlet._parmNameDef);
         Alternates alt = _sess.getEdit();
         if (_nameDef == null || _nameDef.length() == 0)
             _nameDef = alt.getName();
@@ -127,10 +125,10 @@ public class AltNamesDefsForm
             _req.setAttribute(AltNamesDefsServlet._reqSortTitle,  AltNamesDefsServlet._reqSortTitleName);
         }
 
-        String attr = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml((String) _req.getParameter("_prevActionTag"));
+        String attr = _req.getParameter(AltNamesDefsServlet._prevActionTag);
         _req.setAttribute(AltNamesDefsServlet._prevActionTag, attr);
 
-        attr = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml((String) _req.getParameter("_parmFilterText"));
+        attr = _req.getParameter(AltNamesDefsServlet._parmFilterText);
         if (attr == null)
             attr = "";
         _req.setAttribute(AltNamesDefsServlet._parmFilterText, attr);
