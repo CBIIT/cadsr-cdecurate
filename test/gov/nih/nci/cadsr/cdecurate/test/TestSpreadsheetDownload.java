@@ -52,7 +52,6 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 
 /**
- * @author shegde
  * @useful sqls -
  * --getting a DE with all columns populated
 select 
@@ -524,7 +523,8 @@ public class TestSpreadsheetDownload {
 //					+ "rownum < 11"
 //					+ "\"DE Public ID\" = 3124888"	//test case for ORA-01403: no data found" 
 //					+ "\"DE Public ID\" = 2341940"	//get by entering *derived* in DE search based on Name and Def
-					+ "\"DE Public ID\" = 2341940"	//DERIVATION METHOD test, created by Denise
+//					+ "\"DE Public ID\" = 2341940"	//DERIVATION METHOD test, created by Denise
+					+ "\"DE Public ID\" = 2228592"	//JR1047
 					;
 			stmt = m_conn.prepareStatement(qry);
 			// _EXCEL_GENERATOR_VIEW.OC_CONCEPTS:
@@ -647,9 +647,14 @@ public class TestSpreadsheetDownload {
 
 				    if (sqlname.equals ("SBREXT.VALID_VALUE_T"))
 				    {
-					      System.out.println ("VALIDVALUE=" + AdministeredItemUtil.handleSpecialCharacters(attrs[0].getBytes()));
-					      System.out.println ("PVBEGINDATE=" + attrs[4].dateValue());
-					      System.out.println ("VMPUBLICID=" + attrs[6].intValue());
+					      try {
+							System.out.println ("VALIDVALUE=" + AdministeredItemUtil.handleSpecialCharacters(attrs[0].getBytes()));
+							  System.out.println ("PVBEGINDATE=" + attrs[4].dateValue());
+							  System.out.println ("VMPUBLICID=" + attrs[6].intValue());
+						} catch (Exception e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
 				    }
 				    else 
 				      throw new Exception ("Invalid type name: "+sqlname + " in parent");
