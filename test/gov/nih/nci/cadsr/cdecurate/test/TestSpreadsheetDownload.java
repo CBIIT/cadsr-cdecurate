@@ -274,7 +274,8 @@ public class TestSpreadsheetDownload {
 			String qry = "SELECT VD_CONCEPTS, REP_CONCEPTS, VALID_VALUES, CLASSIFICATIONS, DESIGNATIONS FROM VD_EXCEL_GENERATOR_VIEW"
 					+ " where "
 //					+ "rownum < 11"
-					+ "\"VD Public ID\" = 2990741"
+//					+ "\"VD Public ID\" = 2990741"
+					+ "\"VD Public ID\" = 2228591"
 					;
 			stmt = m_conn.prepareStatement(qry);
 			// _EXCEL_GENERATOR_VIEW.OC_CONCEPTS:
@@ -524,7 +525,8 @@ public class TestSpreadsheetDownload {
 //					+ "\"DE Public ID\" = 3124888"	//test case for ORA-01403: no data found" 
 //					+ "\"DE Public ID\" = 2341940"	//get by entering *derived* in DE search based on Name and Def
 //					+ "\"DE Public ID\" = 2341940"	//DERIVATION METHOD test, created by Denise
-					+ "\"DE Public ID\" = 2228592"	//JR1047
+//					+ "\"DE Public ID\" = 2228592"	//JR1047
+					+ "CDE_IDSEQ = 'F6FEB251-3020-4594-E034-0003BA3F9857'"	//JR1047 VD is 2228591v1
 					;
 			stmt = m_conn.prepareStatement(qry);
 			// _EXCEL_GENERATOR_VIEW.OC_CONCEPTS:
@@ -648,9 +650,9 @@ public class TestSpreadsheetDownload {
 				    if (sqlname.equals ("SBREXT.VALID_VALUE_T"))
 				    {
 					      try {
-							System.out.println ("VALIDVALUE=" + AdministeredItemUtil.handleSpecialCharacters(attrs[0].getBytes()));
-							  System.out.println ("PVBEGINDATE=" + attrs[4].dateValue());
-							  System.out.println ("VMPUBLICID=" + attrs[6].intValue());
+					    	  if(attrs[0] != null) System.out.println ("VALIDVALUE=" + AdministeredItemUtil.handleSpecialCharacters(attrs[0].getBytes()));	//JR1047
+					    	  if(attrs[4] != null) System.out.println ("PVBEGINDATE=" + attrs[4].dateValue());
+					    	  if(attrs[6] != null) System.out.println ("VMPUBLICID=" + attrs[6].intValue());
 						} catch (Exception e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
