@@ -253,8 +253,9 @@ public class CustomDownloadServlet extends CurationServlet {
 		Array array = null;
 		//Special case: first row has info on derivation, others on data elements
 		if (columnType.indexOf("DERIVED") > 0) {
-			Object derivedObject = rs.getObject(index+1);
-			STRUCT struct = (STRUCT) derivedObject;
+//			Object derivedObject = rs.getObject(index+1);
+//			STRUCT struct = (STRUCT) derivedObject;
+			STRUCT struct = (oracle.sql.STRUCT) rs.getObject(index+1);	//JR1047
 			Datum[] valueStruct = struct.getOracleAttributes();
 			//Fifth entry is the array with DE's 
 			array = (Array) valueStruct[5];
