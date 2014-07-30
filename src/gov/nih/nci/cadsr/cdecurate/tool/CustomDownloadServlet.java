@@ -272,8 +272,10 @@ public class CustomDownloadServlet extends CurationServlet {
 							derivationInfo[z] = valueStruct[z].dateValue().toString();
 							derivationInfo[z] = AdministeredItemUtil.truncateTime(derivationInfo[z]);
 						} else{
-							if(valueStruct[z] != null && valueStruct[z].getBytes() != null)	//JR1047
+							if(valueStruct[z] != null && valueStruct[z].getBytes() != null)	{ //JR1047
 								derivationInfo[z] = AdministeredItemUtil.handleSpecialCharacters(valueStruct[z].getBytes());
+								logger.info("CustomDownloadServlet.java 1: derivationInfo[" + z + "] = b4 [" + valueStruct[z].getBytes() + " aft [" + derivationInfo[z] + "]");
+							}
 						}
 //						derivationInfo[z] =(valueStruct[z] != null)? valueStruct[z].toString(): "";
 					}
@@ -298,8 +300,10 @@ public class CustomDownloadServlet extends CurationServlet {
 									values[a] = valueDatum[a].dateValue().toString();
 									values[a] = AdministeredItemUtil.truncateTime(values[a]);
 								} else{
-									if(valueDatum[a] != null && valueDatum[a].getBytes() != null)	//JR1047
-									values[a] = AdministeredItemUtil.handleSpecialCharacters(valueDatum[a].getBytes());
+									if(valueDatum[a] != null && valueDatum[a].getBytes() != null) {	//JR1047
+										values[a] = AdministeredItemUtil.handleSpecialCharacters(valueDatum[a].getBytes());
+										logger.info("CustomDownloadServlet.java 2: values[" + a + "] = b4 [" + valueDatum[a].getBytes() + " aft [" + values[a] + "]");
+									}
 								}
 //								values[a]= valueDatum[a].toString();	
 							} 
@@ -349,8 +353,10 @@ public class CustomDownloadServlet extends CurationServlet {
 												truncatedTimeStamp = strValues[b].dateValue().toString();
 												truncatedTimeStamp = AdministeredItemUtil.truncateTime(truncatedTimeStamp);
 											} else  {
-												if(strValues[b] != null && strValues[b].getBytes() != null)	//JR1047
-													truncatedTimeStamp = AdministeredItemUtil.handleSpecialCharacters(strValues[b].getBytes()); 
+												if(strValues[b] != null && strValues[b].getBytes() != null)	{ //JR1047
+													truncatedTimeStamp = AdministeredItemUtil.handleSpecialCharacters(strValues[b].getBytes());
+													logger.info("CustomDownloadServlet.java 3: strValues[" + b + "] = b4 [" + strValues[b].getBytes() + " aft [" + truncatedTimeStamp + "]");
+												}
 											}//GF30779=============END
 //											truncatedTimeStamp = AdministeredItemUtil.handleSpecialCharacters(strValues[b].getBytes()); // GF30779
 											logger.debug("At line 316 of CustomDownloadServlet.java" + "***" + truncatedTimeStamp + "***" + className + "***" + valueDatum[a]+ "***" + strValues[b]);
@@ -369,8 +375,10 @@ public class CustomDownloadServlet extends CurationServlet {
 										truncatedTimeStamp = valueDatum[a].dateValue().toString();
 										truncatedTimeStamp = AdministeredItemUtil.truncateTime(truncatedTimeStamp);
 									} else{
-										if(valueDatum[a] != null && valueDatum[a].getBytes() != null)	//JR1047
+										if(valueDatum[a] != null && valueDatum[a].getBytes() != null) {	//JR1047
 											truncatedTimeStamp = AdministeredItemUtil.handleSpecialCharacters(valueDatum[a].getBytes());
+											logger.info("CustomDownloadServlet.java 4: valueDatum[" + a + "] = b4 [" + valueDatum[a].getBytes() + " aft [" + truncatedTimeStamp + "]");
+										}
 									}//GF30779=============END
 //									truncatedTimeStamp = valueDatum[a].toString(); //begin GF30779
 									logger.debug("At line 335 of CustomDownloadServlet.java" +"****" + truncatedTimeStamp +"*****" + s);
