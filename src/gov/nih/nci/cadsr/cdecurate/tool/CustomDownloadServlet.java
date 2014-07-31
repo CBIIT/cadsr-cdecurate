@@ -234,7 +234,7 @@ public class CustomDownloadServlet extends CurationServlet {
 					}
 				}
 
-				m_classReq.getSession().setAttribute("arrayData", arrayData);
+				m_classReq.getSession().setAttribute("arrayData", arrayData);	//JR1047 tagged
 			
 			}
 
@@ -972,7 +972,8 @@ public class CustomDownloadServlet extends CurationServlet {
 		for (int i = 0; i < columns.length; i++) {
 			Cell cell = headerRow.createCell(i);
 			temp = columns[i];
-			cell.setCellValue(temp);
+			cell.setCellValue(temp);	//JR1047 just setting column headers
+			logger.info("CustomDownloadServlet.java JR1047 1: cell header set to ["+ temp + "]");
 			cell.setCellStyle(boldCellStyle); //GF30779
 		}
 
@@ -1041,11 +1042,12 @@ public class CustomDownloadServlet extends CurationServlet {
 										
 								}else 
 									data = nestedData[originalColumnIndex];
-								logger.debug("at line 960 of CustomDownloadServlet.java*****"+ data + currentType);
+								logger.debug("at line 960 of CustomDownloadServlet.java*****"+ data + currentType);	//JR1047 this data is good
 								if (currentType.contains("VALID_VALUE")) { //GF30779
 									data = AdministeredItemUtil.truncateTime(data);
 								}
 								cell.setCellValue(data);
+								logger.debug("CustomDownloadServlet.java JR1047 2: cell value set to ["+ data + "] based on type [" + currentType + "]");
 
 								tempBump++;
 
@@ -1079,6 +1081,7 @@ public class CustomDownloadServlet extends CurationServlet {
 							temp = AdministeredItemUtil.truncateTime(temp);
 						}
 						cell.setCellValue(temp);
+						logger.debug("CustomDownloadServlet.java JR1047 3: cell value set to ["+ temp + "] based on type [" + currentType + "]");
 					}
 
 				}
@@ -1147,6 +1150,7 @@ public class CustomDownloadServlet extends CurationServlet {
 						temp = AdministeredItemUtil.truncateTime(temp);
 					}
 					cell.setCellValue(temp);
+					logger.debug("CustomDownloadServlet.java JR1047 4: cell value set to ["+ temp + "] based on type [" + currentType + "]");
 				}
 
 			}
