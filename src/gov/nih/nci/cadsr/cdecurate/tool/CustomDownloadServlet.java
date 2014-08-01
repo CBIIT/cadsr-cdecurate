@@ -1043,8 +1043,8 @@ public class CustomDownloadServlet extends CurationServlet {
 								}else 
 									data = nestedData[originalColumnIndex];
 								logger.debug("at line 960 of CustomDownloadServlet.java*****"+ data + currentType);	//JR1047 this data is good
-								if (currentType.contains("VALID_VALUE")) { //GF30779
-									data = AdministeredItemUtil.truncateTime(data);
+								if (currentType.contains("VALID_VALUE") && /* JR1047 */ !currentType.contains("VALID_VALUE_LIST_T")) {
+									data = AdministeredItemUtil.truncateTime(data);	//GF30779
 								}
 								cell.setCellValue(data);
 								logger.debug("CustomDownloadServlet.java JR1047 2: cell value set to ["+ data + "] based on type [" + currentType + "]");
