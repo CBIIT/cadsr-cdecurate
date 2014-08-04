@@ -19,10 +19,14 @@
 package gov.nih.nci.cadsr.cdecurate.test;
 
 import gov.nih.nci.cadsr.cdecurate.util.AdministeredItemUtil;
+import gov.nih.nci.cadsr.cdecurate.util.DownloadHelper;
+import gov.nih.nci.cadsr.cdecurate.util.ValueHolder;
 import gov.nih.nci.cadsr.common.TestUtil;
 
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.sql.Array;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -252,7 +256,7 @@ public class TestSpreadsheetDownload {
 	ArrayList<HashMap<String, List<String[]>>> arrayData = new ArrayList<HashMap<String, List<String[]>>>();
 
 	//=======================================================================
-	public static void main(String[] args) {
+	public static void main1(String[] args) {
 		testDE(args);
 //		testVD(args);
 	}
@@ -770,14 +774,41 @@ public class TestSpreadsheetDownload {
 		}
 	}
 
-	public static void main1(String[] args) {
+	public static void main(String[] args) {
 		connectDB(args[0], args[1]);
 		TestSpreadsheetDownload download = new TestSpreadsheetDownload();
-		download.setColHeadersAndTypes("CDE");
+		ValueHolder vh = DownloadHelper.setColHeadersAndTypes(null, null, null, m_conn, "CDE");
 		ArrayList<String[]> downloadRows = download.getRecords(false, false);
-		download.createDownloadColumns(downloadRows);
+		createDownloadColumns(downloadRows, vh);
 	}
 
+	public static void createDownloadColumns(ArrayList<String[]> downloadRows, ValueHolder vh) {
+		List data = (ArrayList) vh.getValue();
+
+		String colString = "Valid Values,Value Meaning Name,Value Meaning Description";	//(String) m_classReq.getParameter("cdlColumns");	//e.g. Valid Values,Value Meaning Name,Value Meaning Description
+		String fillIn = null;	//(String) m_classReq.getParameter("fillIn");		//e.g. ; can be null/optional
+
+		ArrayList<String> allHeaders = (ArrayList<String>) data.get(0);	//(ArrayList<String>) m_classReq.getSession().getAttribute("headers");		//e.g. [CDE_IDSEQ, Data Element Short Name, Data Element Long Name, Data Element Preferred Question Text, Data Element Preferred Definition, Data Element Version, Data Element Context Name, Data Element Context Version, Data Element Public ID, Data Element Workflow Status, Data Element Registration Status, Data Element Begin Date, Data Element Source, Data Element Concept Public ID, Data Element Concept Short Name, Data Element Concept Long Name, Data Element Concept Version, Data Element Concept Context Name, Data Element Concept Context Version, Data Element Concept Workflow Status, Data Element Concept Registration Status, Object Class Public ID, Object Class Long Name, Object Class Short Name, Object Class Context Name, Object Class Version, Object Class Workflow Status, OC_CONCEPTS, Property Public ID, Property Long Name, Property Short Name, Property Context Name, Property Version, Property Workflow Status, PROP_CONCEPTS, Value Domain Public ID, Value Domain Short Name, Value Domain Long Name, Value Domain Version, Value Domain Workflow Status, Value Domain Registration Status, Value Domain Context Name, Value Domain Context Version, Value Domain Type, Value Domain Datatype, Value Domain Min Length, Value Domain Max Length, Value Domain Min value, Value Domain Max Value, Value Domain Decimal Place, Value Domain Format, VD_CONCEPTS, Representation Public ID, Representation Long Name, Representation Short Name, Representation Context Name, Representation Version, REP_CONCEPTS, VALID_VALUES, CLASSIFICATIONS, DESIGNATIONS, REFERENCE_DOCS, DE_DERIVATION, Conceptual Domain Public ID, Conceptual Domain Short Name, Conceptual Domain Version, Conceptual Domain Context Name]
+		ArrayList<String> allExpandedHeaders = (ArrayList<String>) data.get(1);	//(ArrayList<String>) m_classReq.getSession().getAttribute("allExpandedHeaders");	//e.g. [CDE_IDSEQ, Data Element Short Name, Data Element Long Name, Data Element Preferred Question Text, Data Element Preferred Definition, Data Element Version, Data Element Context Name, Data Element Context Version, Data Element Public ID, Data Element Workflow Status, Data Element Registration Status, Data Element Begin Date, Data Element Source, Data Element Concept Public ID, Data Element Concept Short Name, Data Element Concept Long Name, Data Element Concept Version, Data Element Concept Context Name, Data Element Concept Context Version, Data Element Concept Workflow Status, Data Element Concept Registration Status, Object Class Public ID, Object Class Long Name, Object Class Short Name, Object Class Context Name, Object Class Version, Object Class Workflow Status, Object Class Concept Name, Object Class Concept Code, Object Class Concept Public ID, Object Class Concept Definition Source, Object Class Concept Origin, Object Class Concept EVS Source, Object Class Concept Primary Flag, Object Class Concept NCI RAI, Property Public ID, Property Long Name, Property Short Name, Property Context Name, Property Version, Property Workflow Status, Property Concept Name, Property Concept Code, Property Concept Public ID, Property Concept Definition Source, Property Concept Origin, Property Concept EVS Source, Property Concept Primary Flag, Property Concept NCI RAI, Value Domain Public ID, Value Domain Short Name, Value Domain Long Name, Value Domain Version, Value Domain Workflow Status, Value Domain Registration Status, Value Domain Context Name, Value Domain Context Version, Value Domain Type, Value Domain Datatype, Value Domain Min Length, Value Domain Max Length, Value Domain Min value, Value Domain Max Value, Value Domain Decimal Place, Value Domain Format, Value Domain Concept Name, Value Domain Concept Code, Value Domain Concept Public ID, Value Domain Concept Definition Source, Value Domain Concept Origin, Value Domain Concept EVS Source, Value Domain Concept Primary Flag, Value Domain Concept NCI RAI, Representation Public ID, Representation Long Name, Representation Short Name, Representation Context Name, Representation Version, Representation Concept Name, Representation Concept Code, Representation Concept Public ID, Representation Concept Definition Source, Representation Concept Origin, Representation Concept EVS Source, Representation Concept Primary Flag, Representation Concept NCI RAI, Valid Values, Value Meaning Name, Value Meaning Description, Value Meaning Concepts, PV Begin Date, PV End Date, Value Meaning PublicID, Value Meaning Version, Value Meaning Alternate Definitions, Classification Scheme Public ID, Classification Scheme Short Name, Classification Scheme Version, Classification Scheme Context Name, Classification Scheme Context Version, Classification Scheme Item Name, Classification Scheme Item Type Name, Classification Scheme Item Public Id, Classification Scheme Item Version, Data Element Alternate Name Context Name, Data Element Alternate Name Context Version, Data Element Alternate Name, Data Element Alternate Name Type, Document, Document Name, Document Type, Document Organization, Derivation Type, Derivation Type Description, Derivation Method, Derivation Rule, Concatenation Character, DDE Public ID, DDE Long Name, DDE Preferred Name, DDE Preferred Definition, DDE Version, DDE Workflow Status, DDE Context, DDE Display Order, Conceptual Domain Public ID, Conceptual Domain Short Name, Conceptual Domain Version, Conceptual Domain Context Name]
+		ArrayList<String> allTypes = (ArrayList<String>) data.get(2);	//(ArrayList<String>) m_classReq.getSession().getAttribute("types");		//e.g. [CHAR, VARCHAR2, VARCHAR2, VARCHAR2, VARCHAR2, NUMBER, VARCHAR2, NUMBER, NUMBER, VARCHAR2, VARCHAR2, DATE, VARCHAR2, NUMBER, VARCHAR2, VARCHAR2, NUMBER, VARCHAR2, NUMBER, VARCHAR2, VARCHAR2, NUMBER, VARCHAR2, VARCHAR2, VARCHAR2, NUMBER, VARCHAR2, 28:SBREXT.CONCEPTS_LIST_T, NUMBER, VARCHAR2, VARCHAR2, VARCHAR2, NUMBER, VARCHAR2, 35:SBREXT.CONCEPTS_LIST_T, NUMBER, VARCHAR2, VARCHAR2, NUMBER, VARCHAR2, VARCHAR2, VARCHAR2, NUMBER, VARCHAR2, VARCHAR2, NUMBER, NUMBER, VARCHAR2, VARCHAR2, NUMBER, VARCHAR2, 52:SBREXT.CONCEPTS_LIST_T, NUMBER, VARCHAR2, VARCHAR2, VARCHAR2, NUMBER, 58:SBREXT.CONCEPTS_LIST_T, 59:SBREXT.VALID_VALUE_LIST_T, 60:SBREXT.CDEBROWSER_CSI_LIST_T, 61:SBREXT.DESIGNATIONS_LIST_T, 62:SBREXT.CDEBROWSER_RD_LIST_T, 63:SBREXT.DERIVED_DATA_ELEMENT_T, NUMBER, VARCHAR2, NUMBER, VARCHAR2]
+		HashMap<String,ArrayList<String[]>> typeMap = (HashMap<String, ArrayList<String[]>>) data.get(3);	//(HashMap<String,ArrayList<String[]>>) m_classReq.getSession().getAttribute("typeMap");	//e.g. {35:SBREXT.CONCEPTS_LIST_T=[[Ljava.lang.String;@6a8b5cdf, [Ljava.lang.String;@637e6b1e], 63:SBREXT.DERIVED_DATA_ELEMENT_T=[[Ljava.lang.String;@aab19a, [Ljava.lang.String;@4671f5cd], 60:SBREXT.CDEBROWSER_CSI_LIST_T=[[Ljava.lang.String;@63c089dc, [Ljava.lang.String;@759afdad], 58:SBREXT.CONCEPTS_LIST_T=[[Ljava.lang.String;@1284a52d, [Ljava.lang.String;@427836da], 62:SBREXT.CDEBROWSER_RD_LIST_T=[[Ljava.lang.String;@6259444d, [Ljava.lang.String;@52934dac], 61:SBREXT.DESIGNATIONS_LIST_T=[[Ljava.lang.String;@44d0818e, [Ljava.lang.String;@54e9b4ed], 52:SBREXT.CONCEPTS_LIST_T=[[Ljava.lang.String;@3b655f28, [Ljava.lang.String;@7c4a598e], 28:SBREXT.CONCEPTS_LIST_T=[[Ljava.lang.String;@753db961, [Ljava.lang.String;@2755cb69], 59:SBREXT.VALID_VALUE_LIST_T=[[Ljava.lang.String;@719d6eab, [Ljava.lang.String;@16ccd6d3]}
+		ArrayList<HashMap<String,ArrayList<String[]>>> arrayData = (ArrayList<HashMap<String, ArrayList<String[]>>>) data.get(4);	//(ArrayList<HashMap<String,ArrayList<String[]>>>) m_classReq.getSession().getAttribute("arrayData"); //e.g. [{35:SBREXT.CONCEPTS_LIST_T=[], 63:SBREXT.DERIVED_DATA_ELEMENT_T=[], 60:SBREXT.CDEBROWSER_CSI_LIST_T=[], 58:SBREXT.CONCEPTS_LIST_T=[], 62:SBREXT.CDEBROWSER_RD_LIST_T=[], 61:SBREXT.DESIGNATIONS_LIST_T=[], 52:SBREXT.CONCEPTS_LIST_T=[], 28:SBREXT.CONCEPTS_LIST_T=[], 59:SBREXT.VALID_VALUE_LIST_T=[]}]
+		HashMap<String, String> arrayColumnTypes = (HashMap<String, String>) data.get(5);	//(HashMap<String,String>) m_classReq.getSession().getAttribute("arrayColumnTypes");	//e.g. {PV Begin Date=59:SBREXT.VALID_VALUE_LIST_T, Object Class Concept Public ID=28:SBREXT.CONCEPTS_LIST_T, Object Class Concept NCI RAI=28:SBREXT.CONCEPTS_LIST_T, Derivation Type=63:SBREXT.DERIVED_DATA_ELEMENT_T, Classification Scheme Item Name=60:SBREXT.CDEBROWSER_CSI_LIST_T, Derivation Method=63:SBREXT.DERIVED_DATA_ELEMENT_T, Object Class Concept Origin=28:SBREXT.CONCEPTS_LIST_T, PV End Date=59:SBREXT.VALID_VALUE_LIST_T, DDE Preferred Name=63:SBREXT.DERIVED_DATA_ELEMENT_T, Classification Scheme Item Public Id=60:SBREXT.CDEBROWSER_CSI_LIST_T, DDE Version=63:SBREXT.DERIVED_DATA_ELEMENT_T, Derivation Type Description=63:SBREXT.DERIVED_DATA_ELEMENT_T, Property Concept Code=35:SBREXT.CONCEPTS_LIST_T, Classification Scheme Version=60:SBREXT.CDEBROWSER_CSI_LIST_T, Representation Concept Definition Source=58:SBREXT.CONCEPTS_LIST_T, Classification Scheme Public ID=60:SBREXT.CDEBROWSER_CSI_LIST_T, Representation Concept Name=58:SBREXT.CONCEPTS_LIST_T, Value Domain Concept Name=52:SBREXT.CONCEPTS_LIST_T, Value Domain Concept Code=52:SBREXT.CONCEPTS_LIST_T, Object Class Concept Name=28:SBREXT.CONCEPTS_LIST_T, Value Domain Concept NCI RAI=52:SBREXT.CONCEPTS_LIST_T, Value Domain Concept Definition Source=52:SBREXT.CONCEPTS_LIST_T, DDE Workflow Status=63:SBREXT.DERIVED_DATA_ELEMENT_T, Data Element Alternate Name Context Version=61:SBREXT.DESIGNATIONS_LIST_T, Value Domain Concept EVS Source=52:SBREXT.CONCEPTS_LIST_T, Value Meaning Alternate Definitions=59:SBREXT.VALID_VALUE_LIST_T, Classification Scheme Context Name=60:SBREXT.CDEBROWSER_CSI_LIST_T, Property Concept NCI RAI=35:SBREXT.CONCEPTS_LIST_T, Property Concept EVS Source=35:SBREXT.CONCEPTS_LIST_T, Value Meaning Description=59:SBREXT.VALID_VALUE_LIST_T, DDE Preferred Definition=63:SBREXT.DERIVED_DATA_ELEMENT_T, DDE Display Order=63:SBREXT.DERIVED_DATA_ELEMENT_T, Object Class Concept Code=28:SBREXT.CONCEPTS_LIST_T, Classification Scheme Item Version=60:SBREXT.CDEBROWSER_CSI_LIST_T, Value Domain Concept Origin=52:SBREXT.CONCEPTS_LIST_T, Document Organization=62:SBREXT.CDEBROWSER_RD_LIST_T, Value Meaning Name=59:SBREXT.VALID_VALUE_LIST_T, Object Class Concept Definition Source=28:SBREXT.CONCEPTS_LIST_T, Object Class Concept EVS Source=28:SBREXT.CONCEPTS_LIST_T, Value Meaning PublicID=59:SBREXT.VALID_VALUE_LIST_T, Value Meaning Concepts=59:SBREXT.VALID_VALUE_LIST_T, Value Domain Concept Public ID=52:SBREXT.CONCEPTS_LIST_T, Classification Scheme Short Name=60:SBREXT.CDEBROWSER_CSI_LIST_T, Representation Concept Code=58:SBREXT.CONCEPTS_LIST_T, Data Element Alternate Name Context Name=61:SBREXT.DESIGNATIONS_LIST_T, Property Concept Primary Flag=35:SBREXT.CONCEPTS_LIST_T, Derivation Rule=63:SBREXT.DERIVED_DATA_ELEMENT_T, DDE Context=63:SBREXT.DERIVED_DATA_ELEMENT_T, Data Element Alternate Name Type=61:SBREXT.DESIGNATIONS_LIST_T, Valid Values=59:SBREXT.VALID_VALUE_LIST_T, Value Meaning Version=59:SBREXT.VALID_VALUE_LIST_T, DDE Public ID=63:SBREXT.DERIVED_DATA_ELEMENT_T, Document=62:SBREXT.CDEBROWSER_RD_LIST_T, Classification Scheme Context Version=60:SBREXT.CDEBROWSER_CSI_LIST_T, Representation Concept Primary Flag=58:SBREXT.CONCEPTS_LIST_T, Classification Scheme Item Type Name=60:SBREXT.CDEBROWSER_CSI_LIST_T, Object Class Concept Primary Flag=28:SBREXT.CONCEPTS_LIST_T, Property Concept Definition Source=35:SBREXT.CONCEPTS_LIST_T, Representation Concept Public ID=58:SBREXT.CONCEPTS_LIST_T, Representation Concept EVS Source=58:SBREXT.CONCEPTS_LIST_T, Representation Concept NCI RAI=58:SBREXT.CONCEPTS_LIST_T, DDE Long Name=63:SBREXT.DERIVED_DATA_ELEMENT_T, Value Domain Concept Primary Flag=52:SBREXT.CONCEPTS_LIST_T, Concatenation Character=63:SBREXT.DERIVED_DATA_ELEMENT_T, Document Type=62:SBREXT.CDEBROWSER_RD_LIST_T, Property Concept Origin=35:SBREXT.CONCEPTS_LIST_T, Representation Concept Origin=58:SBREXT.CONCEPTS_LIST_T, Data Element Alternate Name=61:SBREXT.DESIGNATIONS_LIST_T, Document Name=62:SBREXT.CDEBROWSER_RD_LIST_T, Property Concept Name=35:SBREXT.CONCEPTS_LIST_T, Property Concept Public ID=35:SBREXT.CONCEPTS_LIST_T}
+
+		Workbook wb = DownloadHelper.createDownloadColumns(colString, fillIn, allHeaders, allExpandedHeaders, allTypes, typeMap, arrayData, arrayColumnTypes, downloadRows);
+		try {
+//			m_classRes.setContentType( "application/vnd.ms-excel" );
+//			m_classRes.setHeader( "Content-Disposition", "attachment; filename=\"customDownload.xls\"" );
+			File file = new File("c:/testDownload.xls");
+			OutputStream out = new FileOutputStream(file);	//m_classRes.getOutputStream();
+			wb.write(out);
+			out.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}        
+	}
+	
+	
 	//=======================================================================
 	
 	public void get_m_conn() {
@@ -872,7 +903,8 @@ public class TestSpreadsheetDownload {
 	}
 
 	//=======================================================================
-	
+
+/*	
 	private void setColHeadersAndTypes(String type) {
 		String sList = new String();
 		PreparedStatement ps = null;
@@ -961,7 +993,8 @@ public class TestSpreadsheetDownload {
 				}
 		}
 	}
-
+*/
+	
 	//=======================================================================
 	
 	private String prettyName(String name) {
@@ -1466,218 +1499,218 @@ where
 
 	//=======================================================================
 	
-	private void createDownloadColumns(ArrayList<String[]> allRows) {
-		final int MAX_ROWS = 65000;
-
-		String sheetName = "Custom Download";
-		int sheetNum = 1;
-		String fillIn = "false";// set true to fill in all values.
-		String[] columns = null;
-		
-			ArrayList<String> defaultHeaders = new ArrayList<String>();
-
-			for (String cName : allExpandedColumnHeaders) {
-				if (cName.endsWith("IDSEQ") || cName.startsWith("CD ")
-						|| cName.startsWith("Conceptual Domain")) { /* skip */
-				} else {
-					System.out.println("cName = " + cName);
-					defaultHeaders.add(cName);
-				}
-			}
-			columns = defaultHeaders.toArray(new String[defaultHeaders.size()]);
-
-		int[] colIndices = new int[columns.length];
-		for (int i = 0; i < columns.length; i++) {
-			String colName = columns[i];
-			if (columnHeaders.indexOf(colName) < 0) {
-				String tempType = arrayColumnTypes.get(colName);
-				int temp = columnTypes.indexOf(tempType);
-				colIndices[i] = temp;
-			} else {
-				int temp = columnHeaders.indexOf(colName);
-				colIndices[i] = temp;
-			}
-		}
-
-		Workbook wb = new HSSFWorkbook();
-
-		Sheet sheet = wb.createSheet(sheetName);
-		Font font = wb.createFont();
-		font.setBoldweight(Font.BOLDWEIGHT_BOLD);
-		CellStyle boldCellStyle = wb.createCellStyle();
-		boldCellStyle.setFont(font);
-		boldCellStyle.setAlignment(CellStyle.ALIGN_GENERAL);
-
-		Row headerRow = sheet.createRow(0);
-		headerRow.setHeightInPoints(12.75f);
-		String temp;
-		for (int i = 0; i < columns.length; i++) {
-			Cell cell = headerRow.createCell(i);
-			temp = columns[i];
-			cell.setCellValue(temp);
-			cell.setCellStyle(boldCellStyle);
-		}
-
-		// freeze the first row
-		sheet.createFreezePane(0, 1);
-
-		Row row = null;
-		Cell cell;
-		int rownum = 1;
-		int bump = 0;
-		int i = 0;
-		try {
-			System.out.println("Total CDEs to download [" + allRows.size()
-					+ "]");
-			for (i = 0; i < allRows.size(); i++, rownum++) {
-				// Check if row already exists
-				int maxBump = 0;
-				if (sheet.getRow(rownum + bump) == null) {
-					row = sheet.createRow(rownum + bump);
-				}
-
-				if (allRows.get(i) == null)
-					continue;
-
-				for (int j = 0; j < colIndices.length; j++) {
-
-					cell = row.createCell(j);
-					String currentType = columnTypes.get(colIndices[j]);
-					if (currentType.endsWith("_T")) {
-						// Deal with CS/CSI
-						String[] originalArrColNames = typeMap.get(currentType)
-								.get(0);
-
-						// Find current column in original data
-
-						int originalColumnIndex = -1;
-						for (int a = 0; a < originalArrColNames.length; a++) {
-							if (columns[j].equals(originalArrColNames[a])) {
-								originalColumnIndex = a;
-								break;
-							}
-						}
-						// ArrayList<HashMap<String,ArrayList<String[]>>>
-						// arrayData1 =
-						// (ArrayList<HashMap<String,ArrayList<String[]>>>)arrayData;
-						HashMap<String, List<String[]>> typeArrayData = arrayData
-								.get(i);
-						ArrayList<String[]> rowArrayData = (ArrayList<String[]>) typeArrayData
-								.get(currentType);
-
-						if (rowArrayData != null) {
-							int tempBump = 0;
-							for (int nestedRowIndex = 0; nestedRowIndex < rowArrayData
-									.size(); nestedRowIndex++) {
-
-								String[] nestedData = rowArrayData
-										.get(nestedRowIndex);
-								String data = "";
-								if (currentType.contains("DERIVED")) {
-									// Derived data element is special double
-									// nested, needs to be modified to be more
-									// general.
-
-									// General DDE information is in the first 4
-									// columns, but contained in the first row
-									// of the Row Array Data
-									if (originalColumnIndex < 5) {
-										if (nestedRowIndex == 0)
-											data = (originalColumnIndex > 0) ? nestedData[originalColumnIndex]
-													: nestedData[originalColumnIndex + 1]; 
-									} else {
-										if (nestedRowIndex + 1 < rowArrayData
-												.size()) {
-											data = rowArrayData
-													.get(nestedRowIndex + 1)[originalColumnIndex - 5];
-										}
-									}
-
-								} else
-									data = nestedData[originalColumnIndex];
-								logger.debug("at line 828 of TestSpreadsheetDownload.java*****"
-										+ data + currentType);
-								if (currentType.contains("VALID_VALUE")) { 
-									data = AdministeredItemUtil
-											.truncateTime(data);
-								}
-								cell.setCellValue(data);
-
-								tempBump++;
-
-								if (nestedRowIndex < rowArrayData.size() - 1) {
-									row = sheet
-											.getRow(rownum + bump + tempBump);
-									if (row == null) {
-										if (rownum + bump + tempBump >= MAX_ROWS) {
-											sheet = wb.createSheet(sheetName
-													+ "_" + sheetNum);
-											sheetNum++;
-											rownum = 1;
-											bump = 0;
-											tempBump = 0;
-										}
-										row = sheet.createRow(rownum + bump
-												+ tempBump);
-									}
-
-									cell = row.createCell(j);
-
-								} else {
-									// Go back to top row
-									row = sheet.getRow(rownum + bump);
-									if (tempBump > maxBump)
-										maxBump = tempBump;
-								}
-							}
-						}
-					} else {
-						temp = allRows.get(i)[colIndices[j]];
-						logger.debug("at line 866 of TestSpreadsheetDownload.java*****"
-								+ temp + currentType);
-						if (currentType.equalsIgnoreCase("Date")) {
-							temp = AdministeredItemUtil.truncateTime(temp);
-						}
-						cell.setCellValue(temp);
-					}
-
-				}
-
-				bump = bump + maxBump;
-
-				if (fillIn != null
-						&& (fillIn.equals("true") || fillIn.equals("yes")
-								&& bump > 0)) {
-					sheet = fillInBump(sheet, i, rownum, bump, allRows,
-							columnTypes, colIndices);
-					rownum = rownum + bump;
-					bump = 0;
-				}
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-		try {
-			// Please specify the path below if needed, otherwise it will create in the root/dir where this test class is run
-			fileOutputStream = new FileOutputStream("Test_Excel.xls");
-			wb.write(fileOutputStream);
-
-		} catch (Exception e) {
-			e.printStackTrace();
-		} finally {
-			/**
-			 * Close the fileOutputStream.
-			 */
-			try {
-				if (fileOutputStream != null) {
-					fileOutputStream.close();
-				}
-			} catch (IOException ex) {
-				ex.printStackTrace();
-			}
-		}
-	}
-	
+//	private void createDownloadColumns(ArrayList<String[]> allRows) {
+//		final int MAX_ROWS = 65000;
+//
+//		String sheetName = "Custom Download";
+//		int sheetNum = 1;
+//		String fillIn = "false";// set true to fill in all values.
+//		String[] columns = null;
+//		
+//			ArrayList<String> defaultHeaders = new ArrayList<String>();
+//
+//			for (String cName : allExpandedColumnHeaders) {
+//				if (cName.endsWith("IDSEQ") || cName.startsWith("CD ")
+//						|| cName.startsWith("Conceptual Domain")) { /* skip */
+//				} else {
+//					System.out.println("cName = " + cName);
+//					defaultHeaders.add(cName);
+//				}
+//			}
+//			columns = defaultHeaders.toArray(new String[defaultHeaders.size()]);
+//
+//		int[] colIndices = new int[columns.length];
+//		for (int i = 0; i < columns.length; i++) {
+//			String colName = columns[i];
+//			if (columnHeaders.indexOf(colName) < 0) {
+//				String tempType = arrayColumnTypes.get(colName);
+//				int temp = columnTypes.indexOf(tempType);
+//				colIndices[i] = temp;
+//			} else {
+//				int temp = columnHeaders.indexOf(colName);
+//				colIndices[i] = temp;
+//			}
+//		}
+//
+//		Workbook wb = new HSSFWorkbook();
+//
+//		Sheet sheet = wb.createSheet(sheetName);
+//		Font font = wb.createFont();
+//		font.setBoldweight(Font.BOLDWEIGHT_BOLD);
+//		CellStyle boldCellStyle = wb.createCellStyle();
+//		boldCellStyle.setFont(font);
+//		boldCellStyle.setAlignment(CellStyle.ALIGN_GENERAL);
+//
+//		Row headerRow = sheet.createRow(0);
+//		headerRow.setHeightInPoints(12.75f);
+//		String temp;
+//		for (int i = 0; i < columns.length; i++) {
+//			Cell cell = headerRow.createCell(i);
+//			temp = columns[i];
+//			cell.setCellValue(temp);
+//			cell.setCellStyle(boldCellStyle);
+//		}
+//
+//		// freeze the first row
+//		sheet.createFreezePane(0, 1);
+//
+//		Row row = null;
+//		Cell cell;
+//		int rownum = 1;
+//		int bump = 0;
+//		int i = 0;
+//		try {
+//			System.out.println("Total CDEs to download [" + allRows.size()
+//					+ "]");
+//			for (i = 0; i < allRows.size(); i++, rownum++) {
+//				// Check if row already exists
+//				int maxBump = 0;
+//				if (sheet.getRow(rownum + bump) == null) {
+//					row = sheet.createRow(rownum + bump);
+//				}
+//
+//				if (allRows.get(i) == null)
+//					continue;
+//
+//				for (int j = 0; j < colIndices.length; j++) {
+//
+//					cell = row.createCell(j);
+//					String currentType = columnTypes.get(colIndices[j]);
+//					if (currentType.endsWith("_T")) {
+//						// Deal with CS/CSI
+//						String[] originalArrColNames = typeMap.get(currentType)
+//								.get(0);
+//
+//						// Find current column in original data
+//
+//						int originalColumnIndex = -1;
+//						for (int a = 0; a < originalArrColNames.length; a++) {
+//							if (columns[j].equals(originalArrColNames[a])) {
+//								originalColumnIndex = a;
+//								break;
+//							}
+//						}
+//						// ArrayList<HashMap<String,ArrayList<String[]>>>
+//						// arrayData1 =
+//						// (ArrayList<HashMap<String,ArrayList<String[]>>>)arrayData;
+//						HashMap<String, List<String[]>> typeArrayData = arrayData
+//								.get(i);
+//						ArrayList<String[]> rowArrayData = (ArrayList<String[]>) typeArrayData
+//								.get(currentType);
+//
+//						if (rowArrayData != null) {
+//							int tempBump = 0;
+//							for (int nestedRowIndex = 0; nestedRowIndex < rowArrayData
+//									.size(); nestedRowIndex++) {
+//
+//								String[] nestedData = rowArrayData
+//										.get(nestedRowIndex);
+//								String data = "";
+//								if (currentType.contains("DERIVED")) {
+//									// Derived data element is special double
+//									// nested, needs to be modified to be more
+//									// general.
+//
+//									// General DDE information is in the first 4
+//									// columns, but contained in the first row
+//									// of the Row Array Data
+//									if (originalColumnIndex < 5) {
+//										if (nestedRowIndex == 0)
+//											data = (originalColumnIndex > 0) ? nestedData[originalColumnIndex]
+//													: nestedData[originalColumnIndex + 1]; 
+//									} else {
+//										if (nestedRowIndex + 1 < rowArrayData
+//												.size()) {
+//											data = rowArrayData
+//													.get(nestedRowIndex + 1)[originalColumnIndex - 5];
+//										}
+//									}
+//
+//								} else
+//									data = nestedData[originalColumnIndex];
+//								logger.debug("at line 828 of TestSpreadsheetDownload.java*****"
+//										+ data + currentType);
+//								if (currentType.contains("VALID_VALUE")) { 
+//									data = AdministeredItemUtil
+//											.truncateTime(data);
+//								}
+//								cell.setCellValue(data);
+//
+//								tempBump++;
+//
+//								if (nestedRowIndex < rowArrayData.size() - 1) {
+//									row = sheet
+//											.getRow(rownum + bump + tempBump);
+//									if (row == null) {
+//										if (rownum + bump + tempBump >= MAX_ROWS) {
+//											sheet = wb.createSheet(sheetName
+//													+ "_" + sheetNum);
+//											sheetNum++;
+//											rownum = 1;
+//											bump = 0;
+//											tempBump = 0;
+//										}
+//										row = sheet.createRow(rownum + bump
+//												+ tempBump);
+//									}
+//
+//									cell = row.createCell(j);
+//
+//								} else {
+//									// Go back to top row
+//									row = sheet.getRow(rownum + bump);
+//									if (tempBump > maxBump)
+//										maxBump = tempBump;
+//								}
+//							}
+//						}
+//					} else {
+//						temp = allRows.get(i)[colIndices[j]];
+//						logger.debug("at line 866 of TestSpreadsheetDownload.java*****"
+//								+ temp + currentType);
+//						if (currentType.equalsIgnoreCase("Date")) {
+//							temp = AdministeredItemUtil.truncateTime(temp);
+//						}
+//						cell.setCellValue(temp);
+//					}
+//
+//				}
+//
+//				bump = bump + maxBump;
+//
+//				if (fillIn != null
+//						&& (fillIn.equals("true") || fillIn.equals("yes")
+//								&& bump > 0)) {
+//					sheet = fillInBump(sheet, i, rownum, bump, allRows,
+//							columnTypes, colIndices);
+//					rownum = rownum + bump;
+//					bump = 0;
+//				}
+//			}
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
+//
+//		try {
+//			// Please specify the path below if needed, otherwise it will create in the root/dir where this test class is run
+//			fileOutputStream = new FileOutputStream("Test_Excel.xls");
+//			wb.write(fileOutputStream);
+//
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		} finally {
+//			/**
+//			 * Close the fileOutputStream.
+//			 */
+//			try {
+//				if (fileOutputStream != null) {
+//					fileOutputStream.close();
+//				}
+//			} catch (IOException ex) {
+//				ex.printStackTrace();
+//			}
+//		}
+//	}
+//	
 	//=======================================================================
 }
