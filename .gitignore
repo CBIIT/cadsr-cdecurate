@@ -52,3 +52,5 @@ ss.*
 DEV.build.properties
 sql.*
 test/js/runcasper.cmd
+agitar 
+agitar/ 
