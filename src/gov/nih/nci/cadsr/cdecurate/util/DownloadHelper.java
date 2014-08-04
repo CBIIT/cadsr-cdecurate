@@ -12,6 +12,7 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Vector;
 
 import javax.servlet.http.HttpServletRequest;
@@ -502,5 +503,81 @@ public class DownloadHelper {
 		return attrNames;
 
 	}
+
+//	private ArrayList<String[]> getRecords(
+//			HttpServletRequest  m_classReq, HttpServletResponse m_classRes, 
+//			Connection conn, 
+//			boolean full, boolean restrict) {
+//
+//		ArrayList<String[]> rows = new ArrayList<String[]>();
+//
+//		ArrayList<HashMap<String,List<String[]>>> arrayData = new ArrayList<HashMap<String,List<String[]>>>();
+//
+//		ResultSet rs = null;
+//		PreparedStatement ps = null;
+//		try {
+//			if (conn == null) {
+//				ErrorLogin(m_classReq, m_classRes);
+//			} else {
+//				int rowNum = 0;
+//				List<String> sqlStmts = getSQLStatements(full, restrict);
+//				for (String sqlStmt: sqlStmts) {
+//					ps = getConn().prepareStatement(sqlStmt);
+//					rs = ps.executeQuery();
+//
+//					ResultSetMetaData rsmd = rs.getMetaData();
+//					int numColumns = rsmd.getColumnCount();
+//
+//					ArrayList<String> columnTypes = (ArrayList<String>)m_classReq.getSession().getAttribute("types");
+//					HashMap<String,ArrayList<String[]>> typeMap = (HashMap<String, ArrayList<String[]>>)m_classReq.getSession().getAttribute("typeMap");
+//
+//					while (rs.next()) {
+//						String[] row = new String[numColumns];
+//						HashMap<String,List<String[]>> typeArrayData = null;
+//
+//						for (int i=0; i<numColumns; i++) {
+//							if (columnTypes.get(i).endsWith("_T")) {
+//								List<String[]> rowArrayData = getRowArrayData(rs, columnTypes.get(i), i);
+//
+//								if (typeArrayData == null) {
+//									typeArrayData = new HashMap<String,List<String[]>>();
+//								}
+//								typeArrayData.put(columnTypes.get(i), rowArrayData);
+//							} else {
+//								//GF30779 truncate timestamp
+//								if(columnTypes.get(i).equalsIgnoreCase("Date")) {
+//									row[i] = AdministeredItemUtil.truncateTime(rs.getString(i+1));
+//								} else {
+//									row[i] = rs.getString(i+1);
+//								}
+//								//System.out.println("rs.getString(i+1) = " + rs.getString(i+1));
+//							}
+//						}
+//						//If there were no arrayData added, add null to keep parity with rows.
+//						if (typeArrayData == null) {
+//							arrayData.add(null);
+//						}	
+//						else {
+//							arrayData.add(rowNum, typeArrayData);
+//						}
+//
+//						rows.add(row);
+//						rowNum++;
+//					}
+//				}
+//
+//				m_classReq.getSession().setAttribute("arrayData", arrayData);	//JR1047 tagged
+//			
+//			}
+//
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		} finally {
+//			if (rs!=null) try{rs.close();}catch(Exception e) {}
+//			if (ps!=null) try{ps.close();}catch(Exception e) {}
+//		}
+//
+//		return rows;
+//	}
 
 }

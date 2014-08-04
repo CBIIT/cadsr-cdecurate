@@ -18,6 +18,9 @@
  */
 package gov.nih.nci.cadsr.cdecurate.test;
 
+import gov.nih.nci.cadsr.cdecurate.tool.CurationServlet;
+import gov.nih.nci.cadsr.cdecurate.tool.EVS_UserBean;
+import gov.nih.nci.cadsr.cdecurate.tool.Session_Data;
 import gov.nih.nci.cadsr.cdecurate.util.AdministeredItemUtil;
 import gov.nih.nci.cadsr.cdecurate.util.DownloadHelper;
 import gov.nih.nci.cadsr.cdecurate.util.ValueHolder;
@@ -776,8 +779,13 @@ public class TestSpreadsheetDownload {
 
 	public static void main(String[] args) {
 		connectDB(args[0], args[1]);
+		CurationServlet m_servlet = new CurationServlet();
+//		m_servlet.sessionData = new Session_Data();
+//		m_servlet.sessionData.EvsUsrBean = new EVS_UserBean();
+		m_servlet.setConn(m_conn);
+
 		TestSpreadsheetDownload download = new TestSpreadsheetDownload();
-		ValueHolder vh = DownloadHelper.setColHeadersAndTypes(null, null, null, m_conn, "CDE");
+		ValueHolder vh = DownloadHelper.setColHeadersAndTypes(null, null, m_servlet, m_conn, "CDE");
 		ArrayList<String[]> downloadRows = download.getRecords(false, false);
 		createDownloadColumns(downloadRows, vh);
 	}
