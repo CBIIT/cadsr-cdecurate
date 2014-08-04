@@ -214,7 +214,7 @@ public class CustomDownloadServlet extends CurationServlet {
 
 	}
 
-	private ArrayList<String[]> getRecords(boolean full, boolean restrict) {
+	public ArrayList<String[]> getRecords(boolean full, boolean restrict) {
 
 		ArrayList<String[]> rows = new ArrayList<String[]>();
 

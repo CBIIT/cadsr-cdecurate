@@ -19,6 +19,7 @@
 package gov.nih.nci.cadsr.cdecurate.test;
 
 import gov.nih.nci.cadsr.cdecurate.tool.CurationServlet;
+import gov.nih.nci.cadsr.cdecurate.tool.CustomDownloadServlet;
 import gov.nih.nci.cadsr.cdecurate.tool.EVS_UserBean;
 import gov.nih.nci.cadsr.cdecurate.tool.Session_Data;
 import gov.nih.nci.cadsr.cdecurate.util.AdministeredItemUtil;
@@ -777,6 +778,9 @@ public class TestSpreadsheetDownload {
 		}
 	}
 
+	/**
+	 * @param args
+	 */
 	public static void main(String[] args) {
 		connectDB(args[0], args[1]);
 		CurationServlet m_servlet = new CurationServlet();
@@ -786,8 +790,13 @@ public class TestSpreadsheetDownload {
 
 		TestSpreadsheetDownload download = new TestSpreadsheetDownload();
 		ValueHolder vh = DownloadHelper.setColHeadersAndTypes(null, null, m_servlet, m_conn, "CDE");
-		ArrayList<String[]> downloadRows = download.getRecords(false, false);
+		ArrayList<String[]> downloadRows = getRecords(false, false);	//download.getRecords(false, false);
 		createDownloadColumns(downloadRows, vh);
+	}
+	
+	private static ArrayList<String[]> getRecords(boolean full, boolean restrict) {
+		CustomDownloadServlet download = new CustomDownloadServlet();
+		return download.getRecords(full, restrict);
 	}
 
 	public static void createDownloadColumns(ArrayList<String[]> downloadRows, ValueHolder vh) {
@@ -1158,7 +1167,7 @@ public class TestSpreadsheetDownload {
 
 	//=======================================================================
 	
-	private ArrayList<String[]> getRecords(boolean full, boolean restrict) {
+	private ArrayList<String[]> getRecords1(boolean full, boolean restrict) {
 
 		ArrayList<String[]> rows = new ArrayList<String[]>();
 
