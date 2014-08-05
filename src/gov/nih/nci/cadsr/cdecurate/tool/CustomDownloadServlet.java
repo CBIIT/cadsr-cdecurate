@@ -8,7 +8,9 @@
 package gov.nih.nci.cadsr.cdecurate.tool;
 
 import gov.nih.nci.cadsr.cdecurate.util.AdministeredItemUtil;
+import gov.nih.nci.cadsr.cdecurate.util.ColumnHeaderTypeLoader;
 import gov.nih.nci.cadsr.cdecurate.util.DownloadHelper;
+import gov.nih.nci.cadsr.cdecurate.util.DownloadRowsArrayDataLoader;
 import gov.nih.nci.cadsr.cdecurate.util.ValueHolder;
 import gov.nih.nci.cadsr.common.StringUtil;
 
@@ -131,6 +133,9 @@ public class CustomDownloadServlet extends CurationServlet {
 			createDownloadColumns(downloadRows);
 			break;
 		case dlXMLColumns:
+			ValueHolder vh = getRecords(false, false);
+			List data = (ArrayList) vh.getValue();
+			
 			ArrayList<String[]> xmlDownloadRows = getRecords(false, false);
 			createXMLDownload(xmlDownloadRows);
 			break;
@@ -153,6 +158,15 @@ public class CustomDownloadServlet extends CurationServlet {
 		}	
 	}
 
+	//JR1000
+	private ArrayList<String[]> getRecordsFromValueHolder(boolean flag1, boolean flag2) {
+		ValueHolder vh = getRecords(flag1, flag2);
+		List data = (ArrayList) vh.getValue();
+		ArrayList<String[]> rows = (ArrayList<String[]>)data.get(DownloadRowsArrayDataLoader.ROWS_INDEX);
+		
+		return rows;
+	}
+	
 	private void prepDisplayPage(String type) {
 
 		boolean outside = false;
@@ -214,7 +228,7 @@ public class CustomDownloadServlet extends CurationServlet {
 
 	}
 
-	public ArrayList<String[]> getRecords(boolean full, boolean restrict) {
+	public ValueHolder getRecords(boolean full, boolean restrict) {
 
 		ArrayList<String[]> rows = new ArrayList<String[]>();
 
@@ -284,7 +298,8 @@ public class CustomDownloadServlet extends CurationServlet {
 			if (ps!=null) try{ps.close();}catch(Exception e) {}
 		}
 
-		return rows;
+//		return rows;	//JR1000
+		return new ValueHolder(new DownloadRowsArrayDataLoader(rows, arrayData));
 	}
 
 	private List<String[]> getRowArrayData(ResultSet rs, String columnType, int index) throws Exception{
