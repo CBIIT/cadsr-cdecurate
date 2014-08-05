@@ -249,6 +249,7 @@ public class TestSpreadsheetDownload {
 	public static final Logger logger = Logger
 			.getLogger(TestSpreadsheetDownload.class.getName());
 
+	private ValueHolder vh;
 	protected static Connection m_conn = null;
 	private static final int GRID_MAX_DISPLAY = 10;
 	FileOutputStream fileOutputStream = null;
@@ -790,15 +791,28 @@ public class TestSpreadsheetDownload {
 
 		TestSpreadsheetDownload download = new TestSpreadsheetDownload();
 		ValueHolder vh = DownloadHelper.setColHeadersAndTypes(null, null, m_servlet, m_conn, "CDE");
-ArrayList<String[]> downloadRows = getRecords(false, false);	//TODO get this from 
+CustomDownloadServlet cDownload = new CustomDownloadServlet();
+cDownload.setConn(m_conn);
+vh = cDownload.getRecords(false, false);
+
+ArrayList<String[]> downloadRows = getRecordsFromValueHolder(vh);	//TODO get this from 
+
 //		ArrayList<String[]> downloadRows = getRecords(false, false);	//download.getRecords(false, false);
 		createDownloadColumns(downloadRows, vh);
 	}
 	
-	private static ArrayList<String[]> getRecords(boolean full, boolean restrict) {
-		CustomDownloadServlet download = new CustomDownloadServlet();
-		download.setConn(m_conn);
-		return download.getRecordsFromValueHolder(full, restrict);
+//	private static ArrayList<String[]> getRecords(boolean full, boolean restrict) {
+//		CustomDownloadServlet download = new CustomDownloadServlet();
+//		download.setConn(m_conn);
+//		return download.getRecordsFromValueHolder(full, restrict);
+//	}
+
+	private static ArrayList<String[]> getRecordsFromValueHolder(ValueHolder vh) {
+		return ((ArrayList<String>) vh.getValue()).get(0);
+	}
+
+	public ArrayList<String[]> getArrayDataFromValueHolder(ValueHolder vh) {
+		return vh.getValue().get(1);
 	}
 
 	public static void createDownloadColumns(ArrayList<String[]> downloadRows, ValueHolder vh) {
