@@ -24,6 +24,8 @@ import gov.nih.nci.cadsr.cdecurate.tool.EVS_UserBean;
 import gov.nih.nci.cadsr.cdecurate.tool.Session_Data;
 import gov.nih.nci.cadsr.cdecurate.util.AdministeredItemUtil;
 import gov.nih.nci.cadsr.cdecurate.util.DownloadHelper;
+import gov.nih.nci.cadsr.cdecurate.util.DownloadRowsArrayDataLoader;
+import gov.nih.nci.cadsr.cdecurate.util.DownloadedDataLoader;
 import gov.nih.nci.cadsr.cdecurate.util.ValueHolder;
 import gov.nih.nci.cadsr.common.TestUtil;
 
@@ -249,7 +251,7 @@ public class TestSpreadsheetDownload {
 	public static final Logger logger = Logger
 			.getLogger(TestSpreadsheetDownload.class.getName());
 
-	private ValueHolder vh;
+	private static ValueHolder downloadRowsArrayData;
 	protected static Connection m_conn = null;
 	private static final int GRID_MAX_DISPLAY = 10;
 	FileOutputStream fileOutputStream = null;
@@ -783,22 +785,36 @@ public class TestSpreadsheetDownload {
 	 * @param args
 	 */
 	public static void main(String[] args) {
+		//=== Main download processing logic aka pseudo codes:
+		/*
+			1. setDownloadIDs("CDE");
+			2. setColHeadersAndTypes("CDE");
+			3. allRows = getRecordsFromValueHolder();
+			4. createDownloadColumns(allRows);
+		*/
+
 		connectDB(args[0], args[1]);
 		CurationServlet m_servlet = new CurationServlet();
-//		m_servlet.sessionData = new Session_Data();
-//		m_servlet.sessionData.EvsUsrBean = new EVS_UserBean();
 		m_servlet.setConn(m_conn);
 
 		TestSpreadsheetDownload download = new TestSpreadsheetDownload();
-		ValueHolder vh = DownloadHelper.setColHeadersAndTypes(null, null, m_servlet, m_conn, "CDE");
-CustomDownloadServlet cDownload = new CustomDownloadServlet();
-cDownload.setConn(m_conn);
-vh = cDownload.getRecords(false, false);
+		
+		CustomDownloadServlet cDownload = new CustomDownloadServlet();
+		String type = "CDE";	boolean outside = false;	String dlLimit = "5000";
+//		/* 1 */ ValueHolder downloadedData = cDownload.setDownloadIDs(type, outside);
+		ArrayList idArray = new ArrayList<String>();
+		idArray.add("F6FEB251-3020-4594-E034-0003BA3F9857");
+		/* 1 */ ValueHolder downloadedData = new ValueHolder(new DownloadedDataLoader(idArray, type, dlLimit));
 
-ArrayList<String[]> downloadRows = getRecordsFromValueHolder(vh);	//TODO get this from 
+		/* 2 */ ValueHolder columnHeadersTypes = DownloadHelper.setColHeadersAndTypes(null, null, m_servlet, m_conn, "CDE");
 
-//		ArrayList<String[]> downloadRows = getRecords(false, false);	//download.getRecords(false, false);
-		createDownloadColumns(downloadRows, vh);
+		cDownload.setConn(m_conn);
+		/* 3 */ downloadRowsArrayData = cDownload.getRecords(false, false, downloadedData, columnHeadersTypes);
+		
+		ArrayList<String[]> downloadRows = getRecordsFromValueHolder(downloadRowsArrayData);
+		ArrayList<HashMap<String,ArrayList<String[]>>> arrayData = getArrayDataFromValueHolder(downloadRowsArrayData);
+
+		/* 4 */ createDownloadColumns(downloadRows, columnHeadersTypes, arrayData);
 	}
 	
 //	private static ArrayList<String[]> getRecords(boolean full, boolean restrict) {
@@ -809,15 +825,15 @@ ArrayList<String[]> downloadRows = getRecordsFromValueHolder(vh);	//TODO get thi
 
 	private static ArrayList<String[]> getRecordsFromValueHolder(ValueHolder vh) {
 		List data = (ArrayList) vh.getValue();
-		return (ArrayList<String[]>) data.get(0);
+		return (ArrayList<String[]>) data.get(DownloadRowsArrayDataLoader.ROWS_INDEX);
 	}
 
 	public static ArrayList<HashMap<String,ArrayList<String[]>>> getArrayDataFromValueHolder(ValueHolder vh) {
 		List data = (ArrayList) vh.getValue();
-		return (ArrayList<HashMap<String,ArrayList<String[]>>>) data.get(1);
+		return (ArrayList<HashMap<String,ArrayList<String[]>>>) data.get(DownloadRowsArrayDataLoader.ARRAY_DATA_INDEX);
 	}
 
-	public static void createDownloadColumns(ArrayList<String[]> downloadRows, ValueHolder vh) {
+	public static void createDownloadColumns(ArrayList<String[]> downloadRows, ValueHolder vh, ArrayList<HashMap<String,ArrayList<String[]>>> arrayData) {
 		List data = (ArrayList) vh.getValue();
 
 		String colString = "Valid Values,Value Meaning Name,Value Meaning Description";	//(String) m_classReq.getParameter("cdlColumns");	//e.g. Valid Values,Value Meaning Name,Value Meaning Description
@@ -829,8 +845,6 @@ ArrayList<String[]> downloadRows = getRecordsFromValueHolder(vh);	//TODO get thi
 		ArrayList<String> allTypes = (ArrayList<String>) data.get(3);	//(ArrayList<String>) m_classReq.getSession().getAttribute("types");		//e.g. [CHAR, VARCHAR2, VARCHAR2, VARCHAR2, VARCHAR2, NUMBER, VARCHAR2, NUMBER, NUMBER, VARCHAR2, VARCHAR2, DATE, VARCHAR2, NUMBER, VARCHAR2, VARCHAR2, NUMBER, VARCHAR2, NUMBER, VARCHAR2, VARCHAR2, NUMBER, VARCHAR2, VARCHAR2, VARCHAR2, NUMBER, VARCHAR2, 28:SBREXT.CONCEPTS_LIST_T, NUMBER, VARCHAR2, VARCHAR2, VARCHAR2, NUMBER, VARCHAR2, 35:SBREXT.CONCEPTS_LIST_T, NUMBER, VARCHAR2, VARCHAR2, NUMBER, VARCHAR2, VARCHAR2, VARCHAR2, NUMBER, VARCHAR2, VARCHAR2, NUMBER, NUMBER, VARCHAR2, VARCHAR2, NUMBER, VARCHAR2, 52:SBREXT.CONCEPTS_LIST_T, NUMBER, VARCHAR2, VARCHAR2, VARCHAR2, NUMBER, 58:SBREXT.CONCEPTS_LIST_T, 59:SBREXT.VALID_VALUE_LIST_T, 60:SBREXT.CDEBROWSER_CSI_LIST_T, 61:SBREXT.DESIGNATIONS_LIST_T, 62:SBREXT.CDEBROWSER_RD_LIST_T, 63:SBREXT.DERIVED_DATA_ELEMENT_T, NUMBER, VARCHAR2, NUMBER, VARCHAR2]
 		HashMap<String,ArrayList<String[]>> typeMap = (HashMap<String, ArrayList<String[]>>) data.get(4);	//(HashMap<String,ArrayList<String[]>>) m_classReq.getSession().getAttribute("typeMap");	//e.g. {35:SBREXT.CONCEPTS_LIST_T=[[Ljava.lang.String;@6a8b5cdf, [Ljava.lang.String;@637e6b1e], 63:SBREXT.DERIVED_DATA_ELEMENT_T=[[Ljava.lang.String;@aab19a, [Ljava.lang.String;@4671f5cd], 60:SBREXT.CDEBROWSER_CSI_LIST_T=[[Ljava.lang.String;@63c089dc, [Ljava.lang.String;@759afdad], 58:SBREXT.CONCEPTS_LIST_T=[[Ljava.lang.String;@1284a52d, [Ljava.lang.String;@427836da], 62:SBREXT.CDEBROWSER_RD_LIST_T=[[Ljava.lang.String;@6259444d, [Ljava.lang.String;@52934dac], 61:SBREXT.DESIGNATIONS_LIST_T=[[Ljava.lang.String;@44d0818e, [Ljava.lang.String;@54e9b4ed], 52:SBREXT.CONCEPTS_LIST_T=[[Ljava.lang.String;@3b655f28, [Ljava.lang.String;@7c4a598e], 28:SBREXT.CONCEPTS_LIST_T=[[Ljava.lang.String;@753db961, [Ljava.lang.String;@2755cb69], 59:SBREXT.VALID_VALUE_LIST_T=[[Ljava.lang.String;@719d6eab, [Ljava.lang.String;@16ccd6d3]}
 		HashMap<String, String> arrayColumnTypes = (HashMap<String, String>) data.get(5);	//(HashMap<String,String>) m_classReq.getSession().getAttribute("arrayColumnTypes");	//e.g. {PV Begin Date=59:SBREXT.VALID_VALUE_LIST_T, Object Class Concept Public ID=28:SBREXT.CONCEPTS_LIST_T, Object Class Concept NCI RAI=28:SBREXT.CONCEPTS_LIST_T, Derivation Type=63:SBREXT.DERIVED_DATA_ELEMENT_T, Classification Scheme Item Name=60:SBREXT.CDEBROWSER_CSI_LIST_T, Derivation Method=63:SBREXT.DERIVED_DATA_ELEMENT_T, Object Class Concept Origin=28:SBREXT.CONCEPTS_LIST_T, PV End Date=59:SBREXT.VALID_VALUE_LIST_T, DDE Preferred Name=63:SBREXT.DERIVED_DATA_ELEMENT_T, Classification Scheme Item Public Id=60:SBREXT.CDEBROWSER_CSI_LIST_T, DDE Version=63:SBREXT.DERIVED_DATA_ELEMENT_T, Derivation Type Description=63:SBREXT.DERIVED_DATA_ELEMENT_T, Property Concept Code=35:SBREXT.CONCEPTS_LIST_T, Classification Scheme Version=60:SBREXT.CDEBROWSER_CSI_LIST_T, Representation Concept Definition Source=58:SBREXT.CONCEPTS_LIST_T, Classification Scheme Public ID=60:SBREXT.CDEBROWSER_CSI_LIST_T, Representation Concept Name=58:SBREXT.CONCEPTS_LIST_T, Value Domain Concept Name=52:SBREXT.CONCEPTS_LIST_T, Value Domain Concept Code=52:SBREXT.CONCEPTS_LIST_T, Object Class Concept Name=28:SBREXT.CONCEPTS_LIST_T, Value Domain Concept NCI RAI=52:SBREXT.CONCEPTS_LIST_T, Value Domain Concept Definition Source=52:SBREXT.CONCEPTS_LIST_T, DDE Workflow Status=63:SBREXT.DERIVED_DATA_ELEMENT_T, Data Element Alternate Name Context Version=61:SBREXT.DESIGNATIONS_LIST_T, Value Domain Concept EVS Source=52:SBREXT.CONCEPTS_LIST_T, Value Meaning Alternate Definitions=59:SBREXT.VALID_VALUE_LIST_T, Classification Scheme Context Name=60:SBREXT.CDEBROWSER_CSI_LIST_T, Property Concept NCI RAI=35:SBREXT.CONCEPTS_LIST_T, Property Concept EVS Source=35:SBREXT.CONCEPTS_LIST_T, Value Meaning Description=59:SBREXT.VALID_VALUE_LIST_T, DDE Preferred Definition=63:SBREXT.DERIVED_DATA_ELEMENT_T, DDE Display Order=63:SBREXT.DERIVED_DATA_ELEMENT_T, Object Class Concept Code=28:SBREXT.CONCEPTS_LIST_T, Classification Scheme Item Version=60:SBREXT.CDEBROWSER_CSI_LIST_T, Value Domain Concept Origin=52:SBREXT.CONCEPTS_LIST_T, Document Organization=62:SBREXT.CDEBROWSER_RD_LIST_T, Value Meaning Name=59:SBREXT.VALID_VALUE_LIST_T, Object Class Concept Definition Source=28:SBREXT.CONCEPTS_LIST_T, Object Class Concept EVS Source=28:SBREXT.CONCEPTS_LIST_T, Value Meaning PublicID=59:SBREXT.VALID_VALUE_LIST_T, Value Meaning Concepts=59:SBREXT.VALID_VALUE_LIST_T, Value Domain Concept Public ID=52:SBREXT.CONCEPTS_LIST_T, Classification Scheme Short Name=60:SBREXT.CDEBROWSER_CSI_LIST_T, Representation Concept Code=58:SBREXT.CONCEPTS_LIST_T, Data Element Alternate Name Context Name=61:SBREXT.DESIGNATIONS_LIST_T, Property Concept Primary Flag=35:SBREXT.CONCEPTS_LIST_T, Derivation Rule=63:SBREXT.DERIVED_DATA_ELEMENT_T, DDE Context=63:SBREXT.DERIVED_DATA_ELEMENT_T, Data Element Alternate Name Type=61:SBREXT.DESIGNATIONS_LIST_T, Valid Values=59:SBREXT.VALID_VALUE_LIST_T, Value Meaning Version=59:SBREXT.VALID_VALUE_LIST_T, DDE Public ID=63:SBREXT.DERIVED_DATA_ELEMENT_T, Document=62:SBREXT.CDEBROWSER_RD_LIST_T, Classification Scheme Context Version=60:SBREXT.CDEBROWSER_CSI_LIST_T, Representation Concept Primary Flag=58:SBREXT.CONCEPTS_LIST_T, Classification Scheme Item Type Name=60:SBREXT.CDEBROWSER_CSI_LIST_T, Object Class Concept Primary Flag=28:SBREXT.CONCEPTS_LIST_T, Property Concept Definition Source=35:SBREXT.CONCEPTS_LIST_T, Representation Concept Public ID=58:SBREXT.CONCEPTS_LIST_T, Representation Concept EVS Source=58:SBREXT.CONCEPTS_LIST_T, Representation Concept NCI RAI=58:SBREXT.CONCEPTS_LIST_T, DDE Long Name=63:SBREXT.DERIVED_DATA_ELEMENT_T, Value Domain Concept Primary Flag=52:SBREXT.CONCEPTS_LIST_T, Concatenation Character=63:SBREXT.DERIVED_DATA_ELEMENT_T, Document Type=62:SBREXT.CDEBROWSER_RD_LIST_T, Property Concept Origin=35:SBREXT.CONCEPTS_LIST_T, Representation Concept Origin=58:SBREXT.CONCEPTS_LIST_T, Data Element Alternate Name=61:SBREXT.DESIGNATIONS_LIST_T, Document Name=62:SBREXT.CDEBROWSER_RD_LIST_T, Property Concept Name=35:SBREXT.CONCEPTS_LIST_T, Property Concept Public ID=35:SBREXT.CONCEPTS_LIST_T}
-
-		ArrayList<HashMap<String,ArrayList<String[]>>> arrayData = getArrayDataFromValueHolder(vh);	//(ArrayList<HashMap<String,ArrayList<String[]>>>) m_classReq.getSession().getAttribute("arrayData"); //e.g. [{35:SBREXT.CONCEPTS_LIST_T=[], 63:SBREXT.DERIVED_DATA_ELEMENT_T=[], 60:SBREXT.CDEBROWSER_CSI_LIST_T=[], 58:SBREXT.CONCEPTS_LIST_T=[], 62:SBREXT.CDEBROWSER_RD_LIST_T=[], 61:SBREXT.DESIGNATIONS_LIST_T=[], 52:SBREXT.CONCEPTS_LIST_T=[], 28:SBREXT.CONCEPTS_LIST_T=[], 59:SBREXT.VALID_VALUE_LIST_T=[]}]
 
 		Workbook wb = DownloadHelper.createDownloadColumns(colString, fillIn, allHeaders, allExpandedHeaders, allTypes, typeMap, arrayData, arrayColumnTypes, downloadRows);
 		try {

@@ -11,6 +11,7 @@ import gov.nih.nci.cadsr.cdecurate.util.AdministeredItemUtil;
 import gov.nih.nci.cadsr.cdecurate.util.ColumnHeaderTypeLoader;
 import gov.nih.nci.cadsr.cdecurate.util.DownloadHelper;
 import gov.nih.nci.cadsr.cdecurate.util.DownloadRowsArrayDataLoader;
+import gov.nih.nci.cadsr.cdecurate.util.DownloadedDataLoader;
 import gov.nih.nci.cadsr.cdecurate.util.ValueHolder;
 import gov.nih.nci.cadsr.common.StringUtil;
 
@@ -78,7 +79,7 @@ public class CustomDownloadServlet extends CurationServlet {
 
 	}
 	
-	private void setColHeadersAndTypes(HttpServletRequest m_classReq, HttpServletResponse m_classRes, CurationServlet servlet, Connection m_conn, String ac) {
+	private ValueHolder setColHeadersAndTypes(HttpServletRequest m_classReq, HttpServletResponse m_classRes, CurationServlet servlet, Connection m_conn, String ac) {
 		ValueHolder valueHolder = DownloadHelper.setColHeadersAndTypes(m_classReq, m_classRes, servlet, m_conn, ac);
 		List data = (ArrayList) valueHolder.getValue();
 		m_classReq.getSession().setAttribute("excludedHeaders", data.get(0) /*excluded*/);
@@ -87,6 +88,8 @@ public class CustomDownloadServlet extends CurationServlet {
 		m_classReq.getSession().setAttribute("types", data.get(3) /*columnTypes*/);
 		m_classReq.getSession().setAttribute("typeMap", data.get(4) /*typeMap*/);
 		m_classReq.getSession().setAttribute("arrayColumnTypes", data.get(5) /*arrayColumnTypes*/);
+		
+		return valueHolder;
 	}
 
 	private void createDownloadColumns(ArrayList<String[]> downloadRows) {
@@ -115,7 +118,7 @@ public class CustomDownloadServlet extends CurationServlet {
 	
 	public void execute(ACRequestTypes reqType) throws Exception {	
 
-		switch (reqType){
+		switch (reqType){	//e.g. dlExcelColumns
 		case showDEfromOutside:
 			prepDisplayPage("O-CDE");
 			break;
@@ -129,11 +132,14 @@ public class CustomDownloadServlet extends CurationServlet {
 			returnJSONFromSession("Layout");
 			break;
 		case dlExcelColumns:
-			ArrayList<String[]> downloadRows = getRecordsFromValueHolder(false, false);	//GF30779 multiple rows, if any
+			String type = "CDE";	//what about other AC?
+			ValueHolder downloadedData2 = setDownloadIDs(type, false);	//JR1000
+			ValueHolder downloadedMeta2 = setColHeadersAndTypes(m_classReq, m_classRes, this, m_conn, type);	//JR1000
+			ArrayList<String[]> downloadRows = getRecordsFromValueHolder(false, false, downloadedData2, downloadedMeta2);	//GF30779 multiple rows, if any		//JR1000 when the "Download Excel" button is clicked!
 			createDownloadColumns(downloadRows);
 			break;
 		case dlXMLColumns:
-			ArrayList<String[]> xmlDownloadRows = getRecordsFromValueHolder(false, false);
+			ArrayList<String[]> xmlDownloadRows = getRecordsFromValueHolder(false, false, null, null);
 			createXMLDownload(xmlDownloadRows);
 			break;
 		case createExcelDownload:
@@ -146,18 +152,18 @@ public class CustomDownloadServlet extends CurationServlet {
 			prepDisplayPage("DEC"); 
 			break;
 		case createFullDEDownload:
-			setDownloadIDs("CDE",false);
-			setColHeadersAndTypes(m_classReq, m_classRes, this, m_conn, "CDE");	//setColHeadersAndTypes("CDE");	//JR1000
+			ValueHolder downloadedData1 = setDownloadIDs("CDE",false);
+			ValueHolder downloadedMeta1 = setColHeadersAndTypes(m_classReq, m_classRes, this, m_conn, "CDE");	//setColHeadersAndTypes("CDE");	//JR1000 when the AC (DE) is selected after search in a Menu action click (right context click)
 
-			ArrayList<String[]> allRows = getRecordsFromValueHolder(true, false);
+			ArrayList<String[]> allRows = getRecordsFromValueHolder(true, false, downloadedData1, downloadedMeta1);
 			createDownloadColumns(allRows);
 			break;
-		}	
+		}
 	}
 
 	//JR1000
-	public ArrayList<String[]> getRecordsFromValueHolder(boolean flag1, boolean flag2) {
-		ValueHolder vh = getRecords(flag1, flag2);
+	public ArrayList<String[]> getRecordsFromValueHolder(boolean flag1, boolean flag2, ValueHolder downloadedData, ValueHolder downloadedMeta) {
+		ValueHolder vh = getRecords(flag1, flag2, downloadedData, downloadedMeta);
 		List data = (ArrayList) vh.getValue();
 		ArrayList<String[]> rows = (ArrayList<String[]>)data.get(DownloadRowsArrayDataLoader.ROWS_INDEX);
 		
@@ -187,25 +193,37 @@ public class CustomDownloadServlet extends CurationServlet {
 			}
 		}	
 
-		setDownloadIDs(type, outside);
-		setColHeadersAndTypes(m_classReq, m_classRes, this, m_conn, type);	//setColHeadersAndTypes(type);	//JR1000
-		ArrayList<String[]> rows = getRecordsFromValueHolder(false, true);
+		ValueHolder downloadedData = setDownloadIDs(type, outside);
+		ValueHolder downloadedMeta = setColHeadersAndTypes(m_classReq, m_classRes, this, m_conn, type);	//setColHeadersAndTypes(type);	//JR1000
+		ArrayList<String[]> rows = getRecordsFromValueHolder(false, true, downloadedData, downloadedMeta);	//JR1000 TODO broken, blank page! :(
 
 		m_classReq.getSession().setAttribute("rows", rows);
 		ForwardJSP(m_classReq, m_classRes, "/CustomDownload.jsp");
 	}
 
-	private void setDownloadIDs(String type, boolean outside) {
+	//JR1000
+	public ValueHolder setDownloadIDs(String type, boolean outside) {
+		ValueHolder vh = setDownloadIDsValueHolder(type, outside);
+		List data = (ArrayList) vh.getValue();	//e.g. [[F6FEB251-3020-4594-E034-0003BA3F9857], CDE, 5000]
+
+		ArrayList<String> downloadID = (ArrayList<String>) data.get(DownloadedDataLoader.ID_INDEX);
+		if (downloadID.size() > this.MAX_DOWNLOAD)
+			ForwardJSP(m_classReq, m_classRes, "/CustomOverLimit.jsp");
+
+		return vh;
+	}
+	
+	private ValueHolder setDownloadIDsValueHolder(String type, boolean outside) {
 		ArrayList<String> downloadID = new ArrayList<String>();
 
 		if (!outside) {
-			Set<String> paramNames = this.m_classReq.getParameterMap().keySet();
-			Vector<String> searchID= (Vector<String>) this.m_classReq.getSession().getAttribute("SearchID");
+			Set<String> paramNames = this.m_classReq.getParameterMap().keySet();	//e.g. [orgCompID, selectedRowId, serRecCount, count, actSelected, serMenuAct, AppendAction, show, hidMenuAction, allCK, desID, hidaction, pageAction, CK0, hiddenSelectedRow, desContextID, SelectAll, numAttSelected, selectAll, selRowID, hiddenName, flag, desName, desContext, unCheckedRowId, sortType, reqType, numSelected, hiddenDefSource, AttChecked, hiddenSearch, isValid, hiddenName2, searchComp]
+			Vector<String> searchID= (Vector<String>) this.m_classReq.getSession().getAttribute("SearchID");	//e.g. [F6FEB251-3020-4594-E034-0003BA3F9857]
 
 			for(String name:paramNames) {
 				if (name.startsWith("CK")) {
-					int ndx = Integer.valueOf(name.substring(2));
-					downloadID.add(searchID.get(ndx));
+					int ndx = Integer.valueOf(name.substring(2));	//e.g. CK0 => 0
+					downloadID.add(searchID.get(ndx));				//get the value based on the index, ndx e.g. F6FEB251-3020-4594-E034-0003BA3F9857
 				}
 			}
 		} else {
@@ -220,12 +238,14 @@ public class CustomDownloadServlet extends CurationServlet {
 		m_classReq.getSession().setAttribute("downloadType", type);
 		m_classReq.getSession().setAttribute("downloadLimit", Integer.toString(this.MAX_DOWNLOAD));
 
-		if (downloadID.size() > this.MAX_DOWNLOAD)
-			ForwardJSP(m_classReq, m_classRes, "/CustomOverLimit.jsp");
-
+		//JR1000
+		return new ValueHolder(new DownloadedDataLoader(downloadID, type, Integer.toString(this.MAX_DOWNLOAD)));
+		
+//		if (downloadID.size() > this.MAX_DOWNLOAD)
+//			ForwardJSP(m_classReq, m_classRes, "/CustomOverLimit.jsp");
 	}
 
-	public ValueHolder getRecords(boolean full, boolean restrict) {
+	public ValueHolder getRecords(boolean full, boolean restrict, ValueHolder downloadedDataVH, ValueHolder downloadedMetaVH) {
 
 		ArrayList<String[]> rows = new ArrayList<String[]>();
 
@@ -238,7 +258,16 @@ public class CustomDownloadServlet extends CurationServlet {
 				ErrorLogin(m_classReq, m_classRes);
 			} else {
 				int rowNum = 0;
-				List<String> sqlStmts = getSQLStatements(full, restrict);
+				//begin JR1000
+				ArrayList<String> arraydownloadIDs = null;
+				String downloadType = null;
+				if(downloadedDataVH != null) {
+					List data = (ArrayList) downloadedDataVH.getValue();	//JR1000
+					arraydownloadIDs = (ArrayList<String>) data.get(DownloadedDataLoader.ID_INDEX);
+					downloadType = (String) data.get(DownloadedDataLoader.TYPE_INDEX);
+				}
+				//end JR1000
+				List<String> sqlStmts = getSQLStatements(full, restrict, arraydownloadIDs, downloadType);
 				for (String sqlStmt: sqlStmts) {
 					ps = getConn().prepareStatement(sqlStmt);
 					rs = ps.executeQuery();
@@ -246,8 +275,9 @@ public class CustomDownloadServlet extends CurationServlet {
 					ResultSetMetaData rsmd = rs.getMetaData();
 					int numColumns = rsmd.getColumnCount();
 
-					ArrayList<String> columnTypes = (ArrayList<String>)m_classReq.getSession().getAttribute("types");
-					HashMap<String,ArrayList<String[]>> typeMap = (HashMap<String, ArrayList<String[]>>)m_classReq.getSession().getAttribute("typeMap");
+					List data = (ArrayList) downloadedMetaVH.getValue();	//JR1000
+					ArrayList<String> columnTypes = (ArrayList<String>)data.get(ColumnHeaderTypeLoader.ALL_TYPES_INDEX);	//m_classReq.getSession().getAttribute("types");
+					HashMap<String,ArrayList<String[]>> typeMap = (HashMap<String, ArrayList<String[]>>)data.get(ColumnHeaderTypeLoader.TYPEMAP_INDEX);	//m_classReq.getSession().getAttribute("typeMap");
 
 					while (rs.next()) {
 						String[] row = new String[numColumns];
@@ -284,7 +314,7 @@ public class CustomDownloadServlet extends CurationServlet {
 					}
 				}
 
-				m_classReq.getSession().setAttribute("arrayData", arrayData);	//JR1047 tagged
+				if(m_classReq != null) m_classReq.getSession().setAttribute("arrayData", arrayData);	//JR1047 tagged		//JR1000 null check for unit test
 			
 			}
 
@@ -459,10 +489,10 @@ public class CustomDownloadServlet extends CurationServlet {
 	 * @param restrict
 	 * @return
 	 */
-	private List<String> getSQLStatements(boolean full, boolean restrict) {
+	private List<String> getSQLStatements(boolean full, boolean restrict, ArrayList<String> downloadIDs, String downloadType) {
 		List<String> sqlStmts  = new ArrayList<String>();
-		ArrayList<String> downloadIDs = (ArrayList<String>)m_classReq.getSession().getAttribute("downloadIDs");
-		String type = (String)m_classReq.getSession().getAttribute("downloadType");
+//		ArrayList<String> downloadIDs = (ArrayList<String>)m_classReq.getSession().getAttribute("downloadIDs");
+		String type = downloadType;	//(String)m_classReq.getSession().getAttribute("downloadType");	//JR1000
 
 		String sqlStmt = null;
 		if (!full){
@@ -505,15 +535,17 @@ public class CustomDownloadServlet extends CurationServlet {
 			int counter = 0;
 			whereBuffer = new StringBuffer();
 
-			for (String id:downloadIds) {
-				whereBuffer.append("'" + id + "',");
-
-				counter++;
-
-				if (counter%1000 == 0) {
-					whereBuffer.deleteCharAt(whereBuffer.length()-1);
-					whereBuffers.add(whereBuffer);
-					whereBuffer = new StringBuffer();
+			if(downloadIds != null) {	//JR1000 fix NPE; nothing to do with ticket
+				for (String id:downloadIds) {
+					whereBuffer.append("'" + id + "',");
+	
+					counter++;
+	
+					if (counter%1000 == 0) {
+						whereBuffer.deleteCharAt(whereBuffer.length()-1);
+						whereBuffers.add(whereBuffer);
+						whereBuffer = new StringBuffer();
+					}
 				}
 			}
 
@@ -532,8 +564,9 @@ public class CustomDownloadServlet extends CurationServlet {
 		return whereBuffers.toArray(new StringBuffer[0]);
 	}
 
+	//JR1000 not used
 	private void returnJSONFromSession(String JSPName) {
-		ArrayList<String[]> displayRows = getRecordsFromValueHolder(false, true);
+		ArrayList<String[]> displayRows = getRecordsFromValueHolder(false, true, null, null);
 		m_classReq.getSession().setAttribute("rows", displayRows);
 		ForwardJSP(m_classReq, m_classRes, "/JSON"+JSPName+".jsp");
 	}
