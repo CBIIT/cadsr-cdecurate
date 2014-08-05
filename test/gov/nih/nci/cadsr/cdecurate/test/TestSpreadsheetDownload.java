@@ -790,14 +790,15 @@ public class TestSpreadsheetDownload {
 
 		TestSpreadsheetDownload download = new TestSpreadsheetDownload();
 		ValueHolder vh = DownloadHelper.setColHeadersAndTypes(null, null, m_servlet, m_conn, "CDE");
-		ArrayList<String[]> downloadRows = getRecords(false, false);	//download.getRecords(false, false);
+ArrayList<String[]> downloadRows = getRecords(false, false);	//TODO get this from 
+//		ArrayList<String[]> downloadRows = getRecords(false, false);	//download.getRecords(false, false);
 		createDownloadColumns(downloadRows, vh);
 	}
 	
 	private static ArrayList<String[]> getRecords(boolean full, boolean restrict) {
 		CustomDownloadServlet download = new CustomDownloadServlet();
 		download.setConn(m_conn);
-		return download.getRecords(full, restrict);
+		return download.getRecordsFromValueHolder(full, restrict);
 	}
 
 	public static void createDownloadColumns(ArrayList<String[]> downloadRows, ValueHolder vh) {

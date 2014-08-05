@@ -129,14 +129,11 @@ public class CustomDownloadServlet extends CurationServlet {
 			returnJSONFromSession("Layout");
 			break;
 		case dlExcelColumns:
-			ArrayList<String[]> downloadRows = getRecords(false, false);	//GF30779 multiple rows, if any
+			ArrayList<String[]> downloadRows = getRecordsFromValueHolder(false, false);	//GF30779 multiple rows, if any
 			createDownloadColumns(downloadRows);
 			break;
 		case dlXMLColumns:
-			ValueHolder vh = getRecords(false, false);
-			List data = (ArrayList) vh.getValue();
-			
-			ArrayList<String[]> xmlDownloadRows = getRecords(false, false);
+			ArrayList<String[]> xmlDownloadRows = getRecordsFromValueHolder(false, false);
 			createXMLDownload(xmlDownloadRows);
 			break;
 		case createExcelDownload:
@@ -152,14 +149,14 @@ public class CustomDownloadServlet extends CurationServlet {
 			setDownloadIDs("CDE",false);
 			setColHeadersAndTypes(m_classReq, m_classRes, this, m_conn, "CDE");	//setColHeadersAndTypes("CDE");	//JR1000
 
-			ArrayList<String[]> allRows = getRecords(true, false);
+			ArrayList<String[]> allRows = getRecordsFromValueHolder(true, false);
 			createDownloadColumns(allRows);
 			break;
 		}	
 	}
 
 	//JR1000
-	private ArrayList<String[]> getRecordsFromValueHolder(boolean flag1, boolean flag2) {
+	public ArrayList<String[]> getRecordsFromValueHolder(boolean flag1, boolean flag2) {
 		ValueHolder vh = getRecords(flag1, flag2);
 		List data = (ArrayList) vh.getValue();
 		ArrayList<String[]> rows = (ArrayList<String[]>)data.get(DownloadRowsArrayDataLoader.ROWS_INDEX);
@@ -192,7 +189,7 @@ public class CustomDownloadServlet extends CurationServlet {
 
 		setDownloadIDs(type, outside);
 		setColHeadersAndTypes(m_classReq, m_classRes, this, m_conn, type);	//setColHeadersAndTypes(type);	//JR1000
-		ArrayList<String[]> rows = getRecords(false, true);
+		ArrayList<String[]> rows = getRecordsFromValueHolder(false, true);
 
 		m_classReq.getSession().setAttribute("rows", rows);
 		ForwardJSP(m_classReq, m_classRes, "/CustomDownload.jsp");
@@ -536,7 +533,7 @@ public class CustomDownloadServlet extends CurationServlet {
 	}
 
 	private void returnJSONFromSession(String JSPName) {
-		ArrayList<String[]> displayRows = getRecords(false, true);
+		ArrayList<String[]> displayRows = getRecordsFromValueHolder(false, true);
 		m_classReq.getSession().setAttribute("rows", displayRows);
 		ForwardJSP(m_classReq, m_classRes, "/JSON"+JSPName+".jsp");
 	}
