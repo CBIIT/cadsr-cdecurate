@@ -136,6 +136,7 @@ public class CustomDownloadServlet extends CurationServlet {
 			ValueHolder downloadedData2 = setDownloadIDs(type, false);	//JR1000
 			ValueHolder downloadedMeta2 = setColHeadersAndTypes(m_classReq, m_classRes, this, m_conn, type);	//JR1000
 			ArrayList<String[]> downloadRows = getRecordsFromValueHolder(false, false, downloadedData2, downloadedMeta2);	//GF30779 multiple rows, if any		//JR1000 when the "Download Excel" button is clicked!
+//			ArrayList<HashMap<String,ArrayList<String[]>>> arrayData = getArrayDataFromValueHolder(downloadRowsArrayData);
 			createDownloadColumns(downloadRows);
 			break;
 		case dlXMLColumns:
@@ -170,6 +171,11 @@ public class CustomDownloadServlet extends CurationServlet {
 		return rows;
 	}
 	
+	public static ArrayList<HashMap<String,ArrayList<String[]>>> getArrayDataFromValueHolder(ValueHolder vh) {
+		List data = (ArrayList) vh.getValue();
+		return (ArrayList<HashMap<String,ArrayList<String[]>>>) data.get(DownloadRowsArrayDataLoader.ARRAY_DATA_INDEX);
+	}
+
 	private void prepDisplayPage(String type) {
 
 		boolean outside = false;
