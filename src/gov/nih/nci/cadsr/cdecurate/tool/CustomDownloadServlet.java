@@ -92,18 +92,20 @@ public class CustomDownloadServlet extends CurationServlet {
 		return valueHolder;
 	}
 
-	private void createDownloadColumns(ArrayList<String[]> downloadRows) {
+	private void createDownloadColumns(ArrayList<String[]> downloadRows, ValueHolder vh, ArrayList<HashMap<String,ArrayList<String[]>>> arrayData) {
 		String colString = (String) m_classReq.getParameter("cdlColumns");	//e.g. Valid Values,Value Meaning Name,Value Meaning Description
 		String fillIn = (String) m_classReq.getParameter("fillIn");		//e.g. ; can be null/optional
 
-		ArrayList<String> allHeaders = (ArrayList<String>) m_classReq.getSession().getAttribute("headers");		//e.g. [CDE_IDSEQ, Data Element Short Name, Data Element Long Name, Data Element Preferred Question Text, Data Element Preferred Definition, Data Element Version, Data Element Context Name, Data Element Context Version, Data Element Public ID, Data Element Workflow Status, Data Element Registration Status, Data Element Begin Date, Data Element Source, Data Element Concept Public ID, Data Element Concept Short Name, Data Element Concept Long Name, Data Element Concept Version, Data Element Concept Context Name, Data Element Concept Context Version, Data Element Concept Workflow Status, Data Element Concept Registration Status, Object Class Public ID, Object Class Long Name, Object Class Short Name, Object Class Context Name, Object Class Version, Object Class Workflow Status, OC_CONCEPTS, Property Public ID, Property Long Name, Property Short Name, Property Context Name, Property Version, Property Workflow Status, PROP_CONCEPTS, Value Domain Public ID, Value Domain Short Name, Value Domain Long Name, Value Domain Version, Value Domain Workflow Status, Value Domain Registration Status, Value Domain Context Name, Value Domain Context Version, Value Domain Type, Value Domain Datatype, Value Domain Min Length, Value Domain Max Length, Value Domain Min value, Value Domain Max Value, Value Domain Decimal Place, Value Domain Format, VD_CONCEPTS, Representation Public ID, Representation Long Name, Representation Short Name, Representation Context Name, Representation Version, REP_CONCEPTS, VALID_VALUES, CLASSIFICATIONS, DESIGNATIONS, REFERENCE_DOCS, DE_DERIVATION, Conceptual Domain Public ID, Conceptual Domain Short Name, Conceptual Domain Version, Conceptual Domain Context Name]
-		ArrayList<String> allExpandedHeaders = (ArrayList<String>) m_classReq.getSession().getAttribute("allExpandedHeaders");	//e.g. [CDE_IDSEQ, Data Element Short Name, Data Element Long Name, Data Element Preferred Question Text, Data Element Preferred Definition, Data Element Version, Data Element Context Name, Data Element Context Version, Data Element Public ID, Data Element Workflow Status, Data Element Registration Status, Data Element Begin Date, Data Element Source, Data Element Concept Public ID, Data Element Concept Short Name, Data Element Concept Long Name, Data Element Concept Version, Data Element Concept Context Name, Data Element Concept Context Version, Data Element Concept Workflow Status, Data Element Concept Registration Status, Object Class Public ID, Object Class Long Name, Object Class Short Name, Object Class Context Name, Object Class Version, Object Class Workflow Status, Object Class Concept Name, Object Class Concept Code, Object Class Concept Public ID, Object Class Concept Definition Source, Object Class Concept Origin, Object Class Concept EVS Source, Object Class Concept Primary Flag, Object Class Concept NCI RAI, Property Public ID, Property Long Name, Property Short Name, Property Context Name, Property Version, Property Workflow Status, Property Concept Name, Property Concept Code, Property Concept Public ID, Property Concept Definition Source, Property Concept Origin, Property Concept EVS Source, Property Concept Primary Flag, Property Concept NCI RAI, Value Domain Public ID, Value Domain Short Name, Value Domain Long Name, Value Domain Version, Value Domain Workflow Status, Value Domain Registration Status, Value Domain Context Name, Value Domain Context Version, Value Domain Type, Value Domain Datatype, Value Domain Min Length, Value Domain Max Length, Value Domain Min value, Value Domain Max Value, Value Domain Decimal Place, Value Domain Format, Value Domain Concept Name, Value Domain Concept Code, Value Domain Concept Public ID, Value Domain Concept Definition Source, Value Domain Concept Origin, Value Domain Concept EVS Source, Value Domain Concept Primary Flag, Value Domain Concept NCI RAI, Representation Public ID, Representation Long Name, Representation Short Name, Representation Context Name, Representation Version, Representation Concept Name, Representation Concept Code, Representation Concept Public ID, Representation Concept Definition Source, Representation Concept Origin, Representation Concept EVS Source, Representation Concept Primary Flag, Representation Concept NCI RAI, Valid Values, Value Meaning Name, Value Meaning Description, Value Meaning Concepts, PV Begin Date, PV End Date, Value Meaning PublicID, Value Meaning Version, Value Meaning Alternate Definitions, Classification Scheme Public ID, Classification Scheme Short Name, Classification Scheme Version, Classification Scheme Context Name, Classification Scheme Context Version, Classification Scheme Item Name, Classification Scheme Item Type Name, Classification Scheme Item Public Id, Classification Scheme Item Version, Data Element Alternate Name Context Name, Data Element Alternate Name Context Version, Data Element Alternate Name, Data Element Alternate Name Type, Document, Document Name, Document Type, Document Organization, Derivation Type, Derivation Type Description, Derivation Method, Derivation Rule, Concatenation Character, DDE Public ID, DDE Long Name, DDE Preferred Name, DDE Preferred Definition, DDE Version, DDE Workflow Status, DDE Context, DDE Display Order, Conceptual Domain Public ID, Conceptual Domain Short Name, Conceptual Domain Version, Conceptual Domain Context Name]
-		ArrayList<String> allTypes = (ArrayList<String>) m_classReq.getSession().getAttribute("types");		//e.g. [CHAR, VARCHAR2, VARCHAR2, VARCHAR2, VARCHAR2, NUMBER, VARCHAR2, NUMBER, NUMBER, VARCHAR2, VARCHAR2, DATE, VARCHAR2, NUMBER, VARCHAR2, VARCHAR2, NUMBER, VARCHAR2, NUMBER, VARCHAR2, VARCHAR2, NUMBER, VARCHAR2, VARCHAR2, VARCHAR2, NUMBER, VARCHAR2, 28:SBREXT.CONCEPTS_LIST_T, NUMBER, VARCHAR2, VARCHAR2, VARCHAR2, NUMBER, VARCHAR2, 35:SBREXT.CONCEPTS_LIST_T, NUMBER, VARCHAR2, VARCHAR2, NUMBER, VARCHAR2, VARCHAR2, VARCHAR2, NUMBER, VARCHAR2, VARCHAR2, NUMBER, NUMBER, VARCHAR2, VARCHAR2, NUMBER, VARCHAR2, 52:SBREXT.CONCEPTS_LIST_T, NUMBER, VARCHAR2, VARCHAR2, VARCHAR2, NUMBER, 58:SBREXT.CONCEPTS_LIST_T, 59:SBREXT.VALID_VALUE_LIST_T, 60:SBREXT.CDEBROWSER_CSI_LIST_T, 61:SBREXT.DESIGNATIONS_LIST_T, 62:SBREXT.CDEBROWSER_RD_LIST_T, 63:SBREXT.DERIVED_DATA_ELEMENT_T, NUMBER, VARCHAR2, NUMBER, VARCHAR2]
-		HashMap<String,ArrayList<String[]>> typeMap = (HashMap<String,ArrayList<String[]>>) m_classReq.getSession().getAttribute("typeMap");	//e.g. {35:SBREXT.CONCEPTS_LIST_T=[[Ljava.lang.String;@6a8b5cdf, [Ljava.lang.String;@637e6b1e], 63:SBREXT.DERIVED_DATA_ELEMENT_T=[[Ljava.lang.String;@aab19a, [Ljava.lang.String;@4671f5cd], 60:SBREXT.CDEBROWSER_CSI_LIST_T=[[Ljava.lang.String;@63c089dc, [Ljava.lang.String;@759afdad], 58:SBREXT.CONCEPTS_LIST_T=[[Ljava.lang.String;@1284a52d, [Ljava.lang.String;@427836da], 62:SBREXT.CDEBROWSER_RD_LIST_T=[[Ljava.lang.String;@6259444d, [Ljava.lang.String;@52934dac], 61:SBREXT.DESIGNATIONS_LIST_T=[[Ljava.lang.String;@44d0818e, [Ljava.lang.String;@54e9b4ed], 52:SBREXT.CONCEPTS_LIST_T=[[Ljava.lang.String;@3b655f28, [Ljava.lang.String;@7c4a598e], 28:SBREXT.CONCEPTS_LIST_T=[[Ljava.lang.String;@753db961, [Ljava.lang.String;@2755cb69], 59:SBREXT.VALID_VALUE_LIST_T=[[Ljava.lang.String;@719d6eab, [Ljava.lang.String;@16ccd6d3]}
-		ArrayList<HashMap<String,ArrayList<String[]>>> arrayData = (ArrayList<HashMap<String,ArrayList<String[]>>>) m_classReq.getSession().getAttribute("arrayData"); //e.g. [{35:SBREXT.CONCEPTS_LIST_T=[], 63:SBREXT.DERIVED_DATA_ELEMENT_T=[], 60:SBREXT.CDEBROWSER_CSI_LIST_T=[], 58:SBREXT.CONCEPTS_LIST_T=[], 62:SBREXT.CDEBROWSER_RD_LIST_T=[], 61:SBREXT.DESIGNATIONS_LIST_T=[], 52:SBREXT.CONCEPTS_LIST_T=[], 28:SBREXT.CONCEPTS_LIST_T=[], 59:SBREXT.VALID_VALUE_LIST_T=[]}]
-		HashMap<String, String> arrayColumnTypes = (HashMap<String,String>) m_classReq.getSession().getAttribute("arrayColumnTypes");	//e.g. {PV Begin Date=59:SBREXT.VALID_VALUE_LIST_T, Object Class Concept Public ID=28:SBREXT.CONCEPTS_LIST_T, Object Class Concept NCI RAI=28:SBREXT.CONCEPTS_LIST_T, Derivation Type=63:SBREXT.DERIVED_DATA_ELEMENT_T, Classification Scheme Item Name=60:SBREXT.CDEBROWSER_CSI_LIST_T, Derivation Method=63:SBREXT.DERIVED_DATA_ELEMENT_T, Object Class Concept Origin=28:SBREXT.CONCEPTS_LIST_T, PV End Date=59:SBREXT.VALID_VALUE_LIST_T, DDE Preferred Name=63:SBREXT.DERIVED_DATA_ELEMENT_T, Classification Scheme Item Public Id=60:SBREXT.CDEBROWSER_CSI_LIST_T, DDE Version=63:SBREXT.DERIVED_DATA_ELEMENT_T, Derivation Type Description=63:SBREXT.DERIVED_DATA_ELEMENT_T, Property Concept Code=35:SBREXT.CONCEPTS_LIST_T, Classification Scheme Version=60:SBREXT.CDEBROWSER_CSI_LIST_T, Representation Concept Definition Source=58:SBREXT.CONCEPTS_LIST_T, Classification Scheme Public ID=60:SBREXT.CDEBROWSER_CSI_LIST_T, Representation Concept Name=58:SBREXT.CONCEPTS_LIST_T, Value Domain Concept Name=52:SBREXT.CONCEPTS_LIST_T, Value Domain Concept Code=52:SBREXT.CONCEPTS_LIST_T, Object Class Concept Name=28:SBREXT.CONCEPTS_LIST_T, Value Domain Concept NCI RAI=52:SBREXT.CONCEPTS_LIST_T, Value Domain Concept Definition Source=52:SBREXT.CONCEPTS_LIST_T, DDE Workflow Status=63:SBREXT.DERIVED_DATA_ELEMENT_T, Data Element Alternate Name Context Version=61:SBREXT.DESIGNATIONS_LIST_T, Value Domain Concept EVS Source=52:SBREXT.CONCEPTS_LIST_T, Value Meaning Alternate Definitions=59:SBREXT.VALID_VALUE_LIST_T, Classification Scheme Context Name=60:SBREXT.CDEBROWSER_CSI_LIST_T, Property Concept NCI RAI=35:SBREXT.CONCEPTS_LIST_T, Property Concept EVS Source=35:SBREXT.CONCEPTS_LIST_T, Value Meaning Description=59:SBREXT.VALID_VALUE_LIST_T, DDE Preferred Definition=63:SBREXT.DERIVED_DATA_ELEMENT_T, DDE Display Order=63:SBREXT.DERIVED_DATA_ELEMENT_T, Object Class Concept Code=28:SBREXT.CONCEPTS_LIST_T, Classification Scheme Item Version=60:SBREXT.CDEBROWSER_CSI_LIST_T, Value Domain Concept Origin=52:SBREXT.CONCEPTS_LIST_T, Document Organization=62:SBREXT.CDEBROWSER_RD_LIST_T, Value Meaning Name=59:SBREXT.VALID_VALUE_LIST_T, Object Class Concept Definition Source=28:SBREXT.CONCEPTS_LIST_T, Object Class Concept EVS Source=28:SBREXT.CONCEPTS_LIST_T, Value Meaning PublicID=59:SBREXT.VALID_VALUE_LIST_T, Value Meaning Concepts=59:SBREXT.VALID_VALUE_LIST_T, Value Domain Concept Public ID=52:SBREXT.CONCEPTS_LIST_T, Classification Scheme Short Name=60:SBREXT.CDEBROWSER_CSI_LIST_T, Representation Concept Code=58:SBREXT.CONCEPTS_LIST_T, Data Element Alternate Name Context Name=61:SBREXT.DESIGNATIONS_LIST_T, Property Concept Primary Flag=35:SBREXT.CONCEPTS_LIST_T, Derivation Rule=63:SBREXT.DERIVED_DATA_ELEMENT_T, DDE Context=63:SBREXT.DERIVED_DATA_ELEMENT_T, Data Element Alternate Name Type=61:SBREXT.DESIGNATIONS_LIST_T, Valid Values=59:SBREXT.VALID_VALUE_LIST_T, Value Meaning Version=59:SBREXT.VALID_VALUE_LIST_T, DDE Public ID=63:SBREXT.DERIVED_DATA_ELEMENT_T, Document=62:SBREXT.CDEBROWSER_RD_LIST_T, Classification Scheme Context Version=60:SBREXT.CDEBROWSER_CSI_LIST_T, Representation Concept Primary Flag=58:SBREXT.CONCEPTS_LIST_T, Classification Scheme Item Type Name=60:SBREXT.CDEBROWSER_CSI_LIST_T, Object Class Concept Primary Flag=28:SBREXT.CONCEPTS_LIST_T, Property Concept Definition Source=35:SBREXT.CONCEPTS_LIST_T, Representation Concept Public ID=58:SBREXT.CONCEPTS_LIST_T, Representation Concept EVS Source=58:SBREXT.CONCEPTS_LIST_T, Representation Concept NCI RAI=58:SBREXT.CONCEPTS_LIST_T, DDE Long Name=63:SBREXT.DERIVED_DATA_ELEMENT_T, Value Domain Concept Primary Flag=52:SBREXT.CONCEPTS_LIST_T, Concatenation Character=63:SBREXT.DERIVED_DATA_ELEMENT_T, Document Type=62:SBREXT.CDEBROWSER_RD_LIST_T, Property Concept Origin=35:SBREXT.CONCEPTS_LIST_T, Representation Concept Origin=58:SBREXT.CONCEPTS_LIST_T, Data Element Alternate Name=61:SBREXT.DESIGNATIONS_LIST_T, Document Name=62:SBREXT.CDEBROWSER_RD_LIST_T, Property Concept Name=35:SBREXT.CONCEPTS_LIST_T, Property Concept Public ID=35:SBREXT.CONCEPTS_LIST_T}
-
-		Workbook wb = DownloadHelper.createDownloadColumns(colString, fillIn, allHeaders, allExpandedHeaders, allTypes, typeMap, arrayData, arrayColumnTypes, downloadRows);
+//		ArrayList<String> allHeaders = (ArrayList<String>) m_classReq.getSession().getAttribute("headers");		//e.g. [CDE_IDSEQ, Data Element Short Name, Data Element Long Name, Data Element Preferred Question Text, Data Element Preferred Definition, Data Element Version, Data Element Context Name, Data Element Context Version, Data Element Public ID, Data Element Workflow Status, Data Element Registration Status, Data Element Begin Date, Data Element Source, Data Element Concept Public ID, Data Element Concept Short Name, Data Element Concept Long Name, Data Element Concept Version, Data Element Concept Context Name, Data Element Concept Context Version, Data Element Concept Workflow Status, Data Element Concept Registration Status, Object Class Public ID, Object Class Long Name, Object Class Short Name, Object Class Context Name, Object Class Version, Object Class Workflow Status, OC_CONCEPTS, Property Public ID, Property Long Name, Property Short Name, Property Context Name, Property Version, Property Workflow Status, PROP_CONCEPTS, Value Domain Public ID, Value Domain Short Name, Value Domain Long Name, Value Domain Version, Value Domain Workflow Status, Value Domain Registration Status, Value Domain Context Name, Value Domain Context Version, Value Domain Type, Value Domain Datatype, Value Domain Min Length, Value Domain Max Length, Value Domain Min value, Value Domain Max Value, Value Domain Decimal Place, Value Domain Format, VD_CONCEPTS, Representation Public ID, Representation Long Name, Representation Short Name, Representation Context Name, Representation Version, REP_CONCEPTS, VALID_VALUES, CLASSIFICATIONS, DESIGNATIONS, REFERENCE_DOCS, DE_DERIVATION, Conceptual Domain Public ID, Conceptual Domain Short Name, Conceptual Domain Version, Conceptual Domain Context Name]
+//		ArrayList<String> allExpandedHeaders = (ArrayList<String>) m_classReq.getSession().getAttribute("allExpandedHeaders");	//e.g. [CDE_IDSEQ, Data Element Short Name, Data Element Long Name, Data Element Preferred Question Text, Data Element Preferred Definition, Data Element Version, Data Element Context Name, Data Element Context Version, Data Element Public ID, Data Element Workflow Status, Data Element Registration Status, Data Element Begin Date, Data Element Source, Data Element Concept Public ID, Data Element Concept Short Name, Data Element Concept Long Name, Data Element Concept Version, Data Element Concept Context Name, Data Element Concept Context Version, Data Element Concept Workflow Status, Data Element Concept Registration Status, Object Class Public ID, Object Class Long Name, Object Class Short Name, Object Class Context Name, Object Class Version, Object Class Workflow Status, Object Class Concept Name, Object Class Concept Code, Object Class Concept Public ID, Object Class Concept Definition Source, Object Class Concept Origin, Object Class Concept EVS Source, Object Class Concept Primary Flag, Object Class Concept NCI RAI, Property Public ID, Property Long Name, Property Short Name, Property Context Name, Property Version, Property Workflow Status, Property Concept Name, Property Concept Code, Property Concept Public ID, Property Concept Definition Source, Property Concept Origin, Property Concept EVS Source, Property Concept Primary Flag, Property Concept NCI RAI, Value Domain Public ID, Value Domain Short Name, Value Domain Long Name, Value Domain Version, Value Domain Workflow Status, Value Domain Registration Status, Value Domain Context Name, Value Domain Context Version, Value Domain Type, Value Domain Datatype, Value Domain Min Length, Value Domain Max Length, Value Domain Min value, Value Domain Max Value, Value Domain Decimal Place, Value Domain Format, Value Domain Concept Name, Value Domain Concept Code, Value Domain Concept Public ID, Value Domain Concept Definition Source, Value Domain Concept Origin, Value Domain Concept EVS Source, Value Domain Concept Primary Flag, Value Domain Concept NCI RAI, Representation Public ID, Representation Long Name, Representation Short Name, Representation Context Name, Representation Version, Representation Concept Name, Representation Concept Code, Representation Concept Public ID, Representation Concept Definition Source, Representation Concept Origin, Representation Concept EVS Source, Representation Concept Primary Flag, Representation Concept NCI RAI, Valid Values, Value Meaning Name, Value Meaning Description, Value Meaning Concepts, PV Begin Date, PV End Date, Value Meaning PublicID, Value Meaning Version, Value Meaning Alternate Definitions, Classification Scheme Public ID, Classification Scheme Short Name, Classification Scheme Version, Classification Scheme Context Name, Classification Scheme Context Version, Classification Scheme Item Name, Classification Scheme Item Type Name, Classification Scheme Item Public Id, Classification Scheme Item Version, Data Element Alternate Name Context Name, Data Element Alternate Name Context Version, Data Element Alternate Name, Data Element Alternate Name Type, Document, Document Name, Document Type, Document Organization, Derivation Type, Derivation Type Description, Derivation Method, Derivation Rule, Concatenation Character, DDE Public ID, DDE Long Name, DDE Preferred Name, DDE Preferred Definition, DDE Version, DDE Workflow Status, DDE Context, DDE Display Order, Conceptual Domain Public ID, Conceptual Domain Short Name, Conceptual Domain Version, Conceptual Domain Context Name]
+//		ArrayList<String> allTypes = (ArrayList<String>) m_classReq.getSession().getAttribute("types");		//e.g. [CHAR, VARCHAR2, VARCHAR2, VARCHAR2, VARCHAR2, NUMBER, VARCHAR2, NUMBER, NUMBER, VARCHAR2, VARCHAR2, DATE, VARCHAR2, NUMBER, VARCHAR2, VARCHAR2, NUMBER, VARCHAR2, NUMBER, VARCHAR2, VARCHAR2, NUMBER, VARCHAR2, VARCHAR2, VARCHAR2, NUMBER, VARCHAR2, 28:SBREXT.CONCEPTS_LIST_T, NUMBER, VARCHAR2, VARCHAR2, VARCHAR2, NUMBER, VARCHAR2, 35:SBREXT.CONCEPTS_LIST_T, NUMBER, VARCHAR2, VARCHAR2, NUMBER, VARCHAR2, VARCHAR2, VARCHAR2, NUMBER, VARCHAR2, VARCHAR2, NUMBER, NUMBER, VARCHAR2, VARCHAR2, NUMBER, VARCHAR2, 52:SBREXT.CONCEPTS_LIST_T, NUMBER, VARCHAR2, VARCHAR2, VARCHAR2, NUMBER, 58:SBREXT.CONCEPTS_LIST_T, 59:SBREXT.VALID_VALUE_LIST_T, 60:SBREXT.CDEBROWSER_CSI_LIST_T, 61:SBREXT.DESIGNATIONS_LIST_T, 62:SBREXT.CDEBROWSER_RD_LIST_T, 63:SBREXT.DERIVED_DATA_ELEMENT_T, NUMBER, VARCHAR2, NUMBER, VARCHAR2]
+//		HashMap<String,ArrayList<String[]>> typeMap = (HashMap<String,ArrayList<String[]>>) m_classReq.getSession().getAttribute("typeMap");	//e.g. {35:SBREXT.CONCEPTS_LIST_T=[[Ljava.lang.String;@6a8b5cdf, [Ljava.lang.String;@637e6b1e], 63:SBREXT.DERIVED_DATA_ELEMENT_T=[[Ljava.lang.String;@aab19a, [Ljava.lang.String;@4671f5cd], 60:SBREXT.CDEBROWSER_CSI_LIST_T=[[Ljava.lang.String;@63c089dc, [Ljava.lang.String;@759afdad], 58:SBREXT.CONCEPTS_LIST_T=[[Ljava.lang.String;@1284a52d, [Ljava.lang.String;@427836da], 62:SBREXT.CDEBROWSER_RD_LIST_T=[[Ljava.lang.String;@6259444d, [Ljava.lang.String;@52934dac], 61:SBREXT.DESIGNATIONS_LIST_T=[[Ljava.lang.String;@44d0818e, [Ljava.lang.String;@54e9b4ed], 52:SBREXT.CONCEPTS_LIST_T=[[Ljava.lang.String;@3b655f28, [Ljava.lang.String;@7c4a598e], 28:SBREXT.CONCEPTS_LIST_T=[[Ljava.lang.String;@753db961, [Ljava.lang.String;@2755cb69], 59:SBREXT.VALID_VALUE_LIST_T=[[Ljava.lang.String;@719d6eab, [Ljava.lang.String;@16ccd6d3]}
+//		ArrayList<HashMap<String,ArrayList<String[]>>> arrayData = (ArrayList<HashMap<String,ArrayList<String[]>>>) m_classReq.getSession().getAttribute("arrayData"); //e.g. [{35:SBREXT.CONCEPTS_LIST_T=[], 63:SBREXT.DERIVED_DATA_ELEMENT_T=[], 60:SBREXT.CDEBROWSER_CSI_LIST_T=[], 58:SBREXT.CONCEPTS_LIST_T=[], 62:SBREXT.CDEBROWSER_RD_LIST_T=[], 61:SBREXT.DESIGNATIONS_LIST_T=[], 52:SBREXT.CONCEPTS_LIST_T=[], 28:SBREXT.CONCEPTS_LIST_T=[], 59:SBREXT.VALID_VALUE_LIST_T=[]}]
+//		HashMap<String, String> arrayColumnTypes = (HashMap<String,String>) m_classReq.getSession().getAttribute("arrayColumnTypes");	//e.g. {PV Begin Date=59:SBREXT.VALID_VALUE_LIST_T, Object Class Concept Public ID=28:SBREXT.CONCEPTS_LIST_T, Object Class Concept NCI RAI=28:SBREXT.CONCEPTS_LIST_T, Derivation Type=63:SBREXT.DERIVED_DATA_ELEMENT_T, Classification Scheme Item Name=60:SBREXT.CDEBROWSER_CSI_LIST_T, Derivation Method=63:SBREXT.DERIVED_DATA_ELEMENT_T, Object Class Concept Origin=28:SBREXT.CONCEPTS_LIST_T, PV End Date=59:SBREXT.VALID_VALUE_LIST_T, DDE Preferred Name=63:SBREXT.DERIVED_DATA_ELEMENT_T, Classification Scheme Item Public Id=60:SBREXT.CDEBROWSER_CSI_LIST_T, DDE Version=63:SBREXT.DERIVED_DATA_ELEMENT_T, Derivation Type Description=63:SBREXT.DERIVED_DATA_ELEMENT_T, Property Concept Code=35:SBREXT.CONCEPTS_LIST_T, Classification Scheme Version=60:SBREXT.CDEBROWSER_CSI_LIST_T, Representation Concept Definition Source=58:SBREXT.CONCEPTS_LIST_T, Classification Scheme Public ID=60:SBREXT.CDEBROWSER_CSI_LIST_T, Representation Concept Name=58:SBREXT.CONCEPTS_LIST_T, Value Domain Concept Name=52:SBREXT.CONCEPTS_LIST_T, Value Domain Concept Code=52:SBREXT.CONCEPTS_LIST_T, Object Class Concept Name=28:SBREXT.CONCEPTS_LIST_T, Value Domain Concept NCI RAI=52:SBREXT.CONCEPTS_LIST_T, Value Domain Concept Definition Source=52:SBREXT.CONCEPTS_LIST_T, DDE Workflow Status=63:SBREXT.DERIVED_DATA_ELEMENT_T, Data Element Alternate Name Context Version=61:SBREXT.DESIGNATIONS_LIST_T, Value Domain Concept EVS Source=52:SBREXT.CONCEPTS_LIST_T, Value Meaning Alternate Definitions=59:SBREXT.VALID_VALUE_LIST_T, Classification Scheme Context Name=60:SBREXT.CDEBROWSER_CSI_LIST_T, Property Concept NCI RAI=35:SBREXT.CONCEPTS_LIST_T, Property Concept EVS Source=35:SBREXT.CONCEPTS_LIST_T, Value Meaning Description=59:SBREXT.VALID_VALUE_LIST_T, DDE Preferred Definition=63:SBREXT.DERIVED_DATA_ELEMENT_T, DDE Display Order=63:SBREXT.DERIVED_DATA_ELEMENT_T, Object Class Concept Code=28:SBREXT.CONCEPTS_LIST_T, Classification Scheme Item Version=60:SBREXT.CDEBROWSER_CSI_LIST_T, Value Domain Concept Origin=52:SBREXT.CONCEPTS_LIST_T, Document Organization=62:SBREXT.CDEBROWSER_RD_LIST_T, Value Meaning Name=59:SBREXT.VALID_VALUE_LIST_T, Object Class Concept Definition Source=28:SBREXT.CONCEPTS_LIST_T, Object Class Concept EVS Source=28:SBREXT.CONCEPTS_LIST_T, Value Meaning PublicID=59:SBREXT.VALID_VALUE_LIST_T, Value Meaning Concepts=59:SBREXT.VALID_VALUE_LIST_T, Value Domain Concept Public ID=52:SBREXT.CONCEPTS_LIST_T, Classification Scheme Short Name=60:SBREXT.CDEBROWSER_CSI_LIST_T, Representation Concept Code=58:SBREXT.CONCEPTS_LIST_T, Data Element Alternate Name Context Name=61:SBREXT.DESIGNATIONS_LIST_T, Property Concept Primary Flag=35:SBREXT.CONCEPTS_LIST_T, Derivation Rule=63:SBREXT.DERIVED_DATA_ELEMENT_T, DDE Context=63:SBREXT.DERIVED_DATA_ELEMENT_T, Data Element Alternate Name Type=61:SBREXT.DESIGNATIONS_LIST_T, Valid Values=59:SBREXT.VALID_VALUE_LIST_T, Value Meaning Version=59:SBREXT.VALID_VALUE_LIST_T, DDE Public ID=63:SBREXT.DERIVED_DATA_ELEMENT_T, Document=62:SBREXT.CDEBROWSER_RD_LIST_T, Classification Scheme Context Version=60:SBREXT.CDEBROWSER_CSI_LIST_T, Representation Concept Primary Flag=58:SBREXT.CONCEPTS_LIST_T, Classification Scheme Item Type Name=60:SBREXT.CDEBROWSER_CSI_LIST_T, Object Class Concept Primary Flag=28:SBREXT.CONCEPTS_LIST_T, Property Concept Definition Source=35:SBREXT.CONCEPTS_LIST_T, Representation Concept Public ID=58:SBREXT.CONCEPTS_LIST_T, Representation Concept EVS Source=58:SBREXT.CONCEPTS_LIST_T, Representation Concept NCI RAI=58:SBREXT.CONCEPTS_LIST_T, DDE Long Name=63:SBREXT.DERIVED_DATA_ELEMENT_T, Value Domain Concept Primary Flag=52:SBREXT.CONCEPTS_LIST_T, Concatenation Character=63:SBREXT.DERIVED_DATA_ELEMENT_T, Document Type=62:SBREXT.CDEBROWSER_RD_LIST_T, Property Concept Origin=35:SBREXT.CONCEPTS_LIST_T, Representation Concept Origin=58:SBREXT.CONCEPTS_LIST_T, Data Element Alternate Name=61:SBREXT.DESIGNATIONS_LIST_T, Document Name=62:SBREXT.CDEBROWSER_RD_LIST_T, Property Concept Name=35:SBREXT.CONCEPTS_LIST_T, Property Concept Public ID=35:SBREXT.CONCEPTS_LIST_T}
+//		Workbook wb = DownloadHelper.createDownloadColumns(colString, fillIn, allHeaders, allExpandedHeaders, allTypes, typeMap, arrayData, arrayColumnTypes, downloadRows);
+	
+		Workbook wb = DownloadHelper.createWorkbook(colString, fillIn, downloadRows, vh, arrayData);	//arrayData should never be empty as it is the data!
+		
 		try {
 			m_classRes.setContentType( "application/vnd.ms-excel" );
 			m_classRes.setHeader( "Content-Disposition", "attachment; filename=\"customDownload.xls\"" );
@@ -125,24 +127,26 @@ public class CustomDownloadServlet extends CurationServlet {
 		case showDEfromSearch:
 			prepDisplayPage("CDE"); 
 			break;
-		case jsonRequest:
-			returnJSONFromSession("Return");
-			break;
-		case jsonLayout:
-			returnJSONFromSession("Layout");
-			break;
+//		case jsonRequest:
+//			returnJSONFromSession("Return");
+//			break;
+//		case jsonLayout:
+//			returnJSONFromSession("Layout");
+//			break;
 		case dlExcelColumns:
 			String type = "CDE";	//what about other AC?
 			ValueHolder downloadedData2 = setDownloadIDs(type, false);	//JR1000
 			ValueHolder downloadedMeta2 = setColHeadersAndTypes(m_classReq, m_classRes, this, m_conn, type);	//JR1000
-			ArrayList<String[]> downloadRows = getRecordsFromValueHolder(false, false, downloadedData2, downloadedMeta2);	//GF30779 multiple rows, if any		//JR1000 when the "Download Excel" button is clicked!
-//			ArrayList<HashMap<String,ArrayList<String[]>>> arrayData = getArrayDataFromValueHolder(downloadRowsArrayData);
-			createDownloadColumns(downloadRows);
+			ArrayList<String[]> downloadRows = DownloadHelper.getRecordsFromValueHolder(downloadedMeta2);	//GF30779 multiple rows, if any		//JR1000 when the "Download Excel" button is clicked!
+			ValueHolder downloadRowsArrayData = getRecords(false, false, downloadedData2, downloadedMeta2);
+			ArrayList<HashMap<String,ArrayList<String[]>>> arrayData = DownloadHelper.getArrayDataFromValueHolder(downloadRowsArrayData);
+
+			createDownloadColumns(downloadRows, downloadedMeta2, arrayData);
 			break;
-		case dlXMLColumns:
-			ArrayList<String[]> xmlDownloadRows = getRecordsFromValueHolder(false, false, null, null);
-			createXMLDownload(xmlDownloadRows);
-			break;
+//		case dlXMLColumns:
+//			ArrayList<String[]> xmlDownloadRows = DownloadHelper.getRecordsFromValueHolder(false, false, null, null);
+//			createXMLDownload(xmlDownloadRows);
+//			break;
 		case createExcelDownload:
 			createDownload();
 			break;
@@ -156,25 +160,27 @@ public class CustomDownloadServlet extends CurationServlet {
 			ValueHolder downloadedData1 = setDownloadIDs("CDE",false);
 			ValueHolder downloadedMeta1 = setColHeadersAndTypes(m_classReq, m_classRes, this, m_conn, "CDE");	//setColHeadersAndTypes("CDE");	//JR1000 when the AC (DE) is selected after search in a Menu action click (right context click)
 
-			ArrayList<String[]> allRows = getRecordsFromValueHolder(true, false, downloadedData1, downloadedMeta1);
-			createDownloadColumns(allRows);
+			ArrayList<String[]> allRows = DownloadHelper.getRecordsFromValueHolder(downloadedMeta1);	//GF30779 multiple rows, if any		//JR1000 when the "Download Excel" button is clicked!
+			ValueHolder downloadRowsArrayData1 = getRecords(true, false, downloadedData1, downloadedMeta1);
+			ArrayList<HashMap<String,ArrayList<String[]>>> arrayData1 = DownloadHelper.getArrayDataFromValueHolder(downloadRowsArrayData1);
+			createDownloadColumns(allRows, downloadedMeta1, arrayData1);
 			break;
 		}
 	}
 
 	//JR1000
-	public ArrayList<String[]> getRecordsFromValueHolder(boolean flag1, boolean flag2, ValueHolder downloadedData, ValueHolder downloadedMeta) {
-		ValueHolder vh = getRecords(flag1, flag2, downloadedData, downloadedMeta);
-		List data = (ArrayList) vh.getValue();
-		ArrayList<String[]> rows = (ArrayList<String[]>)data.get(DownloadRowsArrayDataLoader.ROWS_INDEX);
-		
-		return rows;
-	}
-	
-	public static ArrayList<HashMap<String,ArrayList<String[]>>> getArrayDataFromValueHolder(ValueHolder vh) {
-		List data = (ArrayList) vh.getValue();
-		return (ArrayList<HashMap<String,ArrayList<String[]>>>) data.get(DownloadRowsArrayDataLoader.ARRAY_DATA_INDEX);
-	}
+//	public ArrayList<String[]> getRecordsFromValueHolder(boolean flag1, boolean flag2, ValueHolder downloadedData, ValueHolder downloadedMeta) {
+//		ValueHolder vh = getRecords(flag1, flag2, downloadedData, downloadedMeta);
+//		List data = (ArrayList) vh.getValue();
+//		ArrayList<String[]> rows = (ArrayList<String[]>)data.get(DownloadRowsArrayDataLoader.ROWS_INDEX);
+//		
+//		return rows;
+//	}
+//	
+//	public static ArrayList<HashMap<String,ArrayList<String[]>>> getArrayDataFromValueHolder(ValueHolder vh) {
+//		List data = (ArrayList) vh.getValue();
+//		return (ArrayList<HashMap<String,ArrayList<String[]>>>) data.get(DownloadRowsArrayDataLoader.ARRAY_DATA_INDEX);
+//	}
 
 	private void prepDisplayPage(String type) {
 
@@ -201,7 +207,8 @@ public class CustomDownloadServlet extends CurationServlet {
 
 		ValueHolder downloadedData = setDownloadIDs(type, outside);
 		ValueHolder downloadedMeta = setColHeadersAndTypes(m_classReq, m_classRes, this, m_conn, type);	//setColHeadersAndTypes(type);	//JR1000
-		ArrayList<String[]> rows = getRecordsFromValueHolder(false, true, downloadedData, downloadedMeta);	//JR1000 TODO broken, blank page! :(
+		ValueHolder downloadRowsArrayData = getRecords(false, true, downloadedData, downloadedMeta);	//JR1000 TODO is the flags correct?
+		ArrayList<String[]> rows = DownloadHelper.getRecordsFromValueHolder(downloadRowsArrayData);	//JR1000 TODO broken, blank page! :(
 
 		m_classReq.getSession().setAttribute("rows", rows);
 		ForwardJSP(m_classReq, m_classRes, "/CustomDownload.jsp");
@@ -221,28 +228,32 @@ public class CustomDownloadServlet extends CurationServlet {
 	
 	private ValueHolder setDownloadIDsValueHolder(String type, boolean outside) {
 		ArrayList<String> downloadID = new ArrayList<String>();
-
-		if (!outside) {
-			Set<String> paramNames = this.m_classReq.getParameterMap().keySet();	//e.g. [orgCompID, selectedRowId, serRecCount, count, actSelected, serMenuAct, AppendAction, show, hidMenuAction, allCK, desID, hidaction, pageAction, CK0, hiddenSelectedRow, desContextID, SelectAll, numAttSelected, selectAll, selRowID, hiddenName, flag, desName, desContext, unCheckedRowId, sortType, reqType, numSelected, hiddenDefSource, AttChecked, hiddenSearch, isValid, hiddenName2, searchComp]
-			Vector<String> searchID= (Vector<String>) this.m_classReq.getSession().getAttribute("SearchID");	//e.g. [F6FEB251-3020-4594-E034-0003BA3F9857]
-
-			for(String name:paramNames) {
-				if (name.startsWith("CK")) {
-					int ndx = Integer.valueOf(name.substring(2));	//e.g. CK0 => 0
-					downloadID.add(searchID.get(ndx));				//get the value based on the index, ndx e.g. F6FEB251-3020-4594-E034-0003BA3F9857
-				}
-			}
+		if(m_classReq.getSession().getAttribute("downloadIDs") != null) {
+			downloadID = (ArrayList<String>)m_classReq.getSession().getAttribute("downloadIDs");
 		} else {
-			String searchIDCSV= StringUtil.cleanJavascriptAndHtml((String) this.m_classReq.getParameter("SearchID"));			
-			String[] ids = searchIDCSV.split(",");
-			for(String id: ids) 
-				downloadID.add(id);
+	
+			if (!outside) {
+				Set<String> paramNames = this.m_classReq.getParameterMap().keySet();	//e.g. [orgCompID, selectedRowId, serRecCount, count, actSelected, serMenuAct, AppendAction, show, hidMenuAction, allCK, desID, hidaction, pageAction, CK0, hiddenSelectedRow, desContextID, SelectAll, numAttSelected, selectAll, selRowID, hiddenName, flag, desName, desContext, unCheckedRowId, sortType, reqType, numSelected, hiddenDefSource, AttChecked, hiddenSearch, isValid, hiddenName2, searchComp]
+				Vector<String> searchID= (Vector<String>) this.m_classReq.getSession().getAttribute("SearchID");	//e.g. [F6FEB251-3020-4594-E034-0003BA3F9857]
+	
+				for(String name:paramNames) {
+					if (name.startsWith("CK")) {
+						int ndx = Integer.valueOf(name.substring(2));	//e.g. CK0 => 0
+						downloadID.add(searchID.get(ndx));				//get the value based on the index, ndx e.g. F6FEB251-3020-4594-E034-0003BA3F9857
+					}
+				}
+			} else {
+				String searchIDCSV= StringUtil.cleanJavascriptAndHtml((String) this.m_classReq.getParameter("SearchID"));			
+				String[] ids = searchIDCSV.split(",");
+				for(String id: ids) 
+					downloadID.add(id);
+			}
+	
+			logger.debug("At line 161 of CustomDownloadServlet.java" + "*****" + Arrays.asList(downloadID));
+			m_classReq.getSession().setAttribute("downloadIDs", downloadID);
+			m_classReq.getSession().setAttribute("downloadType", type);
+			m_classReq.getSession().setAttribute("downloadLimit", Integer.toString(this.MAX_DOWNLOAD));
 		}
-
-		logger.debug("At line 161 of CustomDownloadServlet.java" + "*****" + Arrays.asList(downloadID));
-		m_classReq.getSession().setAttribute("downloadIDs", downloadID);
-		m_classReq.getSession().setAttribute("downloadType", type);
-		m_classReq.getSession().setAttribute("downloadLimit", Integer.toString(this.MAX_DOWNLOAD));
 
 		//JR1000
 		return new ValueHolder(new DownloadedDataLoader(downloadID, type, Integer.toString(this.MAX_DOWNLOAD)));
@@ -251,6 +262,11 @@ public class CustomDownloadServlet extends CurationServlet {
 //			ForwardJSP(m_classReq, m_classRes, "/CustomOverLimit.jsp");
 	}
 
+	/*
+	 * Get the spreadsheet data from the database.
+	 * @full either full download or rows only selected by the user
+	 * @restrict true if called within the page display (restricted to GRID_MAX_DISPLAY), false if it is called directly from the browser (outside)
+	 */
 	public ValueHolder getRecords(boolean full, boolean restrict, ValueHolder downloadedDataVH, ValueHolder downloadedMetaVH) {
 
 		ArrayList<String[]> rows = new ArrayList<String[]>();
@@ -332,7 +348,7 @@ public class CustomDownloadServlet extends CurationServlet {
 		}
 
 //		return rows;	//JR1000
-		return new ValueHolder(new DownloadRowsArrayDataLoader(rows, arrayData));
+		return new ValueHolder(new DownloadRowsArrayDataLoader(rows, arrayData));	//rows is the data; arrayData is the meta data (I know)
 	}
 
 	private List<String[]> getRowArrayData(ResultSet rs, String columnType, int index) throws Exception{
@@ -535,7 +551,13 @@ public class CustomDownloadServlet extends CurationServlet {
 			for (String id:downloadIds) {
 				whereBuffer.append("'" + id + "',");
 			}
-			whereBuffer.deleteCharAt(whereBuffer.length()-1);
+			try {
+				if(whereBuffer != null && whereBuffer.lastIndexOf(",") != -1) {
+					whereBuffer.deleteCharAt(whereBuffer.length()-1);	//delete the comma? e.g. 'F6FEB251-3020-4594-E034-0003BA3F9857',
+				}
+			} catch(Exception e) {
+				e.printStackTrace();  //JR1000
+			}
 		} else {
 			whereBuffers = new ArrayList<StringBuffer>();
 			int counter = 0;
@@ -571,11 +593,11 @@ public class CustomDownloadServlet extends CurationServlet {
 	}
 
 	//JR1000 not used
-	private void returnJSONFromSession(String JSPName) {
-		ArrayList<String[]> displayRows = getRecordsFromValueHolder(false, true, null, null);
-		m_classReq.getSession().setAttribute("rows", displayRows);
-		ForwardJSP(m_classReq, m_classRes, "/JSON"+JSPName+".jsp");
-	}
+//	private void returnJSONFromSession(String JSPName) {
+//		ArrayList<String[]> displayRows = getRecordsFromValueHolder(false, true, null, null);
+//		m_classReq.getSession().setAttribute("rows", displayRows);
+//		ForwardJSP(m_classReq, m_classRes, "/JSON"+JSPName+".jsp");
+//	}
 
 	private void createXMLDownload(ArrayList<String[]> allRows) {
 		//Limited columns?  If xmlColumns is not null
