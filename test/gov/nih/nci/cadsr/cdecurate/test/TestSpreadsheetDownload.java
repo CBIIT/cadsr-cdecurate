@@ -804,6 +804,7 @@ public class TestSpreadsheetDownload {
 //		/* 1 */ ValueHolder downloadedData = cDownload.setDownloadIDs(type, outside);
 		ArrayList idArray = new ArrayList<String>();
 		idArray.add("F6FEB251-3020-4594-E034-0003BA3F9857");
+		idArray.add("8B6FACFE-948B-55CC-E040-BB89AD436343");
 		/* 1 */ ValueHolder downloadedData = new ValueHolder(new DownloadedDataLoader(idArray, type, dlLimit));
 
 		/* 2 */ ValueHolder columnHeadersTypes = DownloadHelper.setColHeadersAndTypes(null, null, m_servlet, m_conn, "CDE");
