@@ -137,8 +137,8 @@ public class CustomDownloadServlet extends CurationServlet {
 			String type = "CDE";	//what about other AC?
 			ValueHolder downloadedData2 = setDownloadIDs(type, false);	//JR1000
 			ValueHolder downloadedMeta2 = setColHeadersAndTypes(m_classReq, m_classRes, this, m_conn, type);	//JR1000
-			ArrayList<String[]> downloadRows = DownloadHelper.getRecordsFromValueHolder(downloadedMeta2);	//GF30779 multiple rows, if any		//JR1000 when the "Download Excel" button is clicked!
 			ValueHolder downloadRowsArrayData = getRecords(false, false, downloadedData2, downloadedMeta2);
+			ArrayList<String[]> downloadRows = DownloadHelper.getRecordsFromValueHolder(downloadRowsArrayData);	//GF30779 multiple rows, if any		//JR1000 when the "Download Excel" button is clicked!
 			ArrayList<HashMap<String,ArrayList<String[]>>> arrayData = DownloadHelper.getArrayDataFromValueHolder(downloadRowsArrayData);
 
 			createDownloadColumns(downloadRows, downloadedMeta2, arrayData);
@@ -208,7 +208,7 @@ public class CustomDownloadServlet extends CurationServlet {
 		ValueHolder downloadedData = setDownloadIDs(type, outside);
 		ValueHolder downloadedMeta = setColHeadersAndTypes(m_classReq, m_classRes, this, m_conn, type);	//setColHeadersAndTypes(type);	//JR1000
 		ValueHolder downloadRowsArrayData = getRecords(false, true, downloadedData, downloadedMeta);	//JR1000 TODO is the flags correct?
-		ArrayList<String[]> rows = DownloadHelper.getRecordsFromValueHolder(downloadRowsArrayData);	//JR1000 TODO broken, blank page! :(
+		ArrayList<String[]> rows = DownloadHelper.getRecordsFromValueHolder(downloadRowsArrayData);	//JR1000
 
 		m_classReq.getSession().setAttribute("rows", rows);
 		ForwardJSP(m_classReq, m_classRes, "/CustomDownload.jsp");
@@ -230,6 +230,8 @@ public class CustomDownloadServlet extends CurationServlet {
 		ArrayList<String> downloadID = new ArrayList<String>();
 		if(m_classReq.getSession().getAttribute("downloadIDs") != null) {
 			downloadID = (ArrayList<String>)m_classReq.getSession().getAttribute("downloadIDs");
+			m_classReq.getSession().setAttribute("downloadType", type);
+			m_classReq.getSession().setAttribute("downloadLimit", Integer.toString(this.MAX_DOWNLOAD));
 		} else {
 	
 			if (!outside) {
@@ -307,8 +309,8 @@ public class CustomDownloadServlet extends CurationServlet {
 
 						for (int i=0; i<numColumns; i++) {
 							if (columnTypes.get(i).endsWith("_T")) {
-								List<String[]> rowArrayData = getRowArrayData(rs, columnTypes.get(i), i);
-
+								List<String[]> rowArrayData = getRowArrayData(rs, (String)columnTypes.get(i), i);
+System.out.println("=======> columnTypes.get(" + i + ") = [" + columnTypes.get(i) + "] returned = " + rowArrayData + " size = " + rowArrayData.size());
 								if (typeArrayData == null) {
 									typeArrayData = new HashMap<String,List<String[]>>();
 								}
@@ -348,14 +350,14 @@ public class CustomDownloadServlet extends CurationServlet {
 		}
 
 //		return rows;	//JR1000
-		return new ValueHolder(new DownloadRowsArrayDataLoader(rows, arrayData));	//rows is the data; arrayData is the meta data (I know)
+		return new ValueHolder(new DownloadRowsArrayDataLoader(rows, arrayData));	//rows is the data; arrayData is the meta data JR1000 TODO arrayData is corrupted!?
 	}
 
 	private List<String[]> getRowArrayData(ResultSet rs, String columnType, int index) throws Exception{
 		List<String[]> rowArrayData = new ArrayList<String[]>();
 		Array array = null;
 		//Special case: first row has info on derivation, others on data elements
-		if (columnType.indexOf("DERIVED") > 0) {
+		if (columnType.indexOf("DERIVED") > -1) {
 //			Object derivedObject = rs.getObject(index+1);
 //			STRUCT struct = (STRUCT) derivedObject;
 			STRUCT struct = (oracle.sql.STRUCT) rs.getObject(index+1);	//JR1047
@@ -427,7 +429,7 @@ public class CustomDownloadServlet extends CurationServlet {
 						valueStruct = (STRUCT) nestedRs.getObject(2);  //GF30779 cause ORA-01403: no data found exception (if no data), thus catch it without doing anything
 						valueDatum = valueStruct.getOracleAttributes(); //GF30779
 					} catch (Exception e) {
-						logger.info(e.getMessage());	//TBD performance impact here
+						logger.info(e.getMessage());	//TBD performance impact here	
 					}
 					if(valueDatum != null) {	//begin of valueDatum
 						String[] values = new String[valueDatum.length];
