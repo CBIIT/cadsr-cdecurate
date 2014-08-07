@@ -825,7 +825,8 @@ public class TestSpreadsheetDownload {
 //	}
 
 	public static void createDownloadColumns(ArrayList<String[]> downloadRows, ValueHolder vh, ArrayList<HashMap<String,ArrayList<String[]>>> arrayData) {
-		String colString = "Valid Values,Value Meaning Name,Value Meaning Description";	//(String) m_classReq.getParameter("cdlColumns");	//e.g. Valid Values,Value Meaning Name,Value Meaning Description
+//		String colString = "Valid Values,Value Meaning Name,Value Meaning Description";	//(String) m_classReq.getParameter("cdlColumns");	//e.g. Valid Values,Value Meaning Name,Value Meaning Description
+		String colString = "Data Element Long Name,Data Element Preferred Definition,Data Element Context Name,Data Element Public ID,NAME";
 		String fillIn = null;	//(String) m_classReq.getParameter("fillIn");		//e.g. ; can be null/optional
 
 		Workbook wb = DownloadHelper.createWorkbook(colString, fillIn, downloadRows, vh, arrayData);
