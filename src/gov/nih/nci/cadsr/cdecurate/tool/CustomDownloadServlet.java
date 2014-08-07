@@ -228,37 +228,32 @@ public class CustomDownloadServlet extends CurationServlet {
 	
 	private ValueHolder setDownloadIDsValueHolder(String type, boolean outside) {
 		ArrayList<String> downloadID = new ArrayList<String>();
-		if(m_classReq.getSession().getAttribute("downloadIDs") != null) {
-			downloadID = (ArrayList<String>)m_classReq.getSession().getAttribute("downloadIDs");
-			m_classReq.getSession().setAttribute("downloadType", type);
-			m_classReq.getSession().setAttribute("downloadLimit", Integer.toString(this.MAX_DOWNLOAD));
-		} else {
-	
-			if (!outside) {
-				Set<String> paramNames = this.m_classReq.getParameterMap().keySet();	//e.g. [orgCompID, selectedRowId, serRecCount, count, actSelected, serMenuAct, AppendAction, show, hidMenuAction, allCK, desID, hidaction, pageAction, CK0, hiddenSelectedRow, desContextID, SelectAll, numAttSelected, selectAll, selRowID, hiddenName, flag, desName, desContext, unCheckedRowId, sortType, reqType, numSelected, hiddenDefSource, AttChecked, hiddenSearch, isValid, hiddenName2, searchComp]
-				Vector<String> searchID= (Vector<String>) this.m_classReq.getSession().getAttribute("SearchID");	//e.g. [F6FEB251-3020-4594-E034-0003BA3F9857]
-	
-				for(String name:paramNames) {
-					if (name.startsWith("CK")) {
-						int ndx = Integer.valueOf(name.substring(2));	//e.g. CK0 => 0
-						downloadID.add(searchID.get(ndx));				//get the value based on the index, ndx e.g. F6FEB251-3020-4594-E034-0003BA3F9857
-					}
+		if (!outside) {
+			Set<String> paramNames = this.m_classReq.getParameterMap().keySet();	//e.g. [orgCompID, selectedRowId, serRecCount, count, actSelected, serMenuAct, AppendAction, show, hidMenuAction, allCK, desID, hidaction, pageAction, CK0, hiddenSelectedRow, desContextID, SelectAll, numAttSelected, selectAll, selRowID, hiddenName, flag, desName, desContext, unCheckedRowId, sortType, reqType, numSelected, hiddenDefSource, AttChecked, hiddenSearch, isValid, hiddenName2, searchComp]
+			Vector<String> searchID= (Vector<String>) this.m_classReq.getSession().getAttribute("SearchID");	//could be bunch of them like [F6FEB251-3020-4594-E034-0003BA3F9857]
+
+			for(String name:paramNames) {
+				if (name.startsWith("CK")) {
+					int ndx = Integer.valueOf(name.substring(2));	//e.g. CK0 => 0
+					downloadID.add(searchID.get(ndx));				//get the value based on the index, ndx e.g. F6FEB251-3020-4594-E034-0003BA3F9857
 				}
-			} else {
-				String searchIDCSV= StringUtil.cleanJavascriptAndHtml((String) this.m_classReq.getParameter("SearchID"));			
-				String[] ids = searchIDCSV.split(",");
-				for(String id: ids) 
-					downloadID.add(id);
 			}
-	
-			logger.debug("At line 161 of CustomDownloadServlet.java" + "*****" + Arrays.asList(downloadID));
-			m_classReq.getSession().setAttribute("downloadIDs", downloadID);
-			m_classReq.getSession().setAttribute("downloadType", type);
-			m_classReq.getSession().setAttribute("downloadLimit", Integer.toString(this.MAX_DOWNLOAD));
+		} else {
+			String searchIDCSV= StringUtil.cleanJavascriptAndHtml((String) this.m_classReq.getParameter("SearchID"));			
+			String[] ids = searchIDCSV.split(",");
+			for(String id: ids) 
+				downloadID.add(id);
 		}
 
+		logger.debug("At line 161 of CustomDownloadServlet.java" + "*****" + Arrays.asList(downloadID));
+		if(downloadID != null && downloadID.size() > 0) {
+			m_classReq.getSession().setAttribute("downloadIDs", downloadID);
+		}
+		m_classReq.getSession().setAttribute("downloadType", type);
+		m_classReq.getSession().setAttribute("downloadLimit", Integer.toString(this.MAX_DOWNLOAD));
+
 		//JR1000
-		return new ValueHolder(new DownloadedDataLoader(downloadID, type, Integer.toString(this.MAX_DOWNLOAD)));
+		return new ValueHolder(new DownloadedDataLoader(downloadID, type, Integer.toString(this.MAX_DOWNLOAD)));	//JR1000 TODO downloadID is [] !!!
 		
 //		if (downloadID.size() > this.MAX_DOWNLOAD)
 //			ForwardJSP(m_classReq, m_classRes, "/CustomOverLimit.jsp");
