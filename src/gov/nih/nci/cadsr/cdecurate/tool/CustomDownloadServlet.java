@@ -13,6 +13,7 @@ import gov.nih.nci.cadsr.cdecurate.util.DownloadHelper;
 import gov.nih.nci.cadsr.cdecurate.util.DownloadRowsArrayDataLoader;
 import gov.nih.nci.cadsr.cdecurate.util.DownloadedDataLoader;
 import gov.nih.nci.cadsr.cdecurate.util.ValueHolder;
+import gov.nih.nci.cadsr.common.Constants;
 import gov.nih.nci.cadsr.common.StringUtil;
 
 import java.io.File;
@@ -157,6 +158,7 @@ public class CustomDownloadServlet extends CurationServlet {
 			prepDisplayPage("DEC"); 
 			break;
 		case createFullDEDownload:
+			this.m_classReq.getSession().setAttribute(Constants.USER_SELECTED_DOWNLOAD_REQUEST, this.m_classReq.getParameterMap().keySet());
 			ValueHolder downloadedData1 = setDownloadIDs("CDE",false);
 			ValueHolder downloadedMeta1 = setColHeadersAndTypes(m_classReq, m_classRes, this, m_conn, "CDE");	//setColHeadersAndTypes("CDE");	//JR1000 when the AC (DE) is selected after search in a Menu action click (right context click)
 
@@ -229,7 +231,7 @@ public class CustomDownloadServlet extends CurationServlet {
 	private ValueHolder setDownloadIDsValueHolder(String type, boolean outside) {
 		ArrayList<String> downloadID = new ArrayList<String>();
 		if (!outside) {
-			Set<String> paramNames = this.m_classReq.getParameterMap().keySet();	//e.g. [orgCompID, selectedRowId, serRecCount, count, actSelected, serMenuAct, AppendAction, show, hidMenuAction, allCK, desID, hidaction, pageAction, CK0, hiddenSelectedRow, desContextID, SelectAll, numAttSelected, selectAll, selRowID, hiddenName, flag, desName, desContext, unCheckedRowId, sortType, reqType, numSelected, hiddenDefSource, AttChecked, hiddenSearch, isValid, hiddenName2, searchComp]
+			Set<String> paramNames = (Set<String>) this.m_classReq.getSession().getAttribute(Constants.USER_SELECTED_DOWNLOAD_REQUEST);	//JR1000 this.m_classReq.getParameterMap().keySet();	//e.g. [orgCompID, selectedRowId, serRecCount, count, actSelected, serMenuAct, AppendAction, show, hidMenuAction, allCK, desID, hidaction, pageAction, CK0, hiddenSelectedRow, desContextID, SelectAll, numAttSelected, selectAll, selRowID, hiddenName, flag, desName, desContext, unCheckedRowId, sortType, reqType, numSelected, hiddenDefSource, AttChecked, hiddenSearch, isValid, hiddenName2, searchComp]
 			Vector<String> searchID= (Vector<String>) this.m_classReq.getSession().getAttribute("SearchID");	//could be bunch of them like [F6FEB251-3020-4594-E034-0003BA3F9857]
 
 			for(String name:paramNames) {
