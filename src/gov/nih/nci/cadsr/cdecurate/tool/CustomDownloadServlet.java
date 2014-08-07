@@ -136,9 +136,9 @@ public class CustomDownloadServlet extends CurationServlet {
 //			break;
 		case dlExcelColumns:
 			String type = "CDE";	//what about other AC?
-			ValueHolder downloadedData2 = setDownloadIDs(type, false);	//JR1000
+//			ValueHolder downloadedData2 = setDownloadIDs(type, false);	//JR1000
 			ValueHolder downloadedMeta2 = setColHeadersAndTypes(m_classReq, m_classRes, this, m_conn, type);	//JR1000
-			ValueHolder downloadRowsArrayData = getRecords(false, false, downloadedData2, downloadedMeta2);
+			ValueHolder downloadRowsArrayData = getRecords(false, false, null /* downloadedData2 */, downloadedMeta2);
 			ArrayList<String[]> downloadRows = DownloadHelper.getRecordsFromValueHolder(downloadRowsArrayData);	//GF30779 multiple rows, if any		//JR1000 when the "Download Excel" button is clicked!
 			ArrayList<HashMap<String,ArrayList<String[]>>> arrayData = DownloadHelper.getArrayDataFromValueHolder(downloadRowsArrayData);
 
@@ -158,12 +158,15 @@ public class CustomDownloadServlet extends CurationServlet {
 			prepDisplayPage("DEC"); 
 			break;
 		case createFullDEDownload:
-			this.m_classReq.getSession().setAttribute(Constants.USER_SELECTED_DOWNLOAD_REQUEST, this.m_classReq.getParameterMap().keySet());
-			ValueHolder downloadedData1 = setDownloadIDs("CDE",false);
+			//JR1000 set up parameters for setDownloadIDsValueHolder()
+//			if(this.m_classReq.getParameterMap() != null && this.m_classReq.getParameterMap().size() > 0) {
+//				this.m_classReq.getSession().setAttribute(Constants.USER_SELECTED_DOWNLOAD_REQUEST, this.m_classReq.getParameterMap().keySet());
+//			}
+//			ValueHolder downloadedData1 = setDownloadIDs("CDE",false);
 			ValueHolder downloadedMeta1 = setColHeadersAndTypes(m_classReq, m_classRes, this, m_conn, "CDE");	//setColHeadersAndTypes("CDE");	//JR1000 when the AC (DE) is selected after search in a Menu action click (right context click)
 
 			ArrayList<String[]> allRows = DownloadHelper.getRecordsFromValueHolder(downloadedMeta1);	//GF30779 multiple rows, if any		//JR1000 when the "Download Excel" button is clicked!
-			ValueHolder downloadRowsArrayData1 = getRecords(true, false, downloadedData1, downloadedMeta1);
+			ValueHolder downloadRowsArrayData1 = getRecords(true, false, null /* downloadedData1 */, downloadedMeta1);
 			ArrayList<HashMap<String,ArrayList<String[]>>> arrayData1 = DownloadHelper.getArrayDataFromValueHolder(downloadRowsArrayData1);
 			createDownloadColumns(allRows, downloadedMeta1, arrayData1);
 			break;
@@ -231,7 +234,10 @@ public class CustomDownloadServlet extends CurationServlet {
 	private ValueHolder setDownloadIDsValueHolder(String type, boolean outside) {
 		ArrayList<String> downloadID = new ArrayList<String>();
 		if (!outside) {
-			Set<String> paramNames = (Set<String>) this.m_classReq.getSession().getAttribute(Constants.USER_SELECTED_DOWNLOAD_REQUEST);	//JR1000 this.m_classReq.getParameterMap().keySet();	//e.g. [orgCompID, selectedRowId, serRecCount, count, actSelected, serMenuAct, AppendAction, show, hidMenuAction, allCK, desID, hidaction, pageAction, CK0, hiddenSelectedRow, desContextID, SelectAll, numAttSelected, selectAll, selRowID, hiddenName, flag, desName, desContext, unCheckedRowId, sortType, reqType, numSelected, hiddenDefSource, AttChecked, hiddenSearch, isValid, hiddenName2, searchComp]
+			//JR1000 
+			Set<String> paramNames = this.m_classReq.getParameterMap().keySet();	//e.g. [orgCompID, selectedRowId, serRecCount, count, actSelected, serMenuAct, AppendAction, show, hidMenuAction, allCK, desID, hidaction, pageAction, CK0, hiddenSelectedRow, desContextID, SelectAll, numAttSelected, selectAll, selRowID, hiddenName, flag, desName, desContext, unCheckedRowId, sortType, reqType, numSelected, hiddenDefSource, AttChecked, hiddenSearch, isValid, hiddenName2, searchComp]
+//			Set<String> paramNames = (Set<String>) this.m_classReq.getSession().getAttribute(Constants.USER_SELECTED_DOWNLOAD_REQUEST);	
+//			if(paramNames == null) paramNames = this.m_classReq.getParameterMap().keySet();
 			Vector<String> searchID= (Vector<String>) this.m_classReq.getSession().getAttribute("SearchID");	//could be bunch of them like [F6FEB251-3020-4594-E034-0003BA3F9857]
 
 			for(String name:paramNames) {
@@ -286,6 +292,9 @@ public class CustomDownloadServlet extends CurationServlet {
 					List data = (ArrayList) downloadedDataVH.getValue();	//JR1000
 					arraydownloadIDs = (ArrayList<String>) data.get(DownloadedDataLoader.ID_INDEX);
 					downloadType = (String) data.get(DownloadedDataLoader.TYPE_INDEX);
+				} else {
+					arraydownloadIDs = (ArrayList<String>) m_classReq.getSession().getAttribute("downloadIDs");
+					downloadType = (String) m_classReq.getSession().getAttribute("downloadType");
 				}
 				//end JR1000
 				List<String> sqlStmts = getSQLStatements(full, restrict, arraydownloadIDs, downloadType);
