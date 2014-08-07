@@ -1,5 +1,6 @@
 package gov.nih.nci.cadsr.cdecurate.util;
 
+import gov.nih.nci.cadsr.cdecurate.database.SQL;
 import gov.nih.nci.cadsr.cdecurate.tool.CurationServlet;
 import gov.nih.nci.cadsr.cdecurate.tool.CustomDownloadServlet;
 import gov.nih.nci.cadsr.cdecurate.tool.GetACService;
@@ -33,6 +34,19 @@ public class DownloadHelper {
 
 	public static final Logger logger = Logger.getLogger(DownloadHelper.class.getName());
 
+	/**
+	 * Parse the user selected columns (colString) and filter the all rows (allRows) to create the spreadsheet columns and rows.
+	 * @param colString
+	 * @param fillIn
+	 * @param allHeaders
+	 * @param allExpandedHeaders
+	 * @param allTypes
+	 * @param typeMap
+	 * @param arrayData
+	 * @param arrayColumnTypes
+	 * @param allRows
+	 * @return
+	 */
 	public static Workbook createDownloadColumns(
 			//HttpServletRequest  m_classReq, HttpServletResponse m_classRes, 
 			String colString,
@@ -306,12 +320,14 @@ public class DownloadHelper {
 		
 		
 		try {
-			String qry = "SELECT * FROM "+type+"_EXCEL_GENERATOR_VIEW where 1=2";
+//			String qry = "SELECT * FROM "+type+"_EXCEL_GENERATOR_VIEW where 1=2";
+			String qry = SQL.getExcelTemplateSQL(type) + " and 1=2";	//JR1000 TODO
 			ps = conn.prepareStatement(qry);
 			rs = ps.executeQuery();
 			ResultSetMetaData rsmd = rs.getMetaData();
 
 			int numColumns = rsmd.getColumnCount();
+			System.out.println("DownloadHelper.java Total columns is " + numColumns);
 			// Get the column names and types; column indices start from 1
 			for (int i=1; i<numColumns+1; i++) {
 				String columnName = rsmd.getColumnName(i);

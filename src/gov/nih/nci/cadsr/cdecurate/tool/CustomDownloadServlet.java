@@ -7,6 +7,7 @@
 
 package gov.nih.nci.cadsr.cdecurate.tool;
 
+import gov.nih.nci.cadsr.cdecurate.database.SQL;
 import gov.nih.nci.cadsr.cdecurate.util.AdministeredItemUtil;
 import gov.nih.nci.cadsr.cdecurate.util.ColumnHeaderTypeLoader;
 import gov.nih.nci.cadsr.cdecurate.util.DownloadHelper;
@@ -94,7 +95,7 @@ public class CustomDownloadServlet extends CurationServlet {
 	}
 
 	private void createDownloadColumns(ArrayList<String[]> downloadRows, ValueHolder vh, ArrayList<HashMap<String,ArrayList<String[]>>> arrayData) {
-		String colString = (String) m_classReq.getParameter("cdlColumns");	//e.g. Valid Values,Value Meaning Name,Value Meaning Description
+		String colString = (String) m_classReq.getParameter("cdlColumns");	//JR1047/JR1000 user selected columns e.g. Valid Values,Value Meaning Name,Value Meaning Description
 		String fillIn = (String) m_classReq.getParameter("fillIn");		//e.g. ; can be null/optional
 
 //		ArrayList<String> allHeaders = (ArrayList<String>) m_classReq.getSession().getAttribute("headers");		//e.g. [CDE_IDSEQ, Data Element Short Name, Data Element Long Name, Data Element Preferred Question Text, Data Element Preferred Definition, Data Element Version, Data Element Context Name, Data Element Context Version, Data Element Public ID, Data Element Workflow Status, Data Element Registration Status, Data Element Begin Date, Data Element Source, Data Element Concept Public ID, Data Element Concept Short Name, Data Element Concept Long Name, Data Element Concept Version, Data Element Concept Context Name, Data Element Concept Context Version, Data Element Concept Workflow Status, Data Element Concept Registration Status, Object Class Public ID, Object Class Long Name, Object Class Short Name, Object Class Context Name, Object Class Version, Object Class Workflow Status, OC_CONCEPTS, Property Public ID, Property Long Name, Property Short Name, Property Context Name, Property Version, Property Workflow Status, PROP_CONCEPTS, Value Domain Public ID, Value Domain Short Name, Value Domain Long Name, Value Domain Version, Value Domain Workflow Status, Value Domain Registration Status, Value Domain Context Name, Value Domain Context Version, Value Domain Type, Value Domain Datatype, Value Domain Min Length, Value Domain Max Length, Value Domain Min value, Value Domain Max Value, Value Domain Decimal Place, Value Domain Format, VD_CONCEPTS, Representation Public ID, Representation Long Name, Representation Short Name, Representation Context Name, Representation Version, REP_CONCEPTS, VALID_VALUES, CLASSIFICATIONS, DESIGNATIONS, REFERENCE_DOCS, DE_DERIVATION, Conceptual Domain Public ID, Conceptual Domain Short Name, Conceptual Domain Version, Conceptual Domain Context Name]
@@ -261,7 +262,7 @@ public class CustomDownloadServlet extends CurationServlet {
 		m_classReq.getSession().setAttribute("downloadLimit", Integer.toString(this.MAX_DOWNLOAD));
 
 		//JR1000
-		return new ValueHolder(new DownloadedDataLoader(downloadID, type, Integer.toString(this.MAX_DOWNLOAD)));	//JR1000 TODO downloadID is [] !!!
+		return new ValueHolder(new DownloadedDataLoader(downloadID, type, Integer.toString(this.MAX_DOWNLOAD)));
 		
 //		if (downloadID.size() > this.MAX_DOWNLOAD)
 //			ForwardJSP(m_classReq, m_classRes, "/CustomOverLimit.jsp");
@@ -528,8 +529,10 @@ System.out.println("=======> columnTypes.get(" + i + ") = [" + columnTypes.get(i
 		if (!full){
 			StringBuffer[] whereBuffers = getWhereBuffers(downloadIDs);
 			for (StringBuffer wBuffer: whereBuffers) {
-				sqlStmt =
-					"SELECT * FROM "+type+"_EXCEL_GENERATOR_VIEW " + "WHERE "+type+"_IDSEQ IN " +
+				sqlStmt = SQL.getExcelTemplateSQL(type)
+					+ "AND "
+					/* end JR1000 */
+					+type+"_IDSEQ IN " +
 					" ( " + wBuffer.toString() + " )  ";
 				if (restrict) {
 					sqlStmt += " and ROWNUM <= "+GRID_MAX_DISPLAY;
