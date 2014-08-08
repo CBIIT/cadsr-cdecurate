@@ -35,6 +35,16 @@ import oracle.jdbc.pool.OracleDataSource;
  * Change the user id and password in DBConnection.xml before running this!
  */
 public class TestConnections {
+	private boolean localTransaction;
+	
+	public boolean isLocalTransaction() {
+		return localTransaction;
+	}
+
+	public void setLocalTransaction(boolean localTransaction) {
+		this.localTransaction = localTransaction;
+	}
+
 	/**
 	 * @param dbXML
 	 *            db connection xml file
@@ -153,6 +163,12 @@ public class TestConnections {
 		String dbname = "DSRDEV"; // dev
 		// String dbserver = "137.187.181.89"; String dbname = "DSRQA";
 		int port = 1551;
+		if(localTransaction) {
+			dbtype = "oracle";
+			dbserver = "localhost";
+			dbname = "orcl";
+			port = 1521;
+		}
 		ConnectionUtil cu = new ConnectionUtil();
 		cu.setUserName(username);
 		cu.setPassword(password);

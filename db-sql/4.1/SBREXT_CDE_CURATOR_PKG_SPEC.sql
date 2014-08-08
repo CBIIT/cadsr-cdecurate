@@ -144,7 +144,7 @@
               ,de_long_name_view r
               ,de_source_name_view sn
               ,de_cn_language_view des
-              ,de_short_name_view hsn
+--              ,de_short_name_view hsn
               ,quest_crf_view_ext q
               ,protocols_view_ext p
          WHERE d.conte_idseq = c.conte_idseq

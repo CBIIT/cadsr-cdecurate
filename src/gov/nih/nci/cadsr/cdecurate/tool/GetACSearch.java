@@ -18,6 +18,7 @@ import gov.nih.nci.cadsr.cdecurate.ui.AltNamesDefsSession;
 import gov.nih.nci.cadsr.cdecurate.util.AdministeredItemUtil;
 import gov.nih.nci.cadsr.cdecurate.util.DataManager;
 import gov.nih.nci.cadsr.common.Constants;
+import gov.nih.nci.cadsr.common.Database;
 import gov.nih.nci.cadsr.common.StringUtil;
 
 import java.io.Serializable;
@@ -39,6 +40,7 @@ import java.util.Vector;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+
 
 
 
@@ -9725,12 +9727,15 @@ public class GetACSearch implements Serializable
         CallableStatement cstmt = null;
         Vector vList = new Vector();
         HttpSession session = m_classReq.getSession();
+        Database mon = new Database();
         try
         {
             if (m_servlet.getConn() == null)
                 m_servlet.ErrorLogin(m_classReq, m_classRes);
             else
             {
+            	mon.setEnabled(true);
+            	mon.trace(m_servlet.getConn());
                 cstmt = m_servlet.getConn().prepareCall("{call SBREXT_CDE_CURATOR_PKG.GET_ALTERNATE_NAMES(?,?,?)}");
                 // Now tie the placeholders for out parameters.
                 cstmt.registerOutParameter(3, OracleTypes.CURSOR);
@@ -9762,7 +9767,7 @@ public class GetACSearch implements Serializable
                         AltNameBean.setALT_NAME_IDSEQ(rs.getString("desig_idseq"));
                         AltNameBean.setCONTE_IDSEQ(rs.getString("conte_idseq"));
                         AltNameBean.setCONTEXT_NAME(rs.getString("context_name"));
-                        AltNameBean.setALTERNATE_NAME(rs.getString("name"));
+                        AltNameBean.setALTERNATE_NAME(rs.getString("name"));	//JR1000 tagged, this is the alternate name
                         AltNameBean.setALT_TYPE_NAME(rs.getString("detl_name"));
                         AltNameBean.setAC_LONG_NAME(rs.getString("ac_long_name"));
                         AltNameBean.setAC_IDSEQ(acIdseq);
@@ -9786,6 +9791,7 @@ public class GetACSearch implements Serializable
         	rs = SQLHelper.closeResultSet(rs);
             cstmt = SQLHelper.closeCallableStatement(cstmt);
 //            SQLHelper.closeConnection(m_servlet.getConn());		//GF32438
+            mon.show();
         }
         return vList;
     }

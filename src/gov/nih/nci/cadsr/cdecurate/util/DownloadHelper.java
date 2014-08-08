@@ -321,7 +321,7 @@ public class DownloadHelper {
 		
 		try {
 //			String qry = "SELECT * FROM "+type+"_EXCEL_GENERATOR_VIEW where 1=2";
-			String qry = SQL.getExcelTemplateSQL(type) + " and 1=2";	//JR1000 TODO
+			String qry = SQL.getExcelTemplateSQL(type, " and 1=2");	//JR1000 TODO
 			ps = conn.prepareStatement(qry);
 			rs = ps.executeQuery();
 			ResultSetMetaData rsmd = rs.getMetaData();

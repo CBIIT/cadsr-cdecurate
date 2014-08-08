@@ -28,7 +28,7 @@ public class TestUtil {
 	private int portNumber = -1;
 	private String dbName;
 	public enum TIER {
-		DEV, QA
+		LOCAL, DEV, QA
 	}
 	private static TIER targetTier = TIER.DEV;
 	
@@ -46,6 +46,12 @@ public class TestUtil {
 		String dbserver = "137.187.181.4";
 		String dbname = "DSRDEV";
 		int port = 1551;
+		if(targetTier == TIER.LOCAL) {
+			dbtype = "oracle";
+			dbserver = "localhost";
+			dbname = "orcl";
+			port = 1521;
+		}
 		if(targetTier == TIER.QA) {
 			dbserver = "ncidb-dsr-q.nci.nih.gov";
 			dbname = "DSRQA";

@@ -529,11 +529,10 @@ System.out.println("=======> columnTypes.get(" + i + ") = [" + columnTypes.get(i
 		if (!full){
 			StringBuffer[] whereBuffers = getWhereBuffers(downloadIDs);
 			for (StringBuffer wBuffer: whereBuffers) {
-				sqlStmt = SQL.getExcelTemplateSQL(type)
-					+ "AND "
-					/* end JR1000 */
-					+type+"_IDSEQ IN " +
-					" ( " + wBuffer.toString() + " )  ";
+				sqlStmt = SQL.getExcelTemplateSQL(type, "AND "
+						/* end JR1000 */
+						+type+"_IDSEQ IN " +
+						" ( " + wBuffer.toString() + " )  ");
 				if (restrict) {
 					sqlStmt += " and ROWNUM <= "+GRID_MAX_DISPLAY;
 					sqlStmts.add(sqlStmt);

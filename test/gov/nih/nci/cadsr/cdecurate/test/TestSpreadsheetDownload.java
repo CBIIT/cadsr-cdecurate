@@ -774,6 +774,7 @@ public class TestSpreadsheetDownload {
 
 	public static void connectDB(String username, String password) {
 		try {
+//			TestUtil.setTargetTier(TestUtil.TIER.LOCAL);
 			//DO NOT HARD CODE the user/password and check in SVN/Git please!
 			setConn(TestUtil.getConnection(username, password));
 		} catch (Exception e) {
@@ -803,6 +804,7 @@ public class TestSpreadsheetDownload {
 		String type = "CDE";	boolean outside = false;	String dlLimit = "5000";
 //		/* 1 */ ValueHolder downloadedData = cDownload.setDownloadIDs(type, outside);
 		ArrayList idArray = new ArrayList<String>();
+		idArray.add("E48B2588-E567-D3FA-E040-BB89AD435DA5");	//has 1 alternate name and 1 alternate definition
 		idArray.add("F6FEB251-3020-4594-E034-0003BA3F9857");
 		idArray.add("8B6FACFE-948B-55CC-E040-BB89AD436343");
 		/* 1 */ ValueHolder downloadedData = new ValueHolder(new DownloadedDataLoader(idArray, type, dlLimit));
@@ -825,8 +827,8 @@ public class TestSpreadsheetDownload {
 //	}
 
 	public static void createDownloadColumns(ArrayList<String[]> downloadRows, ValueHolder vh, ArrayList<HashMap<String,ArrayList<String[]>>> arrayData) {
-//		String colString = "Valid Values,Value Meaning Name,Value Meaning Description";	//(String) m_classReq.getParameter("cdlColumns");	//e.g. Valid Values,Value Meaning Name,Value Meaning Description
-		String colString = "Data Element Long Name,Data Element Preferred Definition,Data Element Context Name,Data Element Public ID,NAME";
+		String colString = "Data Element Public ID,Valid Values,Value Meaning Name,Value Meaning Description,NAME";	//(String) m_classReq.getParameter("cdlColumns");	//e.g. Valid Values,Value Meaning Name,Value Meaning Description
+//		String colString = "Data Element Long Name,Data Element Preferred Definition,Data Element Context Name,Data Element Public ID,NAME";
 		String fillIn = null;	//(String) m_classReq.getParameter("fillIn");		//e.g. ; can be null/optional
 
 		Workbook wb = DownloadHelper.createWorkbook(colString, fillIn, downloadRows, vh, arrayData);
