@@ -804,9 +804,9 @@ public class TestSpreadsheetDownload {
 		String type = "CDE";	boolean outside = false;	String dlLimit = "5000";
 //		/* 1 */ ValueHolder downloadedData = cDownload.setDownloadIDs(type, outside);
 		ArrayList idArray = new ArrayList<String>();
-		idArray.add("E48B2588-E567-D3FA-E040-BB89AD435DA5");	//has 1 alternate name and 1 alternate definition
-		idArray.add("F6FEB251-3020-4594-E034-0003BA3F9857");
-		idArray.add("8B6FACFE-948B-55CC-E040-BB89AD436343");
+		idArray.add("8B6FACFE-948B-55CC-E040-BB89AD436343");	//public id 3121922
+		idArray.add("E48B2588-E567-D3FA-E040-BB89AD435DA5");	//public id 3861416; it has 1 alternate name and 1 alternate definition
+//		idArray.add("F6FEB251-3020-4594-E034-0003BA3F9857");
 		/* 1 */ ValueHolder downloadedData = new ValueHolder(new DownloadedDataLoader(idArray, type, dlLimit));
 
 		/* 2 */ ValueHolder columnHeadersTypes = DownloadHelper.setColHeadersAndTypes(null, null, m_servlet, m_conn, "CDE");
@@ -827,7 +827,8 @@ public class TestSpreadsheetDownload {
 //	}
 
 	public static void createDownloadColumns(ArrayList<String[]> downloadRows, ValueHolder vh, ArrayList<HashMap<String,ArrayList<String[]>>> arrayData) {
-		String colString = "Data Element Public ID,Valid Values,Value Meaning Name,Value Meaning Description,NAME";	//(String) m_classReq.getParameter("cdlColumns");	//e.g. Valid Values,Value Meaning Name,Value Meaning Description
+		/** NOTES: THE FOLLOWING elements must be separated by a comma AND CAN NOT CONTAINS a space in between !!!! **/
+		String colString = "Data Element Public ID,Data Element Long Name,Valid Values,Value Meaning Name,Value Meaning Description,Alternate Name Or Definition";	//(String) m_classReq.getParameter("cdlColumns");	//e.g. Valid Values,Value Meaning Name,Value Meaning Description
 //		String colString = "Data Element Long Name,Data Element Preferred Definition,Data Element Context Name,Data Element Public ID,NAME";
 		String fillIn = null;	//(String) m_classReq.getParameter("fillIn");		//e.g. ; can be null/optional
 

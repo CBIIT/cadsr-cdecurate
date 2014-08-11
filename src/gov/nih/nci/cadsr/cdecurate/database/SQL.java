@@ -2,7 +2,7 @@ package gov.nih.nci.cadsr.cdecurate.database;
 
 public class SQL {
 
-	public static final String EXCEL_TEMPLATE_SQL1 = "SELECT de.*, des.name FROM ";
+	public static final String EXCEL_TEMPLATE_SQL1 = "SELECT de.*, des.name as \"Alternate Name Or Definition\" FROM ";
 	public static final String EXCEL_TEMPLATE_SQL2 = "_EXCEL_GENERATOR_VIEW de "
 		+ ", designations_view des, contexts_view des_conte "
 		+ "WHERE "
