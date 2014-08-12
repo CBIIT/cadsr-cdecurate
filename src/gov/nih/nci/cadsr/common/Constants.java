@@ -38,5 +38,6 @@ public class Constants {
 	public static final String NEW_VERSION_HID_ACTION = "hidaction";
 	//JR1000
 	public static final String USER_SELECTED_DOWNLOAD_REQUEST = "userSelectedDownloadRequest";
+	public static final String USER_SELECTED_DOWNLOAD_TYPE = "userSelectedDownload";
 
 }

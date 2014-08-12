@@ -122,6 +122,8 @@ public class CustomDownloadServlet extends CurationServlet {
 	
 	public void execute(ACRequestTypes reqType) throws Exception {	
 
+//		DownloadHelper.setType(reqType, m_classReq);
+		
 		switch (reqType){	//e.g. dlExcelColumns
 		case showDEfromOutside:
 			prepDisplayPage("O-CDE");
@@ -136,7 +138,7 @@ public class CustomDownloadServlet extends CurationServlet {
 //			returnJSONFromSession("Layout");
 //			break;
 		case dlExcelColumns:
-			String type = "CDE";	//what about other AC?
+			String type = DownloadHelper.getType(m_classReq);	//"CDE";
 //			ValueHolder downloadedData2 = setDownloadIDs(type, false);	//JR1000
 			ValueHolder downloadedMeta2 = setColHeadersAndTypes(m_classReq, m_classRes, this, m_conn, type);	//JR1000
 			ValueHolder downloadRowsArrayData = getRecords(false, false, null /* downloadedData2 */, downloadedMeta2);
@@ -160,11 +162,12 @@ public class CustomDownloadServlet extends CurationServlet {
 			break;
 		case createFullDEDownload:
 			//JR1000 set up parameters for setDownloadIDsValueHolder()
+			String type1 = DownloadHelper.getType(m_classReq);	//"CDE";
 //			if(this.m_classReq.getParameterMap() != null && this.m_classReq.getParameterMap().size() > 0) {
 //				this.m_classReq.getSession().setAttribute(Constants.USER_SELECTED_DOWNLOAD_REQUEST, this.m_classReq.getParameterMap().keySet());
 //			}
 //			ValueHolder downloadedData1 = setDownloadIDs("CDE",false);
-			ValueHolder downloadedMeta1 = setColHeadersAndTypes(m_classReq, m_classRes, this, m_conn, "CDE");	//setColHeadersAndTypes("CDE");	//JR1000 when the AC (DE) is selected after search in a Menu action click (right context click)
+			ValueHolder downloadedMeta1 = setColHeadersAndTypes(m_classReq, m_classRes, this, m_conn, type1);	//setColHeadersAndTypes("CDE");	//JR1000 when the AC (DE) is selected after search in a Menu action click (right context click)
 
 			ArrayList<String[]> allRows = DownloadHelper.getRecordsFromValueHolder(downloadedMeta1);	//GF30779 multiple rows, if any		//JR1000 when the "Download Excel" button is clicked!
 			ValueHolder downloadRowsArrayData1 = getRecords(true, false, null /* downloadedData1 */, downloadedMeta1);

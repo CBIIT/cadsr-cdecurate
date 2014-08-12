@@ -5,6 +5,7 @@ import gov.nih.nci.cadsr.cdecurate.tool.CurationServlet;
 import gov.nih.nci.cadsr.cdecurate.tool.CustomDownloadServlet;
 import gov.nih.nci.cadsr.cdecurate.tool.GetACService;
 import gov.nih.nci.cadsr.cdecurate.tool.TOOL_OPTION_Bean;
+import gov.nih.nci.cadsr.common.Constants;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -550,6 +551,37 @@ public class DownloadHelper {
 		return wb;
 	}
 	
+	void setType(String reqType, HttpServletRequest request) throws Exception {
+		if(request == null) throw new Exception("Request can not be NULL or empty.");
+
+		String downloadType = null;
+		downloadType = (String) request.getSession().getAttribute("downloadType");
+		if(downloadType == null || downloadType.equals("")) {
+			downloadType = (String) request.getSession().getAttribute(Constants.USER_SELECTED_DOWNLOAD_TYPE);
+		}
+		if(reqType != null && downloadType == null && reqType.equals("showDEfromSearch")) {
+			request.getSession().setAttribute("downloadType", "DE");
+		} else
+		if(reqType != null && downloadType == null && reqType.equals("showDECfromSearch")) {
+			request.getSession().setAttribute("downloadType", "DEC");
+		} else
+		if(reqType != null && downloadType == null && reqType.equals("showVDfromSearch")) {
+			request.getSession().setAttribute("downloadType", "VD");
+		}
+	}
+
+	public static String getType(HttpServletRequest request) throws Exception {
+		if(request == null) throw new Exception("Request can not be NULL or empty.");
+
+		String downloadType = null;
+		downloadType = (String) request.getSession().getAttribute("downloadType");
+//		if(downloadType == null || downloadType.equals("")) {
+//			downloadType = (String) request.getSession().getAttribute(Constants.USER_SELECTED_DOWNLOAD_TYPE);
+//		}
+		
+		return downloadType;
+	}
+
 //	private ArrayList<String[]> getRecords(
 //			HttpServletRequest  m_classReq, HttpServletResponse m_classRes, 
 //			Connection conn, 
