@@ -827,8 +827,11 @@ public class TestSpreadsheetDownload {
 //	}
 
 	public static void createDownloadColumns(ArrayList<String[]> downloadRows, ValueHolder vh, ArrayList<HashMap<String,ArrayList<String[]>>> arrayData) {
+		//4.1 "Alternate Name Or Definition" removed
+		String colString = "Data Element Public ID,Data Element Long Name,Valid Values,Value Meaning Name,Value Meaning Description";
 		/** NOTES: THE FOLLOWING elements must be separated by a comma AND CAN NOT CONTAINS a space in between !!!! **/
-		String colString = "Data Element Public ID,Data Element Long Name,Valid Values,Value Meaning Name,Value Meaning Description,Alternate Name Or Definition";	//(String) m_classReq.getParameter("cdlColumns");	//e.g. Valid Values,Value Meaning Name,Value Meaning Description
+		//4.2 only
+//		String colString = "Data Element Public ID,Data Element Long Name,Valid Values,Value Meaning Name,Value Meaning Description,Alternate Name Or Definition";	//(String) m_classReq.getParameter("cdlColumns");	//e.g. Valid Values,Value Meaning Name,Value Meaning Description
 //		String colString = "Data Element Long Name,Data Element Preferred Definition,Data Element Context Name,Data Element Public ID,NAME";
 		String fillIn = null;	//(String) m_classReq.getParameter("fillIn");		//e.g. ; can be null/optional
 
