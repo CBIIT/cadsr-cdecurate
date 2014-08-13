@@ -535,7 +535,7 @@ System.out.println("=======> columnTypes.get(" + i + ") = [" + columnTypes.get(i
 				sqlStmt = SQL.getExcelTemplateSQL(type, "AND "
 						/* end JR1000 */
 						+type+"_IDSEQ IN " +
-						" ( " + wBuffer.toString() + " )  ");
+						" ( " + wBuffer.toString() + " )  ");	//JR1053 get the download ids here
 				if (restrict) {
 					sqlStmt += " and ROWNUM <= "+GRID_MAX_DISPLAY;
 					sqlStmts.add(sqlStmt);
