@@ -94,7 +94,7 @@ public class CustomDownloadServlet extends CurationServlet {
 		return valueHolder;
 	}
 
-	private void createDownloadColumns(ArrayList<String[]> downloadRows, ValueHolder vh, ArrayList<HashMap<String,ArrayList<String[]>>> arrayData) {
+	private void createDownloadColumns(String acType, ArrayList<String[]> downloadRows, ValueHolder vh, ArrayList<HashMap<String,ArrayList<String[]>>> arrayData) {
 		String colString = (String) m_classReq.getParameter("cdlColumns");	//JR1047/JR1000 user selected columns e.g. Valid Values,Value Meaning Name,Value Meaning Description
 		String fillIn = (String) m_classReq.getParameter("fillIn");		//e.g. ; can be null/optional
 
@@ -106,7 +106,7 @@ public class CustomDownloadServlet extends CurationServlet {
 //		HashMap<String, String> arrayColumnTypes = (HashMap<String,String>) m_classReq.getSession().getAttribute("arrayColumnTypes");	//e.g. {PV Begin Date=59:SBREXT.VALID_VALUE_LIST_T, Object Class Concept Public ID=28:SBREXT.CONCEPTS_LIST_T, Object Class Concept NCI RAI=28:SBREXT.CONCEPTS_LIST_T, Derivation Type=63:SBREXT.DERIVED_DATA_ELEMENT_T, Classification Scheme Item Name=60:SBREXT.CDEBROWSER_CSI_LIST_T, Derivation Method=63:SBREXT.DERIVED_DATA_ELEMENT_T, Object Class Concept Origin=28:SBREXT.CONCEPTS_LIST_T, PV End Date=59:SBREXT.VALID_VALUE_LIST_T, DDE Preferred Name=63:SBREXT.DERIVED_DATA_ELEMENT_T, Classification Scheme Item Public Id=60:SBREXT.CDEBROWSER_CSI_LIST_T, DDE Version=63:SBREXT.DERIVED_DATA_ELEMENT_T, Derivation Type Description=63:SBREXT.DERIVED_DATA_ELEMENT_T, Property Concept Code=35:SBREXT.CONCEPTS_LIST_T, Classification Scheme Version=60:SBREXT.CDEBROWSER_CSI_LIST_T, Representation Concept Definition Source=58:SBREXT.CONCEPTS_LIST_T, Classification Scheme Public ID=60:SBREXT.CDEBROWSER_CSI_LIST_T, Representation Concept Name=58:SBREXT.CONCEPTS_LIST_T, Value Domain Concept Name=52:SBREXT.CONCEPTS_LIST_T, Value Domain Concept Code=52:SBREXT.CONCEPTS_LIST_T, Object Class Concept Name=28:SBREXT.CONCEPTS_LIST_T, Value Domain Concept NCI RAI=52:SBREXT.CONCEPTS_LIST_T, Value Domain Concept Definition Source=52:SBREXT.CONCEPTS_LIST_T, DDE Workflow Status=63:SBREXT.DERIVED_DATA_ELEMENT_T, Data Element Alternate Name Context Version=61:SBREXT.DESIGNATIONS_LIST_T, Value Domain Concept EVS Source=52:SBREXT.CONCEPTS_LIST_T, Value Meaning Alternate Definitions=59:SBREXT.VALID_VALUE_LIST_T, Classification Scheme Context Name=60:SBREXT.CDEBROWSER_CSI_LIST_T, Property Concept NCI RAI=35:SBREXT.CONCEPTS_LIST_T, Property Concept EVS Source=35:SBREXT.CONCEPTS_LIST_T, Value Meaning Description=59:SBREXT.VALID_VALUE_LIST_T, DDE Preferred Definition=63:SBREXT.DERIVED_DATA_ELEMENT_T, DDE Display Order=63:SBREXT.DERIVED_DATA_ELEMENT_T, Object Class Concept Code=28:SBREXT.CONCEPTS_LIST_T, Classification Scheme Item Version=60:SBREXT.CDEBROWSER_CSI_LIST_T, Value Domain Concept Origin=52:SBREXT.CONCEPTS_LIST_T, Document Organization=62:SBREXT.CDEBROWSER_RD_LIST_T, Value Meaning Name=59:SBREXT.VALID_VALUE_LIST_T, Object Class Concept Definition Source=28:SBREXT.CONCEPTS_LIST_T, Object Class Concept EVS Source=28:SBREXT.CONCEPTS_LIST_T, Value Meaning PublicID=59:SBREXT.VALID_VALUE_LIST_T, Value Meaning Concepts=59:SBREXT.VALID_VALUE_LIST_T, Value Domain Concept Public ID=52:SBREXT.CONCEPTS_LIST_T, Classification Scheme Short Name=60:SBREXT.CDEBROWSER_CSI_LIST_T, Representation Concept Code=58:SBREXT.CONCEPTS_LIST_T, Data Element Alternate Name Context Name=61:SBREXT.DESIGNATIONS_LIST_T, Property Concept Primary Flag=35:SBREXT.CONCEPTS_LIST_T, Derivation Rule=63:SBREXT.DERIVED_DATA_ELEMENT_T, DDE Context=63:SBREXT.DERIVED_DATA_ELEMENT_T, Data Element Alternate Name Type=61:SBREXT.DESIGNATIONS_LIST_T, Valid Values=59:SBREXT.VALID_VALUE_LIST_T, Value Meaning Version=59:SBREXT.VALID_VALUE_LIST_T, DDE Public ID=63:SBREXT.DERIVED_DATA_ELEMENT_T, Document=62:SBREXT.CDEBROWSER_RD_LIST_T, Classification Scheme Context Version=60:SBREXT.CDEBROWSER_CSI_LIST_T, Representation Concept Primary Flag=58:SBREXT.CONCEPTS_LIST_T, Classification Scheme Item Type Name=60:SBREXT.CDEBROWSER_CSI_LIST_T, Object Class Concept Primary Flag=28:SBREXT.CONCEPTS_LIST_T, Property Concept Definition Source=35:SBREXT.CONCEPTS_LIST_T, Representation Concept Public ID=58:SBREXT.CONCEPTS_LIST_T, Representation Concept EVS Source=58:SBREXT.CONCEPTS_LIST_T, Representation Concept NCI RAI=58:SBREXT.CONCEPTS_LIST_T, DDE Long Name=63:SBREXT.DERIVED_DATA_ELEMENT_T, Value Domain Concept Primary Flag=52:SBREXT.CONCEPTS_LIST_T, Concatenation Character=63:SBREXT.DERIVED_DATA_ELEMENT_T, Document Type=62:SBREXT.CDEBROWSER_RD_LIST_T, Property Concept Origin=35:SBREXT.CONCEPTS_LIST_T, Representation Concept Origin=58:SBREXT.CONCEPTS_LIST_T, Data Element Alternate Name=61:SBREXT.DESIGNATIONS_LIST_T, Document Name=62:SBREXT.CDEBROWSER_RD_LIST_T, Property Concept Name=35:SBREXT.CONCEPTS_LIST_T, Property Concept Public ID=35:SBREXT.CONCEPTS_LIST_T}
 //		Workbook wb = DownloadHelper.createDownloadColumns(colString, fillIn, allHeaders, allExpandedHeaders, allTypes, typeMap, arrayData, arrayColumnTypes, downloadRows);
 	
-		Workbook wb = DownloadHelper.createWorkbook(colString, fillIn, downloadRows, vh, arrayData);	//arrayData should never be empty as it is the data!
+		Workbook wb = DownloadHelper.createWorkbook(acType, colString, fillIn, downloadRows, vh, arrayData);	//arrayData should never be empty as it is the data!
 		
 		try {
 			m_classRes.setContentType( "application/vnd.ms-excel" );
@@ -145,7 +145,7 @@ public class CustomDownloadServlet extends CurationServlet {
 			ArrayList<String[]> downloadRows = DownloadHelper.getRecordsFromValueHolder(downloadRowsArrayData);	//GF30779 multiple rows, if any		//JR1000 when the "Download Excel" button is clicked!
 			ArrayList<HashMap<String,ArrayList<String[]>>> arrayData = DownloadHelper.getArrayDataFromValueHolder(downloadRowsArrayData);
 
-			createDownloadColumns(downloadRows, downloadedMeta2, arrayData);
+			createDownloadColumns(type, downloadRows, downloadedMeta2, arrayData);
 			break;
 //		case dlXMLColumns:
 //			ArrayList<String[]> xmlDownloadRows = DownloadHelper.getRecordsFromValueHolder(false, false, null, null);
@@ -172,7 +172,7 @@ public class CustomDownloadServlet extends CurationServlet {
 			ArrayList<String[]> allRows = DownloadHelper.getRecordsFromValueHolder(downloadedMeta1);	//GF30779 multiple rows, if any		//JR1000 when the "Download Excel" button is clicked!
 			ValueHolder downloadRowsArrayData1 = getRecords(true, false, null /* downloadedData1 */, downloadedMeta1);
 			ArrayList<HashMap<String,ArrayList<String[]>>> arrayData1 = DownloadHelper.getArrayDataFromValueHolder(downloadRowsArrayData1);
-			createDownloadColumns(allRows, downloadedMeta1, arrayData1);
+			createDownloadColumns(type1, allRows, downloadedMeta1, arrayData1);
 			break;
 		}
 	}

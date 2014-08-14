@@ -4,6 +4,7 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.text.CharacterIterator;
 import java.text.StringCharacterIterator;
+import java.util.Arrays;
 
 public class StringUtil {
 
@@ -129,6 +130,13 @@ public class StringUtil {
 		return sw.toString();
 	}	
 	
+	public static long countWords(String text, String delimiter) throws Exception {
+		if(text == null || delimiter == null) {
+			throw new Exception("Text or delimiter can not be NULL or empty.");
+		}
+		return Arrays.asList(text.split(delimiter)).size();
+	}
+
 	/**
 	 * This method is added to address XSS issue discovered during app scan.
 	 * 
