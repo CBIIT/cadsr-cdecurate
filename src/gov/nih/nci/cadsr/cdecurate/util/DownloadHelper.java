@@ -549,12 +549,12 @@ public class DownloadHelper {
 
 		Workbook wb = DownloadHelper.createDownloadColumns(colString, fillIn, allHeaders, allExpandedHeaders, allTypes, typeMap, arrayData, arrayColumnTypes, downloadRows);	//JR1053 get the colString here
 
-		logger.debug("DownloadHelper.java JR1053: " + acType + " values \n******** colString=["+ colString + "] \n******** fillIn=[" + fillIn + "] \n******** allHeaders=[" + allHeaders + "] \n******** allExpandedHeaders=[" + allExpandedHeaders + "] \n******** allTypes=[" + allTypes + "] \n******** typeMap=[" + typeMap + "] \n******** arrayData=[" + arrayData + "] \n******** arrayColumnTypes=[" + arrayColumnTypes + "] \n******** downloadRows=[" + downloadRows + "]");
 		try {
+			logger.debug("DownloadHelper.java JR1053: " + acType + " values \n******** colString=["+ colString + "] \n******** fillIn=[" + fillIn + "] \n******** allHeaders=[" + allHeaders + "] \n******** allExpandedHeaders=[" + allExpandedHeaders + "] \n******** allTypes=[" + allTypes + "] \n******** typeMap=[" + typeMap + "] \n******** arrayData=[" + arrayData + "] \n******** arrayColumnTypes=[" + arrayColumnTypes + "] \n******** downloadRows=[" + downloadRows + "]");
 			logger.debug("DownloadHelper.java JR1053: " + acType + " counts \n******** colString=["+ StringUtil.countWords(colString, ",") + "] \n******** allHeaders=[" + allHeaders.size() + "] \n******** allExpandedHeaders=[" + allExpandedHeaders.size() + "] \n******** allTypes=[" + allTypes.size() + "] \n******** typeMap=[" + typeMap.size() + "] \n******** arrayData=[" + arrayData.size() + "] \n******** arrayColumnTypes=[" + arrayColumnTypes.size() + "] \n******** downloadRows=[" + downloadRows.size() + "]");
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			//e.printStackTrace();
+			logger.info("DownloadHelper.java createWorkbook(): " + e.getMessage());	//even if error should not matter, just logging
 		}
 
 		return wb;

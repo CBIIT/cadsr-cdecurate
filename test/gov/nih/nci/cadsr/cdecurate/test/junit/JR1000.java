@@ -1,134 +1,92 @@
-/*L
- * Copyright ScenPro Inc, SAIC-F
- *
- * Distributed under the OSI-approved BSD 3-Clause License.
- * See http://ncip.github.com/cadsr-cdecurate/LICENSE.txt for details.
- */
+package gov.nih.nci.cadsr.cdecurate.test.junit;
 
-// Copyright ScenPro, Inc 2007
-
-// $Header: /cvsshare/content/cvsroot/cdecurate/src/gov/nih/nci/cadsr/cdecurate/test/testdec.java,v 1.11 2008-03-13 17:57:59 chickerura Exp $
-// $Name: not supported by cvs2svn $
-
-/*
- * To run:
- * 
- * TestSpreadsheetDownload userId password
- * 
- */
-package gov.nih.nci.cadsr.cdecurate.test;
-
-import gov.nih.nci.cadsr.cdecurate.tool.CurationServlet;
-import gov.nih.nci.cadsr.cdecurate.tool.CustomDownloadServlet;
-import gov.nih.nci.cadsr.cdecurate.tool.EVS_UserBean;
-import gov.nih.nci.cadsr.cdecurate.tool.Session_Data;
-import gov.nih.nci.cadsr.cdecurate.util.AdministeredItemUtil;
-import gov.nih.nci.cadsr.cdecurate.util.DownloadHelper;
-import gov.nih.nci.cadsr.cdecurate.util.DownloadRowsArrayDataLoader;
-import gov.nih.nci.cadsr.cdecurate.util.DownloadedDataLoader;
-import gov.nih.nci.cadsr.cdecurate.util.ValueHolder;
+import static org.junit.Assert.assertTrue;
+import gov.nih.nci.cadsr.cdecurate.test.TestSpreadsheetDownload;
+import gov.nih.nci.cadsr.cdecurate.test.helpers.DBUtil;
+import gov.nih.nci.cadsr.cdecurate.ui.AltNamesDefsSession;
 import gov.nih.nci.cadsr.common.TestUtil;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.sql.Array;
 import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
-import java.sql.SQLException;
-import java.sql.Struct;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
+import java.util.Iterator;
 
-import javax.naming.Context;
-import javax.naming.InitialContext;
-import javax.sql.DataSource;
-
-import oracle.sql.Datum;
-import oracle.sql.STRUCT;
-
-import org.apache.log4j.Logger;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.CellStyle;
-import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
+import org.junit.After;
+import org.junit.BeforeClass;
+import org.junit.Test;
 
-public class TestSpreadsheetDownload {
-	public static final Logger logger = Logger
-			.getLogger(TestSpreadsheetDownload.class.getName());
-	static CurationServlet m_servlet;
-	private static ValueHolder downloadRowsArrayData;
-	protected static Connection m_conn = null;
-	private static final int GRID_MAX_DISPLAY = 10;
-	FileOutputStream fileOutputStream = null;
-	ArrayList<String> columnHeaders = new ArrayList<String>();
-	ArrayList<String> columnTypes = new ArrayList<String>();
-	HashMap<String, ArrayList<String[]>> typeMap = new HashMap<String, ArrayList<String[]>>();
-	HashMap<String, String> arrayColumnTypes = new HashMap<String, String>();
-	ArrayList<String> allExpandedColumnHeaders = new ArrayList<String>();
-	ArrayList<HashMap<String, List<String[]>>> arrayData = new ArrayList<HashMap<String, List<String[]>>>();
+import antlr.collections.List;
 
-	public static void connectDB(String username, String password) {
+/**
+  * https://tracker.nci.nih.gov/browse/CURATNTOOL-1000
+  * 
+  * Setup: Enter userId and password in the VM argument (NOT program argument!!!) in the following format:
+  * 
+  * -Du=SBREXT -Dp=[replace with the password]
+  * 
+  */
+public class JR1000 {
+	private static String userId;
+	private static String password;
+	private Connection conn;
+	private static TestSpreadsheetDownload download;
+
+	@BeforeClass
+	public static void init() {
+		userId = System.getProperty("u");
+		password = System.getProperty("p");
 		try {
-//			TestUtil.setTargetTier(TestUtil.TIER.LOCAL);
-			//DO NOT HARD CODE the user/password and check in SVN/Git please!
-			setConn(TestUtil.getConnection(username, password));
+			DBUtil db = new DBUtil(TestUtil.getConnection(userId, password));
+			download = new TestSpreadsheetDownload();
+			download.init(userId, password);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
-	public static TestSpreadsheetDownload init(String username, String password) {
-		connectDB(username, password);
-		m_servlet = new CurationServlet();
-		m_servlet.setConn(m_conn);
-
-		TestSpreadsheetDownload download = new TestSpreadsheetDownload();
-		return download;
+	@After
+	public void cleanup() {
+		AltNamesDefsSession altSession = new AltNamesDefsSession(null);
+		altSession.purgeAlternateList();
 	}
 
-	public static Workbook generateSpreadsheet(String type, String fillAllRows, String selectedColumns, ArrayList idArray) {
-		String colString = selectedColumns;
-		String fillIn = fillAllRows;
+	@Test
+	public void testEmpty() {
+		boolean ret = false;
+		int count = 0;
+		String type = null;
+		String colString = null;
+		String fillIn = null;
+		ArrayList idArray = new ArrayList<String>();
+		try {
+			type = "CDE";
+			colString = "";
+			idArray.add("");
+			Workbook wb = download.generateSpreadsheet(type, fillIn, colString, idArray);
+			Sheet sh = wb.getSheetAt(0);
+			Iterator it = sh.rowIterator();
+			Row row = null;
+			Cell checkString = null;
+			for (; it.hasNext(); count++) {
+				row = (Row) it.next();
+				checkString = row.getCell(0);
+				System.out.println("Cell value = [" + checkString + "]");
+			}
+			System.out.println("count was " + count);
+			assertTrue("Test empty results", count == 1 && checkString != null && checkString.getStringCellValue().equals("Data Element Short Name"));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 
-		CustomDownloadServlet cDownload = new CustomDownloadServlet();
-		boolean outside = false;	String dlLimit = "5000";
-		//=== Main download processing logic aka pseudo codes:
-		/*
-			1. setDownloadIDs("CDE");
-			2. setColHeadersAndTypes("CDE");
-			3. allRows = getRecordsFromValueHolder();
-			4. createDownloadColumns(allRows);
-		*/
-
-		/* 1 */ ValueHolder downloadedData = new ValueHolder(new DownloadedDataLoader(idArray, type, dlLimit));
-
-		/* 2 */ ValueHolder columnHeadersTypes = DownloadHelper.setColHeadersAndTypes(null, null, m_servlet, m_conn, "CDE");
-
-		cDownload.setConn(m_conn);
-		/* 3 */ downloadRowsArrayData = cDownload.getRecords(false, false, downloadedData, columnHeadersTypes);
+	@Test
+	public void testPositive() {
+		boolean ret = false;
 		
-		ArrayList<String[]> downloadRows = DownloadHelper.getRecordsFromValueHolder(downloadRowsArrayData);
-		ArrayList<HashMap<String,ArrayList<String[]>>> arrayData = DownloadHelper.getArrayDataFromValueHolder(downloadRowsArrayData);
-
-		/* 4 */ Workbook ret = createDownloadColumns(type, colString, fillIn, downloadRows, columnHeadersTypes, arrayData);
-
-		return ret;
-	}
-	
-	/**
-	 * @param args
-	 */
-	public static void main(String[] args) {
-		TestSpreadsheetDownload download = init(args[0], args[1]);
 		String type = null;
 		String colString = null;
 		String fillIn = null;
@@ -155,33 +113,32 @@ public class TestSpreadsheetDownload {
 //		idArray.add("1C13BC86-2EB5-6177-E044-0003BA3F9857");	//VD
 //		idArray.add("41BAA115-476B-6112-E044-0003BA3F9857");	//VD
 		//JR1000 4.1 "Alternate Name Or Definition" removed
-		type = "CDE";
-		colString = "Data Element Public ID,Data Element Long Name,Valid Values,Value Meaning Name,Value Meaning Description";
-		idArray.add("8B6FACFE-948B-55CC-E040-BB89AD436343");	//DE public id 3121922
-		idArray.add("E48B2588-E567-D3FA-E040-BB89AD435DA5");	//DE public id 3861416; it has 1 alternate name and 1 alternate definition
-		idArray.add("F6FEB251-3020-4594-E034-0003BA3F9857");
-		download.generateSpreadsheet(type, fillIn, colString, idArray);
-	}
-	
-	public static Workbook createDownloadColumns(String acType, String colString, String fillIn, ArrayList<String[]> downloadRows, ValueHolder vh, ArrayList<HashMap<String,ArrayList<String[]>>> arrayData) {
-		Workbook wb = DownloadHelper.createWorkbook(acType, colString, fillIn, downloadRows, vh, arrayData);
+
 		try {
-			File file = new File("c:/testDownload.xls");
-			OutputStream out = new FileOutputStream(file);	//m_classRes.getOutputStream();
-			wb.write(out);
-			out.close();
+			type = "CDE";
+			colString = "Data Element Public ID,Data Element Long Name,Valid Values,Value Meaning Name,Value Meaning Description";
+			idArray.add("8B6FACFE-948B-55CC-E040-BB89AD436343");	//DE public id 3121922
+			idArray.add("E48B2588-E567-D3FA-E040-BB89AD435DA5");	//DE public id 3861416; it has 1 alternate name and 1 alternate definition
+			idArray.add("F6FEB251-3020-4594-E034-0003BA3F9857");
+			Workbook wb = download.generateSpreadsheet(type, fillIn, colString, idArray);
+			Sheet sh = wb.getSheetAt(0);
+			Iterator it = sh.rowIterator();
+			Row row = null;
+			int checkSum = 18, currentCount = 0;
+			java.util.List<String> checkList = Arrays.asList("Ipsilateral node dissection", "Contralateral node dissection", "Unilateral node dissection (right)");
+			int count = 0;
+			for (; it.hasNext() ; ++count ) {
+				row = (Row) it.next();
+				System.out.println("Cell value = [" + row.getCell(2) + "]");
+				if(checkList.contains(row.getCell(2))) {
+					currentCount++;
+				}
+			}
+			System.out.println("currentCount was " + count + ", expecting " + checkSum);
+			assertTrue("Test truncation", count == checkSum);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return wb;        
-	}
-	
-	/**
-	 * @param m_conn
-	 *            the m_conn to set
-	 */
-	public static void setConn(Connection conn) {
-		m_conn = conn;
 	}
 
 }
