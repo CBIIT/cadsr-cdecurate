@@ -16,7 +16,7 @@ public class SQL {
 	//=== the usual stuff
 	public static final String EXCEL_TEMPLATE_SQL5 = "SELECT de.*"
 //	+	/*", '' as \"Alternate Name Or Definition\"" */
-	+	", '2.16.840.1.113883.3.26.2' as \"Data Element RAI\""
+	+	", '2.16.840.1.113883.3.26.2' as \"Data Element NCI RAI\""
 	+	", '2.16.840.1.113883.3.26.2' as \"Object Class Concept NCI RAI\""
 	+	", '2.16.840.1.113883.3.26.2' as \"Property Concept NCI RAI\""
 	+	", '2.16.840.1.113883.3.26.2' as \"Value Domain Concept NCI RAI\""
