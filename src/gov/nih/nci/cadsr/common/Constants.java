@@ -41,5 +41,5 @@ public class Constants {
 	public static final String USER_SELECTED_DOWNLOAD_TYPE = "userSelectedDownload";
 
 	//JR1053
-//	public static final String NCI_REGISTRY_VALUE = "2.16.840.1.113883.3.26.2";
+	public static final String NCI_REGISTRY_VALUE = "2.16.840.1.113883.3.26.2";
 }
