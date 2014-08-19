@@ -23,6 +23,7 @@ import org.apache.log4j.Logger;
 
 import gov.nih.nci.cadsr.cdecurate.database.SQLHelper;
 import gov.nih.nci.cadsr.cdecurate.tool.ConBean;
+import gov.nih.nci.cadsr.cdecurate.util.AdministeredItemUtil;
 import gov.nih.nci.cadsr.persist.common.BaseVO;
 import gov.nih.nci.cadsr.persist.common.DBConstants;
 import gov.nih.nci.cadsr.persist.exception.DBException;
@@ -167,7 +168,7 @@ private Logger logger = Logger.getLogger(this.getClass());
 			String pDef	= "";
 			
 			if (conVO.getConcept_value() != null && !conVO.getConcept_value().equals("")) {
-				lName = conceptVO.getLong_name() + "::"	+ conVO.getConcept_value();
+				lName = /*JR1008 */AdministeredItemUtil.handleLongName(conceptVO.getLong_name() + "::"	+ conVO.getConcept_value());
 				pName = conceptVO.getPrefferred_name() + "::" + conVO.getConcept_value();
 				pDef = conceptVO.getPrefferred_def() + "::"	+ conVO.getConcept_value();
 			} else {

@@ -836,7 +836,7 @@ public class VMAction implements Serializable
 																// and def
 				{
 					String sNVP = con.getNVP_CONCEPT_VALUE();
-					conName = conName + "::" + sNVP;
+					conName = /*JR1008 */AdministeredItemUtil.handleLongName(conName + "::" + sNVP);
 					conDef = conDef + "::" + sNVP;
 				}
 				con.setLONG_NAME(conName);

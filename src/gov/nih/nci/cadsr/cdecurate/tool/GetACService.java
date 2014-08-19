@@ -14,6 +14,7 @@ package gov.nih.nci.cadsr.cdecurate.tool;
 import gov.nih.nci.cadsr.cdecurate.common.NO_SQL_CHECK;
 import gov.nih.nci.cadsr.cdecurate.database.SQLHelper;
 import gov.nih.nci.cadsr.cdecurate.util.AddOns;
+import gov.nih.nci.cadsr.cdecurate.util.AdministeredItemUtil;
 import gov.nih.nci.cadsr.cdecurate.util.DataManager;
 import gov.nih.nci.cadsr.persist.ac.DataTypeVO;
 import gov.nih.nci.cadsr.persist.ac.DataTypes_Lov_Mgr;
@@ -1210,7 +1211,7 @@ public class GetACService implements Serializable
                         eBean.setNVP_CONCEPT_VALUE(rs.getString("CONCEPT_VALUE"));
                         if (!eBean.getNVP_CONCEPT_VALUE().equals(""))
                         {
-                            eBean.setLONG_NAME(eBean.getLONG_NAME() + "::" + eBean.getNVP_CONCEPT_VALUE());
+                            eBean.setLONG_NAME(/*JR1008 */AdministeredItemUtil.handleLongName(eBean.getLONG_NAME() + "::" + eBean.getNVP_CONCEPT_VALUE()));
                             eBean.setPREFERRED_DEFINITION(eBean.getPREFERRED_DEFINITION() + "::"
                                             + eBean.getNVP_CONCEPT_VALUE());
                         }

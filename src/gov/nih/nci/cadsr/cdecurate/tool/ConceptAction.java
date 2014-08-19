@@ -14,6 +14,7 @@ package gov.nih.nci.cadsr.cdecurate.tool;
 
 import gov.nih.nci.cadsr.cdecurate.common.NO_SQL_CHECK;
 import gov.nih.nci.cadsr.cdecurate.database.SQLHelper;
+import gov.nih.nci.cadsr.cdecurate.util.AdministeredItemUtil;
 import gov.nih.nci.cadsr.cdecurate.util.DataManager;
 import gov.nih.nci.cadsr.common.Database;
 import gov.nih.nci.cadsr.common.PropertyHelper;
@@ -406,7 +407,7 @@ public class ConceptAction implements Serializable
             //append the name value pair to long name and definition of the AC that uses this concept
             if (!nvp.equals(""))
             {
-              eBean.setLONG_NAME(eBean.getLONG_NAME() + "::" + nvp);
+              eBean.setLONG_NAME(/*JR1008 */AdministeredItemUtil.handleLongName(eBean.getLONG_NAME() + "::" + nvp));
               eBean.setPREFERRED_DEFINITION(eBean.getPREFERRED_DEFINITION() + "::" + nvp);
             }
             eBean.setCONDR_IDSEQ(condrID);
@@ -481,7 +482,7 @@ public class ConceptAction implements Serializable
         if (sNVP != null && !sNVP.equals(""))
         {
           eBean.setNVP_CONCEPT_VALUE(sNVP);
-          eBean.setLONG_NAME(eBean.getLONG_NAME() + "::" + sNVP);
+          eBean.setLONG_NAME(/*JR1008 */AdministeredItemUtil.handleLongName(eBean.getLONG_NAME() + "::" + sNVP));
           eBean.setPREFERRED_DEFINITION(eBean.getPREFERRED_DEFINITION() + "::" + sNVP);
         }
       }
