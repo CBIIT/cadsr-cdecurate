@@ -168,7 +168,8 @@ private Logger logger = Logger.getLogger(this.getClass());
 			String pDef	= "";
 			
 			if (conVO.getConcept_value() != null && !conVO.getConcept_value().equals("")) {
-				lName = /*JR1008 */AdministeredItemUtil.handleLongName(conceptVO.getLong_name() + "::"	+ conVO.getConcept_value());
+				//lName = /*JR1008 */AdministeredItemUtil.handleLongName(conceptVO.getLong_name() + "::"	+ conVO.getConcept_value());
+				lName = conceptVO.getLong_name() + "::"	+ conVO.getConcept_value();
 				pName = conceptVO.getPrefferred_name() + "::" + conVO.getConcept_value();
 				pDef = conceptVO.getPrefferred_def() + "::"	+ conVO.getConcept_value();
 			} else {

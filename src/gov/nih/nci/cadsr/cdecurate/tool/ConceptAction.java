@@ -407,7 +407,8 @@ public class ConceptAction implements Serializable
             //append the name value pair to long name and definition of the AC that uses this concept
             if (!nvp.equals(""))
             {
-              eBean.setLONG_NAME(/*JR1008 */AdministeredItemUtil.handleLongName(eBean.getLONG_NAME() + "::" + nvp));
+              //eBean.setLONG_NAME(/*JR1008 */AdministeredItemUtil.handleLongName(eBean.getLONG_NAME() + "::" + nvp));
+              eBean.setLONG_NAME(eBean.getLONG_NAME() + "::" + nvp);
               eBean.setPREFERRED_DEFINITION(eBean.getPREFERRED_DEFINITION() + "::" + nvp);
             }
             eBean.setCONDR_IDSEQ(condrID);
@@ -482,7 +483,8 @@ public class ConceptAction implements Serializable
         if (sNVP != null && !sNVP.equals(""))
         {
           eBean.setNVP_CONCEPT_VALUE(sNVP);
-          eBean.setLONG_NAME(/*JR1008 */AdministeredItemUtil.handleLongName(eBean.getLONG_NAME() + "::" + sNVP));
+          //eBean.setLONG_NAME(/*JR1008 */AdministeredItemUtil.handleLongName(eBean.getLONG_NAME() + "::" + sNVP));
+          eBean.setLONG_NAME(eBean.getLONG_NAME() + "::" + sNVP);
           eBean.setPREFERRED_DEFINITION(eBean.getPREFERRED_DEFINITION() + "::" + sNVP);
         }
       }

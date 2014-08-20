@@ -1121,7 +1121,8 @@ public class DataElementConceptServlet extends CurationServlet {
 				{
 					blockBean.setNVP_CONCEPT_VALUE(sNVP);
 					String sName = blockBean.getLONG_NAME();
-					blockBean.setLONG_NAME(/*JR1008 */AdministeredItemUtil.handleLongName(sName + "::" + sNVP));
+					//blockBean.setLONG_NAME(/*JR1008 */AdministeredItemUtil.handleLongName(sName + "::" + sNVP));
+					blockBean.setLONG_NAME(sName + "::" + sNVP);
 					blockBean.setPREFERRED_DEFINITION(blockBean.getPREFERRED_DEFINITION() + "::" + sNVP);
 				}
 				logger.debug("At Line 977 of DECServlet.java"+sNVP+"**"+blockBean.getLONG_NAME()+"**"+ blockBean.getPREFERRED_DEFINITION());

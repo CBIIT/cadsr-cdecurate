@@ -54,4 +54,4 @@ sql.*
 test/js/runcasper.cmd
 agitar 
 agitar/ 
-test/js/functional/logininfo.js 
+test/js/functional/logininfo.js

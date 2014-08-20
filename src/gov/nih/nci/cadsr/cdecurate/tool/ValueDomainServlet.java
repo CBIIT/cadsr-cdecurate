@@ -1179,7 +1179,8 @@ public class ValueDomainServlet extends CurationServlet {
 						{
 							m_REP.setNVP_CONCEPT_VALUE(sNVP);
 							String sName = m_REP.getLONG_NAME();
-							m_REP.setLONG_NAME(/*JR1008 */AdministeredItemUtil.handleLongName(sName + "::" + sNVP));
+							//m_REP.setLONG_NAME(/*JR1008 */AdministeredItemUtil.handleLongName(sName + "::" + sNVP));
+							m_REP.setLONG_NAME(sName + "::" + sNVP);
 							m_REP.setPREFERRED_DEFINITION(m_REP.getPREFERRED_DEFINITION() + "::" + sNVP);
 						}
 						//System.out.println(sNVP + sComp + m_REP.getLONG_NAME());

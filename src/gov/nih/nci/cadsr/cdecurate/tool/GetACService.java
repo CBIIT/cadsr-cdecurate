@@ -1211,7 +1211,8 @@ public class GetACService implements Serializable
                         eBean.setNVP_CONCEPT_VALUE(rs.getString("CONCEPT_VALUE"));
                         if (!eBean.getNVP_CONCEPT_VALUE().equals(""))
                         {
-                            eBean.setLONG_NAME(/*JR1008 */AdministeredItemUtil.handleLongName(eBean.getLONG_NAME() + "::" + eBean.getNVP_CONCEPT_VALUE()));
+                            //eBean.setLONG_NAME(/*JR1008 */AdministeredItemUtil.handleLongName(eBean.getLONG_NAME() + "::" + eBean.getNVP_CONCEPT_VALUE()));
+                            eBean.setLONG_NAME(eBean.getLONG_NAME() + "::" + eBean.getNVP_CONCEPT_VALUE());
                             eBean.setPREFERRED_DEFINITION(eBean.getPREFERRED_DEFINITION() + "::"
                                             + eBean.getNVP_CONCEPT_VALUE());
                         }
