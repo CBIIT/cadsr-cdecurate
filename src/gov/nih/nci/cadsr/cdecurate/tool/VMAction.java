@@ -69,7 +69,7 @@ public class VMAction implements Serializable
 	{
 
 		ResultSet rs = null;
-		CallableStatement cstmt = null;
+		CallableStatement cstmt = null;	//CADSRMETA-501
 		try
 		{
 			if ((data.getSearchFilterID() != null) && !data.getSearchFilterID().equals("")){

@@ -2258,7 +2258,7 @@ public class GetACSearch implements Serializable
                     String conID, String sVM, Vector vList, String sRecordsDisplayed)
     {
         ResultSet rs = null;
-        CallableStatement cstmt = null;
+        CallableStatement cstmt = null;		//CADSRMETA-501
         try
         {
             if ((CD_ID != null) && !CD_ID.equals("")){
