@@ -441,7 +441,7 @@ public class PVAction implements Serializable {
 		try {
 			if (data.getCurationServlet().getConn() != null) {
 				cstmt = data.getCurationServlet().getConn().prepareCall(
-						"{call SBREXT.SBREXT_CDE_CURATOR_PKG.SEARCH_PV(?,?)}");
+						"{call SBREXT.SBREXT_CDE_CURATOR_PKG.SEARCH_PV(?,?)}");		//CADSRMETA-501
 				// Now tie the placeholders for out parameters.
 				cstmt.registerOutParameter(2, OracleTypes.CURSOR);
 				// Now tie the placeholders for In parameters.

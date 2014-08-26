@@ -702,7 +702,7 @@ public class SearchServlet extends CurationServlet {
         DataManager.setAttribute(session, "selectedAttr", vDefaultAttr);
         this.getDefaultFilterAtt(); // default filter by attributes
         //doInitDDEInfo(m_classReq, m_classRes);  ** put back later; do we need this?? **
-        clearSessionAttributes(m_classReq, m_classRes);
+        //clearSessionAttributes(m_classReq, m_classRes);	//JR3 called in initial search
         // call the method to get attribute list for the selected AC
         getCompAttrList(searchAC, "nothing");
         session.setAttribute("showDefaultSortBtn", "No");
