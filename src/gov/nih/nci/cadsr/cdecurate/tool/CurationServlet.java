@@ -3559,7 +3559,7 @@ public class CurationServlet
         DataManager.setAttribute(session, "m_REPQ", null);
         DataManager.setAttribute(session, "selRepQRow", null);
         DataManager.setAttribute(session, "creKeyword", "");
-        DataManager.setAttribute(session, "serKeyword", "");
+        DataManager.setAttribute(session, "serKeyword", "");	//JR3 rolled back
         DataManager.setAttribute(session, "EVSresults", null);
         DataManager.setAttribute(session, "VDEditAction", null);
         DataManager.setAttribute(session, "DEEditAction", null);

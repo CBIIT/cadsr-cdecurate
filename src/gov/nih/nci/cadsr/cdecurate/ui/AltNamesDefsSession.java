@@ -761,7 +761,7 @@ public class AltNamesDefsSession implements Serializable
             }
 
             // Remove any old Block edit buffer.
-            session.removeAttribute(sessName);
+            session.removeAttribute(sessName);	//JR3 wiped out affect others?
 
             // Value Meanings are different than other AC's.
             if (launch_.equals(_searchPVVM))

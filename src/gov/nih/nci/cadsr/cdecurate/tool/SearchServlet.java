@@ -286,7 +286,7 @@ public class SearchServlet extends CurationServlet {
             }
             // set the attribute send the page back to refresh.
             else if (actType.equals("searchInSelect"))
-                doRefreshPageForSearchIn();
+                doRefreshPageForSearchIn();		//JR3 tagged
             // set the attribute send the page back to refresh.
             else if (actType.equals("searchForSelectOther")){
             	session.setAttribute("showDefaultSortBtn", "No");
@@ -687,7 +687,7 @@ public class SearchServlet extends CurationServlet {
 		DECHelper.clearAlternateDefinition(session, altSession);	//GF30798
         
         DataManager.setAttribute(session, "vStatMsg", new Vector());
-        DataManager.setAttribute(session, Session_Data.SESSION_MENU_ACTION, "nothing");
+        DataManager.setAttribute(session, Session_Data.SESSION_MENU_ACTION, "nothing");		//JR3 tagged
         DataManager.setAttribute(session, "LastMenuButtonPressed", "Search");
         Vector vDefaultAttr = new Vector();
         String searchAC = (String) session.getAttribute("searchAC");
@@ -702,7 +702,7 @@ public class SearchServlet extends CurationServlet {
         DataManager.setAttribute(session, "selectedAttr", vDefaultAttr);
         this.getDefaultFilterAtt(); // default filter by attributes
         //doInitDDEInfo(m_classReq, m_classRes);  ** put back later; do we need this?? **
-        //clearSessionAttributes(m_classReq, m_classRes);	//JR3 called in initial search
+        clearSessionAttributes(m_classReq, m_classRes);	//JR3 called in initial search; rolled back
         // call the method to get attribute list for the selected AC
         getCompAttrList(searchAC, "nothing");
         session.setAttribute("showDefaultSortBtn", "No");
