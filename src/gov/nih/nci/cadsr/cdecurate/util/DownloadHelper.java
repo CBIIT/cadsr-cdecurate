@@ -35,6 +35,11 @@ import org.apache.poi.ss.usermodel.Workbook;
 public class DownloadHelper {
 
 	public static final Logger logger = Logger.getLogger(DownloadHelper.class.getName());
+	public static enum DownloadType {
+		CDE,
+		DEC,
+		VD
+	};
 
 	/**
 	 * Parse the user selected columns (colString) and filter the all rows (allRows) to create the spreadsheet columns and rows.
@@ -284,6 +289,18 @@ public class DownloadHelper {
 		return sheet;
 	}
 
+	public static ArrayList<String> handleCDEHeaders(String type, ArrayList<String> list, String col) {
+		if(type != null && type.equals(DownloadType.CDE.toString())) {
+			if(isCDEHeaders(col)) {
+				list.add(col);	//JR987 here - add only if it is DE's header/values
+			}
+		} else {
+			//no check
+			list.add(col);
+		}
+		return list;
+	}
+
 	public static ValueHolder setColHeadersAndTypes(
 			HttpServletRequest  m_classReq, HttpServletResponse m_classRes, 
 			CurationServlet m_servlet,
@@ -317,7 +334,8 @@ public class DownloadHelper {
 		ArrayList<String> excluded = new ArrayList<String>();
 		
 		for (String col: sList.split(",")){
-			excluded.add(col);
+			logger.debug("DownloadHelper.java excluded col = [" + col + "]");
+			handleCDEHeaders(type, excluded, col);	//JR987 here - add only if it is DE's header/values
 		}
 		
 		
@@ -334,7 +352,8 @@ public class DownloadHelper {
 			for (int i=1; i<numColumns+1; i++) {
 				String columnName = rsmd.getColumnName(i);
 				columnName = prettyName(columnName);
-				columnHeaders.add(columnName);
+				logger.debug("DownloadHelper.java included col = [" + columnName + "]");
+				handleCDEHeaders(type, columnHeaders, columnName);	//JR987 columnHeaders.add(columnName);
 
 				String columnType = rsmd.getColumnTypeName(i);
 
@@ -351,13 +370,13 @@ public class DownloadHelper {
 						String[] orderedTypeColNames = getOrderedTypeNames(conn, typeKey, columnName,type);
 						for (int c = 0; c<orderedTypeColNames.length; c++) {
 							arrayColumnTypes.put(typeColNames[c], typeKey);  // 2 lists should be same length.
-							allExpandedColumnHeaders.add(orderedTypeColNames[c]);  //Adding sorted list to the display list
+							handleCDEHeaders(type, allExpandedColumnHeaders, orderedTypeColNames[c]);	//JR987 allExpandedColumnHeaders.add(orderedTypeColNames[c]);  //Adding sorted list to the display list
 						}
-					} else allExpandedColumnHeaders.add(columnName);
+					} else handleCDEHeaders(type, allExpandedColumnHeaders, columnName);	//JR987 allExpandedColumnHeaders.add(columnName);
 
 				} else {
 					columnTypes.add(columnType);
-					allExpandedColumnHeaders.add(columnName);
+					handleCDEHeaders(type, allExpandedColumnHeaders, columnName);	//JR987 allExpandedColumnHeaders.add(columnName);
 				}
 
 			}
@@ -589,6 +608,18 @@ public class DownloadHelper {
 //		}
 		
 		return downloadType;
+	}
+
+	public static boolean isCDEHeaders(String col) {
+		boolean ret = true;
+
+		//=== the following are not part of (C)DE elements
+		if(col != null && (
+				col.equals("Data Element Concept Workflow Status") ||
+				col.equals("Data Element Concept Registration Status"))) {
+			ret = false;
+		}
+		return ret;
 	}
 
 //	private ArrayList<String[]> getRecords(
