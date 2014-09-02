@@ -1308,7 +1308,7 @@ function openEVSConceptsWindow(){
 								Check
 							</font>
 							Box to Create New Version &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-							<a href="<%=ToolURL.getCurationToolBusinessRulesURL(pageContext)%>" target="_blank">
+							<a href="<%=ToolURL.getCurationToolBusinessRulesURL(pageContext)%>" target="data-popup">
 								Business Rules
 							</a>
 						</td>
@@ -1367,7 +1367,7 @@ function openEVSConceptsWindow(){
 								<input type="text" name="Version" value="<%=sVersion%>" size=5 readonly onHelp="showHelp('html/Help_CreateVD.html#createVDForm_Version',helpUrl); return false">
 							&nbsp;&nbsp;&nbsp;
 						   <% if (!isView){ %>
-							<a href="<%=ToolURL.getCurationToolBusinessRulesURL(pageContext)%>" target="_blank">
+							<a href="<%=ToolURL.getCurationToolBusinessRulesURL(pageContext)%>" target="data-popup">
 								Business Rules
 							</a>
 						   <%}%>	

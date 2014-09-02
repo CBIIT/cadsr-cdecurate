@@ -43,7 +43,7 @@ L--%>
                                 <td class="menuItemNormal"
                                     onmouseover="menuRootOver(this, event);"
                                     onmouseout="menuRootOut(this, event);"
-                                    onclick="window.open('<%=helpUrl%>', '_blank');">
+                                    onclick="window.open('<%=helpUrl%>', 'data-popup');">
                                         Help
                                 </td>
                             </tr>

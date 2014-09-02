@@ -122,7 +122,7 @@ L--%>
 							&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input name="Version" id="version" type="text" value="<%=sVersion%>" size="5" maxlength=5 <%if (isView){%>readonly<%}%>>
 							&nbsp;&nbsp;&nbsp;
 						   <% if (!isView){ %>
-							<a href="<%=ToolURL.getCurationToolBusinessRulesURL(pageContext)%>" target="_blank">
+							<a href="<%=ToolURL.getCurationToolBusinessRulesURL(pageContext)%>" target="data-popup">
 							Business Rules
 						   </a>
 						<%}%><br>

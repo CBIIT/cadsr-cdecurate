@@ -1086,7 +1086,7 @@ newUrl = newUrl + "&idseq=" +idseq+"&type="+type;
 					</td>
 					<td height="25" valign="bottom">
 						Check Box to Create New Version &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-						<a href="<%=ToolURL.getCurationToolBusinessRulesURL(pageContext)%>" target="_blank">
+						<a href="<%=ToolURL.getCurationToolBusinessRulesURL(pageContext)%>" target="data-popup">
 							Business Rules
 						</a>
 					</td>
@@ -1149,7 +1149,7 @@ newUrl = newUrl + "&idseq=" +idseq+"&type="+type;
 							<input type="text" name="Version" value="<%=sVersion%>" size=5 readonly onHelp="showHelp('html/Help_CreateDE.html#newCDEForm_Version',helpUrl); return false">
 						&nbsp;&nbsp;&nbsp;
 					 <% if (!isView){ %>	
-						<a href="<%=ToolURL.getCurationToolBusinessRulesURL(pageContext)%>" target="_blank">
+						<a href="<%=ToolURL.getCurationToolBusinessRulesURL(pageContext)%>" target="data-popup">
 							Business Rules
 						</a>
 					   <%}%>	

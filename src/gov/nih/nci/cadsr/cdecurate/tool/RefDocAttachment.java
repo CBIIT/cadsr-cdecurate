@@ -251,7 +251,7 @@ public void doOpen (){
 											  + "<a href=\""
 											  + RefDocFileUrl
 											  + fileName
-											  + "\" target=\"_blank\">"
+											  + "\" target=\"data-popup\">"	//JR987 "_blank"
 											  + fileName2[1]
 											  + "<a><br>";
 
@@ -262,7 +262,7 @@ public void doOpen (){
 								  + "<a href=\""
 								  + RefDocFileUrl
 								  + fileName
-								  + "\" target=\"_blank\">"
+								  + "\" target=\"data-popup\">"		//JR987 "_blank"
 								  + fileName2[1]
 								  + "<a><br>";
 							}

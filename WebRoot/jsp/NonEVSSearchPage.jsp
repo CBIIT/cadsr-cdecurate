@@ -131,9 +131,9 @@ L--%>
         return;
     }    
     if (sURL != null){
-     window.open(sURL,"_blank","");
+     window.open(sURL,"data-popup","");
     }else{
-     window.open("","_blank","");
+     window.open("","data-popup","");
     } 
   } 
 </script>

@@ -895,7 +895,7 @@ L--%>
 						<td>
 							<input type="text" name="Version" value="<%=sVersion%>" size=12 maxlength=5 onHelp="showHelp('html/Help_CreateVD.html#createVDForm_Version',helpUrl); return false">
 							&nbsp;&nbsp;&nbsp;
-							<a href="<%=ToolURL.getCurationToolBusinessRulesURL(pageContext)%>" target="_blank">
+							<a href="<%=ToolURL.getCurationToolBusinessRulesURL(pageContext)%>" target="data-popup">
 								Business Rules
 							</a>
 						</td>

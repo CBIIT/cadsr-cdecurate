@@ -977,7 +977,7 @@ L--%>
 																<%=refDocText%>
 															</td>
 															<td valign="top">
-																<a target="_blank" href= "<%=refDocURL%>"><%=refDocURL%></a>
+																<a target="data-popup" href= "<%=refDocURL%>"><%=refDocURL%></a>
 															</td>
 															<td valign="top">
 																<%=refDocContext%>

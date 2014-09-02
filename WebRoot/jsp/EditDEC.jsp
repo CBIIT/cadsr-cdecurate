@@ -1199,7 +1199,7 @@ String temp =
         Check
         </font>
         Box to Create New Version &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-        <a href="<%=ToolURL.getCurationToolBusinessRulesURL(pageContext)%>" target="_blank">
+        <a href="<%=ToolURL.getCurationToolBusinessRulesURL(pageContext)%>" target="data-popup">
         Business Rules
         </a>
         </td>
@@ -1257,7 +1257,7 @@ String temp =
         </font>
         &nbsp;&nbsp;&nbsp;
             <% if (!isView){ %>
-        <a href="<%=ToolURL.getCurationToolBusinessRulesURL(pageContext)%>" target="_blank">
+        <a href="<%=ToolURL.getCurationToolBusinessRulesURL(pageContext)%>" target="data-popup">
         Business Rules
         </a>
             <%}%>

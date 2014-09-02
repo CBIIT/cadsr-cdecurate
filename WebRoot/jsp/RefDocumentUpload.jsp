@@ -218,7 +218,7 @@ else {%>
 					<%=docText%>
 				</td>
 				<td>
-					<a href="<%=docLink%><%=docURL%>" target="_blank">
+					<a href="<%=docLink%><%=docURL%>" target="data-popup">
 						<%=docURL%>
 					</a>
 				</td>

@@ -1023,7 +1023,7 @@ sOriginAction.equals("CreateNewDEC")
 
     onHelp="showHelp('html/Help_CreateDEC.html#newDECForm_Version',helpUrl); return false">
     &nbsp;&nbsp;&nbsp;
-    <a href="<%=ToolURL.getCurationToolBusinessRulesURL(pageContext)%>" target="_blank">
+    <a href="<%=ToolURL.getCurationToolBusinessRulesURL(pageContext)%>" target="data-popup">
     Business Rules
     </a>
     </td>

@@ -669,7 +669,7 @@ L--%>
 					<td valign="top">
 						<input name="Version" type="text" value="<%=sVersion%>" size="5" maxlength=5 onHelp="showHelp('html/Help_CreateDE.html#newCDEForm_Version',helpUrl); return false">
 						&nbsp;&nbsp;&nbsp;
-						<a href="<%=ToolURL.getCurationToolBusinessRulesURL(pageContext)%>" target="_blank">
+						<a href="<%=ToolURL.getCurationToolBusinessRulesURL(pageContext)%>" target="data-popup">
 							Business Rules
 						</a>
 					</td>

@@ -704,7 +704,7 @@
 	   var tmpTarget = document.searchResultsForm.target;
 	   var tmpAction = document.searchResultsForm.action;
 	  
-	   document.searchResultsForm.target="_blank";
+	   document.searchResultsForm.target="data-popup";  //JR987 "_blank";
 	   document.searchResultsForm.action="../../cdecurate/NCICurationServlet?reqType=showDEfromSearch";
 	    
 	   document.searchResultsForm.numSelected.value = numRowsSelected;
@@ -720,7 +720,7 @@
 	   var tmpTarget = document.searchResultsForm.target;
 	   var tmpAction = document.searchResultsForm.action;
 	   
-	  document.searchResultsForm.target="_blank";
+	  document.searchResultsForm.target="data-popup";  //JR987 "_blank";
 	   document.searchResultsForm.action="../../cdecurate/NCICurationServlet?reqType=showVDfromSearch";
 	    
 	   document.searchResultsForm.numSelected.value = numRowsSelected;
@@ -736,7 +736,7 @@
 	   var tmpTarget = document.searchResultsForm.target;
 	   var tmpAction = document.searchResultsForm.action;
 	   
-	  document.searchResultsForm.target="_blank";
+	  document.searchResultsForm.target="data-popup";  //JR987 "_blank";
 	   document.searchResultsForm.action="../../cdecurate/NCICurationServlet?reqType=showDECfromSearch";
 	   document.searchResultsForm.numSelected.value = numRowsSelected;
 	   document.searchResultsForm.submit();
