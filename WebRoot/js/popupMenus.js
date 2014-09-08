@@ -100,15 +100,19 @@ function changecolor(divname,colorname)
 // show or hide DIV element
 function showhide(divname,state) 
 {
+    var temp = doc + divname + sty;
+    console.log("popupMenus.js showhide() temp [" + temp + "]")
     divObj = eval (doc + divname + sty);
     if(divObj != null)
     {
      divObj.visibility = state;
+     //divObj.display = "inline";
+     divObj.top = "50px"; divObj.left = "380px";   //NT1
     }
 }
 
 // disable menu item depends on search AC (DE, DEC...)
-function disableMenu(sSearchAC) 
+function disableMenu(sSearchAC)
 {
   var disMenu;
   //disable DE (enable when search is DEC, VD, CD, CSI, VM)
