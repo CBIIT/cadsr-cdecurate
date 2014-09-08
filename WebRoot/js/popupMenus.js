@@ -106,8 +106,6 @@ function showhide(divname,state)
     if(divObj != null)
     {
      divObj.visibility = state;
-     //divObj.display = "inline";
-     divObj.top = "50px"; divObj.left = "380px";   //NT1
     }
 }
 

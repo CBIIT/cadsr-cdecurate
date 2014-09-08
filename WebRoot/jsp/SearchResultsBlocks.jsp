@@ -708,7 +708,7 @@ System.out.println("JR1013 strResult [" + strResult + "] allowNVP [" + allowNVP 
 				</select>
 			</div>
 			<%--<div id="divAssACMenu" style="position:absolute;z-index:1;visibility:hidden;width:185px;">--%>
-            <div id="divAssACMenu" style="position:absolute;z-index:1;display:block;visibility:hidden;width:185px;height:20px;"> <!-- NT1 -->
+            <div id="divAssACMenu" style="position:absolute;z-index:100;display:block;visibility:hidden;width:185px;height:50px;top:50px;left:380px"> <!-- NT1 -->
 				<table id="tblAssACMenu" border="3" cellspacing="0" cellpadding="0">
 					<tr>
 						<td class="menu" id="assDE">
