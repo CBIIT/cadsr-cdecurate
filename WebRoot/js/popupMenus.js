@@ -46,7 +46,7 @@ function placeIt(elem,leftPos,topPos)
        left = window.screenX;
        top  = window.screenY;
        leftPos = leftPos - left- 8;
-       topPos = topPos - top - 50; 
+       topPos = topPos - top - 50;
        docObj = eval(doc + elem + sty);
        if(docObj != null)
        {

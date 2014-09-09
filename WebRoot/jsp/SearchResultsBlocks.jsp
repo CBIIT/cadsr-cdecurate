@@ -378,7 +378,7 @@ L--%>
 	<body>
 		<form name="searchResultsForm" method="post" action="../../cdecurate/NCICurationServlet?reqType=doSortBlocks">
 			<br>
-			<table border="0" style="border-collapse: separate;"> <!-- NT1 -->
+			<table border="0" style="border-collapse:'';"> <!-- NT1 -->
 				<tr align="left">
 					<td>
 						<input type="button" name="editSelectedBtn" value="Link Concept" onClick="ShowSelection();" disabled>
@@ -708,7 +708,7 @@ System.out.println("JR1013 strResult [" + strResult + "] allowNVP [" + allowNVP 
 				</select>
 			</div>
 			<%--<div id="divAssACMenu" style="position:absolute;z-index:1;visibility:hidden;width:185px;">--%>
-            <div id="divAssACMenu" style="position:absolute;z-index:1;visibility:hidden;width:185px;height:50px;top:50px;left:380px"> <!-- NT1 -->
+            <div id="divAssACMenu" style="position:absolute;display:inherit;z-index:100;visibility:inline;width:185px;height:100px;top:50px;left:380px;"> <!-- NT1 -->
 				<table id="tblAssACMenu" border="3" cellspacing="0" cellpadding="0">
 					<tr>
 						<td class="menu" id="assDE">
