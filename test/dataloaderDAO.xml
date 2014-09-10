@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="utf-8"?>
+<database xmlns="http://www.spoledge.com/audao" version="1.0">
+	<config>
+		<factory>
+			<create-params default="false" direct="true"/>
+		</factory>
+	</config>
+
+	<tables>
+
+		<table name="designations_view">
+			<edit-mode>row</edit-mode>
+			<auto-find/>
+			<columns>
+				<column name="DESIG_IDSEQ">
+					<type max-length="36">String</type>
+					<auto/>
+					<pk/>
+					<edit/>
+				</column>
+				<column name="AC_IDSEQ">
+					<type max-length="36">String</type>
+					<not-null/>
+					<edit/>
+				</column>
+				<column name="CONTE_IDSEQ">
+					<type max-length="36">String</type>
+					<not-null/>
+					<edit/>
+				</column>
+				<column name="NAME">
+					<type max-length="2000">String</type>
+					<not-null/>
+					<edit/>
+				</column>
+				<column name="DETL_NAME">
+					<type max-length="20">String</type>
+					<not-null/>
+					<edit/>
+				</column>
+				<column name="DATE_CREATED">
+					<type>Date</type>
+					<auto/>
+					<not-null/>
+					<edit/>
+				</column>
+				<column name="CREATED_BY">
+					<type max-length="30">String</type>
+					<not-null/>
+					<edit/>
+				</column>
+				<column name="DATE_MODIFIED">
+					<type>Date</type>
+					<auto/>
+					<edit/>
+				</column>
+				<column name="MODIFIED_BY">
+					<type max-length="30">String</type>
+					<edit/>
+				</column>
+				<column name="LAE_NAME">
+					<type max-length="30">String</type>
+					<edit/>
+				</column>
+			</columns>
+			<indexes>
+				<index name="inx_what">
+					<unique/>
+					<columns>
+						<column name="NAME"/>
+					</columns>
+				</index>
+			</indexes>
+			<methods>
+				<find name="all">
+			      <all/>
+			      <order-by>
+			        <column name="NAME"/>
+			      </order-by>
+			    </find>
+			 	<delete>
+			      <pk/>
+			    </delete>
+    		</methods>			
+    	</table>
+    	<table name="permissible_values_view">
+			<edit-mode>row</edit-mode>
+			<auto-find/>
+			<columns>
+				<column name="PV_IDSEQ">
+					<type max-length="36">String</type>
+					<auto/>
+					<pk/>
+					<edit/>
+				</column>
+				<column name="VALUE">
+					<type max-length="255">String</type>
+					<not-null/>
+					<edit/>
+				</column>
+				<column name="SHORT_MEANING">
+					<type max-length="255">String</type>
+					<not-null/>
+					<edit/>
+				</column>
+				<column name="MEANING_DESCRIPTION">
+					<type max-length="2000">String</type>
+					<edit/>
+				</column>
+				<column name="BEGIN_DATE">
+					<type>Date</type>
+					<edit/>
+				</column>
+				<column name="END_DATE">
+					<type>Date</type>
+					<edit/>
+				</column>
+				<column name="HIGH_VALUE_NUM">
+          			<type>long</type>
+					<edit/>
+				</column>
+				<column name="LOW_VALUE_NUM">
+          			<type>long</type>
+					<edit/>
+				</column>
+				<column name="DATE_CREATED">
+					<type>Date</type>
+					<edit/>
+				</column>
+				<column name="CREATED_BY">
+					<type max-length="30">String</type>
+					<edit/>
+				</column>
+				<column name="DATE_MODIFIED">
+					<type>Date</type>
+					<edit/>
+				</column>
+				<column name="MODIFIED_BY">
+					<type max-length="30">String</type>
+					<edit/>
+				</column>
+				<column name="VM_IDSEQ">
+					<type max-length="36">String</type>
+					<edit/>
+				</column>
+			</columns>
+			<indexes>
+				<index name="inx_what">
+					<unique/>
+					<columns>
+						<column name="VALUE"/>
+					</columns>
+				</index>
+			</indexes>
+			<methods>
+				<find name="all">
+			      <all/>
+			      <order-by>
+			        <column name="VALUE"/>
+			      </order-by>
+			    </find>
+			 	<delete>
+			      <pk/>
+			    </delete>
+    		</methods>			
+    	</table>
+	</tables>
+</database>

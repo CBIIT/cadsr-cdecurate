@@ -1,0 +1,305 @@
+package gov.nih.nci.cadsr.cdecurate.test.junit;
+
+import static org.junit.Assert.assertTrue;
+import gov.nih.nci.cadsr.cdecurate.test.TestSpreadsheetDownload;
+import gov.nih.nci.cadsr.cdecurate.test.helpers.DBUtil;
+import gov.nih.nci.cadsr.cdecurate.test.helpers.DesignationUtil;
+import gov.nih.nci.cadsr.cdecurate.test.helpers.PermissibleValueUtil;
+import gov.nih.nci.cadsr.cdecurate.ui.AltNamesDefsSession;
+import gov.nih.nci.cadsr.cdecurate.util.AdministeredItemUtil;
+import gov.nih.nci.cadsr.common.TestUtil;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.Iterator;
+
+import nci.cadsr.persist.dao.DaoFactory;
+import nci.cadsr.persist.dao.DesignationsViewDao;
+import nci.cadsr.persist.dao.PermissibleValuesViewDao;
+import nci.cadsr.persist.dto.DesignationsView;
+import nci.cadsr.persist.dto.PermissibleValuesView;
+
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.junit.After;
+import org.junit.BeforeClass;
+import org.junit.Test;
+
+import antlr.collections.List;
+
+/**
+  * https://tracker.nci.nih.gov/browse/CADSRMETA-501
+  * 
+  * Setup: Enter userId and password in the VM argument (NOT program argument!!!) in the following format:
+  * 
+  * -Dsbru=SBR -Dsbrp=[replace with the password]
+  * -Du=cadsr_metadata_user -Dp=[replace with the password]
+  * 
+  */
+public class Meta501 {
+	private static String sbrUserId;
+	private static String sbrPassword;
+	private static String userId;
+	private static String password;
+	private static Connection conn;
+	private static DesignationsViewDao desDAO;
+	private static PermissibleValuesViewDao pvDAO;
+
+	@BeforeClass
+	public static void init() {
+		userId = System.getProperty("u");
+		password = System.getProperty("p");
+		sbrUserId = System.getProperty("sbru");
+		sbrPassword = System.getProperty("sbrp");
+		try {
+			conn = TestUtil.getConnection(userId, password);
+			DBUtil db = new DBUtil(conn);
+			desDAO = DaoFactory.createDesignationsViewDao(conn);
+			pvDAO = DaoFactory.createPermissibleValuesViewDao(conn);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	@After
+	public void cleanup() {
+	}
+
+//	@Test
+	public void testEmpty() {
+		boolean ret = false;
+		int count = -1;
+		try {
+			System.out.println("count was " + count);
+			assertTrue("Test empty results", count == 1);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Test
+	public void testDesignationInsertOneRow() {
+		boolean ret = false;
+		long currentCount = 0, checkSum = -1;
+		try {
+			String name = "major histocompatibility complex";
+			conn = TestUtil.getConnection(userId, password);
+			//get the context id first
+			String contextId = AdministeredItemUtil.getContextID(conn, "NRG");
+			String desigId = null;
+			if((desigId = DesignationUtil.handleDesignationId(conn, name)) != null) {
+				System.out.println("testDesignationInsertOneRow: name already exists. Test skipped!");
+				return;
+			}
+			DesignationsView dto;
+			dto = new DesignationsView();
+			/*
+			ac publicId	ac version	ac longName	Alternate Type	modifiedBy	dateCreated	dateModified		languageName	createdBy	name	type_1	designation context
+			3334837	1	HLA DQB1	Designation	WARZELD				ENGLISH		major histocompatibility complex	Biomarker Synonym	NRG
+			*/
+			//dto.setMODIFIEDBY("WARZELD");
+			dto.setLAENAME("ENGLISH");
+			dto.setCREATEDBY("WARZELD");
+			dto.setNAME(name);
+			dto.setDETLNAME("Biomarker Synonym");
+			dto.setCONTEIDSEQ(contextId);
+			dto.setDESIGIDSEQ(desigId);
+			dto.setACIDSEQ(AdministeredItemUtil.getRelatedAC_IDSEQ(conn, "3334837", "1"));
+			
+			desDAO.insert( dto );
+			System.out.println("testDesignationInsertOneRow: 1 designation inserted");
+//			assertTrue("Test removal", currentCount == checkSum);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	/**
+		Useful SQL:
+SELECT MODIFIED_BY, d.lae_name, d.name, d.detl_name FROM sbr.designations_view d
+--where
+--rownum < 31
+order by d.date_created desc
+	*/
+	@Test
+	public void testDesignationUpdateOneRow() {
+		boolean ret = false;
+		long currentCount = 0, checkSum = -1;
+		try {
+			String name = "major histocompatibility complex from unit test";
+			String desigId = DesignationUtil.getDesignationId(conn, name);
+			if(desigId == null) {
+				throw new Exception("The AC must already exist for update!");
+			}
+			DesignationsView dto;
+			dto = new DesignationsView();
+			dto.setMODIFIEDBY("SBR");	//this field can not be changed, database/PL/SQL codes always set it to the executing user/SBR!!!
+			//dto.setLAENAME("ENGLISH");
+
+			//conn.close();
+			conn = TestUtil.getConnection(sbrUserId, sbrPassword);
+			desDAO = DaoFactory.createDesignationsViewDao(conn);
+			desDAO.update( desigId, dto );
+			System.out.println("testDesignationUpdateOneRow: 1 designation updated");
+//			assertTrue("Test removal", currentCount == checkSum);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	  *	The designation was created with SBR, but modified with different user, TANJ.
+	  * It should throws "java.sql.SQLException: ORA-20999: TAPI-0:Insufficient privileges to modify this designation." exception.
+	  */
+	@Test
+	public void testDesignationUpdateWithDifferentModifier() {
+		boolean ret = false;
+		long currentCount = 0, checkSum = -1;
+		try {
+			conn = TestUtil.getConnection(userId, password);
+			String name = "major histocompatibility complex from unit test";
+			String desigId = DesignationUtil.getDesignationId(conn, name);
+			if(desigId == null) {
+				throw new Exception("The AC must already exist for update!");
+			}
+			DesignationsView dto;
+			dto = new DesignationsView();
+			dto.setMODIFIEDBY("cadsr_metadata_user");	//this field can not be changed, database/PL/SQL codes always set it to the executing user/SBR!!!
+			//dto.setLAENAME("ENGLISH");
+
+			desDAO.update( desigId, dto );
+//			assertTrue("Test removal", currentCount == checkSum);
+		} catch (Exception e) {
+			if(e.getMessage() != null && e.getMessage().indexOf("ORA-20999") > -1) {
+				e.printStackTrace();
+			} else {
+				//passed! :)
+			}
+		}
+		System.out.println("testDesignationUpdateWithDifferentModifier: 1 designation updated");
+	}
+
+
+	/**
+		Useful SQL:
+select pv.VALUE, vm.vm_id, vm.version, vm.vm_idseq, vm.PREFERRED_NAME, vm.LONG_NAME, vm.SHORT_MEANING, vm.DESCRIPTION
+--, pv.SHORT_MEANING, pv.MEANING_DESCRIPTION,
+from SBR.VALUE_MEANINGS_VIEW vm, SBR.PERMISSIBLE_VALUES_VIEW pv where vm.VM_IDSEQ = pv.VM_IDSEQ
+order by pv.date_created desc
+	*/
+	@Test
+	public void testPermissibleValueInsertOneRow() {
+		boolean ret = false;
+		long currentCount = 0, checkSum = -1;
+		try {
+//			String value = "1,3-Butadiene (alpha, gamma-Butadiene; Biethylene; Bivinyl; Divinyl; Erythrene; Vinylethylene)_james";
+			String value = "Specified integer number of months_james";
+			conn = TestUtil.getConnection(userId, password);
+//			conn = TestUtil.getConnection(sbrUserId, sbrPassword);
+//			//get the context id first
+//			String contextId = AdministeredItemUtil.getContextID(conn, "NRG");
+			String pvId = null;
+			if((pvId = PermissibleValueUtil.getPermissibleValueId(conn, value)) == null) {
+				try {
+					pvId = AdministeredItemUtil.getNewAC_IDSEQ(conn);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			} else {
+				System.out.println("testPermissibleValueInsertOneRow: value already exists. Test skipped!");
+				return;
+			}
+			PermissibleValuesView dto;
+			dto = new PermissibleValuesView();
+			/*
+Value Domain ID	Value Domain Version	Value Domain LongName	Type	Existing PV Value	dateModified	Modified By	NEW PV value
+2015675	11	Biomarker Name		MARCH9 (MARCH IX; RNF179; MARCH-IX; Membrane-Associated Ring Finger (C3HC4) 9; E3 Ubiquitin-Protein Ligase MARCH9; RING Finger Protein 179; Membrane-Associated RING-CH Protein IX; Membrane-Associated RING Finger Protein 9)		DWARZEL	MARCH9
+			*/
+			dto.setPVIDSEQ(pvId);
+			dto.setVALUE(value);
+			dto.setSHORTMEANING("NEED TO DO a VM SM lookup");
+			dto.setDATECREATED(new Date());
+			dto.setCREATEDBY("TANJ");
+			dto.setVMIDSEQ((AdministeredItemUtil.getRelatedAC_IDSEQ(conn, "4211591", "1")));
+			
+			pvDAO.insert( dto );
+			System.out.println("testPermissibleValueInsertOneRow: 1 pv inserted");
+//			assertTrue("Test removal", currentCount == checkSum);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	/**
+		Useful SQL:
+SELECT MODIFIED_BY, d.lae_name, d.name, d.detl_name FROM sbr.designations_view d
+--where
+--rownum < 31
+order by d.date_created desc
+	*/
+	@Test
+	public void testPermissibleValueUpdateOneRow() {
+		boolean ret = false;
+		long currentCount = 0, checkSum = -1;
+		try {
+			String value = "Specified integer number of months";
+			String pvId = PermissibleValueUtil.getPermissibleValueId(conn, value);
+			if(pvId == null) {
+				throw new Exception("The AC must already exist for update!");
+			}
+			PermissibleValuesView dto;
+			dto = new PermissibleValuesView();
+			dto.setMODIFIEDBY("SBR");	//this field can not be changed, database/PL/SQL codes always set it to the executing user/SBR!!!
+
+			//conn.close();
+			conn = TestUtil.getConnection(sbrUserId, sbrPassword);
+			pvDAO = DaoFactory.createPermissibleValuesViewDao(conn);
+			pvDAO.update( pvId, dto );
+			System.out.println("testPermissibleValueUpdateOneRow: 1 pv updated");
+//			assertTrue("Test removal", currentCount == checkSum);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	  *	The designation was created with SBR, but modified with different user, TANJ.
+	  * It should throws "java.sql.SQLException: ORA-20999: TAPI-0:Insufficient privileges to modify this designation." exception.
+	  */
+	@Test
+	public void testPermissibleValueUpdateWithDifferentModifier() {
+		boolean ret = false;
+		long currentCount = 0, checkSum = -1;
+		try {
+			conn = TestUtil.getConnection(userId, password);
+			String value = "Specified integer number of months";
+			String pvId = PermissibleValueUtil.getPermissibleValueId(conn, value);
+			if(pvId == null) {
+				throw new Exception("The AC must already exist for update!");
+			}
+			PermissibleValuesView dto;
+			dto = new PermissibleValuesView();
+			dto.setMODIFIEDBY("cadsr_metadata_user");	//this field can not be changed, database/PL/SQL codes always set it to the executing user/SBR!!!
+			//dto.setLAENAME("ENGLISH");
+
+			pvDAO.update( pvId, dto );
+//			assertTrue("Test removal", currentCount == checkSum);
+		} catch (Exception e) {
+			if(e.getMessage() != null && e.getMessage().indexOf("ORA-20999") > -1) {
+				e.printStackTrace();
+			} else {
+				//passed! :)
+			}
+		}
+		System.out.println("testPermissibleValueUpdateWithDifferentModifier: 1 pv updated");
+	}
+
+
+}

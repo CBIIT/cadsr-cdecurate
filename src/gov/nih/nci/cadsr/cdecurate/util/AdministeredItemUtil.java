@@ -13,6 +13,10 @@ import gov.nih.nci.cadsr.common.Constants;
 
 import java.io.BufferedReader;
 import java.io.BufferedReader;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.text.CharacterIterator;
 import java.text.StringCharacterIterator;
 
@@ -150,4 +154,89 @@ public class AdministeredItemUtil {
 		
 		return ret;
 	}
+	
+	public static String getContextID(Connection conn, String name) throws Exception {
+    	PreparedStatement pstmt = null;
+        String sql = "select * from sbr.contexts_view where name = ?";
+        ResultSet rs = null;
+        String ret = null;
+        if(conn == null) {
+        	throw new Exception("Connection is null or empty.");
+        }
+        try {
+            pstmt = conn.prepareStatement( sql );
+            pstmt.setString(1, name);
+			rs = pstmt.executeQuery();
+			int count = 0;
+			if(rs.next()) {
+				ret = rs.getString(1);
+			}
+        }
+        catch (SQLException e) {
+            throw new Exception( e );
+        }
+//        finally {
+//            if (rs != null) { try { rs.close(); } catch (SQLException e) { System.err.println(e.getMessage()); } }
+//            if (pstmt != null) {  try { pstmt.close(); } catch (SQLException e) { System.err.println(e.getMessage()); } }
+//        	if (conn != null) { try { conn.close(); conn = null; } catch (SQLException e) { System.err.println(e.getMessage()); } }
+//        }
+        return ret;
+    }
+
+	public static String getNewAC_IDSEQ(Connection conn) throws Exception {
+	    	PreparedStatement pstmt = null;
+	        String sql = "select sbr.admincomponent_crud.cmr_guid from dual";
+	        ResultSet rs = null;
+	        String ret = null;
+	        if(conn == null) {
+	        	throw new Exception("Connection is null or empty.");
+	        }
+	        try {
+	            pstmt = conn.prepareStatement( sql );
+				rs = pstmt.executeQuery();
+				int count = 0;
+				if(rs.next()) {
+					ret = rs.getString(1);
+				}
+	        }
+	        catch (SQLException e) {
+	            throw new Exception( e );
+	        }
+//	        finally {
+//	            if (rs != null) { try { rs.close(); } catch (SQLException e) { System.err.println(e.getMessage()); } }
+//	            if (pstmt != null) {  try { pstmt.close(); } catch (SQLException e) { System.err.println(e.getMessage()); } }
+//	        	if (conn != null) { try { conn.close(); conn = null; } catch (SQLException e) { System.err.println(e.getMessage()); } }
+//	        }
+	        return ret;
+	}
+
+	public static String getRelatedAC_IDSEQ(Connection conn, String publicId, String version) throws Exception {
+    	PreparedStatement pstmt = null;
+        String sql = "select ac_idseq from SBR.ADMINISTERED_COMPONENTS where public_id = ? and version = ?";
+        ResultSet rs = null;
+        String ret = null;
+        if(conn == null) {
+        	throw new Exception("Connection is null or empty.");
+        }
+        try {
+            pstmt = conn.prepareStatement( sql );
+            pstmt.setString(1, publicId);
+            pstmt.setString(2, version);
+			rs = pstmt.executeQuery();
+			int count = 0;
+			if(rs.next()) {
+				ret = rs.getString(1);
+			}
+        }
+        catch (SQLException e) {
+            throw new Exception( e );
+        }
+//        finally {
+//            if (rs != null) { try { rs.close(); } catch (SQLException e) { System.err.println(e.getMessage()); } }
+//            if (pstmt != null) {  try { pstmt.close(); } catch (SQLException e) { System.err.println(e.getMessage()); } }
+//        	if (conn != null) { try { conn.close(); conn = null; } catch (SQLException e) { System.err.println(e.getMessage()); } }
+//        }
+        return ret;
+    }
+	
 }
