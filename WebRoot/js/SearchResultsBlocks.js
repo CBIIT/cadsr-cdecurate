@@ -910,7 +910,7 @@ function createNames(acType)
       //add or remove the row number in the hidden field
       if (document.searchResultsForm.hiddenSelectedRow != null)
         dCount = document.searchResultsForm.hiddenSelectedRow.length;
-      if (addRow == "true")
+      if (addRow === "true")
          document.searchResultsForm.hiddenSelectedRow.options[dCount] = new Option(selRow,rowNo); //store the row number in the hidden vector	    
       else  //remove the row if not selected anymore
       {

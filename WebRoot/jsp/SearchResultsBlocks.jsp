@@ -378,7 +378,7 @@ L--%>
 	<body>
 		<form name="searchResultsForm" method="post" action="../../cdecurate/NCICurationServlet?reqType=doSortBlocks">
 			<br>
-			<table border="0" style="border-collapse:'';"> <!-- NT1 -->
+			<table border="0" style="z-index:100;"> <!-- NT1 -->
 				<tr align="left">
 					<td>
 						<input type="button" name="editSelectedBtn" value="Link Concept" onClick="ShowSelection();" disabled>

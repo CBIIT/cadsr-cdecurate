@@ -101,7 +101,7 @@ function changecolor(divname,colorname)
 function showhide(divname,state) 
 {
     var temp = doc + divname + sty;
-    console.log("popupMenus.js showhide() temp [" + temp + "]")
+    //console.log("popupMenus.js showhide() temp [" + temp + "]")
     divObj = eval (doc + divname + sty);
     if(divObj != null)
     {

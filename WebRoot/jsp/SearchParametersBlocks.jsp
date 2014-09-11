@@ -468,7 +468,7 @@ function testIsValidObject(objToTest) {
 			{
                 try {
                 //JR1013 begin
-                conOrd = opener.document.getElementById("VMvmConOrder");
+                conOrd = opener.document.getElementById("vmConOrder");  //9/11/2014 by chance
                 if(typeof conOrd === 'undefined' || conOrd == null) {
                     throw new Error("SearchParametersBlocks.jsp error: Not able to retrieve a value from element VMvmConOrder in ValueMeaningDetail.jsp!");
                 }
@@ -479,7 +479,8 @@ function testIsValidObject(objToTest) {
 					document.getElementById("vmConOrder").value = conOrd.value;
 				}
                 }catch(e) {
-                    console.log("SearchParametersBlocks.jsp error: " + e);
+                    //alert(e.message); //JR1013
+                    window.console && console.log("SearchParametersBlocks.jsp error: " + e);
                 }
 			}
 		}
