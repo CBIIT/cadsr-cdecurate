@@ -89,12 +89,19 @@ public class Meta501 {
 		boolean ret = false;
 		long currentCount = 0, checkSum = -1;
 		try {
-			String name = "major histocompatibility complex";
+			String name = "major histocompatibility complex fro jv";
+//			conn = TestUtil.getConnection(sbrUserId, sbrPassword);
 			conn = TestUtil.getConnection(userId, password);
 			//get the context id first
 			String contextId = AdministeredItemUtil.getContextID(conn, "NRG");
 			String desigId = null;
-			if((desigId = DesignationUtil.handleDesignationId(conn, name)) != null) {
+			if((desigId = DesignationUtil.getDesignationId(conn, name)) == null) {
+				try {
+					desigId = AdministeredItemUtil.getNewAC_IDSEQ(conn);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			} else {
 				System.out.println("testDesignationInsertOneRow: name already exists. Test skipped!");
 				return;
 			}
@@ -128,7 +135,7 @@ SELECT MODIFIED_BY, d.lae_name, d.name, d.detl_name FROM sbr.designations_view d
 --rownum < 31
 order by d.date_created desc
 	*/
-	@Test
+//	@Test
 	public void testDesignationUpdateOneRow() {
 		boolean ret = false;
 		long currentCount = 0, checkSum = -1;
@@ -158,7 +165,7 @@ order by d.date_created desc
 	  *	The designation was created with SBR, but modified with different user, TANJ.
 	  * It should throws "java.sql.SQLException: ORA-20999: TAPI-0:Insufficient privileges to modify this designation." exception.
 	  */
-	@Test
+//	@Test
 	public void testDesignationUpdateWithDifferentModifier() {
 		boolean ret = false;
 		long currentCount = 0, checkSum = -1;
@@ -194,7 +201,7 @@ select pv.VALUE, vm.vm_id, vm.version, vm.vm_idseq, vm.PREFERRED_NAME, vm.LONG_N
 from SBR.VALUE_MEANINGS_VIEW vm, SBR.PERMISSIBLE_VALUES_VIEW pv where vm.VM_IDSEQ = pv.VM_IDSEQ
 order by pv.date_created desc
 	*/
-	@Test
+//	@Test
 	public void testPermissibleValueInsertOneRow() {
 		boolean ret = false;
 		long currentCount = 0, checkSum = -1;
@@ -214,6 +221,7 @@ order by pv.date_created desc
 				}
 			} else {
 				System.out.println("testPermissibleValueInsertOneRow: value already exists. Test skipped!");
+				System.out.println("PV vm = [" + PermissibleValueUtil.getPermissibleValueShortMeaning(conn, value) + "]");
 				return;
 			}
 			PermissibleValuesView dto;
@@ -224,7 +232,8 @@ Value Domain ID	Value Domain Version	Value Domain LongName	Type	Existing PV Valu
 			*/
 			dto.setPVIDSEQ(pvId);
 			dto.setVALUE(value);
-			dto.setSHORTMEANING("NEED TO DO a VM SM lookup");
+			//dto.setSHORTMEANING("NEED TO DO a VM SM lookup");
+			dto.setSHORTMEANING(PermissibleValueUtil.getPermissibleValueShortMeaning(conn, value));
 			dto.setDATECREATED(new Date());
 			dto.setCREATEDBY("TANJ");
 			dto.setVMIDSEQ((AdministeredItemUtil.getRelatedAC_IDSEQ(conn, "4211591", "1")));
@@ -244,7 +253,7 @@ SELECT MODIFIED_BY, d.lae_name, d.name, d.detl_name FROM sbr.designations_view d
 --rownum < 31
 order by d.date_created desc
 	*/
-	@Test
+//	@Test
 	public void testPermissibleValueUpdateOneRow() {
 		boolean ret = false;
 		long currentCount = 0, checkSum = -1;
@@ -273,7 +282,7 @@ order by d.date_created desc
 	  *	The designation was created with SBR, but modified with different user, TANJ.
 	  * It should throws "java.sql.SQLException: ORA-20999: TAPI-0:Insufficient privileges to modify this designation." exception.
 	  */
-	@Test
+//	@Test
 	public void testPermissibleValueUpdateWithDifferentModifier() {
 		boolean ret = false;
 		long currentCount = 0, checkSum = -1;
