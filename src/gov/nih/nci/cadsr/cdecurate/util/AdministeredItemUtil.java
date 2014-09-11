@@ -172,8 +172,8 @@ public class AdministeredItemUtil {
 				ret = rs.getString(1);
 			}
         }
-        catch (SQLException e) {
-            throw new Exception( e );
+        catch (Exception e) {
+            throw e;
         }
 //        finally {
 //            if (rs != null) { try { rs.close(); } catch (SQLException e) { System.err.println(e.getMessage()); } }
