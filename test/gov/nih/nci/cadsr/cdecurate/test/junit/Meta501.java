@@ -202,7 +202,7 @@ from SBR.VALUE_MEANINGS_VIEW vm, SBR.PERMISSIBLE_VALUES_VIEW pv where vm.VM_IDSE
 and vm.vm_id = '4211591'
 order by pv.date_created desc
 	*/
-	@Test
+//	@Test
 	public void testPermissibleValueInsertOneRow() {
 		boolean ret = false;
 		long currentCount = 0, checkSum = -1;
@@ -249,10 +249,16 @@ Value Domain ID	Value Domain Version	Value Domain LongName	Type	Existing PV Valu
 
 	/**
 		Useful SQL:
-SELECT MODIFIED_BY, d.lae_name, d.name, d.detl_name FROM sbr.designations_view d
---where
---rownum < 31
-order by d.date_created desc
+select pv.VALUE, vm.vm_id, vm.version, vm.vm_idseq, vm.PREFERRED_NAME, vm.LONG_NAME, vm.SHORT_MEANING, vm.DESCRIPTION
+--, pv.SHORT_MEANING, pv.MEANING_DESCRIPTION,
+from SBR.VALUE_MEANINGS_VIEW vm, SBR.PERMISSIBLE_VALUES_VIEW pv where vm.VM_IDSEQ = pv.VM_IDSEQ
+and vm.vm_id = '4211591'
+order by pv.date_created desc
+
+UPDATE permissible_values_view SET MODIFIED_BY='SBR',  WHERE PV_IDSEQ='02E338E4-E07A-B2AB-E050-BB8921B61594'
+
+SELECT '02E338E4-E07A-B2AB-E050-BB8921B61594' as "PV_IDSEQ", 'Specified integer number of months_james' as "Existing PV Value", 'value without comma 3' as "splitted value", 'SM' as "SHORT_MEANING", 'grave meaning' as "MEANING_DESCRIPTION", sysdate as "BEGIN_DATE", sysdate as "END_DATE", -1 as "HIGH NUM", -1 as "LOW NUM", sysdate as "DATE_CREATED", 'SBR' as "CREATED_BY", sysdate as "DATE_MODIFIED", 'SBR' as  "MODIFIED_BY", '02B89AB0-7917-E455-E050-BB8921B67D8D' as "VM_IDSEQ" FROM permissible_values_view WHERE 1=1 and rownum < 2
+
 	*/
 	@Test
 	public void testPermissibleValueUpdateOneRow() {
@@ -260,6 +266,9 @@ order by d.date_created desc
 		long currentCount = 0, checkSum = -1;
 		try {
 			String value = "Specified integer number of months";
+//			String value = "Specified integer number of months from unit test 9/12/2014";	//open this to test value update
+			String newValue = value;
+//			String newValue = "Specified integer number of months";		//open this to test value update - put back the value for test
 			String pvId = PermissibleValueUtil.getPermissibleValueId(conn, value);
 			if(pvId == null) {
 				throw new Exception("The AC must already exist for update!");
@@ -267,6 +276,7 @@ order by d.date_created desc
 			PermissibleValuesView dto;
 			dto = new PermissibleValuesView();
 			dto.setMODIFIEDBY("SBR");	//this field can not be changed, database/PL/SQL codes always set it to the executing user/SBR!!!
+//			dto.setVALUE(newValue);		//open this to test value update
 
 			//conn.close();
 			conn = TestUtil.getConnection(sbrUserId, sbrPassword);
@@ -283,7 +293,7 @@ order by d.date_created desc
 	  *	The designation was created with SBR, but modified with different user, TANJ.
 	  * It should throws "java.sql.SQLException: ORA-20999: TAPI-0:Insufficient privileges to modify this designation." exception.
 	  */
-	@Test
+//	@Test
 	public void testPermissibleValueUpdateWithDifferentModifier() {
 		boolean ret = false;
 		long currentCount = 0, checkSum = -1;
