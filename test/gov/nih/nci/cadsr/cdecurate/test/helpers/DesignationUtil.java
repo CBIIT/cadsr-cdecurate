@@ -9,7 +9,17 @@ import java.sql.SQLException;
 
 public class DesignationUtil {
 
-	public static String getDesignationId(Connection conn, String name) throws Exception {
+	private boolean autoCleanup;
+
+	public boolean isAutoCleanup() {
+		return autoCleanup;
+	}
+
+	public void setAutoCleanup(boolean autoCleanup) {
+		this.autoCleanup = autoCleanup;
+	}
+	
+	public String getDesignationId(Connection conn, String name) throws Exception {
     	PreparedStatement pstmt = null;
         String sql = "select desig_idseq from sbr.designations_view where name = ?";
         ResultSet rs = null;
@@ -28,15 +38,17 @@ public class DesignationUtil {
         catch (SQLException e) {
             throw new Exception( e );
         }
-//        finally {
-//            if (rs != null) { try { rs.close(); } catch (SQLException e) { System.err.println(e.getMessage()); } }
-//            if (pstmt != null) {  try { pstmt.close(); } catch (SQLException e) { System.err.println(e.getMessage()); } }
-//        	if (conn != null) { try { conn.close(); conn = null; } catch (SQLException e) { System.err.println(e.getMessage()); } }
-//        }
+        finally {
+        	if(autoCleanup) {
+	            if (rs != null) { try { rs.close(); } catch (SQLException e) { System.err.println(e.getMessage()); } }
+	            if (pstmt != null) {  try { pstmt.close(); } catch (SQLException e) { System.err.println(e.getMessage()); } }
+	        	if (conn != null) { try { conn.close(); conn = null; } catch (SQLException e) { System.err.println(e.getMessage()); } }
+        	}
+        }
         return ret;
     }
 
-	public static boolean isDesignationExists(Connection conn, String name) throws Exception {
+	public boolean isDesignationExists(Connection conn, String name) throws Exception {
     	PreparedStatement pstmt = null;
         String sql = "select * from sbr.designations_view where name = ?";
         ResultSet rs = null;
@@ -57,15 +69,17 @@ public class DesignationUtil {
         catch (SQLException e) {
             throw new Exception( e );
         }
-//        finally {
-//            if (rs != null) { try { rs.close(); } catch (SQLException e) { System.err.println(e.getMessage()); } }
-//            if (pstmt != null) {  try { pstmt.close(); } catch (SQLException e) { System.err.println(e.getMessage()); } }
-//        	if (conn != null) { try { conn.close(); conn = null; } catch (SQLException e) { System.err.println(e.getMessage()); } }
-//        }
+        finally {
+        	if(autoCleanup) {
+	            if (rs != null) { try { rs.close(); } catch (SQLException e) { System.err.println(e.getMessage()); } }
+	            if (pstmt != null) {  try { pstmt.close(); } catch (SQLException e) { System.err.println(e.getMessage()); } }
+	        	if (conn != null) { try { conn.close(); conn = null; } catch (SQLException e) { System.err.println(e.getMessage()); } }
+        	}
+        }
         return ret;
     }
 
-	public static String handleDesignationId(Connection conn, String name) throws Exception {
+	public String handleDesignationId(Connection conn, String name) throws Exception {
 		String ret = null;
 		if((ret = getDesignationId(conn, name)) == null) {
 			try {

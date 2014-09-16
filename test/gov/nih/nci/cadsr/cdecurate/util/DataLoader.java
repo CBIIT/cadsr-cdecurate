@@ -11,10 +11,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import org.junit.BeforeClass;
-
-import nci.cadsr.persist.dao.DesignationsViewDao;
-import nci.cadsr.persist.dao.PermissibleValuesViewDao;
 import nci.cadsr.persist.dto.DesignationsView;
 import nci.cadsr.persist.dto.PermissibleValuesView;
 
@@ -24,9 +20,10 @@ public class DataLoader {
 	private static Connection conn;
 	private static String userId;
 	private static String password;
+	private static DesignationUtil designationUtil;
+	private static PermissibleValueUtil permissibleValueUtil;
 
-
-	public static void main(String[] args) {
+	private static void initDB() {
 		userId = System.getProperty("u");
 		password = System.getProperty("p");
 		try {
@@ -34,10 +31,21 @@ public class DataLoader {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+
+	public static void main(String[] args) {
+		initDB();
+		designationUtil = new DesignationUtil();
+		designationUtil.setAutoCleanup(true);
+		permissibleValueUtil = new PermissibleValueUtil();
+		permissibleValueUtil.setAutoCleanup(true);
+
 	    DesignationsView designation = new DesignationsView();
 	    PermissibleValuesView permissiblevalue = new PermissibleValuesView();
-	    processDesignationFromCSV(conn, "C:/Users/ag/demo/cadsr-cdecurate_03122014/test/gov/nih/nci/cadsr/cdecurate/util/SampleForTestingLoader-V3-designation.csv", designation);
+//	    processDesignationFromCSV(conn, "C:/Users/ag/demo/cadsr-cdecurate_03122014/test/gov/nih/nci/cadsr/cdecurate/util/SampleForTestingLoader-V3-designation.csv", designation);
 //	    processPermissibleValueFromCSV(conn, "C:/Users/ag/demo/cadsr-cdecurate_03122014/test/gov/nih/nci/cadsr/cdecurate/util/SampleForTestingLoader-V3-permissiblevalue.csv", permissiblevalue);
+	    processDesignationFromCSV(conn, "C:/Users/ag/demo/cadsr-cdecurate_03122014/test/gov/nih/nci/cadsr/cdecurate/util/SampleForTestingLoader-V3-designation-small.csv", designation);
+//	    processPermissibleValueFromCSV(conn, "C:/Users/ag/demo/cadsr-cdecurate_03122014/test/gov/nih/nci/cadsr/cdecurate/util/SampleForTestingLoader-V3-permissiblevalue-small.csv", permissiblevalue);
 	}
 	
     public static List<Object> processDesignationFromCSV(Connection conn, String fileName, DesignationsView record) {
@@ -48,6 +56,12 @@ public class DataLoader {
                 String strLine = "";
                 
                 String[] columns = ParseHelper.getColumns(br);
+            	String name;
+            	String type;
+            	String contextName;
+    			String desigId;
+    			String contextId;
+    			String acId;
                 while((strLine = br.readLine()) != null){
                 	DesignationsView newRecord = record.getClass().newInstance();
                     String[] values = strLine.split(",");
@@ -57,15 +71,17 @@ public class DataLoader {
                     
 //                    for(int i=0;i< size;i++){
 //                        String columnName = columns[i];
-                    	String name = values[10];
-                    	String type = values[11];
-                    	String contextName = values[13];
-            			String desigId = null;
-            			String contextId = null;
-            			String acId = null;
+                    	name = values[10];
+                    	type = values[11];
+                    	contextName = values[13];
+            			desigId = null;
+            			contextId = null;
+            			acId = null;
             			if(conn != null) {
-		        			if((desigId = DesignationUtil.getDesignationId(conn, name)) == null) {
+            				initDB();
+		        			if((desigId = designationUtil.getDesignationId(conn, name)) == null) {
 		        				try {
+		        					initDB();
 		        					desigId = AdministeredItemUtil.getNewAC_IDSEQ(conn);
 		        				} catch (Exception e) {
 		        					e.printStackTrace();
@@ -73,7 +89,9 @@ public class DataLoader {
 		        			} else {
 		        				System.out.println("processDesignationFromCSV: name already exists. Skipped!");
 		        			}
+		        			initDB();
 	            			contextId = AdministeredItemUtil.getContextID(conn, contextName);
+	            			initDB();
 	            			acId = AdministeredItemUtil.getRelatedAC_IDSEQ(conn, values[0], values[1]);
             			}
 //                    	Field f1 = record.getClass().getDeclaredField(columnName);
@@ -107,6 +125,11 @@ public class DataLoader {
                 String strLine = "";
                 
                 String[] columns = ParseHelper.getColumns(br);
+            	String value;
+            	String contextName;
+    			String pvId = null;
+    			String contextId = null;
+    			String acId = null;
                 while((strLine = br.readLine()) != null){
                 	PermissibleValuesView newRecord = record.getClass().newInstance();
                     String[] values = strLine.split(",");
@@ -116,21 +139,24 @@ public class DataLoader {
                     
 //                    for(int i=0;i< size;i++){
 //                        String columnName = columns[i];
-                    	String value = values[4];
-                    	String contextName = values[13];
-            			String pvId = null;
-            			String contextId = null;
-            			String acId = null;
+                    	value = values[4];
+                    	contextName = values[13];
+            			pvId = null;
+            			contextId = null;
+            			acId = null;
             			if(conn != null) {
-            				if((pvId = PermissibleValueUtil.getPermissibleValueId(conn, value)) == null) {
+            				initDB();
+            				if((pvId = permissibleValueUtil.getPermissibleValueId(conn, value)) == null) {
             					try {
+            						initDB();
             						pvId = AdministeredItemUtil.getNewAC_IDSEQ(conn);
             					} catch (Exception e) {
             						e.printStackTrace();
             					}
             				} else {
             					System.out.println("processPermissibleValueFromCSV: value already exists. Skipped!");
-            					System.out.println("PV vm = [" + PermissibleValueUtil.getPermissibleValueShortMeaning(conn, value) + "]");
+            					initDB();
+            					System.out.println("PV vm = [" + permissibleValueUtil.getPermissibleValueShortMeaning(conn, value) + "]");
             				}
             			}
 //                    	Field f1 = record.getClass().getDeclaredField(columnName);
@@ -141,12 +167,14 @@ public class DataLoader {
             			newRecord.setVALUE(value);
             			//dto.setSHORTMEANING("NEED TO DO a VM SM lookup");
             			String dummySM = null;
-            			if((dummySM = PermissibleValueUtil.getPermissibleValueShortMeaning(conn, value)) == null) {
+            			initDB();
+            			if((dummySM = permissibleValueUtil.getPermissibleValueShortMeaning(conn, value)) == null) {
             				dummySM = "dummy";
             			}
             			newRecord.setSHORTMEANING(dummySM);
             			newRecord.setDATECREATED(new Date());
             			newRecord.setCREATEDBY("WARZELD");
+            			initDB();
             			newRecord.setVMIDSEQ((AdministeredItemUtil.getRelatedAC_IDSEQ(conn, values[0], values[1])));
                         
 //                    }

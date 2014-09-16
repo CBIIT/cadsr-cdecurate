@@ -9,7 +9,17 @@ import java.sql.SQLException;
 
 public class PermissibleValueUtil {
 
-	public static String getPermissibleValueId(Connection conn, String value) throws Exception {
+	private boolean autoCleanup;
+
+	public boolean isAutoCleanup() {
+		return autoCleanup;
+	}
+
+	public void setAutoCleanup(boolean autoCleanup) {
+		this.autoCleanup = autoCleanup;
+	}
+
+	public String getPermissibleValueId(Connection conn, String value) throws Exception {
     	PreparedStatement pstmt = null;
         String sql = "select pv_idseq from SBR.PERMISSIBLE_VALUES_VIEW where value = ?";
         ResultSet rs = null;
@@ -28,15 +38,17 @@ public class PermissibleValueUtil {
         catch (SQLException e) {
             throw new Exception( e );
         }
-//        finally {
-//            if (rs != null) { try { rs.close(); } catch (SQLException e) { System.err.println(e.getMessage()); } }
-//            if (pstmt != null) {  try { pstmt.close(); } catch (SQLException e) { System.err.println(e.getMessage()); } }
-//        	if (conn != null) { try { conn.close(); conn = null; } catch (SQLException e) { System.err.println(e.getMessage()); } }
-//        }
+        finally {
+        	if(autoCleanup) {
+	            if (rs != null) { try { rs.close(); } catch (SQLException e) { System.err.println(e.getMessage()); } }
+	            if (pstmt != null) {  try { pstmt.close(); } catch (SQLException e) { System.err.println(e.getMessage()); } }
+	        	if (conn != null) { try { conn.close(); conn = null; } catch (SQLException e) { System.err.println(e.getMessage()); } }
+        	}
+        }
         return ret;
     }
 
-	public static boolean isPermissibleValueExists(Connection conn, String value) throws Exception {
+	public boolean isPermissibleValueExists(Connection conn, String value) throws Exception {
     	PreparedStatement pstmt = null;
         String sql = "select pv_idseq from SBR.PERMISSIBLE_VALUES_VIEW where value = ?";
         ResultSet rs = null;
@@ -57,15 +69,17 @@ public class PermissibleValueUtil {
         catch (SQLException e) {
             throw new Exception( e );
         }
-//        finally {
-//            if (rs != null) { try { rs.close(); } catch (SQLException e) { System.err.println(e.getMessage()); } }
-//            if (pstmt != null) {  try { pstmt.close(); } catch (SQLException e) { System.err.println(e.getMessage()); } }
-//        	if (conn != null) { try { conn.close(); conn = null; } catch (SQLException e) { System.err.println(e.getMessage()); } }
-//        }
+        finally {
+        	if(autoCleanup) {
+	            if (rs != null) { try { rs.close(); } catch (SQLException e) { System.err.println(e.getMessage()); } }
+	            if (pstmt != null) {  try { pstmt.close(); } catch (SQLException e) { System.err.println(e.getMessage()); } }
+	        	if (conn != null) { try { conn.close(); conn = null; } catch (SQLException e) { System.err.println(e.getMessage()); } }
+        	}
+        }
         return ret;
     }
 
-	public static String handlePermissibleValueId(Connection conn, String value) throws Exception {
+	public String handlePermissibleValueId(Connection conn, String value) throws Exception {
 		String ret = null;
 		if((ret = getPermissibleValueId(conn, value)) == null) {
 			try {
@@ -80,7 +94,7 @@ public class PermissibleValueUtil {
 	/*
 	 * If the results returned > 1, only the first one will be returned.
 	 */
-	public static String getPermissibleValueShortMeaning(Connection conn, String value) throws Exception {
+	public String getPermissibleValueShortMeaning(Connection conn, String value) throws Exception {
 		PreparedStatement pstmt = null;
 	    String sql = "select vm.SHORT_MEANING sm from SBR.VALUE_MEANINGS vm, SBR.PERMISSIBLE_VALUES pv where vm.VM_IDSEQ = pv.VM_IDSEQ and pv.value = ?";
 
@@ -100,11 +114,13 @@ public class PermissibleValueUtil {
 	    catch (SQLException e) {
 	        throw new Exception( e );
 	    }
-	//    finally {
-	//        if (rs != null) { try { rs.close(); } catch (SQLException e) { System.err.println(e.getMessage()); } }
-	//        if (pstmt != null) {  try { pstmt.close(); } catch (SQLException e) { System.err.println(e.getMessage()); } }
-	//    	if (conn != null) { try { conn.close(); conn = null; } catch (SQLException e) { System.err.println(e.getMessage()); } }
-	//    }
+        finally {
+        	if(autoCleanup) {
+	            if (rs != null) { try { rs.close(); } catch (SQLException e) { System.err.println(e.getMessage()); } }
+	            if (pstmt != null) {  try { pstmt.close(); } catch (SQLException e) { System.err.println(e.getMessage()); } }
+	        	if (conn != null) { try { conn.close(); conn = null; } catch (SQLException e) { System.err.println(e.getMessage()); } }
+        	}
+        }
 	    return ret;
 	}
 

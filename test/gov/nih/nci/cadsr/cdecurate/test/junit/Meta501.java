@@ -1,22 +1,14 @@
 package gov.nih.nci.cadsr.cdecurate.test.junit;
 
 import static org.junit.Assert.assertTrue;
-import gov.nih.nci.cadsr.cdecurate.test.TestSpreadsheetDownload;
 import gov.nih.nci.cadsr.cdecurate.test.helpers.DBUtil;
 import gov.nih.nci.cadsr.cdecurate.test.helpers.DesignationUtil;
 import gov.nih.nci.cadsr.cdecurate.test.helpers.PermissibleValueUtil;
-import gov.nih.nci.cadsr.cdecurate.ui.AltNamesDefsSession;
 import gov.nih.nci.cadsr.cdecurate.util.AdministeredItemUtil;
 import gov.nih.nci.cadsr.common.TestUtil;
 
 import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
-import java.util.Iterator;
 
 import nci.cadsr.persist.dao.DaoFactory;
 import nci.cadsr.persist.dao.DesignationsViewDao;
@@ -24,15 +16,9 @@ import nci.cadsr.persist.dao.PermissibleValuesViewDao;
 import nci.cadsr.persist.dto.DesignationsView;
 import nci.cadsr.persist.dto.PermissibleValuesView;
 
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
 import org.junit.After;
 import org.junit.BeforeClass;
 import org.junit.Test;
-
-import antlr.collections.List;
 
 /**
   * https://tracker.nci.nih.gov/browse/CADSRMETA-501
@@ -51,7 +37,8 @@ public class Meta501 {
 	private static Connection conn;
 	private static DesignationsViewDao desDAO;
 	private static PermissibleValuesViewDao pvDAO;
-
+	private static DesignationUtil designationUtil;
+	private static PermissibleValueUtil permissibleValueUtil;
 	@BeforeClass
 	public static void init() {
 		userId = System.getProperty("u");
@@ -66,6 +53,8 @@ public class Meta501 {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		designationUtil = new DesignationUtil();
+		permissibleValueUtil = new PermissibleValueUtil();
 	}
 
 	@After
@@ -95,7 +84,7 @@ public class Meta501 {
 			//get the context id first
 			String contextId = AdministeredItemUtil.getContextID(conn, "NRG");
 			String desigId = null;
-			if((desigId = DesignationUtil.getDesignationId(conn, name)) == null) {
+			if((desigId = designationUtil.getDesignationId(conn, name)) == null) {
 				try {
 					desigId = AdministeredItemUtil.getNewAC_IDSEQ(conn);
 				} catch (Exception e) {
@@ -141,7 +130,7 @@ order by d.date_created desc
 		long currentCount = 0, checkSum = -1;
 		try {
 			String name = "major histocompatibility complex from unit test";
-			String desigId = DesignationUtil.getDesignationId(conn, name);
+			String desigId = designationUtil.getDesignationId(conn, name);
 			if(desigId == null) {
 				throw new Exception("The AC must already exist for update!");
 			}
@@ -172,7 +161,7 @@ order by d.date_created desc
 		try {
 			conn = TestUtil.getConnection(userId, password);
 			String name = "major histocompatibility complex from unit test";
-			String desigId = DesignationUtil.getDesignationId(conn, name);
+			String desigId = designationUtil.getDesignationId(conn, name);
 			if(desigId == null) {
 				throw new Exception("The AC must already exist for update!");
 			}
@@ -214,7 +203,7 @@ order by pv.date_created desc
 //			//get the context id first
 //			String contextId = AdministeredItemUtil.getContextID(conn, "NRG");
 			String pvId = null;
-			if((pvId = PermissibleValueUtil.getPermissibleValueId(conn, value)) == null) {
+			if((pvId = permissibleValueUtil.getPermissibleValueId(conn, value)) == null) {
 				try {
 					pvId = AdministeredItemUtil.getNewAC_IDSEQ(conn);
 				} catch (Exception e) {
@@ -222,7 +211,7 @@ order by pv.date_created desc
 				}
 			} else {
 				System.out.println("testPermissibleValueInsertOneRow: value already exists. Test skipped!");
-				System.out.println("PV vm = [" + PermissibleValueUtil.getPermissibleValueShortMeaning(conn, value) + "]");
+				System.out.println("PV vm = [" + permissibleValueUtil.getPermissibleValueShortMeaning(conn, value) + "]");
 				return;
 			}
 			PermissibleValuesView dto;
@@ -235,7 +224,7 @@ Value Domain ID	Value Domain Version	Value Domain LongName	Type	Existing PV Valu
 			dto.setVALUE(value);
 			//dto.setSHORTMEANING("NEED TO DO a VM SM lookup");
 			String dummySM = null;
-			if((dummySM = PermissibleValueUtil.getPermissibleValueShortMeaning(conn, value)) == null) {
+			if((dummySM = permissibleValueUtil.getPermissibleValueShortMeaning(conn, value)) == null) {
 				dummySM = "dummy";
 			}
 			dto.setSHORTMEANING(dummySM);
@@ -273,7 +262,7 @@ SELECT '02E338E4-E07A-B2AB-E050-BB8921B61594' as "PV_IDSEQ", 'Specified integer 
 //			String value = "Specified integer number of months from unit test 9/12/2014";	//open this to test value update
 			String newValue = value;
 //			String newValue = "Specified integer number of months";		//open this to test value update - put back the value for test
-			String pvId = PermissibleValueUtil.getPermissibleValueId(conn, value);
+			String pvId = permissibleValueUtil.getPermissibleValueId(conn, value);
 			if(pvId == null) {
 				throw new Exception("The AC must already exist for update!");
 			}
@@ -304,7 +293,7 @@ SELECT '02E338E4-E07A-B2AB-E050-BB8921B61594' as "PV_IDSEQ", 'Specified integer 
 		try {
 			conn = TestUtil.getConnection(userId, password);
 			String value = "Specified integer number of months";
-			String pvId = PermissibleValueUtil.getPermissibleValueId(conn, value);
+			String pvId = permissibleValueUtil.getPermissibleValueId(conn, value);
 			if(pvId == null) {
 				throw new Exception("The AC must already exist for update!");
 			}
