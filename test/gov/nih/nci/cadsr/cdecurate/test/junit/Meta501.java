@@ -84,7 +84,7 @@ public class Meta501 {
 		}
 	}
 
-//	@Test
+	@Test
 	public void testDesignationInsertOneRow() {
 		boolean ret = false;
 		long currentCount = 0, checkSum = -1;
@@ -135,7 +135,7 @@ SELECT MODIFIED_BY, d.lae_name, d.name, d.detl_name FROM sbr.designations_view d
 --rownum < 31
 order by d.date_created desc
 	*/
-//	@Test
+	@Test
 	public void testDesignationUpdateOneRow() {
 		boolean ret = false;
 		long currentCount = 0, checkSum = -1;
@@ -165,7 +165,7 @@ order by d.date_created desc
 	  *	The designation was created with SBR, but modified with different user, TANJ.
 	  * It should throws "java.sql.SQLException: ORA-20999: TAPI-0:Insufficient privileges to modify this designation." exception.
 	  */
-//	@Test
+	@Test
 	public void testDesignationUpdateWithDifferentModifier() {
 		boolean ret = false;
 		long currentCount = 0, checkSum = -1;
@@ -202,7 +202,7 @@ from SBR.VALUE_MEANINGS_VIEW vm, SBR.PERMISSIBLE_VALUES_VIEW pv where vm.VM_IDSE
 and vm.vm_id = '4211591'
 order by pv.date_created desc
 	*/
-//	@Test
+	@Test
 	public void testPermissibleValueInsertOneRow() {
 		boolean ret = false;
 		long currentCount = 0, checkSum = -1;
@@ -234,7 +234,11 @@ Value Domain ID	Value Domain Version	Value Domain LongName	Type	Existing PV Valu
 			dto.setPVIDSEQ(pvId);
 			dto.setVALUE(value);
 			//dto.setSHORTMEANING("NEED TO DO a VM SM lookup");
-			dto.setSHORTMEANING(PermissibleValueUtil.getPermissibleValueShortMeaning(conn, value));
+			String dummySM = null;
+			if((dummySM = PermissibleValueUtil.getPermissibleValueShortMeaning(conn, value)) == null) {
+				dummySM = "dummy";
+			}
+			dto.setSHORTMEANING(dummySM);
 			dto.setDATECREATED(new Date());
 			dto.setCREATEDBY("TANJ");
 			dto.setVMIDSEQ((AdministeredItemUtil.getRelatedAC_IDSEQ(conn, "4211591", "1")));
@@ -293,7 +297,7 @@ SELECT '02E338E4-E07A-B2AB-E050-BB8921B61594' as "PV_IDSEQ", 'Specified integer 
 	  *	The designation was created with SBR, but modified with different user, TANJ.
 	  * It should throws "java.sql.SQLException: ORA-20999: TAPI-0:Insufficient privileges to modify this designation." exception.
 	  */
-//	@Test
+	@Test
 	public void testPermissibleValueUpdateWithDifferentModifier() {
 		boolean ret = false;
 		long currentCount = 0, checkSum = -1;
