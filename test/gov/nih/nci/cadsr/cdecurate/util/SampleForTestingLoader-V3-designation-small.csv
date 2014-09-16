@@ -1,0 +1,20 @@
+publicId,version,longName,Type,createdBy,dateCreated,dateModified,id,languageName,modifiedBy,name,type,designationClassSchemeItemCollection,context
+3334837,1,HLA DQB1,Designation,WARZELD,System Date,System date,,ENGLISH,,major histocompatibility complex,Biomarker Synonym,,NRG
+3334837,1,HLA DQB1,Designation,WARZELD,System Date,System date,,ENGLISH,,class II,Biomarker Synonym,,NRG
+3334837,1,HLA DQB1,Designation,WARZELD,System Date,System date,,ENGLISH,,DQ beta 1,Biomarker Synonym,,NRG
+,,,Designation,WARZELD,System Date,System date,,ENGLISH,,,Biomarker Synonym,,NRG
+3606596,1,prostaglandin-D 15-dehydrogenase (NADP(+)) activity,Designation,WARZELD,System Date,System date,,ENGLISH,,15-Prostaglandin Dehydrogenase,Biomarker Synonym,,NRG
+3606596,1,prostaglandin-D 15-dehydrogenase (NADP(+)) activity,Designation,WARZELD,System Date,System date,,ENGLISH,,15-Hydroxyprostaglandin Dehydrogenase [NAD+],Biomarker Synonym,,NRG
+3606596,1,prostaglandin-D 15-dehydrogenase (NADP(+)) activity,Designation,WARZELD,System Date,System date,,ENGLISH,,PGDH,Biomarker Synonym,,NRG
+3606596,1,prostaglandin-D 15-dehydrogenase (NADP(+)) activity,Designation,WARZELD,System Date,System date,,ENGLISH,,Prostaglandin Dehydrogenase 1,Biomarker Synonym,,NRG
+3606596,1,prostaglandin-D 15-dehydrogenase (NADP(+)) activity,Designation,WARZELD,System Date,System date,,ENGLISH,,HPGD,Biomarker Synonym,,NRG
+3606596,1,prostaglandin-D 15-dehydrogenase (NADP(+)) activity,Designation,WARZELD,System Date,System date,,ENGLISH,,PGDH1,Biomarker Synonym,,NRG
+3606596,1,prostaglandin-D 15-dehydrogenase (NADP(+)) activity,Designation,WARZELD,,,,ENGLISH,,Hydroxyprostaglandin Dehydrogenase 15-(NAD),Biomarker Synonym,,NRG
+,,,Designation,WARZELD,,,,ENGLISH,,,Biomarker Synonym,,NRG
+2934718,1,15-Hydroxyprostaglandin Dehydrogenase [NAD+],Designation,WARZELD,,,,ENGLISH,,PGDH,Biomarker Synonym,,NRG
+2934718,1,15-Hydroxyprostaglandin Dehydrogenase [NAD+],Designation,WARZELD,,,,ENGLISH,,PGDH1,Biomarker Synonym,,NRG
+2934718,1,15-Hydroxyprostaglandin Dehydrogenase [NAD+],Designation,WARZELD,,,,ENGLISH,,PHOAR1,Biomarker Synonym,,NRG
+2934718,1,15-Hydroxyprostaglandin Dehydrogenase [NAD+],Designation,WARZELD,,,,ENGLISH,,15-PGDH,Biomarker Synonym,,NRG
+2934718,1,15-Hydroxyprostaglandin Dehydrogenase [NAD+],Designation,WARZELD,,,,ENGLISH,,SDR36C1,Biomarker Synonym,,NRG
+2934718,1,15-Hydroxyprostaglandin Dehydrogenase [NAD+],Designation,WARZELD,,,,ENGLISH,,Hydroxyprostaglandin Dehydrogenase 15-(NAD),Biomarker Synonym,,NRG
+2934718,1,15-Hydroxyprostaglandin Dehydrogenase [NAD+],Designation,WARZELD,,,,ENGLISH,,15-Hydroxyprostaglandin Dehydrogenase [NAD(+)],Biomarker Synonym,,NRG
