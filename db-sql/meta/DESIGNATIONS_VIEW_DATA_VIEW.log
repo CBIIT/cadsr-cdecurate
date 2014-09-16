@@ -1,0 +1,9 @@
+
+SQL*Loader: Release 10.2.0.1.0 - Production on Tue Sep 16 12:34:33 2014
+
+Copyright (c) 1982, 2005, Oracle.  All rights reserved.
+
+SQL*Loader-350: Syntax error at line 2.
+Expecting keyword LOAD, found keyword log.
+LOG=des.log
+^

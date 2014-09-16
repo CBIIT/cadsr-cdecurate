@@ -76,6 +76,7 @@
 	<classpathentry kind="lib" path="testlib/easymock/easymock-3.2.jar"/>
 	<classpathentry kind="lib" path="testlib/easymock/easymockclassextension-3.2.jar"/>
 	<classpathentry kind="lib" path="testlib/easymock/objenesis-2.1.jar"/>
+	<classpathentry kind="lib" path="test/pdi/kettle-engine-5.1.preview.506.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry kind="lib" path="lib/servlet.jar"/>
 	<classpathentry kind="lib" path="testlib/log4jdbc4-1.2.jar"/>
