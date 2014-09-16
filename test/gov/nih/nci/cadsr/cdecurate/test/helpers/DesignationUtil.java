@@ -48,7 +48,7 @@ public class DesignationUtil {
         return ret;
     }
 
-	public boolean isDesignationExists(Connection conn, String name) throws Exception {
+	private boolean isDesignationExists(Connection conn, String name) throws Exception {
     	PreparedStatement pstmt = null;
         String sql = "select * from sbr.designations_view where name = ?";
         ResultSet rs = null;
@@ -79,7 +79,8 @@ public class DesignationUtil {
         return ret;
     }
 
-	public String handleDesignationId(Connection conn, String name) throws Exception {
+	//TODO
+	private String handleDesignationId(Connection conn, String name) throws Exception {
 		String ret = null;
 		if((ret = getDesignationId(conn, name)) == null) {
 			try {

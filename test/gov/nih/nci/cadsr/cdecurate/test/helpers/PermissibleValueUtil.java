@@ -48,7 +48,7 @@ public class PermissibleValueUtil {
         return ret;
     }
 
-	public boolean isPermissibleValueExists(Connection conn, String value) throws Exception {
+	private boolean isPermissibleValueExists(Connection conn, String value) throws Exception {
     	PreparedStatement pstmt = null;
         String sql = "select pv_idseq from SBR.PERMISSIBLE_VALUES_VIEW where value = ?";
         ResultSet rs = null;
@@ -79,7 +79,8 @@ public class PermissibleValueUtil {
         return ret;
     }
 
-	public String handlePermissibleValueId(Connection conn, String value) throws Exception {
+	//TODO
+	private String handlePermissibleValueId(Connection conn, String value) throws Exception {
 		String ret = null;
 		if((ret = getPermissibleValueId(conn, value)) == null) {
 			try {
