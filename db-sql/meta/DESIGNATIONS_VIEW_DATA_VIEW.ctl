@@ -1,7 +1,7 @@
 OPTIONS (ERRORS=50, rows=500000)
 LOAD DATA
-INFILE 'DESIGNATIONS_VIEW_DATA_VIEW.ldr' "str '{EOL}'"
---INFILE 'C:\Users\ag\demo\cadsr-cdecurate_03122014\des.ldr' "str '{EOL}'"
+--INFILE 'DESIGNATIONS_VIEW_DATA_VIEW.ldr' "str '{EOL}'"
+INFILE 'C:\Users\ag\demo\cadsr-cdecurate_03122014\des.ldr' "str '{EOL}'"
 APPEND
 CONTINUEIF NEXT(1:1) = '#'
 INTO TABLE "SBR"."DESIGNATIONS_VIEW"

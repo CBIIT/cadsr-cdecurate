@@ -1,12 +1,12 @@
 
-SQL*Loader: Release 10.2.0.1.0 - Production on Wed Sep 17 15:16:13 2014
+SQL*Loader: Release 10.2.0.1.0 - Production on Wed Sep 17 17:09:04 2014
 
 Copyright (c) 1982, 2005, Oracle.  All rights reserved.
 
 Control File:   DESIGNATIONS_VIEW_DATA_VIEW.ctl
-Data File:      DESIGNATIONS_VIEW_DATA_VIEW.ldr
+Data File:      C:\Users\ag\demo\cadsr-cdecurate_03122014\des.ldr
   File processing option string: "str '{EOL}'"
-  Bad File:     DESIGNATIONS_VIEW_DATA_VIEW.bad
+  Bad File:     des.bad
   Discard File:  none specified
  
  (Allow all discards)
@@ -18,14 +18,13 @@ Bind array:     500000 rows, maximum of 256000 bytes
 Continuation:   1:1 = 0X23(character '#'), in next physical record
 Path used:      Conventional
 
-Table "SBR"."DESIGNATIONS", loaded from every logical record.
+Table "SBR"."DESIGNATIONS_VIEW", loaded from every logical record.
 Insert option in effect for this table: APPEND
 TRAILING NULLCOLS option in effect
 
    Column Name                  Position   Len  Term Encl Datatype
 ------------------------------ ---------- ----- ---- ---- ---------------------
-"DESIG_IDSEQ"                       FIRST    36   ,  O(") CHARACTER            
-                                                      O(")
+"DESIG_IDSEQ"                       FIRST    38           VARCHAR              
 "AC_IDSEQ"                           NEXT    36   ,  O(") CHARACTER            
                                                       O(")
 "CONTE_IDSEQ"                        NEXT    36   ,  O(") CHARACTER            
@@ -46,40 +45,128 @@ TRAILING NULLCOLS option in effect
                                                       O(")
 
 value used for ROWS parameter changed from 500000 to 93
-Record 1: Rejected - Error on table "SBR"."DESIGNATIONS", column "DESIG_IDSEQ".
-Field in data file exceeds maximum length
-Record 2: Rejected - Error on table "SBR"."DESIGNATIONS".
-ORA-20999: TAPI-0:Insufficient privileges to create the designation in the selected context.
-ORA-06512: at "SBR.CG$ERRORS", line 68
-ORA-06512: at "SBR.DESIG_BI_ROW_SECURITY", line 20
-ORA-04088: error during execution of trigger 'SBR.DESIG_BI_ROW_SECURITY'
+Record 1: Rejected - Error on table "SBR"."DESIGNATIONS_VIEW", column "DESIG_IDSEQ".
+Variable length field exceeds maximum length.
+Record 2: Rejected - Error on table "SBR"."DESIGNATIONS_VIEW", column "DESIG_IDSEQ".
+Variable length field exceeds maximum length.
+Record 3: Rejected - Error on table "SBR"."DESIGNATIONS_VIEW", column "DESIG_IDSEQ".
+Variable length field exceeds maximum length.
+Record 4: Rejected - Error on table "SBR"."DESIGNATIONS_VIEW", column "DESIG_IDSEQ".
+Variable length field exceeds maximum length.
+Record 5: Rejected - Error on table "SBR"."DESIGNATIONS_VIEW", column "DESIG_IDSEQ".
+Variable length field exceeds maximum length.
+Record 6: Rejected - Error on table "SBR"."DESIGNATIONS_VIEW", column "DESIG_IDSEQ".
+Variable length field exceeds maximum length.
+Record 7: Rejected - Error on table "SBR"."DESIGNATIONS_VIEW", column "DESIG_IDSEQ".
+Variable length field exceeds maximum length.
+Record 8: Rejected - Error on table "SBR"."DESIGNATIONS_VIEW", column "DESIG_IDSEQ".
+Variable length field exceeds maximum length.
+Record 9: Rejected - Error on table "SBR"."DESIGNATIONS_VIEW", column "DESIG_IDSEQ".
+Variable length field exceeds maximum length.
+Record 10: Rejected - Error on table "SBR"."DESIGNATIONS_VIEW", column "DESIG_IDSEQ".
+Variable length field exceeds maximum length.
+Record 11: Rejected - Error on table "SBR"."DESIGNATIONS_VIEW", column "DESIG_IDSEQ".
+Variable length field exceeds maximum length.
+Record 12: Rejected - Error on table "SBR"."DESIGNATIONS_VIEW", column "DESIG_IDSEQ".
+Variable length field exceeds maximum length.
+Record 13: Rejected - Error on table "SBR"."DESIGNATIONS_VIEW", column "DESIG_IDSEQ".
+Variable length field exceeds maximum length.
+Record 14: Rejected - Error on table "SBR"."DESIGNATIONS_VIEW", column "DESIG_IDSEQ".
+Variable length field exceeds maximum length.
+Record 15: Rejected - Error on table "SBR"."DESIGNATIONS_VIEW", column "DESIG_IDSEQ".
+Variable length field exceeds maximum length.
+Record 16: Rejected - Error on table "SBR"."DESIGNATIONS_VIEW", column "DESIG_IDSEQ".
+Variable length field exceeds maximum length.
+Record 17: Rejected - Error on table "SBR"."DESIGNATIONS_VIEW", column "DESIG_IDSEQ".
+Variable length field exceeds maximum length.
+Record 18: Rejected - Error on table "SBR"."DESIGNATIONS_VIEW", column "DESIG_IDSEQ".
+Variable length field exceeds maximum length.
+Record 19: Rejected - Error on table "SBR"."DESIGNATIONS_VIEW", column "DESIG_IDSEQ".
+Variable length field exceeds maximum length.
+Record 20: Rejected - Error on table "SBR"."DESIGNATIONS_VIEW", column "DESIG_IDSEQ".
+Variable length field exceeds maximum length.
+Record 21: Rejected - Error on table "SBR"."DESIGNATIONS_VIEW", column "DESIG_IDSEQ".
+Variable length field exceeds maximum length.
+Record 22: Rejected - Error on table "SBR"."DESIGNATIONS_VIEW", column "DESIG_IDSEQ".
+Variable length field exceeds maximum length.
+Record 23: Rejected - Error on table "SBR"."DESIGNATIONS_VIEW", column "DESIG_IDSEQ".
+Variable length field exceeds maximum length.
+Record 24: Rejected - Error on table "SBR"."DESIGNATIONS_VIEW", column "DESIG_IDSEQ".
+Variable length field exceeds maximum length.
+Record 25: Rejected - Error on table "SBR"."DESIGNATIONS_VIEW", column "DESIG_IDSEQ".
+Variable length field exceeds maximum length.
+Record 26: Rejected - Error on table "SBR"."DESIGNATIONS_VIEW", column "DESIG_IDSEQ".
+Variable length field exceeds maximum length.
+Record 27: Rejected - Error on table "SBR"."DESIGNATIONS_VIEW", column "DESIG_IDSEQ".
+Variable length field exceeds maximum length.
+Record 28: Rejected - Error on table "SBR"."DESIGNATIONS_VIEW", column "DESIG_IDSEQ".
+Variable length field exceeds maximum length.
+Record 29: Rejected - Error on table "SBR"."DESIGNATIONS_VIEW", column "DESIG_IDSEQ".
+Variable length field exceeds maximum length.
+Record 30: Rejected - Error on table "SBR"."DESIGNATIONS_VIEW", column "DESIG_IDSEQ".
+Variable length field exceeds maximum length.
+Record 31: Rejected - Error on table "SBR"."DESIGNATIONS_VIEW", column "DESIG_IDSEQ".
+Variable length field exceeds maximum length.
+Record 32: Rejected - Error on table "SBR"."DESIGNATIONS_VIEW", column "DESIG_IDSEQ".
+Variable length field exceeds maximum length.
+Record 33: Rejected - Error on table "SBR"."DESIGNATIONS_VIEW", column "DESIG_IDSEQ".
+Variable length field exceeds maximum length.
+Record 34: Rejected - Error on table "SBR"."DESIGNATIONS_VIEW", column "DESIG_IDSEQ".
+Variable length field exceeds maximum length.
+Record 35: Rejected - Error on table "SBR"."DESIGNATIONS_VIEW", column "DESIG_IDSEQ".
+Variable length field exceeds maximum length.
+Record 36: Rejected - Error on table "SBR"."DESIGNATIONS_VIEW", column "DESIG_IDSEQ".
+Variable length field exceeds maximum length.
+Record 37: Rejected - Error on table "SBR"."DESIGNATIONS_VIEW", column "DESIG_IDSEQ".
+Variable length field exceeds maximum length.
+Record 38: Rejected - Error on table "SBR"."DESIGNATIONS_VIEW", column "DESIG_IDSEQ".
+Variable length field exceeds maximum length.
+Record 39: Rejected - Error on table "SBR"."DESIGNATIONS_VIEW", column "DESIG_IDSEQ".
+Variable length field exceeds maximum length.
+Record 40: Rejected - Error on table "SBR"."DESIGNATIONS_VIEW", column "DESIG_IDSEQ".
+Variable length field exceeds maximum length.
+Record 41: Rejected - Error on table "SBR"."DESIGNATIONS_VIEW", column "DESIG_IDSEQ".
+Variable length field exceeds maximum length.
+Record 42: Rejected - Error on table "SBR"."DESIGNATIONS_VIEW", column "DESIG_IDSEQ".
+Variable length field exceeds maximum length.
+Record 43: Rejected - Error on table "SBR"."DESIGNATIONS_VIEW", column "DESIG_IDSEQ".
+Variable length field exceeds maximum length.
+Record 44: Rejected - Error on table "SBR"."DESIGNATIONS_VIEW", column "DESIG_IDSEQ".
+Variable length field exceeds maximum length.
+Record 45: Rejected - Error on table "SBR"."DESIGNATIONS_VIEW", column "DESIG_IDSEQ".
+Variable length field exceeds maximum length.
+Record 46: Rejected - Error on table "SBR"."DESIGNATIONS_VIEW", column "DESIG_IDSEQ".
+Variable length field exceeds maximum length.
+Record 47: Rejected - Error on table "SBR"."DESIGNATIONS_VIEW", column "DESIG_IDSEQ".
+Variable length field exceeds maximum length.
+Record 48: Rejected - Error on table "SBR"."DESIGNATIONS_VIEW", column "DESIG_IDSEQ".
+Variable length field exceeds maximum length.
+Record 49: Rejected - Error on table "SBR"."DESIGNATIONS_VIEW", column "DESIG_IDSEQ".
+Variable length field exceeds maximum length.
+Record 50: Rejected - Error on table "SBR"."DESIGNATIONS_VIEW", column "DESIG_IDSEQ".
+Variable length field exceeds maximum length.
+Record 51: Rejected - Error on table "SBR"."DESIGNATIONS_VIEW", column "DESIG_IDSEQ".
+Variable length field exceeds maximum length.
 
-Record 3: Rejected - Error on table "SBR"."DESIGNATIONS".
-ORA-20999: TAPI-0:Insufficient privileges to create the designation in the selected context.
-           TAPI-0:Insufficient privileges to create the designation in the selected context.
-ORA-06512: at "SBR.CG$ERRORS", line 68
-ORA-06512: at "SBR.DESIG_BI_ROW_SECURITY", line 20
-ORA-04088: error during execution of trigger 'SBR.DESIG_BI_ROW_SECURITY'
+MAXIMUM ERROR COUNT EXCEEDED - Above statistics reflect partial run.
 
-Record 4: Discarded - all columns null.
-
-Table "SBR"."DESIGNATIONS":
+Table "SBR"."DESIGNATIONS_VIEW":
   0 Rows successfully loaded.
-  3 Rows not loaded due to data errors.
+  51 Rows not loaded due to data errors.
   0 Rows not loaded because all WHEN clauses were failed.
-  1 Row not loaded because all fields were null.
+  0 Rows not loaded because all fields were null.
 
 
-Space allocated for bind array:                 255750 bytes(93 rows)
+Space allocated for bind array:                 255936 bytes(93 rows)
 Read   buffer bytes: 1048576
 
 Total logical records skipped:          0
-Total logical records read:             4
-Total logical records rejected:         3
-Total logical records discarded:        1
+Total logical records read:            51
+Total logical records rejected:        51
+Total logical records discarded:        0
 
-Run began on Wed Sep 17 15:16:13 2014
-Run ended on Wed Sep 17 15:16:14 2014
+Run began on Wed Sep 17 17:09:04 2014
+Run ended on Wed Sep 17 17:09:05 2014
 
-Elapsed time was:     00:00:01.40
-CPU time was:         00:00:00.06
+Elapsed time was:     00:00:01.10
+CPU time was:         00:00:00.02

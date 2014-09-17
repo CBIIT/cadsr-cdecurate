@@ -37,7 +37,8 @@ public class DataLoader {
 	private static DesignationUtil designationUtil;
 	private static PermissibleValueUtil permissibleValueUtil;
 	private static AdministeredItemUtil administeredItemUtil;
-	private static boolean autoCleanup;
+//	private static boolean autoCleanup = false;
+	private static boolean autoCleanup = true;
 //	private static boolean showDesSkipped = false;
 //	private static boolean showPVSkipped = false;
 	private static boolean showDesSkipped = true;
@@ -69,9 +70,7 @@ public class DataLoader {
 	}
 
 	public static void main(String[] args) {
-		autoCleanup = false;
-//		autoCleanup = true;
-		String header = "--DataLoaderV1.00 build 103 9/17/2014 [autoCleanup:" + autoCleanup+"] " + new Date() + "\n";
+		String header = "--DataLoaderV1.00 build 103a 9/17/2014 [autoCleanup:" + autoCleanup+"] [persistToDB:" + persistToDB + "] "+ new Date() + "\n";
 		System.out.println(header);
 		initDB(true);
 		designationUtil = new DesignationUtil();
@@ -92,11 +91,11 @@ public class DataLoader {
 
 		DesignationsView designation = new DesignationsView();
 	    PermissibleValuesView permissiblevalue = new PermissibleValuesView();
-//	    processDesignationFromCSV(conn, "C:/Users/ag/demo/cadsr-cdecurate_03122014/test/gov/nih/nci/cadsr/cdecurate/util/SampleForTestingLoader-V3-designation.csv", designation);
+	    processDesignationFromCSV(conn, "C:/Users/ag/demo/cadsr-cdecurate_03122014/test/gov/nih/nci/cadsr/cdecurate/util/SampleForTestingLoader-V3-designation.csv", designation);
 //	    processPermissibleValueFromCSV(conn, "C:/Users/ag/demo/cadsr-cdecurate_03122014/test/gov/nih/nci/cadsr/cdecurate/util/SampleForTestingLoader-V3-permissiblevalue.csv", permissiblevalue);
 
-	    processDesignationFromCSV(conn, "C:/Users/ag/demo/cadsr-cdecurate_03122014/test/gov/nih/nci/cadsr/cdecurate/util/SampleForTestingLoader-V3-designation-small.csv", designation);
-	    processPermissibleValueFromCSV(conn, "C:/Users/ag/demo/cadsr-cdecurate_03122014/test/gov/nih/nci/cadsr/cdecurate/util/SampleForTestingLoader-V3-permissiblevalue-small.csv", permissiblevalue);
+//	    processDesignationFromCSV(conn, "C:/Users/ag/demo/cadsr-cdecurate_03122014/test/gov/nih/nci/cadsr/cdecurate/util/SampleForTestingLoader-V3-designation-small.csv", designation);
+//	    processPermissibleValueFromCSV(conn, "C:/Users/ag/demo/cadsr-cdecurate_03122014/test/gov/nih/nci/cadsr/cdecurate/util/SampleForTestingLoader-V3-permissiblevalue-small.csv", permissiblevalue);
 	}
 	
 	/*
