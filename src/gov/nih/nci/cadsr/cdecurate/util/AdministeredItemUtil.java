@@ -167,7 +167,8 @@ public class AdministeredItemUtil {
 	
 	public String getContextID(Connection conn, String name) throws Exception {
     	PreparedStatement pstmt = null;
-        String sql = "select * from sbr.contexts_view where name = ?";
+        //String sql = "select * from sbr.contexts_view where name = ?";	//can't query / do not need to query the view as it might not return the results due to 
+        String sql = "select * from sbr.contexts where name = ?";	//TODO this is bad as we bypass the security
         ResultSet rs = null;
         String ret = null;
         if(conn == null) {

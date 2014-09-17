@@ -14,13 +14,12 @@ import java.util.StringTokenizer;
  */
 public class ParseHelper {
 
-    public static int NO_OF_COLUMNS = 0; 
-    
     public static String[] getColumns(BufferedReader br) {
         
         String record = "";
         StringTokenizer st = null;
         String[] columns = null;
+        int totalColumns = 0;
         
         try {
             if((record = br.readLine()) != null){
@@ -29,8 +28,8 @@ public class ParseHelper {
                 while(st.hasMoreTokens())
                 {
                     
-                    columns[NO_OF_COLUMNS] = st.nextToken();
-                    NO_OF_COLUMNS++;
+                    columns[totalColumns] = st.nextToken();
+                    totalColumns++;
                 }                
             }
         } catch (IOException e) {

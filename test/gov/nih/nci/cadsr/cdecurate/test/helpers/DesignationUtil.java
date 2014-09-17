@@ -10,6 +10,7 @@ import java.sql.SQLException;
 public class DesignationUtil {
 
 	private boolean autoCleanup;
+	private static AdministeredItemUtil administeredItemUtil;
 
 	public boolean isAutoCleanup() {
 		return autoCleanup;
@@ -17,8 +18,13 @@ public class DesignationUtil {
 
 	public void setAutoCleanup(boolean autoCleanup) {
 		this.autoCleanup = autoCleanup;
+		administeredItemUtil.setAutoCleanup(autoCleanup);
 	}
 	
+	public DesignationUtil() {
+		administeredItemUtil = new AdministeredItemUtil();
+	}
+
 	public String getDesignationId(Connection conn, String name) throws Exception {
     	PreparedStatement pstmt = null;
         String sql = "select desig_idseq from sbr.designations_view where name = ?";
@@ -84,7 +90,7 @@ public class DesignationUtil {
 		String ret = null;
 		if((ret = getDesignationId(conn, name)) == null) {
 			try {
-				ret = AdministeredItemUtil.getNewAC_IDSEQ(conn);
+				ret = administeredItemUtil.getNewAC_IDSEQ(conn);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
