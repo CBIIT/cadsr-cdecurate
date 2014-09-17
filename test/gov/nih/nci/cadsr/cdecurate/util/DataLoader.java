@@ -59,7 +59,8 @@ public class DataLoader {
 	}
 
 	public static void main(String[] args) {
-		autoCleanup = true;	//false;
+		autoCleanup = false;
+//		autoCleanup = true;
 		String header = "--DataLoaderV1.00 build 103 9/17/2014 [autoCleanup:" + autoCleanup+"] " + new Date() + "\n";
 		System.out.println(header);
 		initDB(true);
