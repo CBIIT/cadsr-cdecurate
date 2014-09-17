@@ -22,6 +22,7 @@ public class DataLoader {
 	private static String password;
 	private static DesignationUtil designationUtil;
 	private static PermissibleValueUtil permissibleValueUtil;
+	private static AdministeredItemUtil administeredItemUtil;
 	private static boolean autoCleanup;
 
 	private static void initDB(boolean force) {
@@ -38,11 +39,14 @@ public class DataLoader {
 
 	public static void main(String[] args) {
 		autoCleanup = false;
+		System.out.println("DataLoaderV1.00 build 100 [autoCleanup:" + autoCleanup+"]");
 		initDB(true);
 		designationUtil = new DesignationUtil();
 		designationUtil.setAutoCleanup(autoCleanup);
 		permissibleValueUtil = new PermissibleValueUtil();
 		permissibleValueUtil.setAutoCleanup(autoCleanup);
+		administeredItemUtil = new AdministeredItemUtil();
+		administeredItemUtil.setAutoCleanup(autoCleanup);
 
 	    DesignationsView designation = new DesignationsView();
 	    PermissibleValuesView permissiblevalue = new PermissibleValuesView();
@@ -50,7 +54,7 @@ public class DataLoader {
 //	    processPermissibleValueFromCSV(conn, "C:/Users/ag/demo/cadsr-cdecurate_03122014/test/gov/nih/nci/cadsr/cdecurate/util/SampleForTestingLoader-V3-permissiblevalue.csv", permissiblevalue);
 
 	    processDesignationFromCSV(conn, "C:/Users/ag/demo/cadsr-cdecurate_03122014/test/gov/nih/nci/cadsr/cdecurate/util/SampleForTestingLoader-V3-designation-small.csv", designation);
-	    processPermissibleValueFromCSV(conn, "C:/Users/ag/demo/cadsr-cdecurate_03122014/test/gov/nih/nci/cadsr/cdecurate/util/SampleForTestingLoader-V3-permissiblevalue-small.csv", permissiblevalue);
+//	    processPermissibleValueFromCSV(conn, "C:/Users/ag/demo/cadsr-cdecurate_03122014/test/gov/nih/nci/cadsr/cdecurate/util/SampleForTestingLoader-V3-permissiblevalue-small.csv", permissiblevalue);
 	}
 	
     public static List<Object> processDesignationFromCSV(Connection conn, String fileName, DesignationsView record) {
@@ -87,7 +91,7 @@ public class DataLoader {
 		        			if((desigId = designationUtil.getDesignationId(conn, name)) == null) {
 		        				try {
 		            				initDB(autoCleanup);
-		        					desigId = AdministeredItemUtil.getNewAC_IDSEQ(conn);
+		        					desigId = administeredItemUtil.getNewAC_IDSEQ(conn);
 		        				} catch (Exception e) {
 		        					e.printStackTrace();
 		        				}
@@ -95,9 +99,9 @@ public class DataLoader {
 		        				System.out.println("processDesignationFromCSV: name already exists. Skipped!");
 		        			}
             				initDB(autoCleanup);
-	            			contextId = AdministeredItemUtil.getContextID(conn, contextName);
+	            			contextId = administeredItemUtil.getContextID(conn, contextName);
             				initDB(autoCleanup);
-	            			acId = AdministeredItemUtil.getRelatedAC_IDSEQ(conn, values[0], values[1]);
+	            			acId = administeredItemUtil.getRelatedAC_IDSEQ(conn, values[0], values[1]);
             			}
 //                    	Field f1 = record.getClass().getDeclaredField(columnName);
 //                    	f1.setAccessible(true);
@@ -154,7 +158,7 @@ public class DataLoader {
             				if((pvId = permissibleValueUtil.getPermissibleValueId(conn, value)) == null) {
             					try {
                     				initDB(autoCleanup);
-            						pvId = AdministeredItemUtil.getNewAC_IDSEQ(conn);
+            						pvId = administeredItemUtil.getNewAC_IDSEQ(conn);
             					} catch (Exception e) {
             						e.printStackTrace();
             					}
@@ -180,7 +184,7 @@ public class DataLoader {
             			newRecord.setDATECREATED(new Date());
             			newRecord.setCREATEDBY("WARZELD");
         				initDB(autoCleanup);
-            			newRecord.setVMIDSEQ((AdministeredItemUtil.getRelatedAC_IDSEQ(conn, values[0], values[1])));
+            			newRecord.setVMIDSEQ((administeredItemUtil.getRelatedAC_IDSEQ(conn, values[0], values[1])));
                         
 //                    }
                     recordList.add(newRecord);

@@ -39,6 +39,8 @@ public class Meta501 {
 	private static PermissibleValuesViewDao pvDAO;
 	private static DesignationUtil designationUtil;
 	private static PermissibleValueUtil permissibleValueUtil;
+	private static AdministeredItemUtil administeredItemUtil;
+
 	@BeforeClass
 	public static void init() {
 		userId = System.getProperty("u");
@@ -55,6 +57,7 @@ public class Meta501 {
 		}
 		designationUtil = new DesignationUtil();
 		permissibleValueUtil = new PermissibleValueUtil();
+		administeredItemUtil = new AdministeredItemUtil();
 	}
 
 	@After
@@ -82,11 +85,11 @@ public class Meta501 {
 			conn = TestUtil.getConnection(sbrUserId, sbrPassword);	//TODO can not use this account, this is just a workaround!
 //			conn = TestUtil.getConnection(userId, password);	//TODO this account does not return anything, will use it once the DBA fix it
 			//get the context id first
-			String contextId = AdministeredItemUtil.getContextID(conn, "NRG");
+			String contextId = administeredItemUtil.getContextID(conn, "NRG");
 			String desigId = null;
 			if((desigId = designationUtil.getDesignationId(conn, name)) == null) {
 				try {
-					desigId = AdministeredItemUtil.getNewAC_IDSEQ(conn);
+					desigId = administeredItemUtil.getNewAC_IDSEQ(conn);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -107,7 +110,7 @@ public class Meta501 {
 			dto.setDETLNAME("Biomarker Synonym");
 			dto.setCONTEIDSEQ(contextId);
 			dto.setDESIGIDSEQ(desigId);
-			dto.setACIDSEQ(AdministeredItemUtil.getRelatedAC_IDSEQ(conn, "3334837", "1"));
+			dto.setACIDSEQ(administeredItemUtil.getRelatedAC_IDSEQ(conn, "3334837", "1"));
 			
 			desDAO.insert( dto );
 			System.out.println("testDesignationInsertOneRow: 1 designation inserted");
@@ -205,7 +208,7 @@ order by pv.date_created desc
 			String pvId = null;
 			if((pvId = permissibleValueUtil.getPermissibleValueId(conn, value)) == null) {
 				try {
-					pvId = AdministeredItemUtil.getNewAC_IDSEQ(conn);
+					pvId = administeredItemUtil.getNewAC_IDSEQ(conn);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -230,7 +233,7 @@ Value Domain ID	Value Domain Version	Value Domain LongName	Type	Existing PV Valu
 			dto.setSHORTMEANING(dummySM);
 			dto.setDATECREATED(new Date());
 			dto.setCREATEDBY("TANJ");
-			dto.setVMIDSEQ((AdministeredItemUtil.getRelatedAC_IDSEQ(conn, "4211591", "1")));
+			dto.setVMIDSEQ((administeredItemUtil.getRelatedAC_IDSEQ(conn, "4211591", "1")));
 			
 			pvDAO.insert( dto );
 			System.out.println("testPermissibleValueInsertOneRow: 1 pv inserted");
