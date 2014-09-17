@@ -1,5 +1,6 @@
 package gov.nih.nci.cadsr.cdecurate.util;
 
+import gov.nih.nci.cadsr.cdecurate.test.helpers.DBUtil;
 import gov.nih.nci.cadsr.cdecurate.test.helpers.DesignationUtil;
 import gov.nih.nci.cadsr.cdecurate.test.helpers.PermissibleValueUtil;
 import gov.nih.nci.cadsr.common.TestUtil;
@@ -14,7 +15,11 @@ import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.io.FileUtils;
+import org.junit.BeforeClass;
 
+import nci.cadsr.persist.dao.DaoFactory;
+import nci.cadsr.persist.dao.DesignationsViewDao;
+import nci.cadsr.persist.dao.PermissibleValuesViewDao;
 import nci.cadsr.persist.dto.DesignationsView;
 import nci.cadsr.persist.dto.PermissibleValuesView;
 
@@ -46,6 +51,11 @@ public class DataLoader {
 //	private static boolean showDesInserted = false;
 	private static boolean showPVInserted = false;
 
+	//private static boolean persistToDB = true;
+	private static boolean persistToDB = false;
+	//private static boolean sqlLoaderOutput = false;
+	private static boolean sqlLoaderOutput = true;
+	
 	private static void initDB(boolean force) {
 		if(force) {
 			userId = System.getProperty("u");
@@ -170,7 +180,12 @@ order by d.date_modified desc
                     if(showDesInserted) {
                     	System.out.println("new des: " + newRecord.toString());
                     }
-                    FileUtils.writeStringToFile(desFile, SQLLoaderHelper.toDesRow(newRecord), true);
+                    if(sqlLoaderOutput) {
+                    	FileUtils.writeStringToFile(desFile, SQLLoaderHelper.toDesRow(newRecord), true);
+                    }
+                    if(persistToDB) {
+                    	persistDesignation(newRecord);
+                    }
                 }
                 br.close();
             } catch(Exception e){
@@ -261,7 +276,12 @@ order by pv.date_modified desc
                     if(showPVInserted) {
                     	System.out.println("new pv: " + newRecord.toString());
                     }
-                    FileUtils.writeStringToFile(pvFile, SQLLoaderHelper.toPVRow(newRecord), true);
+                    if(sqlLoaderOutput) {
+                    	FileUtils.writeStringToFile(pvFile, SQLLoaderHelper.toPVRow(newRecord), true);
+                    }
+                    if(persistToDB) {
+                    	persistPermissibleValue(newRecord);
+                    }
                 }
                 br.close();
             } catch(Exception e){
@@ -271,5 +291,32 @@ order by pv.date_modified desc
             return recordList;
     }
 
+    private static void persistDesignation(DesignationsView des) {
+    	DesignationsViewDao desDAO;
+
+		try {
+			desDAO = DaoFactory.createDesignationsViewDao(conn);
+			if(desDAO.findByPrimaryKey(des.getDESIGIDSEQ()) != null) {
+				desDAO.update(des.getDESIGIDSEQ(), des);
+			} else {
+				desDAO.insert(des);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+    	
+    }
+
+    private static void persistPermissibleValue(PermissibleValuesView pv) {
+    	PermissibleValuesViewDao pvDAO;
+
+    	try {
+			pvDAO = DaoFactory.createPermissibleValuesViewDao(conn);
+			pvDAO.update(pv.getPVIDSEQ(), pv);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+    	
+    }
+
 }
-	
