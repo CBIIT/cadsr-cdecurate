@@ -100,9 +100,12 @@ public class DataLoader {
 	}
 	
 	/*
-SELECT d.date_modified, MODIFIED_BY, d.lae_name, d.name, d.detl_name FROM sbr.designations_view d
+SELECT 
+count(*)
+--d.date_modified, MODIFIED_BY, d.lae_name, d.name, d.detl_name 
+FROM sbr.designations_view d
 where
-d.date_modified is not NULL
+d.date_modified is not NULL and d.date_modified >= sysdate -1
 --rownum < 31
 order by d.date_modified desc
 --order by d.date_created desc
@@ -199,12 +202,15 @@ order by d.date_modified desc
     }
 
     /*
-select pv.date_modified, pv.VALUE, vm.vm_id, vm.version, vm.vm_idseq, vm.PREFERRED_NAME, vm.LONG_NAME, vm.SHORT_MEANING, vm.DESCRIPTION
+select 
+count(*)
+--pv.date_modified, pv.VALUE, vm.vm_id, vm.version, vm.vm_idseq, vm.PREFERRED_NAME, vm.LONG_NAME, vm.SHORT_MEANING, vm.DESCRIPTION
 --, pv.SHORT_MEANING, pv.MEANING_DESCRIPTION,
 from SBR.VALUE_MEANINGS_VIEW vm, SBR.PERMISSIBLE_VALUES_VIEW pv where vm.VM_IDSEQ = pv.VM_IDSEQ
-and pv.date_modified is not NULL
+and pv.date_modified is not NULL and pv.date_modified >= sysdate -1
 --and vm.vm_id = '4211591'
 order by pv.date_modified desc
+--order by pv.date_created desc
      */
     public static List<Object> processPermissibleValueFromCSV(String fileName, PermissibleValuesView record) {
         List<Object> recordList = new ArrayList<Object>();
