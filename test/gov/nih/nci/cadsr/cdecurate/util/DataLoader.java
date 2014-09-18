@@ -115,11 +115,16 @@ public class DataLoader {
 
 		DesignationsView designation = new DesignationsView();
 	    PermissibleValuesView permissiblevalue = new PermissibleValuesView();
-	    processDesignationFromCSV("C:/Users/ag/demo/cadsr-cdecurate_03122014/test/gov/nih/nci/cadsr/cdecurate/util/SampleForTestingLoader-V3-designation.csv", designation, 227, true);
+//	    processDesignationFromCSV("C:/Users/ag/demo/cadsr-cdecurate_03122014/test/gov/nih/nci/cadsr/cdecurate/util/SampleForTestingLoader-V3-designation.csv", designation, 7404, true);
 //	    processPermissibleValueFromCSV("C:/Users/ag/demo/cadsr-cdecurate_03122014/test/gov/nih/nci/cadsr/cdecurate/util/SampleForTestingLoader-V3-permissiblevalue.csv", permissiblevalue, -1, true);
 
+	    //first test data set
 //	    processDesignationFromCSV("C:/Users/ag/demo/cadsr-cdecurate_03122014/test/gov/nih/nci/cadsr/cdecurate/util/SampleForTestingLoader-V3-designation-small.csv", designation, -1, true);
 //	    processPermissibleValueFromCSV("C:/Users/ag/demo/cadsr-cdecurate_03122014/test/gov/nih/nci/cadsr/cdecurate/util/SampleForTestingLoader-V3-permissiblevalue-small.csv", permissiblevalue, -1, true);
+	    //second test data set received on 9/18/2014
+	    processPermissibleValueFromCSV("C:/Users/ag/demo/cadsr-cdecurate_03122014/test/gov/nih/nci/cadsr/cdecurate/util/Sample2ForTestingLoader-V3-1-permissiblevalue-small.csv", permissiblevalue, -1, true);
+//	    processPermissibleValueFromCSV("C:/Users/ag/demo/cadsr-cdecurate_03122014/test/gov/nih/nci/cadsr/cdecurate/util/Sample2ForTestingLoader-V3-1-permissiblevalue.csv", permissiblevalue, -1, true);
+	    
 	}
 	
 	/*
@@ -156,11 +161,12 @@ order by d.date_modified desc
                 		}
                 	}
                 	DesignationsView newRecord = record.getClass().newInstance();
-                    String[] values = strLine.split(",");
+                    String[] values = strLine.split(",(?=([^\"]*\"[^\"]*\")*[^\"]*$)");
                     int size = values.length;
                     if(columns.length != size) {
 	    				if(showDesSkipped) {
-	    					System.out.println("processDesignationFromCSV: row column=" + size + " is not equal to header column=" + columns.length + " [" + values[0] + ", " + values[1] + ", " + values[2] + "] ??? - skipped!");
+	    					System.out.println("processDesignationFromCSV: row " + count + " column=" + size + " is not equal to header column=" + columns.length + " [" + values[0] + ", " + values[1] + ", " + values[2] + "] ??? - skipped!");
+                			count++;
 	    					continue;
 	    				}
                     }
@@ -265,11 +271,12 @@ order by pv.date_modified desc
                 		}
                 	}
                 	PermissibleValuesView newRecord = record.getClass().newInstance();
-                    String[] values = strLine.split(",");
+                    String[] values = strLine.split(",(?=([^\"]*\"[^\"]*\")*[^\"]*$)");
                     int size = values.length;
                     if(columns.length != size) {
         				if(showPVSkipped) {
-        					System.out.println("processPermissibleValueFromCSV: row column=" + size + " is not equal to header column=" + columns.length + " [" + values[0] + ", " + values[1] + ", " + values[2] + "] ??? - skipped!");
+        					System.out.println("processPermissibleValueFromCSV: row " + count + " column=" + size + " is not equal to header column=" + columns.length + " [" + values[0] + ", " + values[1] + ", " + values[2] + "] ??? - skipped!");
+                			count++;
         					continue;
         				}
                     }
