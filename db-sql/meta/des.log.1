@@ -1,0 +1,80 @@
+
+SQL*Loader: Release 10.2.0.1.0 - Production on Thu Sep 18 10:31:00 2014
+
+Copyright (c) 1982, 2005, Oracle.  All rights reserved.
+
+Control File:   DESIGNATIONS_VIEW_DATA_VIEW.ctl
+Data File:      C:\Users\ag\demo\cadsr-cdecurate_03122014\des.ldr
+  File processing option string: "str '{EOL}'"
+  Bad File:     des.bad
+  Discard File:  none specified
+ 
+ (Allow all discards)
+
+Number to load: ALL
+Number to skip: 0
+Errors allowed: 50
+Bind array:     64 rows, maximum of 256000 bytes
+Continuation:    none specified
+Path used:      Conventional
+
+Table "SBR"."DESIGNATIONS_VIEW", loaded from every logical record.
+Insert option in effect for this table: APPEND
+TRAILING NULLCOLS option in effect
+
+   Column Name                  Position   Len  Term Encl Datatype
+------------------------------ ---------- ----- ---- ---- ---------------------
+"DESIG_IDSEQ"                       FIRST    36   |  O(") CHARACTER            
+                                                      O(")
+"AC_IDSEQ"                           NEXT    36   |  O(") CHARACTER            
+                                                      O(")
+"CONTE_IDSEQ"                        NEXT    36   |  O(") CHARACTER            
+                                                      O(")
+"NAME"                               NEXT  2000   |  O(") CHARACTER            
+                                                      O(")
+"DETL_NAME"                          NEXT    20   |  O(") CHARACTER            
+                                                      O(")
+"DATE_CREATED"                       NEXT     *   |  O(") DATE YYYY-MM-DD HH24:MI:SS
+                                                      O(")
+"CREATED_BY"                         NEXT    30   |  O(") CHARACTER            
+                                                      O(")
+"DATE_MODIFIED"                      NEXT     *   |  O(") DATE YYYY-MM-DD HH24:MI:SS
+                                                      O(")
+"MODIFIED_BY"                        NEXT    30   |  O(") CHARACTER            
+                                                      O(")
+"LAE_NAME"                           NEXT    30   |  O(") CHARACTER            
+                                                      O(")
+
+Record 1: Rejected - Error on table "SBR"."DESIGNATIONS_VIEW", column "DESIG_IDSEQ".
+Field in data file exceeds maximum length
+Record 4: Rejected - Error on table "SBR"."DESIGNATIONS_VIEW".
+ORA-01403: no data found
+ORA-06512: at "SBR.DESIG_BIU_ROW_ASSIGN_VALUES", line 18
+ORA-04088: error during execution of trigger 'SBR.DESIG_BIU_ROW_ASSIGN_VALUES'
+
+Record 12: Rejected - Error on table "SBR"."DESIGNATIONS_VIEW".
+ORA-01403: no data found
+ORA-06512: at "SBR.DESIG_BIU_ROW_ASSIGN_VALUES", line 18
+ORA-04088: error during execution of trigger 'SBR.DESIG_BIU_ROW_ASSIGN_VALUES'
+
+
+Table "SBR"."DESIGNATIONS_VIEW":
+  16 Rows successfully loaded.
+  3 Rows not loaded due to data errors.
+  0 Rows not loaded because all WHEN clauses were failed.
+  0 Rows not loaded because all fields were null.
+
+
+Space allocated for bind array:                 176000 bytes(64 rows)
+Read   buffer bytes: 1048576
+
+Total logical records skipped:          0
+Total logical records read:            19
+Total logical records rejected:         3
+Total logical records discarded:        0
+
+Run began on Thu Sep 18 10:31:00 2014
+Run ended on Thu Sep 18 10:31:01 2014
+
+Elapsed time was:     00:00:01.11
+CPU time was:         00:00:00.05
