@@ -70,7 +70,8 @@ public class DataLoader {
 	}
 
 	public static void main(String[] args) {
-		String header = "--DataLoaderV1.00 build 103a 9/17/2014 [autoCleanup:" + autoCleanup+"] [persistToDB:" + persistToDB + "] "+ new Date() + "\n";
+		String header = "--DataLoaderV1.00 build 105 9/17/2014 [autoCleanup:" + autoCleanup+"] [persistToDB:" + persistToDB + "] "+ new Date() + "\n";
+		//String header = " ";
 		System.out.println(header);
 		initDB(true);
 		designationUtil = new DesignationUtil();
@@ -91,11 +92,11 @@ public class DataLoader {
 
 		DesignationsView designation = new DesignationsView();
 	    PermissibleValuesView permissiblevalue = new PermissibleValuesView();
-	    processDesignationFromCSV(conn, "C:/Users/ag/demo/cadsr-cdecurate_03122014/test/gov/nih/nci/cadsr/cdecurate/util/SampleForTestingLoader-V3-designation.csv", designation);
-//	    processPermissibleValueFromCSV(conn, "C:/Users/ag/demo/cadsr-cdecurate_03122014/test/gov/nih/nci/cadsr/cdecurate/util/SampleForTestingLoader-V3-permissiblevalue.csv", permissiblevalue);
+//	    processDesignationFromCSV("C:/Users/ag/demo/cadsr-cdecurate_03122014/test/gov/nih/nci/cadsr/cdecurate/util/SampleForTestingLoader-V3-designation.csv", designation);
+//	    processPermissibleValueFromCSV("C:/Users/ag/demo/cadsr-cdecurate_03122014/test/gov/nih/nci/cadsr/cdecurate/util/SampleForTestingLoader-V3-permissiblevalue.csv", permissiblevalue);
 
-//	    processDesignationFromCSV(conn, "C:/Users/ag/demo/cadsr-cdecurate_03122014/test/gov/nih/nci/cadsr/cdecurate/util/SampleForTestingLoader-V3-designation-small.csv", designation);
-//	    processPermissibleValueFromCSV(conn, "C:/Users/ag/demo/cadsr-cdecurate_03122014/test/gov/nih/nci/cadsr/cdecurate/util/SampleForTestingLoader-V3-permissiblevalue-small.csv", permissiblevalue);
+	    processDesignationFromCSV("C:/Users/ag/demo/cadsr-cdecurate_03122014/test/gov/nih/nci/cadsr/cdecurate/util/SampleForTestingLoader-V3-designation-small.csv", designation);
+//	    processPermissibleValueFromCSV("C:/Users/ag/demo/cadsr-cdecurate_03122014/test/gov/nih/nci/cadsr/cdecurate/util/SampleForTestingLoader-V3-permissiblevalue-small.csv", permissiblevalue);
 	}
 	
 	/*
@@ -106,7 +107,7 @@ d.date_modified is not NULL
 order by d.date_modified desc
 --order by d.date_created desc
 	 */
-    public static List<Object> processDesignationFromCSV(Connection conn, String fileName, DesignationsView record) {
+    public static List<Object> processDesignationFromCSV(String fileName, DesignationsView record) {
         List<Object> recordList = new ArrayList<Object>();
            try{
                    String path = fileName;
@@ -173,7 +174,9 @@ order by d.date_modified desc
                     	newRecord.setCONTEIDSEQ(contextId);
                     	newRecord.setDESIGIDSEQ(desigId);
                     	newRecord.setACIDSEQ(acId);
-                        
+                    	//the following are optional but needed as they are in the sql loader control file
+                    	newRecord.setDATECREATED(new Date());
+                    	newRecord.setDATEMODIFIED(new Date());
 //                    }
                     recordList.add(newRecord);
                     if(showDesInserted) {
@@ -203,7 +206,7 @@ and pv.date_modified is not NULL
 --and vm.vm_id = '4211591'
 order by pv.date_modified desc
      */
-    public static List<Object> processPermissibleValueFromCSV(Connection conn, String fileName, PermissibleValuesView record) {
+    public static List<Object> processPermissibleValueFromCSV(String fileName, PermissibleValuesView record) {
         List<Object> recordList = new ArrayList<Object>();
            try{
                    String path = fileName;
@@ -269,6 +272,9 @@ order by pv.date_modified desc
             			newRecord.setCREATEDBY("WARZELD");
         				initDB(autoCleanup);
             			newRecord.setVMIDSEQ((administeredItemUtil.getRelatedAC_IDSEQ(conn, values[0], values[1])));
+                    	//the following are optional but needed as they are in the sql loader control file
+                    	newRecord.setDATECREATED(new Date());
+                    	newRecord.setDATEMODIFIED(new Date());
                         
 //                    }
                     recordList.add(newRecord);

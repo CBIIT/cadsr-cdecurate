@@ -1,5 +1,5 @@
 
-SQL*Loader: Release 10.2.0.1.0 - Production on Wed Sep 17 17:09:04 2014
+SQL*Loader: Release 10.2.0.1.0 - Production on Thu Sep 18 10:31:00 2014
 
 Copyright (c) 1982, 2005, Oracle.  All rights reserved.
 
@@ -14,8 +14,8 @@ Data File:      C:\Users\ag\demo\cadsr-cdecurate_03122014\des.ldr
 Number to load: ALL
 Number to skip: 0
 Errors allowed: 50
-Bind array:     500000 rows, maximum of 256000 bytes
-Continuation:   1:1 = 0X23(character '#'), in next physical record
+Bind array:     64 rows, maximum of 256000 bytes
+Continuation:    none specified
 Path used:      Conventional
 
 Table "SBR"."DESIGNATIONS_VIEW", loaded from every logical record.
@@ -24,149 +24,57 @@ TRAILING NULLCOLS option in effect
 
    Column Name                  Position   Len  Term Encl Datatype
 ------------------------------ ---------- ----- ---- ---- ---------------------
-"DESIG_IDSEQ"                       FIRST    38           VARCHAR              
-"AC_IDSEQ"                           NEXT    36   ,  O(") CHARACTER            
+"DESIG_IDSEQ"                       FIRST    36   |  O(") CHARACTER            
                                                       O(")
-"CONTE_IDSEQ"                        NEXT    36   ,  O(") CHARACTER            
+"AC_IDSEQ"                           NEXT    36   |  O(") CHARACTER            
                                                       O(")
-"NAME"                               NEXT  2000   ,  O(") CHARACTER            
+"CONTE_IDSEQ"                        NEXT    36   |  O(") CHARACTER            
                                                       O(")
-"DETL_NAME"                          NEXT    20   ,  O(") CHARACTER            
+"NAME"                               NEXT  2000   |  O(") CHARACTER            
                                                       O(")
-"DATE_CREATED"                       NEXT     *   ,  O(") DATE YYYY-MM-DD HH24:MI:SS
+"DETL_NAME"                          NEXT    20   |  O(") CHARACTER            
                                                       O(")
-"CREATED_BY"                         NEXT    30   ,  O(") CHARACTER            
+"DATE_CREATED"                       NEXT     *   |  O(") DATE YYYY-MM-DD HH24:MI:SS
                                                       O(")
-"DATE_MODIFIED"                      NEXT     *   ,  O(") DATE YYYY-MM-DD HH24:MI:SS
+"CREATED_BY"                         NEXT    30   |  O(") CHARACTER            
                                                       O(")
-"MODIFIED_BY"                        NEXT    30   ,  O(") CHARACTER            
+"DATE_MODIFIED"                      NEXT     *   |  O(") DATE YYYY-MM-DD HH24:MI:SS
                                                       O(")
-"LAE_NAME"                           NEXT    30   ,  O(") CHARACTER            
+"MODIFIED_BY"                        NEXT    30   |  O(") CHARACTER            
+                                                      O(")
+"LAE_NAME"                           NEXT    30   |  O(") CHARACTER            
                                                       O(")
 
-value used for ROWS parameter changed from 500000 to 93
 Record 1: Rejected - Error on table "SBR"."DESIGNATIONS_VIEW", column "DESIG_IDSEQ".
-Variable length field exceeds maximum length.
-Record 2: Rejected - Error on table "SBR"."DESIGNATIONS_VIEW", column "DESIG_IDSEQ".
-Variable length field exceeds maximum length.
-Record 3: Rejected - Error on table "SBR"."DESIGNATIONS_VIEW", column "DESIG_IDSEQ".
-Variable length field exceeds maximum length.
-Record 4: Rejected - Error on table "SBR"."DESIGNATIONS_VIEW", column "DESIG_IDSEQ".
-Variable length field exceeds maximum length.
-Record 5: Rejected - Error on table "SBR"."DESIGNATIONS_VIEW", column "DESIG_IDSEQ".
-Variable length field exceeds maximum length.
-Record 6: Rejected - Error on table "SBR"."DESIGNATIONS_VIEW", column "DESIG_IDSEQ".
-Variable length field exceeds maximum length.
-Record 7: Rejected - Error on table "SBR"."DESIGNATIONS_VIEW", column "DESIG_IDSEQ".
-Variable length field exceeds maximum length.
-Record 8: Rejected - Error on table "SBR"."DESIGNATIONS_VIEW", column "DESIG_IDSEQ".
-Variable length field exceeds maximum length.
-Record 9: Rejected - Error on table "SBR"."DESIGNATIONS_VIEW", column "DESIG_IDSEQ".
-Variable length field exceeds maximum length.
-Record 10: Rejected - Error on table "SBR"."DESIGNATIONS_VIEW", column "DESIG_IDSEQ".
-Variable length field exceeds maximum length.
-Record 11: Rejected - Error on table "SBR"."DESIGNATIONS_VIEW", column "DESIG_IDSEQ".
-Variable length field exceeds maximum length.
-Record 12: Rejected - Error on table "SBR"."DESIGNATIONS_VIEW", column "DESIG_IDSEQ".
-Variable length field exceeds maximum length.
-Record 13: Rejected - Error on table "SBR"."DESIGNATIONS_VIEW", column "DESIG_IDSEQ".
-Variable length field exceeds maximum length.
-Record 14: Rejected - Error on table "SBR"."DESIGNATIONS_VIEW", column "DESIG_IDSEQ".
-Variable length field exceeds maximum length.
-Record 15: Rejected - Error on table "SBR"."DESIGNATIONS_VIEW", column "DESIG_IDSEQ".
-Variable length field exceeds maximum length.
-Record 16: Rejected - Error on table "SBR"."DESIGNATIONS_VIEW", column "DESIG_IDSEQ".
-Variable length field exceeds maximum length.
-Record 17: Rejected - Error on table "SBR"."DESIGNATIONS_VIEW", column "DESIG_IDSEQ".
-Variable length field exceeds maximum length.
-Record 18: Rejected - Error on table "SBR"."DESIGNATIONS_VIEW", column "DESIG_IDSEQ".
-Variable length field exceeds maximum length.
-Record 19: Rejected - Error on table "SBR"."DESIGNATIONS_VIEW", column "DESIG_IDSEQ".
-Variable length field exceeds maximum length.
-Record 20: Rejected - Error on table "SBR"."DESIGNATIONS_VIEW", column "DESIG_IDSEQ".
-Variable length field exceeds maximum length.
-Record 21: Rejected - Error on table "SBR"."DESIGNATIONS_VIEW", column "DESIG_IDSEQ".
-Variable length field exceeds maximum length.
-Record 22: Rejected - Error on table "SBR"."DESIGNATIONS_VIEW", column "DESIG_IDSEQ".
-Variable length field exceeds maximum length.
-Record 23: Rejected - Error on table "SBR"."DESIGNATIONS_VIEW", column "DESIG_IDSEQ".
-Variable length field exceeds maximum length.
-Record 24: Rejected - Error on table "SBR"."DESIGNATIONS_VIEW", column "DESIG_IDSEQ".
-Variable length field exceeds maximum length.
-Record 25: Rejected - Error on table "SBR"."DESIGNATIONS_VIEW", column "DESIG_IDSEQ".
-Variable length field exceeds maximum length.
-Record 26: Rejected - Error on table "SBR"."DESIGNATIONS_VIEW", column "DESIG_IDSEQ".
-Variable length field exceeds maximum length.
-Record 27: Rejected - Error on table "SBR"."DESIGNATIONS_VIEW", column "DESIG_IDSEQ".
-Variable length field exceeds maximum length.
-Record 28: Rejected - Error on table "SBR"."DESIGNATIONS_VIEW", column "DESIG_IDSEQ".
-Variable length field exceeds maximum length.
-Record 29: Rejected - Error on table "SBR"."DESIGNATIONS_VIEW", column "DESIG_IDSEQ".
-Variable length field exceeds maximum length.
-Record 30: Rejected - Error on table "SBR"."DESIGNATIONS_VIEW", column "DESIG_IDSEQ".
-Variable length field exceeds maximum length.
-Record 31: Rejected - Error on table "SBR"."DESIGNATIONS_VIEW", column "DESIG_IDSEQ".
-Variable length field exceeds maximum length.
-Record 32: Rejected - Error on table "SBR"."DESIGNATIONS_VIEW", column "DESIG_IDSEQ".
-Variable length field exceeds maximum length.
-Record 33: Rejected - Error on table "SBR"."DESIGNATIONS_VIEW", column "DESIG_IDSEQ".
-Variable length field exceeds maximum length.
-Record 34: Rejected - Error on table "SBR"."DESIGNATIONS_VIEW", column "DESIG_IDSEQ".
-Variable length field exceeds maximum length.
-Record 35: Rejected - Error on table "SBR"."DESIGNATIONS_VIEW", column "DESIG_IDSEQ".
-Variable length field exceeds maximum length.
-Record 36: Rejected - Error on table "SBR"."DESIGNATIONS_VIEW", column "DESIG_IDSEQ".
-Variable length field exceeds maximum length.
-Record 37: Rejected - Error on table "SBR"."DESIGNATIONS_VIEW", column "DESIG_IDSEQ".
-Variable length field exceeds maximum length.
-Record 38: Rejected - Error on table "SBR"."DESIGNATIONS_VIEW", column "DESIG_IDSEQ".
-Variable length field exceeds maximum length.
-Record 39: Rejected - Error on table "SBR"."DESIGNATIONS_VIEW", column "DESIG_IDSEQ".
-Variable length field exceeds maximum length.
-Record 40: Rejected - Error on table "SBR"."DESIGNATIONS_VIEW", column "DESIG_IDSEQ".
-Variable length field exceeds maximum length.
-Record 41: Rejected - Error on table "SBR"."DESIGNATIONS_VIEW", column "DESIG_IDSEQ".
-Variable length field exceeds maximum length.
-Record 42: Rejected - Error on table "SBR"."DESIGNATIONS_VIEW", column "DESIG_IDSEQ".
-Variable length field exceeds maximum length.
-Record 43: Rejected - Error on table "SBR"."DESIGNATIONS_VIEW", column "DESIG_IDSEQ".
-Variable length field exceeds maximum length.
-Record 44: Rejected - Error on table "SBR"."DESIGNATIONS_VIEW", column "DESIG_IDSEQ".
-Variable length field exceeds maximum length.
-Record 45: Rejected - Error on table "SBR"."DESIGNATIONS_VIEW", column "DESIG_IDSEQ".
-Variable length field exceeds maximum length.
-Record 46: Rejected - Error on table "SBR"."DESIGNATIONS_VIEW", column "DESIG_IDSEQ".
-Variable length field exceeds maximum length.
-Record 47: Rejected - Error on table "SBR"."DESIGNATIONS_VIEW", column "DESIG_IDSEQ".
-Variable length field exceeds maximum length.
-Record 48: Rejected - Error on table "SBR"."DESIGNATIONS_VIEW", column "DESIG_IDSEQ".
-Variable length field exceeds maximum length.
-Record 49: Rejected - Error on table "SBR"."DESIGNATIONS_VIEW", column "DESIG_IDSEQ".
-Variable length field exceeds maximum length.
-Record 50: Rejected - Error on table "SBR"."DESIGNATIONS_VIEW", column "DESIG_IDSEQ".
-Variable length field exceeds maximum length.
-Record 51: Rejected - Error on table "SBR"."DESIGNATIONS_VIEW", column "DESIG_IDSEQ".
-Variable length field exceeds maximum length.
+Field in data file exceeds maximum length
+Record 4: Rejected - Error on table "SBR"."DESIGNATIONS_VIEW".
+ORA-01403: no data found
+ORA-06512: at "SBR.DESIG_BIU_ROW_ASSIGN_VALUES", line 18
+ORA-04088: error during execution of trigger 'SBR.DESIG_BIU_ROW_ASSIGN_VALUES'
 
-MAXIMUM ERROR COUNT EXCEEDED - Above statistics reflect partial run.
+Record 12: Rejected - Error on table "SBR"."DESIGNATIONS_VIEW".
+ORA-01403: no data found
+ORA-06512: at "SBR.DESIG_BIU_ROW_ASSIGN_VALUES", line 18
+ORA-04088: error during execution of trigger 'SBR.DESIG_BIU_ROW_ASSIGN_VALUES'
+
 
 Table "SBR"."DESIGNATIONS_VIEW":
-  0 Rows successfully loaded.
-  51 Rows not loaded due to data errors.
+  16 Rows successfully loaded.
+  3 Rows not loaded due to data errors.
   0 Rows not loaded because all WHEN clauses were failed.
   0 Rows not loaded because all fields were null.
 
 
-Space allocated for bind array:                 255936 bytes(93 rows)
+Space allocated for bind array:                 176000 bytes(64 rows)
 Read   buffer bytes: 1048576
 
 Total logical records skipped:          0
-Total logical records read:            51
-Total logical records rejected:        51
+Total logical records read:            19
+Total logical records rejected:         3
 Total logical records discarded:        0
 
-Run began on Wed Sep 17 17:09:04 2014
-Run ended on Wed Sep 17 17:09:05 2014
+Run began on Thu Sep 18 10:31:00 2014
+Run ended on Thu Sep 18 10:31:01 2014
 
-Elapsed time was:     00:00:01.10
-CPU time was:         00:00:00.02
+Elapsed time was:     00:00:01.11
+CPU time was:         00:00:00.05
