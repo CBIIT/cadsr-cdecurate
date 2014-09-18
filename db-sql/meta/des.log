@@ -1,5 +1,5 @@
 
-SQL*Loader: Release 10.2.0.1.0 - Production on Thu Sep 18 10:31:00 2014
+SQL*Loader: Release 10.2.0.1.0 - Production on Thu Sep 18 11:31:32 2014
 
 Copyright (c) 1982, 2005, Oracle.  All rights reserved.
 
@@ -47,20 +47,226 @@ TRAILING NULLCOLS option in effect
 
 Record 1: Rejected - Error on table "SBR"."DESIGNATIONS_VIEW", column "DESIG_IDSEQ".
 Field in data file exceeds maximum length
+Record 2: Rejected - Error on table "SBR"."DESIGNATIONS_VIEW".
+ORA-00001: unique constraint (SBR.DESIG_UK) violated
+
+Record 3: Rejected - Error on table "SBR"."DESIGNATIONS_VIEW".
+ORA-00001: unique constraint (SBR.DESIG_UK) violated
+
 Record 4: Rejected - Error on table "SBR"."DESIGNATIONS_VIEW".
 ORA-01403: no data found
 ORA-06512: at "SBR.DESIG_BIU_ROW_ASSIGN_VALUES", line 18
 ORA-04088: error during execution of trigger 'SBR.DESIG_BIU_ROW_ASSIGN_VALUES'
+
+Record 5: Rejected - Error on table "SBR"."DESIGNATIONS_VIEW".
+ORA-00001: unique constraint (SBR.DESIG_UK) violated
+
+Record 6: Rejected - Error on table "SBR"."DESIGNATIONS_VIEW".
+ORA-00001: unique constraint (SBR.DESIG_UK) violated
+
+Record 7: Rejected - Error on table "SBR"."DESIGNATIONS_VIEW".
+ORA-00001: unique constraint (SBR.DESIG_UK) violated
+
+Record 8: Rejected - Error on table "SBR"."DESIGNATIONS_VIEW".
+ORA-00001: unique constraint (SBR.DESIG_UK) violated
+
+Record 9: Rejected - Error on table "SBR"."DESIGNATIONS_VIEW".
+ORA-00001: unique constraint (SBR.DESIG_UK) violated
+
+Record 10: Rejected - Error on table "SBR"."DESIGNATIONS_VIEW".
+ORA-00001: unique constraint (SBR.DESIG_UK) violated
+
+Record 11: Rejected - Error on table "SBR"."DESIGNATIONS_VIEW".
+ORA-00001: unique constraint (SBR.DESIG_UK) violated
 
 Record 12: Rejected - Error on table "SBR"."DESIGNATIONS_VIEW".
 ORA-01403: no data found
 ORA-06512: at "SBR.DESIG_BIU_ROW_ASSIGN_VALUES", line 18
 ORA-04088: error during execution of trigger 'SBR.DESIG_BIU_ROW_ASSIGN_VALUES'
 
+Record 13: Rejected - Error on table "SBR"."DESIGNATIONS_VIEW".
+ORA-00001: unique constraint (SBR.DESIG_UK) violated
+
+Record 14: Rejected - Error on table "SBR"."DESIGNATIONS_VIEW".
+ORA-00001: unique constraint (SBR.DESIG_UK) violated
+
+Record 15: Rejected - Error on table "SBR"."DESIGNATIONS_VIEW".
+ORA-00001: unique constraint (SBR.DESIG_UK) violated
+
+Record 16: Rejected - Error on table "SBR"."DESIGNATIONS_VIEW".
+ORA-00001: unique constraint (SBR.DESIG_UK) violated
+
+Record 17: Rejected - Error on table "SBR"."DESIGNATIONS_VIEW".
+ORA-00001: unique constraint (SBR.DESIG_UK) violated
+
+Record 18: Rejected - Error on table "SBR"."DESIGNATIONS_VIEW".
+ORA-00001: unique constraint (SBR.DESIG_UK) violated
+
+Record 19: Rejected - Error on table "SBR"."DESIGNATIONS_VIEW".
+ORA-00001: unique constraint (SBR.DESIG_UK) violated
+
+Record 20: Rejected - Error on table "SBR"."DESIGNATIONS_VIEW".
+ORA-00001: unique constraint (SBR.DESIG_PK) violated
+
+Record 21: Rejected - Error on table "SBR"."DESIGNATIONS_VIEW".
+ORA-00001: unique constraint (SBR.DESIG_PK) violated
+
+Record 22: Rejected - Error on table "SBR"."DESIGNATIONS_VIEW".
+ORA-01403: no data found
+ORA-06512: at "SBR.DESIG_BIU_ROW_ASSIGN_VALUES", line 18
+ORA-04088: error during execution of trigger 'SBR.DESIG_BIU_ROW_ASSIGN_VALUES'
+
+Record 23: Rejected - Error on table "SBR"."DESIGNATIONS_VIEW".
+ORA-01403: no data found
+ORA-06512: at "SBR.DESIG_BIU_ROW_ASSIGN_VALUES", line 18
+ORA-04088: error during execution of trigger 'SBR.DESIG_BIU_ROW_ASSIGN_VALUES'
+
+Record 24: Rejected - Error on table "SBR"."DESIGNATIONS_VIEW".
+ORA-01403: no data found
+ORA-06512: at "SBR.DESIG_BIU_ROW_ASSIGN_VALUES", line 18
+ORA-04088: error during execution of trigger 'SBR.DESIG_BIU_ROW_ASSIGN_VALUES'
+
+Record 25: Rejected - Error on table "SBR"."DESIGNATIONS_VIEW".
+ORA-01403: no data found
+ORA-06512: at "SBR.DESIG_BIU_ROW_ASSIGN_VALUES", line 18
+ORA-04088: error during execution of trigger 'SBR.DESIG_BIU_ROW_ASSIGN_VALUES'
+
+Record 26: Rejected - Error on table "SBR"."DESIGNATIONS_VIEW".
+ORA-01403: no data found
+ORA-06512: at "SBR.DESIG_BIU_ROW_ASSIGN_VALUES", line 18
+ORA-04088: error during execution of trigger 'SBR.DESIG_BIU_ROW_ASSIGN_VALUES'
+
+Record 27: Rejected - Error on table "SBR"."DESIGNATIONS_VIEW".
+ORA-01403: no data found
+ORA-06512: at "SBR.DESIG_BIU_ROW_ASSIGN_VALUES", line 18
+ORA-04088: error during execution of trigger 'SBR.DESIG_BIU_ROW_ASSIGN_VALUES'
+
+Record 28: Rejected - Error on table "SBR"."DESIGNATIONS_VIEW".
+ORA-01403: no data found
+ORA-06512: at "SBR.DESIG_BIU_ROW_ASSIGN_VALUES", line 18
+ORA-04088: error during execution of trigger 'SBR.DESIG_BIU_ROW_ASSIGN_VALUES'
+
+Record 29: Rejected - Error on table "SBR"."DESIGNATIONS_VIEW".
+ORA-01403: no data found
+ORA-06512: at "SBR.DESIG_BIU_ROW_ASSIGN_VALUES", line 18
+ORA-04088: error during execution of trigger 'SBR.DESIG_BIU_ROW_ASSIGN_VALUES'
+
+Record 30: Rejected - Error on table "SBR"."DESIGNATIONS_VIEW".
+ORA-01403: no data found
+ORA-06512: at "SBR.DESIG_BIU_ROW_ASSIGN_VALUES", line 18
+ORA-04088: error during execution of trigger 'SBR.DESIG_BIU_ROW_ASSIGN_VALUES'
+
+Record 31: Rejected - Error on table "SBR"."DESIGNATIONS_VIEW".
+ORA-01403: no data found
+ORA-06512: at "SBR.DESIG_BIU_ROW_ASSIGN_VALUES", line 18
+ORA-04088: error during execution of trigger 'SBR.DESIG_BIU_ROW_ASSIGN_VALUES'
+
+Record 32: Rejected - Error on table "SBR"."DESIGNATIONS_VIEW".
+ORA-01403: no data found
+ORA-06512: at "SBR.DESIG_BIU_ROW_ASSIGN_VALUES", line 18
+ORA-04088: error during execution of trigger 'SBR.DESIG_BIU_ROW_ASSIGN_VALUES'
+
+Record 33: Rejected - Error on table "SBR"."DESIGNATIONS_VIEW".
+ORA-01403: no data found
+ORA-06512: at "SBR.DESIG_BIU_ROW_ASSIGN_VALUES", line 18
+ORA-04088: error during execution of trigger 'SBR.DESIG_BIU_ROW_ASSIGN_VALUES'
+
+Record 34: Rejected - Error on table "SBR"."DESIGNATIONS_VIEW".
+ORA-01403: no data found
+ORA-06512: at "SBR.DESIG_BIU_ROW_ASSIGN_VALUES", line 18
+ORA-04088: error during execution of trigger 'SBR.DESIG_BIU_ROW_ASSIGN_VALUES'
+
+Record 35: Rejected - Error on table "SBR"."DESIGNATIONS_VIEW".
+ORA-01403: no data found
+ORA-06512: at "SBR.DESIG_BIU_ROW_ASSIGN_VALUES", line 18
+ORA-04088: error during execution of trigger 'SBR.DESIG_BIU_ROW_ASSIGN_VALUES'
+
+Record 36: Rejected - Error on table "SBR"."DESIGNATIONS_VIEW".
+ORA-01403: no data found
+ORA-06512: at "SBR.DESIG_BIU_ROW_ASSIGN_VALUES", line 18
+ORA-04088: error during execution of trigger 'SBR.DESIG_BIU_ROW_ASSIGN_VALUES'
+
+Record 37: Rejected - Error on table "SBR"."DESIGNATIONS_VIEW".
+ORA-01403: no data found
+ORA-06512: at "SBR.DESIG_BIU_ROW_ASSIGN_VALUES", line 18
+ORA-04088: error during execution of trigger 'SBR.DESIG_BIU_ROW_ASSIGN_VALUES'
+
+Record 38: Rejected - Error on table "SBR"."DESIGNATIONS_VIEW".
+ORA-01403: no data found
+ORA-06512: at "SBR.DESIG_BIU_ROW_ASSIGN_VALUES", line 18
+ORA-04088: error during execution of trigger 'SBR.DESIG_BIU_ROW_ASSIGN_VALUES'
+
+Record 39: Rejected - Error on table "SBR"."DESIGNATIONS_VIEW".
+ORA-01403: no data found
+ORA-06512: at "SBR.DESIG_BIU_ROW_ASSIGN_VALUES", line 18
+ORA-04088: error during execution of trigger 'SBR.DESIG_BIU_ROW_ASSIGN_VALUES'
+
+Record 40: Rejected - Error on table "SBR"."DESIGNATIONS_VIEW".
+ORA-01403: no data found
+ORA-06512: at "SBR.DESIG_BIU_ROW_ASSIGN_VALUES", line 18
+ORA-04088: error during execution of trigger 'SBR.DESIG_BIU_ROW_ASSIGN_VALUES'
+
+Record 41: Rejected - Error on table "SBR"."DESIGNATIONS_VIEW".
+ORA-01403: no data found
+ORA-06512: at "SBR.DESIG_BIU_ROW_ASSIGN_VALUES", line 18
+ORA-04088: error during execution of trigger 'SBR.DESIG_BIU_ROW_ASSIGN_VALUES'
+
+Record 42: Rejected - Error on table "SBR"."DESIGNATIONS_VIEW".
+ORA-01403: no data found
+ORA-06512: at "SBR.DESIG_BIU_ROW_ASSIGN_VALUES", line 18
+ORA-04088: error during execution of trigger 'SBR.DESIG_BIU_ROW_ASSIGN_VALUES'
+
+Record 43: Rejected - Error on table "SBR"."DESIGNATIONS_VIEW".
+ORA-01403: no data found
+ORA-06512: at "SBR.DESIG_BIU_ROW_ASSIGN_VALUES", line 18
+ORA-04088: error during execution of trigger 'SBR.DESIG_BIU_ROW_ASSIGN_VALUES'
+
+Record 44: Rejected - Error on table "SBR"."DESIGNATIONS_VIEW".
+ORA-01403: no data found
+ORA-06512: at "SBR.DESIG_BIU_ROW_ASSIGN_VALUES", line 18
+ORA-04088: error during execution of trigger 'SBR.DESIG_BIU_ROW_ASSIGN_VALUES'
+
+Record 45: Rejected - Error on table "SBR"."DESIGNATIONS_VIEW".
+ORA-01403: no data found
+ORA-06512: at "SBR.DESIG_BIU_ROW_ASSIGN_VALUES", line 18
+ORA-04088: error during execution of trigger 'SBR.DESIG_BIU_ROW_ASSIGN_VALUES'
+
+Record 46: Rejected - Error on table "SBR"."DESIGNATIONS_VIEW".
+ORA-01403: no data found
+ORA-06512: at "SBR.DESIG_BIU_ROW_ASSIGN_VALUES", line 18
+ORA-04088: error during execution of trigger 'SBR.DESIG_BIU_ROW_ASSIGN_VALUES'
+
+Record 47: Rejected - Error on table "SBR"."DESIGNATIONS_VIEW".
+ORA-01403: no data found
+ORA-06512: at "SBR.DESIG_BIU_ROW_ASSIGN_VALUES", line 18
+ORA-04088: error during execution of trigger 'SBR.DESIG_BIU_ROW_ASSIGN_VALUES'
+
+Record 48: Rejected - Error on table "SBR"."DESIGNATIONS_VIEW".
+ORA-01403: no data found
+ORA-06512: at "SBR.DESIG_BIU_ROW_ASSIGN_VALUES", line 18
+ORA-04088: error during execution of trigger 'SBR.DESIG_BIU_ROW_ASSIGN_VALUES'
+
+Record 49: Rejected - Error on table "SBR"."DESIGNATIONS_VIEW".
+ORA-01403: no data found
+ORA-06512: at "SBR.DESIG_BIU_ROW_ASSIGN_VALUES", line 18
+ORA-04088: error during execution of trigger 'SBR.DESIG_BIU_ROW_ASSIGN_VALUES'
+
+Record 50: Rejected - Error on table "SBR"."DESIGNATIONS_VIEW".
+ORA-01403: no data found
+ORA-06512: at "SBR.DESIG_BIU_ROW_ASSIGN_VALUES", line 18
+ORA-04088: error during execution of trigger 'SBR.DESIG_BIU_ROW_ASSIGN_VALUES'
+
+Record 51: Rejected - Error on table "SBR"."DESIGNATIONS_VIEW".
+ORA-01403: no data found
+ORA-06512: at "SBR.DESIG_BIU_ROW_ASSIGN_VALUES", line 18
+ORA-04088: error during execution of trigger 'SBR.DESIG_BIU_ROW_ASSIGN_VALUES'
+
+
+MAXIMUM ERROR COUNT EXCEEDED - Above statistics reflect partial run.
 
 Table "SBR"."DESIGNATIONS_VIEW":
-  16 Rows successfully loaded.
-  3 Rows not loaded due to data errors.
+  0 Rows successfully loaded.
+  51 Rows not loaded due to data errors.
   0 Rows not loaded because all WHEN clauses were failed.
   0 Rows not loaded because all fields were null.
 
@@ -69,12 +275,12 @@ Space allocated for bind array:                 176000 bytes(64 rows)
 Read   buffer bytes: 1048576
 
 Total logical records skipped:          0
-Total logical records read:            19
-Total logical records rejected:         3
+Total logical records read:            65
+Total logical records rejected:        51
 Total logical records discarded:        0
 
-Run began on Thu Sep 18 10:31:00 2014
-Run ended on Thu Sep 18 10:31:01 2014
+Run began on Thu Sep 18 11:31:32 2014
+Run ended on Thu Sep 18 11:31:36 2014
 
-Elapsed time was:     00:00:01.11
-CPU time was:         00:00:00.05
+Elapsed time was:     00:00:03.79
+CPU time was:         00:00:00.06

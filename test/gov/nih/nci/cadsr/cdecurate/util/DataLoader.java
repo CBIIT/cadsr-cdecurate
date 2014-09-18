@@ -61,16 +61,39 @@ public class DataLoader {
 		if(force) {
 			userId = System.getProperty("u");
 			password = System.getProperty("p");
-			try {
-				conn = TestUtil.getConnection(userId, password);
-			} catch (Exception e) {
-				e.printStackTrace();
+			conn = null;
+			boolean donotGiveUp = true;
+			int retryLimit = 20, retryCount = 0;
+			while(conn == null) {
+				try {
+					conn = TestUtil.getConnection(userId, password);
+				} catch (Exception e) {
+					if(conn == null) {
+						retryCount++;
+						if(!donotGiveUp && retryCount > retryLimit) break;
+						//sleep for a while and try again
+						try {
+							int t = 5000;
+							System.out.println("initDB: retrying database connection in " + t + " ms ...");
+							Thread.sleep(t, 0);
+						} catch (InterruptedException e1) {
+							e1.printStackTrace();
+						}
+					} else {
+						e.printStackTrace();
+					}
+				}
+			}
+			
+			if(conn == null) {
+				System.out.println("initDB: not able to get database connection, give up!");
+				System.exit(-1);
 			}
 		}
 	}
 
 	public static void main(String[] args) {
-		String header = "--DataLoaderV1.00 build 105 9/17/2014 [autoCleanup:" + autoCleanup+"] [persistToDB:" + persistToDB + "] "+ new Date() + "\n";
+		String header = "\n--DataLoaderV1.00 build 105 9/18/2014 [autoCleanup:" + autoCleanup+"] [persistToDB:" + persistToDB + "] "+ new Date() + "\n";
 		//String header = " ";
 		System.out.println(header);
 		initDB(true);
@@ -92,11 +115,11 @@ public class DataLoader {
 
 		DesignationsView designation = new DesignationsView();
 	    PermissibleValuesView permissiblevalue = new PermissibleValuesView();
-//	    processDesignationFromCSV("C:/Users/ag/demo/cadsr-cdecurate_03122014/test/gov/nih/nci/cadsr/cdecurate/util/SampleForTestingLoader-V3-designation.csv", designation);
-//	    processPermissibleValueFromCSV("C:/Users/ag/demo/cadsr-cdecurate_03122014/test/gov/nih/nci/cadsr/cdecurate/util/SampleForTestingLoader-V3-permissiblevalue.csv", permissiblevalue);
+	    processDesignationFromCSV("C:/Users/ag/demo/cadsr-cdecurate_03122014/test/gov/nih/nci/cadsr/cdecurate/util/SampleForTestingLoader-V3-designation.csv", designation, 227, true);
+//	    processPermissibleValueFromCSV("C:/Users/ag/demo/cadsr-cdecurate_03122014/test/gov/nih/nci/cadsr/cdecurate/util/SampleForTestingLoader-V3-permissiblevalue.csv", permissiblevalue, -1, true);
 
-	    processDesignationFromCSV("C:/Users/ag/demo/cadsr-cdecurate_03122014/test/gov/nih/nci/cadsr/cdecurate/util/SampleForTestingLoader-V3-designation-small.csv", designation);
-//	    processPermissibleValueFromCSV("C:/Users/ag/demo/cadsr-cdecurate_03122014/test/gov/nih/nci/cadsr/cdecurate/util/SampleForTestingLoader-V3-permissiblevalue-small.csv", permissiblevalue);
+//	    processDesignationFromCSV("C:/Users/ag/demo/cadsr-cdecurate_03122014/test/gov/nih/nci/cadsr/cdecurate/util/SampleForTestingLoader-V3-designation-small.csv", designation, -1, true);
+//	    processPermissibleValueFromCSV("C:/Users/ag/demo/cadsr-cdecurate_03122014/test/gov/nih/nci/cadsr/cdecurate/util/SampleForTestingLoader-V3-permissiblevalue-small.csv", permissiblevalue, -1, true);
 	}
 	
 	/*
@@ -110,7 +133,7 @@ d.date_modified is not NULL and d.date_modified >= sysdate -1
 order by d.date_modified desc
 --order by d.date_created desc
 	 */
-    public static List<Object> processDesignationFromCSV(String fileName, DesignationsView record) {
+    public static List<Object> processDesignationFromCSV(String fileName, DesignationsView record, long startRow, boolean append) {
         List<Object> recordList = new ArrayList<Object>();
            try{
                    String path = fileName;
@@ -124,7 +147,14 @@ order by d.date_modified desc
     			String desigId = null;
     			String contextId = null;
     			String acId = null;
+    			long count = 1;
                 while((strLine = br.readLine()) != null){
+                	if(startRow > 0) {
+                		if(count < startRow) {
+                			count++;
+                			continue;
+                		}
+                	}
                 	DesignationsView newRecord = record.getClass().newInstance();
                     String[] values = strLine.split(",");
                     int size = values.length;
@@ -182,11 +212,12 @@ order by d.date_modified desc
                     	newRecord.setDATEMODIFIED(new Date());
 //                    }
                     recordList.add(newRecord);
+                    System.out.println("record: " + count++ + "\n");
                     if(showDesInserted) {
                     	System.out.println("new des: " + newRecord.toString());
                     }
                     if(sqlLoaderOutput) {
-                    	FileUtils.writeStringToFile(desFile, SQLLoaderHelper.toDesRow(newRecord), true);
+                    	FileUtils.writeStringToFile(desFile, SQLLoaderHelper.toDesRow(newRecord), append);
                     }
                     if(persistToDB) {
                     	persistDesignation(newRecord);
@@ -212,7 +243,7 @@ and pv.date_modified is not NULL and pv.date_modified >= sysdate -1
 order by pv.date_modified desc
 --order by pv.date_created desc
      */
-    public static List<Object> processPermissibleValueFromCSV(String fileName, PermissibleValuesView record) {
+    public static List<Object> processPermissibleValueFromCSV(String fileName, PermissibleValuesView record, long startRow, boolean append) {
         List<Object> recordList = new ArrayList<Object>();
            try{
                    String path = fileName;
@@ -225,7 +256,14 @@ order by pv.date_modified desc
     			String pvId = null;
 //    			String contextId = null;
 //    			String acId = null;
+    			long count = 0;
                 while((strLine = br.readLine()) != null){
+                	if(startRow > 0) {
+                		if(count < startRow) {
+                			count++;
+                			continue;
+                		}
+                	}
                 	PermissibleValuesView newRecord = record.getClass().newInstance();
                     String[] values = strLine.split(",");
                     int size = values.length;
@@ -284,11 +322,12 @@ order by pv.date_modified desc
                         
 //                    }
                     recordList.add(newRecord);
+                    System.out.println("record: " + count++ + "\n");
                     if(showPVInserted) {
                     	System.out.println("new pv: " + newRecord.toString());
                     }
                     if(sqlLoaderOutput) {
-                    	FileUtils.writeStringToFile(pvFile, SQLLoaderHelper.toPVRow(newRecord), true);
+                    	FileUtils.writeStringToFile(pvFile, SQLLoaderHelper.toPVRow(newRecord), append);
                     }
                     if(persistToDB) {
                     	persistPermissibleValue(newRecord);
