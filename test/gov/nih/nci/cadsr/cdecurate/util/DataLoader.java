@@ -62,7 +62,7 @@ public class DataLoader {
 			userId = System.getProperty("u");
 			password = System.getProperty("p");
 			conn = null;
-			boolean donotGiveUp = true;
+			boolean donotGiveUp = true, quite = true;
 			int retryLimit = 20, retryCount = 0;
 			while(conn == null) {
 				try {
@@ -74,7 +74,7 @@ public class DataLoader {
 						//sleep for a while and try again
 						try {
 							int t = 5000;
-							System.out.println("initDB: retrying database connection in " + t + " ms ...");
+							if(!quite) System.out.println("initDB: retrying database connection in " + t + " ms ...");
 							Thread.sleep(t, 0);
 						} catch (InterruptedException e1) {
 							e1.printStackTrace();
