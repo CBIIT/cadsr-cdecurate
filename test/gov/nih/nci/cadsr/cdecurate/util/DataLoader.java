@@ -117,7 +117,7 @@ public class DataLoader {
 //	    processPermissibleValueFromCSV("C:/Users/ag/demo/cadsr-cdecurate_03122014/test/gov/nih/nci/cadsr/cdecurate/util/SampleForTestingLoader-V3-permissiblevalue.csv", permissiblevalue, -1, true);
 
 	    //first test data set
-//	    processDesignationFromCSV("C:/Users/ag/demo/cadsr-cdecurate_03122014/test/gov/nih/nci/cadsr/cdecurate/util/SampleForTestingLoader-V3-designation-small.csv", designation, -1, true);
+	    processDesignationFromCSV("C:/Users/ag/demo/cadsr-cdecurate_03122014/test/gov/nih/nci/cadsr/cdecurate/util/SampleForTestingLoader-V3-designation-small.csv", designation, -1, true);
 //	    processPermissibleValueFromCSV("C:/Users/ag/demo/cadsr-cdecurate_03122014/test/gov/nih/nci/cadsr/cdecurate/util/SampleForTestingLoader-V3-permissiblevalue-small.csv", permissiblevalue, -1, true);
 	    //second test data set received on 9/18/2014
 	    processPermissibleValueFromCSV("C:/Users/ag/demo/cadsr-cdecurate_03122014/test/gov/nih/nci/cadsr/cdecurate/util/Sample2ForTestingLoader-V3-1-permissiblevalue-small.csv", permissiblevalue, -1, true);
