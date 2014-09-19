@@ -64,7 +64,7 @@ public class Meta501 {
 	public void cleanup() {
 	}
 
-//	@Test
+	@Test
 	public void testEmpty() {
 		boolean ret = false;
 		int count = -1;
@@ -76,7 +76,7 @@ public class Meta501 {
 		}
 	}
 
-	@Test
+	//@Test
 	public void testDesignationInsertOneRow() {
 		boolean ret = false;
 		long currentCount = 0, checkSum = -1;
@@ -127,7 +127,7 @@ SELECT MODIFIED_BY, d.lae_name, d.name, d.detl_name FROM sbr.designations_view d
 --rownum < 31
 order by d.date_created desc
 	*/
-	@Test
+	//@Test
 	public void testDesignationUpdateOneRow() {
 		boolean ret = false;
 		long currentCount = 0, checkSum = -1;
@@ -157,7 +157,7 @@ order by d.date_created desc
 	  *	The designation was created with SBR, but modified with different user, TANJ.
 	  * It should throws "java.sql.SQLException: ORA-20999: TAPI-0:Insufficient privileges to modify this designation." exception.
 	  */
-	@Test
+	//@Test
 	public void testDesignationUpdateWithDifferentModifier() {
 		boolean ret = false;
 		long currentCount = 0, checkSum = -1;
@@ -194,7 +194,7 @@ from SBR.VALUE_MEANINGS_VIEW vm, SBR.PERMISSIBLE_VALUES_VIEW pv where vm.VM_IDSE
 and vm.vm_id = '4211591'
 order by pv.date_created desc
 	*/
-	@Test
+	//@Test
 	public void testPermissibleValueInsertOneRow() {
 		boolean ret = false;
 		long currentCount = 0, checkSum = -1;
@@ -256,7 +256,7 @@ UPDATE permissible_values_view SET MODIFIED_BY='SBR',  WHERE PV_IDSEQ='02E338E4-
 SELECT '02E338E4-E07A-B2AB-E050-BB8921B61594' as "PV_IDSEQ", 'Specified integer number of months_james' as "Existing PV Value", 'value without comma 3' as "splitted value", 'SM' as "SHORT_MEANING", 'grave meaning' as "MEANING_DESCRIPTION", sysdate as "BEGIN_DATE", sysdate as "END_DATE", -1 as "HIGH NUM", -1 as "LOW NUM", sysdate as "DATE_CREATED", 'SBR' as "CREATED_BY", sysdate as "DATE_MODIFIED", 'SBR' as  "MODIFIED_BY", '02B89AB0-7917-E455-E050-BB8921B67D8D' as "VM_IDSEQ" FROM permissible_values_view WHERE 1=1 and rownum < 2
 
 	*/
-	@Test
+	//@Test
 	public void testPermissibleValueUpdateOneRow() {
 		boolean ret = false;
 		long currentCount = 0, checkSum = -1;
@@ -289,7 +289,7 @@ SELECT '02E338E4-E07A-B2AB-E050-BB8921B61594' as "PV_IDSEQ", 'Specified integer 
 	  *	The designation was created with SBR, but modified with different user, TANJ.
 	  * It should throws "java.sql.SQLException: ORA-20999: TAPI-0:Insufficient privileges to modify this designation." exception.
 	  */
-	@Test
+	//@Test
 	public void testPermissibleValueUpdateWithDifferentModifier() {
 		boolean ret = false;
 		long currentCount = 0, checkSum = -1;

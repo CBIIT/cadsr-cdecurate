@@ -1,6 +1,5 @@
 package gov.nih.nci.cadsr.cdecurate.util;
 
-import gov.nih.nci.cadsr.cdecurate.test.helpers.DBUtil;
 import gov.nih.nci.cadsr.cdecurate.test.helpers.DesignationUtil;
 import gov.nih.nci.cadsr.cdecurate.test.helpers.PermissibleValueUtil;
 import gov.nih.nci.cadsr.common.TestUtil;
@@ -14,14 +13,13 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import org.apache.commons.io.FileUtils;
-import org.junit.BeforeClass;
-
 import nci.cadsr.persist.dao.DaoFactory;
 import nci.cadsr.persist.dao.DesignationsViewDao;
 import nci.cadsr.persist.dao.PermissibleValuesViewDao;
 import nci.cadsr.persist.dto.DesignationsView;
 import nci.cadsr.persist.dto.PermissibleValuesView;
+
+import org.apache.commons.io.FileUtils;
 
 import com.csvparsing.common.ParseHelper;
 import com.csvparsing.common.SQLLoaderHelper;
@@ -93,7 +91,7 @@ public class DataLoader {
 	}
 
 	public static void main(String[] args) {
-		String header = "\n--DataLoaderV1.00 build 105 9/18/2014 [autoCleanup:" + autoCleanup+"] [persistToDB:" + persistToDB + "] "+ new Date() + "\n";
+		String header = "\n--DataLoaderV1.00 build 106 9/19/2014 [autoCleanup:" + autoCleanup+"] [persistToDB:" + persistToDB + "] "+ new Date() + "\n";
 		//String header = " ";
 		System.out.println(header);
 		initDB(true);
@@ -170,10 +168,10 @@ order by d.date_modified desc
 	    					continue;
 	    				}
                     }
-                    
+
 //                    for(int i=0;i< size;i++){
 //                        String columnName = columns[i];
-                    	name = values[10];
+                		name = values[10];
                     	type = values[11];
                     	try {
 							contextName = values[13];
@@ -183,7 +181,20 @@ order by d.date_modified desc
             			desigId = null;
             			contextId = null;
             			acId = null;
-            			if(conn != null) {
+                        
+            			//latest business rule as specified in BulkLoadDesignationLogic.docx given by GS (9/19/2014)
+                        String relatedVMId = null;
+        				if(showDesSkipped) {
+            				initDB(autoCleanup);
+                			contextId = administeredItemUtil.getContextID(conn, contextName);
+        					if(contextId == null) {
+    	    					System.out.println("processDesignationFromCSV: row " + count + " designation context not found by [" + contextName + "] for designation name [" + name + "] ??? - skipped!");
+    	            			count++;
+    	    					continue;
+        					}
+        				}
+
+        				if(conn != null) {
             				initDB(autoCleanup);
 		        			if((desigId = designationUtil.getDesignationId(conn, name)) == null) {
 		        				try {
@@ -198,7 +209,7 @@ order by d.date_modified desc
 		        				}
 		        			}
             				initDB(autoCleanup);
-	            			contextId = administeredItemUtil.getContextID(conn, contextName);
+//	            			contextId = administeredItemUtil.getContextID(conn, contextName);
             				initDB(autoCleanup);
 	            			acId = administeredItemUtil.getRelatedAC_IDSEQ(conn, values[0], values[1]);
             			}
@@ -262,7 +273,7 @@ order by pv.date_modified desc
     			String pvId = null;
 //    			String contextId = null;
 //    			String acId = null;
-    			long count = 0;
+    			long count = 1;
                 while((strLine = br.readLine()) != null){
                 	if(startRow > 0) {
                 		if(count < startRow) {
@@ -280,6 +291,18 @@ order by pv.date_modified desc
         					continue;
         				}
                     }
+                    
+                    //latest business rule as specified in BulkLoadDesignationLogic.docx given by GS (9/19/2014)
+                    String relatedVMId = null;
+    				if(showPVSkipped) {
+        				initDB(autoCleanup);
+    					relatedVMId = administeredItemUtil.getRelatedAC_IDSEQ(conn, values[0], values[1]);
+    					if(relatedVMId == null) {
+	    					System.out.println("processPermissibleValueFromCSV: row " + count + " related AC(VD) not found, by [" + values[0] + ", " + values[1] + ", " + values[2] + "] ??? - skipped!");
+	            			count++;
+	    					continue;
+    					}
+    				}
                     
 //                    for(int i=0;i< size;i++){
 //                        String columnName = columns[i];
@@ -301,6 +324,7 @@ order by pv.date_modified desc
             				} else {
 //                				initDB(autoCleanup);
 		        				if(showPVUpdated) {
+		            				initDB(autoCleanup);
 			        				System.out.println("processPermissibleValueFromCSV: value [" + value + "] exists i.e. by [" + values[0] + ", " + values[1] + ", " + values[2] + "] - will be updated");
 	            					System.out.println("PV vm = [" + permissibleValueUtil.getPermissibleValueShortMeaning(conn, value) + "]");
 		        				}
@@ -322,7 +346,7 @@ order by pv.date_modified desc
             			newRecord.setDATECREATED(new Date());
             			newRecord.setCREATEDBY("WARZELD");
         				initDB(autoCleanup);
-            			newRecord.setVMIDSEQ((administeredItemUtil.getRelatedAC_IDSEQ(conn, values[0], values[1])));
+            			newRecord.setVMIDSEQ((relatedVMId));
                     	//the following are optional but needed as they are in the sql loader control file
                     	newRecord.setDATECREATED(new Date());
                     	newRecord.setDATEMODIFIED(new Date());
