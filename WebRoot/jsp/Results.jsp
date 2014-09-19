@@ -1631,8 +1631,8 @@ function ShowSelectedRowss(){
                  </tr>     
                  <tr>
                   <td><div style="padding-left: 20px">
-						<select name="listCDName" size="1" style="width: 185" valign="top" id="listCDName"
-							onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchParameters',helpUrl); return false">
+						<select name="listCDName" size="1" style="width:185px;" valign="top" id="listCDName"
+							onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchParameters',helpUrl); return false"> <!-- NT2 with added px -->
 							<option value="All Domains" <%if(selCD.equals("All Domains")){%>
 								selected <%}%>>
 								All Domains

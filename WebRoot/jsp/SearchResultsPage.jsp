@@ -31,6 +31,11 @@
         <script language="javascript" type="text/javascript">
            history.forward();
         </script>
+    <style>
+    input {
+        box-sizing: border-box; /* NT2 */
+    }
+    </style>
 </head>
 <curate:sessionAttributes/>
 	<body onload="loaded('menuDefs');" onclick="menuHide();update();" onkeyup="if (event.keyCode == 27) menuHide();">
