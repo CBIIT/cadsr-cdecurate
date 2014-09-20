@@ -13,6 +13,7 @@ L--%>
 <%@taglib uri="/WEB-INF/tld/curate.tld" prefix="curate"%>
 <%@ page import="gov.nih.nci.cadsr.common.StringUtil"%>
 
+<!-- NT2 all width 185 are suffixed with px -->
 <%
 
 	long stime = System.currentTimeMillis();
@@ -1036,7 +1037,7 @@ function ShowSelectedRowss(){
 						if (!sMenuAction.equals("searchForCreate")) {
 						%>
 						
-						<select name="listSearchFor" size="1" style="width: 185" id="listSearchFor"
+						<select name="listSearchFor" size="1" style="width: 185px;" id="listSearchFor"
 							onChange="doSearchForChange();"
 							onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchParameters',helpUrl); return false">
 							<option value="ClassSchemeItems"
@@ -1086,7 +1087,7 @@ function ShowSelectedRowss(){
 						} else {
 						%>
 						
-						<select name="listSearchFor" size="1" style="width: 185"
+						<select name="listSearchFor" size="1" style="width: 185px;"
 							onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchParameters',helpUrl); return false">
 							<option value="<%=StringEscapeUtils.escapeHtml(sSearchAC)%>" selected>
 								<%=StringEscapeUtils.escapeHtml(sLongAC)%>
@@ -1116,7 +1117,7 @@ function ShowSelectedRowss(){
                      <tr>
                         <td>       
                                 <div style="padding-left: 20px">
-                                    <select name="listSearchIn" size="1" style="width: 185" id="listSearchIn"
+                                    <select name="listSearchIn" size="1" style="width: 185px;" id="listSearchIn"
 							onChange="doSearchInChange();"
 							onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchParameters',helpUrl); return false">
 							<!-- include names&definition only if not questions-->
@@ -1277,7 +1278,7 @@ function ShowSelectedRowss(){
                       <tr>
                          <td>
                              <div style="padding-left: 20px">
-                             <select name="listRDType" size="3" style="width: 185" valign="top"	multiple
+                             <select name="listRDType" size="3" style="width: 185px;" valign="top"	multiple
                               onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchParameters',helpUrl); return false">
 							<%
 									if (vDocType != null) {
@@ -1351,7 +1352,7 @@ function ShowSelectedRowss(){
                      <!-- same input box for crf name and other keyword searches -->      
                      <tr>     
                       <td><div style="padding-left: 20px">
-						<input type="text" name="keyword" size="24" style="width: 185" id="keyword"
+						<input type="text" name="keyword" size="24" style="width: 185px;" id="keyword"
 							value="<%=sLastKeyword%>"
 							onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchParameters',helpUrl); return false">
 					  </div>
@@ -1417,7 +1418,7 @@ function ShowSelectedRowss(){
                  <tr>
                    <td>
                        <div style="padding-left: 20px">    
-                        <select name="listMultiContextFilter" size="5" style="width: 185" id="listMultiContextFilter"
+                        <select name="listMultiContextFilter" size="5" style="width: 185px;" id="listMultiContextFilter"
 							multiple
 							onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchParameters',helpUrl); return false">
 								<option value="All (No Test/Train)"
@@ -1593,7 +1594,7 @@ function ShowSelectedRowss(){
                  </tr>                  
                  <tr>
                    <td><div style="padding-left: 20px">
-						<select name="listCSName" size="1" style="width: 185" valign="top" id="listCSName"
+						<select name="listCSName" size="1" style="width: 185px;" valign="top" id="listCSName"
 							onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchParameters',helpUrl); return false">
 							<option value="AllSchemes" selected>
 								All Schemes
@@ -1669,7 +1670,7 @@ function ShowSelectedRowss(){
                 </tr>
                 <tr>
                    <td><div style="padding-left: 20px">
-						<select name="listRegStatus" size="1" style="width: 185" id="listRegStatus"
+						<select name="listRegStatus" size="1" style="width: 185px;" id="listRegStatus"
 							onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchParameters',helpUrl); return false">
 							<option value="allReg"
 								<%if (vRegStatus == null || vRegStatus.size()==0 
@@ -1712,7 +1713,7 @@ function ShowSelectedRowss(){
                  </tr>    
                  <tr>
 					<td><div style="padding-left: 20px">
-						<select name="listStatusFilter" size="5" style="width: 185" id="listStatusFilter"
+						<select name="listStatusFilter" size="5" style="width: 185px;" id="listStatusFilter"
 							multiple
 							onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchParameters',helpUrl); return false">
 							<!--store the status list as per the CONCEPT SEARCH  -->
@@ -1829,7 +1830,7 @@ function ShowSelectedRowss(){
                 </tr>
                 <tr>
                    <td><div style="padding-left: 20px">
-						<select name="listRegStatus" size="1" style="width: 185" id="listRegStatus1"
+						<select name="listRegStatus" size="1" style="width: 185px;" id="listRegStatus1"
 							onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchParameters',helpUrl); return false">
 							<option value="allReg"
 								<%if (vRegStatus == null || vRegStatus.size()==0 
@@ -1870,7 +1871,7 @@ function ShowSelectedRowss(){
                 </tr>     
                 <tr>
                   <td><div style="padding-left: 20px">
-						<select name="listDataType" size="1" style="width: 185" id="listDataType"
+						<select name="listDataType" size="1" style="width: 185px;" id="listDataType"
 							onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchParameters',helpUrl); return false">
 							<option value="allData"
 								<%if (vDataType == null || vDataType.size()==0 
@@ -1918,7 +1919,7 @@ function ShowSelectedRowss(){
                 </tr>        
                 <tr>
                     <td> <div style="padding-left: 20px">
-						<select name="listDeriveType" size="1" style="width: 185" id="listDeriveType"
+						<select name="listDeriveType" size="1" style="width: 185px;" id="listDeriveType"
 							onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchParameters',helpUrl); return false">
 							<option value="allDer"
 								<%if (vDerType == null || vDerType.size()==0 
@@ -2172,7 +2173,7 @@ function ShowSelectedRowss(){
                <tr>
                 <td>
                    <div style="padding-left: 20px">
-                      <select name="listAttrFilter" size="5" style="width: 185" id="listAttrFilter"
+                      <select name="listAttrFilter" size="5" style="width: 185px;" id="listAttrFilter"
 								multiple valign="bottom"
 								onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_displayAttributes',helpUrl); return false">
 								<%
