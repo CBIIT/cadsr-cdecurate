@@ -13,7 +13,7 @@ L--%>
 <%@taglib uri="/WEB-INF/tld/curate.tld" prefix="curate"%>
 <%@ page import="gov.nih.nci.cadsr.common.StringUtil"%>
 
-<!-- NT2 all width 185 are suffixed with px -->
+<!-- NT2 all height 20, 35 and width 185, 173 and 160 are suffixed with px, padding-right: 10px to padding-right: 0px -->
 <%
 
 	long stime = System.currentTimeMillis();
@@ -1367,7 +1367,7 @@ function ShowSelectedRowss(){
                  
                  <tr>
                    <td>          
-                       <span style="padding-right: 40px;  padding-top: 7px" ><b>Filter By</b></span>
+                       <span style="padding-right: 0px;  padding-top: 7px" ><b>Filter By</b></span>
                        <!-- Place the adv/simple filter hyperlink only if it is for AC of these only -->
 							<%
 										if (sSearchAC.equals("DataElement")
@@ -1532,7 +1532,7 @@ function ShowSelectedRowss(){
 						<input type="radio" name="rVersion" value="Other" id="other"
 							<% if (sVersion.equals("Other")) { %> checked <% } %>
 							onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchParameters',helpUrl); return false"><input type="text" name="tVersion" id="tVersion" value="<%=txVersion%>"
-							maxlength="5" size="3" style="height: 20"
+							maxlength="5" size="3" style="height: 20px;"
 							onkeyup="javascript:enableOtherVersion();"
 							onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchParameters',helpUrl); return false">
 						
@@ -1953,7 +1953,7 @@ function ShowSelectedRowss(){
 				 
 				 <tr >
 					<td colspan=2><div class="scItem">
-						<table style = "padding-right: 40px">
+						<table style = "padding-right: 0px">
 							<col width=5%>
 							<col width=20%>
 							<col width=32%>
@@ -1964,7 +1964,7 @@ function ShowSelectedRowss(){
 								<td>
 									&nbsp;
 								</td>
-								<td style="height: 20" colspan=4 valign=bottom>
+								<td style="height: 20px;" colspan=4 valign=bottom>
 									<b> Date Created </b> &nbsp;&nbsp;(MM/DD/YYYY)
 								</td>
 							</tr>
@@ -2015,7 +2015,7 @@ function ShowSelectedRowss(){
 								<td>
 									&nbsp;
 								</td>
-								<td style="height: 20" colspan=4 valign=bottom>
+								<td style="height: 20px;" colspan=4 valign=bottom>
 									<b> <label for="creator">Creator</label> </b>
 								</td>
 							<tr>
@@ -2024,8 +2024,8 @@ function ShowSelectedRowss(){
 								<td>
 									&nbsp;
 								</td>
-								<td style="height: 20" colspan=4 valign=top><div style="padding-left: 20px">
-									<select name="creator" size="1" style="width: 173" valign="top" id="creator"
+								<td style="height: 20px;" colspan=4 valign=top><div style="padding-left: 20px">
+									<select name="creator" size="1" style="width: 173px;" valign="top" id="creator"
 										onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchParameters',helpUrl); return false">
 										<option value="allUsers"
 											<%if (vUsers == null || vUsers.size()==0 
@@ -2061,7 +2061,7 @@ function ShowSelectedRowss(){
 								<td>
 									&nbsp;
 								</td>
-								<td style="height: 20" colspan=4 valign=bottom>
+								<td style="height: 20px;" colspan=4 valign=bottom>
 									<b> Date Modified </b> &nbsp;&nbsp;(MM/DD/YYYY)
 								</td>
 							</tr>
@@ -2112,7 +2112,7 @@ function ShowSelectedRowss(){
 								<td>
 									&nbsp;
 								</td>
-								<td style="height: 20" colspan=4 valign=bottom>
+								<td style="height: 20px;" colspan=4 valign=bottom>
 									<b> <label for="modifier">Modifier</label> </b>
 								</td>
 							</tr>
@@ -2121,9 +2121,9 @@ function ShowSelectedRowss(){
 									&nbsp;
 								</td>
 								
-								<td style="height: 35" colspan=4 valign=top>
+								<td style="height: 35px;" colspan=4 valign=top>
 									<div style="padding-left: 20px">
-									<select name="modifier" size="1" style="width: 173" id="modifier"
+									<select name="modifier" size="1" style="width: 173px;" id="modifier"
 										valign="top"
 										onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchParameters',helpUrl); return false">
 										<option value="allUsers"
@@ -2210,7 +2210,7 @@ function ShowSelectedRowss(){
 					<td align="center" class="scItem">
 						<div align="left">
 							<label for="recordsDisplayed">Results Displayed:</label>
-							<select name="recordsDisplayed" size="1" style="width: 160" id="recordsDisplayed">
+							<select name="recordsDisplayed" size="1" style="width: 160px;" id="recordsDisplayed">
 							
 								<option value="500" <% if (sessionRecordsDisplayed != null && !sessionRecordsDisplayed.equals("") && sessionRecordsDisplayed.equals("500")){ %>
 								selected<%} %>>
@@ -2239,7 +2239,7 @@ function ShowSelectedRowss(){
             </table> 
                
            <select size="1" name="hidListAttr"
-				style="visibility: hidden; width: 150">
+				style="visibility: hidden; width: 150px;">
 				<%
 						for (int i = 0; vSelectedAttr.size() > i; i++) {
 						String sName = (String) vSelectedAttr.elementAt(i);
