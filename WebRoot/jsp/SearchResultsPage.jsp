@@ -22,7 +22,8 @@
                         </a>
                 </div>
 		<title>CDE Curation: Search</title>
-		<link href="css/style.css" rel="stylesheet" type="text/css">
+        <meta http-equiv="X-UA-Compatible" content="IE=Edge"/> <!-- NT2 force to use IE9 standard mode or above in intranet environment -->
+        <link href="css/style.css" rel="stylesheet" type="text/css">
         <script language="javascript" src="js/SearchParameters.js"></script>
         <script language="javascript" src="js/SearchResults.js"></script>
         <script language="JavaScript" src="js/menu.js"></script>
