@@ -35,6 +35,7 @@
     <style>
     input {
         box-sizing: border-box; /* NT2 */
+        /*max-width: 15px;*/
     }
     </style>
 </head>

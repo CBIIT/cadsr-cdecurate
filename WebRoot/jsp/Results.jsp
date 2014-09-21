@@ -13,12 +13,12 @@ L--%>
 <%@taglib uri="/WEB-INF/tld/curate.tld" prefix="curate"%>
 <%@ page import="gov.nih.nci.cadsr.common.StringUtil"%>
 
-<!-- NT2 all height 20, 35 and width 185, 173 and 160 are suffixed with px, padding-right: 10px to padding-right: 0px -->
+<!-- NT2 all height 20, 35 and width 183, 173 and 160 are suffixed with px, margin-left: 20px;; to padding: 2px; padding-right: 10px to padding-right: 2px -->
 <%
 
 	long stime = System.currentTimeMillis();
 	System.out.println("Starting Results.jsp Processing");
-	
+
 	UtilService util = new UtilService();
 	Vector vSelectedAttr = new Vector();
 	Vector vStatus = new Vector();
@@ -37,10 +37,10 @@ L--%>
 	String totalRecords = "";
 	Vector vMultiContext = (Vector) session.getAttribute("multiContextAC");
 	totalRecords = (String) session.getAttribute("totalRecords");
-	
+
 	if (totalRecords == null)
 		totalRecords = "";
-	
+
 	//gets the session attributes for action searchForCreate
 	if (sMenuAction.equals("searchForCreate")) {
 		sSearchAC = (String) session.getAttribute("creSearchAC"); //done now in CDEHomePage
@@ -120,7 +120,7 @@ L--%>
 	//gets the searchin attribute, defaults to longName if none
 	if (sSearchIn == null)
 		sSearchIn = "longName";
-	
+
 	//expands the searchAC for displaying in the dropdown list.
 	String sLongAC = "";
 	if (sSearchAC.equals("DataElement"))
@@ -279,7 +279,7 @@ L--%>
 	//empty the alternate name and ref doc results from the session
 	session.setAttribute("AllAltNameList", new Vector());
 	session.setAttribute("AllRefDocList", new Vector());
-	
+
 	String sKeyword, nRecs;
 	Vector vSelAttr = new Vector();
 	Vector vCheckList = new Vector();
@@ -306,7 +306,7 @@ L--%>
 	if ((nRecs != null) && !(nRecs.equals("No "))){
 	  totolNumRec = Integer.parseInt(nRecs);
 	}
-	
+
 	int rowsChecked = 0;
 	if (vCheckList!=null){
 	    rowsChecked = vCheckList.size();
@@ -342,9 +342,9 @@ L--%>
 		sSelAC = "ConceptClass";
     else if (sSelAC.equals("Property"))
 		sSelAC = "Property";
-    else 
+    else
 		sSelAC = "Data Element";
-    
+
 
 	//for button label text
 	if ((sMAction == null) || (sMAction.equals("nothing")))
@@ -405,7 +405,7 @@ L--%>
 		else
 			sSelectAll = "false";
 	}
-   String labelKeyword1 = (String)request.getAttribute("labelKeyword1");	
+   String labelKeyword1 = (String)request.getAttribute("labelKeyword1");
    String labelKeyword2 = (String)request.getAttribute("labelKeyword2");
    String show = (String)session.getAttribute("showDefaultSortBtn");
  %>
@@ -417,9 +417,9 @@ function populateAttr(){
      if (document.searchParmsForm.keyword != null)
         document.searchParmsForm.keyword.focus();
     //call function to get component to search for if search from create page
-  <%if (sMenuAction.equals("searchForCreate")) {%>       
+  <%if (sMenuAction.equals("searchForCreate")) {%>
       openSearchForCreateAct("<%=StringEscapeUtils.escapeJavaScript(sSearchAC)%>");   //call the function in JS
-  <%}%>  
+  <%}%>
 }
 function unQualifiedSearch(ac){
  var flag = true;
@@ -453,7 +453,7 @@ function unQualifiedSearch(ac){
           flag =false;
         <%}%>
   }
-  
+
   if(ac=="ValueMeaning"){
     <% if(temp6.equals("N")){%>
           flag =false;
@@ -474,38 +474,38 @@ function unQualifiedSearch(ac){
             flag =false;
           <%}%>
  }
- 
+
      var resultsToDisplay = document.searchParmsForm.recordsDisplayed.value;
-     
+
      if (resultsToDisplay > 0)
      	return true;
     else
     	return flag;
-}	
+}
 
 function searchAll(){
-        
+
         var ac = document.searchParmsForm.listSearchFor.value;
         var unQualifiedSearchflag = unQualifiedSearch(ac);
         var numOfDefaultContexts = <%=vContext.size()%>;
         var checkDefaultSearch = checkIfDefaultSearch(numOfDefaultContexts);
-        
+
    	    if(checkDefaultSearch && !unQualifiedSearchflag)
     	{
     		confirmation =  confirm("The Search will cause all caDSR content for "+ ac +" to be retrieved.\n"
         				 +"This is a slow, lengthy search. Are you sure you wish to proceed?");
     		return confirmation;
     	}
-    	else 
+    	else
     	{
     	  return true;
     	}
-         
+
  }
- //submits the page to start the search  
+ //submits the page to start the search
 function doSearchDE(){
-   	
-     if(searchAll()){     
+
+     if(searchAll()){
      <%  if (!sMenuAction.equals("searchForCreate") && sAppendAction.equals("Was Appended")) { %>
      var conf = confirm("You did not press the Append button so these results will not be appended.");
       if (conf == true)
@@ -518,7 +518,7 @@ function doSearchDE(){
         document.searchParmsForm.actSelect.value = "Search";
         document.searchParmsForm.submit();
       }
-       
+
      <% } else { %>
         <% if (sMenuAction.equals("searchForCreate")) { %>
           if (opener && opener.document != null && opener.document.SearchActionForm != null)
@@ -530,7 +530,7 @@ function doSearchDE(){
         document.searchParmsForm.actSelect.value = "Search";
         document.searchParmsForm.submit();
       <% }%>
-     } 
+     }
   }
 //  From a search page:  a search can be initiated two ways:
 //    By pressing the "Start Search" button or
@@ -575,8 +575,8 @@ function LoadKeyHandler(){
 
     var numRows2;
     var SelectAllOn = <%=sSelectAll%>;
-      
-        //display status message if any 
+
+        //display status message if any
  	<%
         String statusMessage = (String)session.getAttribute(Session_Data.SESSION_STATUS_MESSAGE);
         if (statusMessage == null) statusMessage = "";
@@ -586,23 +586,23 @@ function LoadKeyHandler(){
         if (vStat != null && vStat.size() > 30)  { %>
             displayStatusWindow();
      <% }
-        else if (statusMessage != null && !statusMessage.equals("")) { 
+        else if (statusMessage != null && !statusMessage.equals("")) {
             session.setAttribute("vStatMsg", new Vector());
         %>
             displayStatus("<%=statusMessage%>", "<%=StringEscapeUtils.escapeJavaScript(sSubmitAction)%>");
      <% }
-        //reset the message attributes   
+        //reset the message attributes
         session.setAttribute(Session_Data.SESSION_STATUS_MESSAGE, "");
         if (vCheckList != null && vCheckList.size() >0) {
             for (int i=0; i<vCheckList.size(); i++) {
             %>
-                
+
             <%
             }
         }
 %>
         window.status = "Enter the keyword to search a component";
-    
+
 <%
         if (sBackFromGetAssociated.equals("backFromGetAssociated"))  {
             Stack vSearchIDStack = (Stack)session.getAttribute("vSearchIDStack");
@@ -610,12 +610,12 @@ function LoadKeyHandler(){
             if (vSearchIDStack != null && vSearchIDStack.size()>0) // && sSecondBackFromGetAssociated.equals(""))
             {
                 vIDs = (Vector)vSearchIDStack.pop();
-            } 
+            }
             if (vSearchIDStack != null && vSearchIDStack.size()>0)
             {
                 vIDs = (Vector)vSearchIDStack.pop();
           // do not lose the very first search result
-      //    if(vSearchIDStack.size()==0) 
+      //    if(vSearchIDStack.size()==0)
       //    {
                 vSearchIDStack.push(vIDs);
        //   }
@@ -639,82 +639,82 @@ function LoadKeyHandler(){
             {
                 vNames = (Vector)vSearchNameStack.pop();
           // do not lose the very first search result
-       //   if(vSearchNameStack.size()==0) 
+       //   if(vSearchNameStack.size()==0)
         //  {
                 vSearchNameStack.push(vNames);
        //   }
                 session.setAttribute("vSearchNameStack", vSearchNameStack);
                 session.setAttribute("SearchName", vNames);
             }
-      
+
             Stack vSearchLongNameStack = (Stack)session.getAttribute("vSearchLongNameStack");
             Vector vLongNames = (Vector)session.getAttribute("SearchLongName");
             if (vSearchLongNameStack != null && vSearchLongNameStack.size()>0) // && sSecondBackFromGetAssociated.equals(""))
             {
                 vLongNames = (Vector)vSearchLongNameStack.pop();
-            } 
+            }
             if (vSearchLongNameStack != null && vSearchLongNameStack.size()>0)
             {
                 vLongNames = (Vector)vSearchLongNameStack.pop();
           // do not lose the very first search result
-       //   if(vSearchNameStack.size()==0) 
+       //   if(vSearchNameStack.size()==0)
         //  {
                 vSearchLongNameStack.push(vLongNames);
        //   }
                 session.setAttribute("vSearchLongNameStack", vSearchLongNameStack);
                 session.setAttribute("SearchLongName", vLongNames);
             }
-        
+
             Stack vACSearchStack = (Stack)session.getAttribute("vACSearchStack");
             Vector vACSearch = (Vector)session.getAttribute("vACSearch");
             if (vACSearchStack != null && vACSearchStack.size()>0) // && sSecondBackFromGetAssociated.equals(""))
             {
                 vACSearch = (Vector)vACSearchStack.pop();
-            } 
+            }
             if (vACSearchStack != null && vACSearchStack.size()>0)
             {
                 vACSearch = (Vector)vACSearchStack.pop();
         // do not lose the very first search result
-     //   if(vACSearchStack.size()==0) 
+     //   if(vACSearchStack.size()==0)
      //   {
                 vACSearchStack.push(vACSearch);
       //  }
                 session.setAttribute("vACSearchStack", vACSearchStack);
                 session.setAttribute("vACSearch", vACSearch);
             }
-      
+
             Stack vSearchASLStack = (Stack)session.getAttribute("vSearchASLStack");
             vSearchASL = (Vector)session.getAttribute("SearchASL");
             if (vSearchASL == null)  vSearchASL = new Vector();
             if (vSearchASLStack != null && vSearchASLStack.size()>0) // && sSecondBackFromGetAssociated.equals(""))
             {
                 vSearchASL = (Vector)vSearchASLStack.pop();
-            } 
+            }
             if (vSearchASLStack != null && vSearchASLStack.size()>0)
             {
                 vSearchASL = (Vector)vSearchASLStack.pop();
 //System.out.println("sr jsp 2pop vSearchASL2.size: " + vSearchASL.size());
         // do not lose the very first search result
-    //    if(vSearchASLStack.size()==0) 
+    //    if(vSearchASLStack.size()==0)
      //   {
                 vSearchASLStack.push(vSearchASL);
      //   }
                 session.setAttribute("vSearchASLStack", vSearchASLStack);
                 session.setAttribute("SearchASL", vSearchASL);
-            } 
+            }
 
             Stack vSelRowsStack = (Stack)session.getAttribute("vSelRowsStack");
             Vector vRSel = (Vector)session.getAttribute("vSelRows");
             if (vSelRowsStack != null && vSelRowsStack.size()>0) // && sSecondBackFromGetAssociated.equals(""))
             {
                 vRSel = (Vector)vSelRowsStack.pop();
-            } 
+            }
             if (vSelRowsStack != null && vSelRowsStack.size()>0)
             {
                 vRSel = (Vector)vSelRowsStack.pop();
 
         // do not lose the very first search result
-     //   if(vSelRowsStack.size()==0) 
+     //   if(vSelRowsStack.size()==0)
      //   {
                 vSelRowsStack.push(vRSel);
      //   }
@@ -728,11 +728,11 @@ function LoadKeyHandler(){
             if (vResultStack != null && vResultStack.size()>0) // && sSecondBackFromGetAssociated.equals(""))
             {
                 results = (Vector)vResultStack.pop();
-            } 
+            }
             if (vResultStack != null && vResultStack.size()>0)
             {
                 results = (Vector)vResultStack.pop();
-     //   if(vResultStack.size()==0) 
+     //   if(vResultStack.size()==0)
       //  {
                 vResultStack.push(results);
                 pushBoolean = "true";
@@ -740,9 +740,9 @@ function LoadKeyHandler(){
                 session.setAttribute("vResultStack", vResultStack);
                 session.setAttribute("results", results);
             }
-        } 
+        }
         %>
-  
+
    function checkClick(cb){
    if ((cb.checked == false) && (document.searchResultsForm.allCK.checked == true)){
      document.searchResultsForm.allCK.checked = false;
@@ -754,9 +754,9 @@ function LoadKeyHandler(){
        document.searchResultsForm.count.value = ">1";
     }else{
         var num = 0;
-        checkClickJS(cb,'<%=StringEscapeUtils.escapeJavaScript(sSelAC)%>', num, totalRec); 
-    }   
- }  
+        checkClickJS(cb,'<%=StringEscapeUtils.escapeJavaScript(sSelAC)%>', num, totalRec);
+    }
+ }
  function SelectUnSelectCheckBox()
   {
     var numRows2 = "<%=numRows%>";
@@ -785,7 +785,7 @@ function LoadKeyHandler(){
       SelectAllOn = "false";
       ShowSelectedRows(false);
     }
-  } 
+  }
   function Back()
   {
     hourglass();
@@ -851,7 +851,7 @@ function LoadKeyHandler(){
         for (int i = 0; i < vWriteContextVD.size(); i++)
 		  {
           String sWCont = (String)vWriteContextVD.elementAt(i);
-%>        
+%>
           var vCont = "<%=sWCont%>";
           if (vCont == vWrContext)
              doesExist = "true";
@@ -892,7 +892,7 @@ function LoadKeyHandler(){
     }
 %>
   }
-  
+
   //get detail button and calls the function in the js passing server name from the request.
   function GetDetails(){
      GetDetailsJS("<%=browserURL%>" + "<%=ToolURL.getDEDetailsCDEBrowserURL(pageContext)%>");
@@ -902,8 +902,8 @@ function LoadKeyHandler(){
   {
       SetSortTypeJS(sortBy, "<%=StringEscapeUtils.escapeJavaScript(sMAction)%>");
   }
-  
-  
+
+
   function SelectAllCheckBox(){
     document.searchResultsForm.show.value = "Yes";
     var numRows2 = "<%=numRows%>";
@@ -948,15 +948,15 @@ function update(){
   updateHiddenSelectedRow(numRowsChecked);
  }
 }
-// This function will display the alert message to the user if he/she is not logged in 
+// This function will display the alert message to the user if he/she is not logged in
 // or will call the appropriate function if he/she is already logged in
 function performAction(type){
   if(checkUser('<%=StringEscapeUtils.escapeJavaScript(userName)%>')){
       if (isCheckboxChecked()){
         document.searchResultsForm.unCheckedRowId.value = "";
         performActionJS('<%=StringEscapeUtils.escapeJavaScript(sSelAC)%>', type);
-      } 
-   }    
+      }
+   }
 }
 function append(){
  if (isCheckboxChecked()){
@@ -973,18 +973,18 @@ function createDownload(){
       else if (document.searchParmsForm.listSearchFor.value == "DataElementConcept")
     	  setDECCustomDownloadAction();
       else
-      	setVDCustomDownloadAction();	
+      	setVDCustomDownloadAction();
  }
 }
-// This function will display the alert message to the user if he/she is not logged in 
+// This function will display the alert message to the user if he/she is not logged in
 // or will call the appropriate function if he/she is already logged in
 function performUncheckedCkBoxAction(type){
    if(checkUser('<%=StringEscapeUtils.escapeJavaScript(userName)%>')){
       document.searchResultsForm.unCheckedRowId.value = document.searchResultsForm.selectedRowId.value;
       performActionJS('<%=StringEscapeUtils.escapeJavaScript(sSelAC)%>', type);
-   }   
+   }
 }
-// This function will display the alert message to the user if he/she is not logged in 
+// This function will display the alert message to the user if he/she is not logged in
 // or will call the appropriate function if he/she is already logged in
 function createNew(type){
   if(checkUser('<%=StringEscapeUtils.escapeJavaScript(userName)%>')){
@@ -999,14 +999,14 @@ function viewAC(){
  	   var viewWindow = window.open("../../cdecurate/NCICurationServlet?reqType=view&idseq=" +acIdseq, name, "width=1000,height=1000,top=0,left=0,resizable=yes,scrollbars=yes");
  }
 function openEditVMWindow(curPV){
-  if (checkUser('<%=StringEscapeUtils.escapeJavaScript(userName)%>')) 
-      openEditVMWindowJS(curPV);	
+  if (checkUser('<%=StringEscapeUtils.escapeJavaScript(userName)%>'))
+      openEditVMWindowJS(curPV);
 }
 function ShowSelectedRowss(){
   if (isCheckboxChecked())
      ShowSelectedRows(true);
-}    
- 
+}
+
 
 </SCRIPT>
 
@@ -1017,27 +1017,27 @@ function ShowSelectedRowss(){
  <tr>
 <td valign="top" align="left" style="background-color: #c9c9c9; border-right: 2px solid #ffffff">
 <form name="searchParmsForm" method="post" action="../../cdecurate/NCICurationServlet?reqType=searchACs">
-			
-			
+
+
 			<!-- need this style to keep the table aligned top which is different for crf questions   -->
-			<table>			
+			<table style="width: 225px;">
 				   <tr>
-				     
+
                        <td valign="top" align="left">
                        <div class = "scItem">
                          <b><label for="listSearchFor">Search For</label></b>
-                        </div> 
+                        </div>
                       </td>
                      </tr>
                      <tr>
-                       <td> 
-                        <div style="padding-left: 20px">        
+                       <td>
+                        <div style="margin-left: 20px;">
                         <!-- include all components for regular search or question search-->
 						<%
 						if (!sMenuAction.equals("searchForCreate")) {
 						%>
-						
-						<select name="listSearchFor" size="1" style="width: 185px;" id="listSearchFor"
+
+						<select name="listSearchFor" size="1" style="width: 183px;" id="listSearchFor"
 							onChange="doSearchForChange();"
 							onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchParameters',helpUrl); return false">
 							<option value="ClassSchemeItems"
@@ -1052,7 +1052,7 @@ function ShowSelectedRowss(){
 								<%if(sSearchAC.equals("ConceptualDomain")){%> selected <%}%>>
 								Conceptual Domain
 							</option>
-							
+
 							<option value="DataElement"
 								<%if(sSearchAC.equals("DataElement")){%> selected <%}%>>
 								Data Element
@@ -1082,42 +1082,42 @@ function ShowSelectedRowss(){
 								Value Meaning
 							</option>
 				</select>
-						
+
 						<%
 						} else {
 						%>
-						
-						<select name="listSearchFor" size="1" style="width: 185px;"
+
+						<select name="listSearchFor" size="1" style="width: 183px;"
 							onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchParameters',helpUrl); return false">
 							<option value="<%=StringEscapeUtils.escapeHtml(sSearchAC)%>" selected>
 								<%=StringEscapeUtils.escapeHtml(sLongAC)%>
 							</option>
 						</select>
-					
+
 						<%
 						}
 						%>
 					</div>
 					</td>
 					</tr>
-                
-                
-                
+
+
+
                      <!--not for crf questions    -->
 				<%
 				if (!sSearchAC.equals("Questions")) {
 				%>
                      <tr>
-                     
-                        <td> <div class = "scItem">    
+
+                        <td> <div class = "scItem">
                               <b><label for="listSearchIn">Search In</label></b></div>
-                        </td> 
-                           
+                        </td>
+
                      </tr>
                      <tr>
-                        <td>       
-                                <div style="padding-left: 20px">
-                                    <select name="listSearchIn" size="1" style="width: 185px;" id="listSearchIn"
+                        <td>
+                                <div style="margin-left: 20px;">
+                                    <select name="listSearchIn" size="1" style="width: 183px;" id="listSearchIn"
 							onChange="doSearchInChange();"
 							onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchParameters',helpUrl); return false">
 							<!-- include names&definition only if not questions-->
@@ -1244,17 +1244,17 @@ function ShowSelectedRowss(){
 						</select>
                         </div>
                     </td>
-                    </tr>       
-                           
-                            
+                    </tr>
+
+
                       <!-- Names, definition, long name document text and historic short cde name search in -->
 				      <%
 						if (sSearchIn.equals("NamesAndDocText")
 						&& sSearchAC.equals("DataElement")) {
-				      %>     
+				      %>
                        <tr>
 					        <td >
-					        <div style="padding-left: 20px"> 
+					        <div style="margin-left: 20px;">
 						    <font size=1> Doc Text searches in Document Text of type
 							   Preferred Question Text and HISTORIC SHORT CDE NAME. </font></div>
 					        </td>
@@ -1262,23 +1262,23 @@ function ShowSelectedRowss(){
 				    <%
 				     }
 				    %>
-                           
-                    
+
+
                      <!-- Reference Document Types if the search in is  Refernce Document Text -->
 				     <%
 						if (sSearchIn.equals("docText")
 						&& sSearchAC.equals("DataElement")
 						&& sUIFilter.equals("advanced")) {
-				     %>      
+				     %>
                       <tr>
-                        <td> <div class = "scItem">    
-                              <b>Select Document Types</b></div> 
+                        <td> <div class = "scItem">
+                              <b>Select Document Types</b></div>
                         </td>
-                      </tr>   
+                      </tr>
                       <tr>
                          <td>
-                             <div style="padding-left: 20px">
-                             <select name="listRDType" size="3" style="width: 185px;" valign="top"	multiple
+                             <div style="margin-left: 20px;">
+                             <select name="listRDType" size="3" style="width: 183px;" valign="top"	multiple
                               onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchParameters',helpUrl); return false">
 							<%
 									if (vDocType != null) {
@@ -1295,7 +1295,7 @@ function ShowSelectedRowss(){
 								<%if(vDocs != null && vDocs.contains(sDoc)){%> selected <%}%>>
 								<%=sDoc%>
 							</option>
-							<%} }				
+							<%} }
 						    %>
 						</select>
                          </div>
@@ -1303,71 +1303,71 @@ function ShowSelectedRowss(){
                       </tr>
 				     <%
 				        }
-				     %>  
+				     %>
                      	<!-- end not equal value meaning -->
-                     	
-                  	<!--  makes two input boxes if searhing crfname  otherwise only one  -->     
-                          
+
+                  	<!--  makes two input boxes if searhing crfname  otherwise only one  -->
+
                      <%
 						if (sSearchIn.equals("CRFName")
 						&& sSearchAC.equals("DataElement")) {
-				     %>     
+				     %>
                       <tr>
-                        <td>  <div class = "scItem">      
+                        <td>  <div class = "scItem">
                               <b><label for="protoKeyword">Enter Protocol ID</label></b></div>
-                        </td> 
-                     </tr>   
+                        </td>
+                     </tr>
                      <tr>
                        <td>
-                         <div style="padding-left: 20px">
-						 <input type="text" name="protoKeyword" size="24" id="protoKeyword"
+                         <div style="margin-left: 20px;">
+						 <input style="width: 183px;" type="text" name="protoKeyword" size="21" id="protoKeyword"
 							value="<%=sProtoKeyword%>"
 							onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchParameters',helpUrl); return false">
-					   </div> 
+					   </div>
 					   </td>
 					 </tr>
-					 
+
 					  <tr>
-                        <td>  <div class = "scItem">      
+                        <td>  <div class = "scItem">
                               <b><label for="keyword">Enter CRF Name</label></b></div>
-                        </td> 
-                     </tr>        
+                        </td>
+                     </tr>
                       <!--keep the seach term for all other cases-->
 				     <%
 				      } else {
-				     %>     
+				     %>
                            <tr>
-                        <td> <div class = "scItem">       
+                        <td> <div class = "scItem">
                               <b><label for="keyword">Enter Search Term</label></b></div>
-                              <div style="padding-left: 20px">
+                              <div style="margin-left: 20px;">
                                     <i>use * as wildcard</i><br/>
                               </div>
-                        </td> 
-                     </tr>   
-                      
+                        </td>
+                     </tr>
+
                       <%
 				        }
-				     %>    
-                           
-                     <!-- same input box for crf name and other keyword searches -->      
-                     <tr>     
-                      <td><div style="padding-left: 20px">
-						<input type="text" name="keyword" size="24" style="width: 185px;" id="keyword"
+				     %>
+
+                     <!-- same input box for crf name and other keyword searches -->
+                     <tr>
+                      <td><div style="margin-left: 20px;">
+						<input type="text" name="keyword" size="24" style="width: 183px;" id="keyword"
 							value="<%=sLastKeyword%>"
 							onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchParameters',helpUrl); return false">
 					  </div>
-					  </td>     
-                     </tr>      
-                          
+					  </td>
+                     </tr>
+
                      <%
 				}
 				%>
 				<!-- end not crf question -->
-				      
-                 
+
+
                  <tr>
-                   <td>          
-                       <span style="padding-right: 0px;  padding-top: 7px" ><b>Filter By</b></span>
+                   <td>
+                       <span style="padding-right: 2px;  padding-top: 0px" ><b>Filter By</b></span>
                        <!-- Place the adv/simple filter hyperlink only if it is for AC of these only -->
 							<%
 										if (sSearchAC.equals("DataElement")
@@ -1393,11 +1393,11 @@ function ShowSelectedRowss(){
 							<%
 							}
 							%>
-                        
+
                    </td>
-                 </tr>         
-                           
-                 
+                 </tr>
+
+
                  <!--not for crf questions    -->
 				<%
 				if (!sSearchAC.equals("Questions")) {
@@ -1407,18 +1407,18 @@ function ShowSelectedRowss(){
 						if (!sSearchAC.equals("PermissibleValue")
 						&& !sSearchAC.equals("ValueMeaning")) {
 				%>
-                 
-                 <tr>          
-                   <td>
-                       <div style="padding-left: 20px">    
-                       <b><label for="listMultiContextFilter">Context</label></b>
-                       </div>
-                   </td> 
-                 </tr>                 
+
                  <tr>
                    <td>
-                       <div style="padding-left: 20px">    
-                        <select name="listMultiContextFilter" size="5" style="width: 185px;" id="listMultiContextFilter"
+                       <div style="margin-left: 20px;">
+                       <b><label for="listMultiContextFilter">Context</label></b>
+                       </div>
+                   </td>
+                 </tr>
+                 <tr>
+                   <td>
+                       <div style="margin-left: 20px;">
+                        <select name="listMultiContextFilter" size="5" style="width: 183px;" id="listMultiContextFilter"
 							multiple
 							onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchParameters',helpUrl); return false">
 								<option value="All (No Test/Train)"
@@ -1426,8 +1426,8 @@ function ShowSelectedRowss(){
 								selected <%}%>>
 								All (No Test/Train)
 							</option>
-									
-															
+
+
 							<option value="AllContext"
 								<%if (vContext != null && vContext.contains("AllContext")){%>
 								selected <%}%>>
@@ -1448,77 +1448,77 @@ function ShowSelectedRowss(){
 										}
 										}
 							%>
-						</select>    
+						</select>
                         </div>
                      </td>
 				  </tr>
-				
+
 				  <%
 				     } //not pv
-				    %>       
-                            
-                   
+				    %>
+
+
                    <!-- designation exist only for data element -->
 				<%
 				if (sSearchAC.equals("DataElement")) {
-				%>         
-                     <tr>          
+				%>
+                     <tr>
                    <td>
                        <div class="scSubItem">
-                        <b>Context Use</b> 
+                        <b>Context Use</b>
                        </div>
-                   </td> 
-                 </tr>    
-                     
+                   </td>
+                 </tr>
+
                  <tr>
-                  <td><div style="padding-left: 20px">
+                  <td><div style="margin-left: 20px;">
                    <input type="radio" name="rContextUse" value="OWNED_BY" id="owned"
 							<%if(sContextUse.equals("OWNED_BY")){%> checked <%}%>
 							onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchParameters',helpUrl); return false">
 						<label for="owned">Owned By</label></div>
 					</td>
-				</tr> 
-				
+				</tr>
+
 				<tr>
-                  <td><div style="padding-left: 20px">
+                  <td><div style="margin-left: 20px;">
                    <input type="radio" name="rContextUse" value="USED_BY" id="used"
 							<%if(sContextUse.equals("USED_BY")){%> checked <%}%>
 							onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchParameters',helpUrl); return false">
 						<label for="used">Used By</label>
 					</td>
-				</tr>    
-				
+				</tr>
+
 				<tr>
-                  <td><div style="padding-left: 20px">
+                  <td><div style="margin-left: 20px;">
                    <input type="radio" name="rContextUse" value="BOTH" id="both"
 							<%if(sContextUse.equals("BOTH")){%> checked <%}%>
 							onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchParameters',helpUrl); return false">
 						<label for="both">Owned By/Used By</label>
 					</td>
-				</tr>       
-                            
+				</tr>
+
                <%
-						//} 
+						//}
 						}
-				%>             
-                            
-                
+				%>
+
+
                 <%
 						if (sSearchAC.equals("DataElement")
 						|| sSearchAC.equals("ValueMeaning")
 						|| sSearchAC.equals("DataElementConcept")
 						|| sSearchAC.equals("ValueDomain")
 						|| sSearchAC.equals("ConceptualDomain")) {
-				%>            
-                            
+				%>
+
                  <tr>
                    <td><div class="scSubItem">
-                                    <b><label for="tVersion">Version</label><label for="other">&nbsp;</label></b></div>           
-                   </td>         
-                 </tr>           
+                                    <b><label for="tVersion">Version</label><label for="other">&nbsp;</label></b></div>
+                   </td>
+                 </tr>
                  <tr>
 					<td align=left>
-					<div style="padding-left: 20px">
+					<div style="margin-left: 20px;">
 						<input type="radio" name="rVersion" value="All" id="all"
 							onclick="javascript:removeOtherText();"
 							<%if(sVersion.equals("All")){%> checked <%}%>
@@ -1532,28 +1532,28 @@ function ShowSelectedRowss(){
 						<input type="radio" name="rVersion" value="Other" id="other"
 							<% if (sVersion.equals("Other")) { %> checked <% } %>
 							onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchParameters',helpUrl); return false"><input type="text" name="tVersion" id="tVersion" value="<%=txVersion%>"
-							maxlength="5" size="3" style="height: 20px;"
+							maxlength="5" size="3" style="height: 20px; width: 30px;"
 							onkeyup="javascript:enableOtherVersion();"
 							onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchParameters',helpUrl); return false">
-						
+
 					</div>
 					</td>
 				</tr>
 				<%
 				}
-				%>  
+				%>
 				<!-- filter value domain type -->
 				<%
 				if (sSearchAC.equals("ValueDomain")) {
 				%>
 				 <tr>
                    <td><div class="scSubItem">
-                        <b>Value Domain Type</b></div>           
-                   </td>         
-                 </tr>   
+                        <b>Value Domain Type</b></div>
+                   </td>
+                 </tr>
 				<!-- check box value domain type -->
 				<tr>
-					<td ><div style="padding-left: 20px">
+					<td ><div style="margin-left: 20px;">
 						<input type="checkbox" name="enumBox" value="E" id="enumBox"
 							<%if(typeEnum != null && typeEnum.equals("E")){%> checked <%}%>
 							onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchParameters',helpUrl); return false">
@@ -1562,7 +1562,7 @@ function ShowSelectedRowss(){
 					</td>
 				</tr>
 				<tr>
-					<td><div style="padding-left: 20px">
+					<td><div style="margin-left: 20px;">
 						<input type="checkbox" name="nonEnumBox" value="N" id="nonEnumBox"
 							<%if(typeNonEnum != null && typeNonEnum.equals("N")){%> checked
 							<%}%>
@@ -1570,31 +1570,31 @@ function ShowSelectedRowss(){
 						<label for="nonEnumBox">Non-Enumerated</label>
 					</div>
 					</td>
-				</tr> 
-				
-				         
+				</tr>
+
+
                 <%
 				}
 				%>
 				<%
 				} //not for crf question
-				%>            
-                            
-                            
-               
+				%>
+
+
+
                <!-- classification schemes filter for csi search -->
 				<%
 				if (sSearchAC.equals("ClassSchemeItems")) {
-				%>             
-                            
+				%>
+
                  <tr>
                    <td><div class="scSubItem">
-                        <b><label for="listCSName">Classification Schemes</label></b></div>           
-                   </td>         
-                 </tr>                  
+                        <b><label for="listCSName">Classification Schemes</label></b></div>
+                   </td>
+                 </tr>
                  <tr>
-                   <td><div style="padding-left: 20px">
-						<select name="listCSName" size="1" style="width: 185px;" valign="top" id="listCSName"
+                   <td><div style="margin-left: 20px;">
+						<select name="listCSName" size="1" style="width: 183px;" valign="top" id="listCSName"
 							onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchParameters',helpUrl); return false">
 							<option value="AllSchemes" selected>
 								All Schemes
@@ -1613,26 +1613,26 @@ function ShowSelectedRowss(){
 							%>
 						</select>
                     </div>
-                 </tr>            
+                 </tr>
                  	<%
 				}
-				%>              
-                
+				%>
+
                 <!-- CD filter for pv, vm, dec or vd searches drop down list-->
 				<%
 							if (sSearchAC.equals("PermissibleValue")
 							|| sSearchAC.equals("ValueMeaning")
 							|| sSearchAC.equals("DataElementConcept")
 							|| sSearchAC.equals("ValueDomain")) {
-				%>               
+				%>
                  <tr>
                    <td><div class="scSubItem">
-                        <b> <label for="listCDName">Conceptual Domain</label> </b>         
-                   </td>         
-                 </tr>     
+                        <b> <label for="listCDName">Conceptual Domain</label> </b>
+                   </td>
+                 </tr>
                  <tr>
-                  <td><div style="padding-left: 20px">
-						<select name="listCDName" size="1" style="width:185px;" valign="top" id="listCDName"
+                  <td><div style="margin-left: 20px;">
+						<select name="listCDName" size="1" style="width:183px;" valign="top" id="listCDName"
 							onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchParameters',helpUrl); return false"> <!-- NT2 with added px -->
 							<option value="All Domains" <%if(selCD.equals("All Domains")){%>
 								selected <%}%>>
@@ -1652,8 +1652,8 @@ function ShowSelectedRowss(){
 							%>
 						</select></div>
 					</td>
-				
-                </tr>  
+
+                </tr>
                 <%
 				}
 				%>
@@ -1661,19 +1661,19 @@ function ShowSelectedRowss(){
 				<!-- Registration status filter GF32398-->
 				<%
 							if (sSearchAC.equals("DataElementConcept") || sSearchAC.equals("ValueDomain")) {
-				%>          
+				%>
                 <tr>
                  <td>
                      <div class="scSubItem">
-                         <b><label for="listRegStatus">Registration Status</label></b>      
-                 </td>        
+                         <b><label for="listRegStatus">Registration Status</label></b>
+                 </td>
                 </tr>
                 <tr>
-                   <td><div style="padding-left: 20px">
-						<select name="listRegStatus" size="1" style="width: 185px;" id="listRegStatus"
+                   <td><div style="margin-left: 20px;">
+						<select name="listRegStatus" size="1" style="width: 183px;" id="listRegStatus"
 							onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchParameters',helpUrl); return false">
 							<option value="allReg"
-								<%if (vRegStatus == null || vRegStatus.size()==0 
+								<%if (vRegStatus == null || vRegStatus.size()==0
               || sRegStatus == null || sRegStatus.equals("") || sRegStatus.equals("allReg")){%>
 								selected <%}%>>
 								All Statuses
@@ -1693,14 +1693,14 @@ function ShowSelectedRowss(){
 							%>
 						</select></div>
 					</td>
-				
+
 				</tr>
 				<%
 				}
-				%>          
-                
+				%>
+
                 <!-- Registration status filter GF32398-->
-              
+
               <!-- workflow status filter for all ACs except csi, pv, vm -->
 				<%
 							if (!sSearchAC.equals("ClassSchemeItems")
@@ -1708,12 +1708,12 @@ function ShowSelectedRowss(){
 				%>
                   <tr>
                    <td><div class="scSubItem">
-                        <b><label for="listStatusFilter">Workflow Status</label></b>         
-                   </td>         
-                 </tr>    
+                        <b><label for="listStatusFilter">Workflow Status</label></b>
+                   </td>
+                 </tr>
                  <tr>
-					<td><div style="padding-left: 20px">
-						<select name="listStatusFilter" size="5" style="width: 185px;" id="listStatusFilter"
+					<td><div style="margin-left: 20px;">
+						<select name="listStatusFilter" size="5" style="width: 183px;" id="listStatusFilter"
 							multiple
 							onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchParameters',helpUrl); return false">
 							<!--store the status list as per the CONCEPT SEARCH  -->
@@ -1753,7 +1753,7 @@ function ShowSelectedRowss(){
 										for (int i = 0; vStatusDEC.size() > i; i++) {
 									String sStatusName = (String) vStatusDEC.elementAt(i);
 							%>
-							
+
 							<!--if(sStatusName.equals("RELEASED")){ -->
 							<option value="<%=sStatusName%>"
 
@@ -1811,7 +1811,7 @@ function ShowSelectedRowss(){
 							%>
 						</select></div>
 					</td>
-					
+
 				</tr>
 				<%
 				}
@@ -1821,19 +1821,19 @@ function ShowSelectedRowss(){
 				<%
 							if (sSearchAC.equals("DataElement")
 							|| sSearchAC.equals("ValueMeaning")) {
-				%>          
+				%>
                 <tr>
                  <td>
                      <div class="scSubItem">
-                         <b><label for="listRegStatus1">Registration Status</label></b>      
-                 </td>        
+                         <b><label for="listRegStatus1">Registration Status</label></b>
+                 </td>
                 </tr>
                 <tr>
-                   <td><div style="padding-left: 20px">
-						<select name="listRegStatus" size="1" style="width: 185px;" id="listRegStatus1"
+                   <td><div style="margin-left: 20px;">
+						<select name="listRegStatus" size="1" style="width: 183px;" id="listRegStatus1"
 							onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchParameters',helpUrl); return false">
 							<option value="allReg"
-								<%if (vRegStatus == null || vRegStatus.size()==0 
+								<%if (vRegStatus == null || vRegStatus.size()==0
               || sRegStatus == null || sRegStatus.equals("") || sRegStatus.equals("allReg")){%>
 								selected <%}%>>
 								All Statuses
@@ -1853,28 +1853,28 @@ function ShowSelectedRowss(){
 							%>
 						</select></div>
 					</td>
-				
+
 				</tr>
 				<%
 				}
-				%>          
-                
+				%>
+
                 <!-- Registration status filter-->
 				<%
 				if (sSearchAC.equals("ValueDomain")) {
-				%>             
+				%>
                    <tr>
                  <td>
                      <div class="scSubItem">
-                         <b> <label for="listDataType">Value Domain Data Type</label></b>      
-                 </td>        
-                </tr>     
+                         <b> <label for="listDataType">Value Domain Data Type</label></b>
+                 </td>
+                </tr>
                 <tr>
-                  <td><div style="padding-left: 20px">
-						<select name="listDataType" size="1" style="width: 185px;" id="listDataType"
+                  <td><div style="margin-left: 20px;">
+						<select name="listDataType" size="1" style="width: 183px;" id="listDataType"
 							onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchParameters',helpUrl); return false">
 							<option value="allData"
-								<%if (vDataType == null || vDataType.size()==0 
+								<%if (vDataType == null || vDataType.size()==0
               || sDataType == null || sDataType.equals("") || sDataType.equals("allData")){%>
 								selected <%}%>>
 								All Data Types
@@ -1896,12 +1896,12 @@ function ShowSelectedRowss(){
 							%>
 						</select></div>
 					</td>
-				
+
 				</tr>
 				<%
 				}
 				%>
-                         
+
                  <!-- created date filter-->
 				<%
 							if ((sUIFilter.equals("advanced"))
@@ -1910,19 +1910,19 @@ function ShowSelectedRowss(){
 							|| sSearchAC.equals("ValueDomain") || sSearchAC
 							.equals("ConceptualDomain"))) {
 						if (sSearchAC.equals("DataElement")) {
-				%>      
+				%>
                  <tr>
                  <td>
                      <div class="scSubItem">
-                         <b> <label for="listDeriveType">Derivation Type</label> </b>      
-                 </td>        
-                </tr>        
+                         <b> <label for="listDeriveType">Derivation Type</label> </b>
+                 </td>
+                </tr>
                 <tr>
-                    <td> <div style="padding-left: 20px">
-						<select name="listDeriveType" size="1" style="width: 185px;" id="listDeriveType"
+                    <td> <div style="margin-left: 20px;">
+						<select name="listDeriveType" size="1" style="width: 183px;" id="listDeriveType"
 							onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchParameters',helpUrl); return false">
 							<option value="allDer"
-								<%if (vDerType == null || vDerType.size()==0 
+								<%if (vDerType == null || vDerType.size()==0
               || sDerType == null || sDerType.equals("") || sDerType.equals("allDer")){%>
 								selected <%}%>>
 								All Derivation Types
@@ -1944,31 +1944,29 @@ function ShowSelectedRowss(){
 							%>
 						</select></div>
 					</td>
-				
+
 				</tr>
 				<%
-				} 
+				}
 				%>
-				 
-				 
+
+
 				 <tr >
 					<td colspan=2><div class="scItem">
-						<table style = "padding-right: 0px">
-							<col width=5%>
+						<table style = "padding-right: 2px">
+							<col width=0%>
 							<col width=20%>
-							<col width=32%>
-							<col width=14%>
-							<col width=20%>
-							
+							<col width=30%>
+							<col width=10%>
+
 							<tr>
+                                <td style="height: 20px;" colspan=7 valign=bottom>
+                                <b> Date Created </b> &nbsp;(MM/DD/YYYY)
+                                </td>
 								<td>
-									&nbsp;
-								</td>
-								<td style="height: 20px;" colspan=4 valign=bottom>
-									<b> Date Created </b> &nbsp;&nbsp;(MM/DD/YYYY)
 								</td>
 							</tr>
-							
+
 							<tr>
 								<td>
 									&nbsp;
@@ -1977,18 +1975,18 @@ function ShowSelectedRowss(){
 									<label for="createdFrom">From</label>
 								</td>
 								<td>
-									<input type="text" name="createdFrom" value="<%=sCreatedFrom%>" id="createdFrom"
+									<input style="width:82px;" type="text" name="createdFrom" value="<%=sCreatedFrom%>" id="createdFrom"
 										size="8" readonly
 										onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchParameters',helpUrl); return false">
 								</td>
 								<td align=center><img src="../../cdecurate/images/calendarbutton.gif" alt="Calendar" onclick="calendar('createdFrom', event);">
-									
+
 								</td>
 								<td align=left>
 									<a href="javascript:clearDate('createdFrom');"> Clear </a>
 								</td>
 							</tr>
-							
+
 							<tr>
 								<td>
 									&nbsp;
@@ -1997,7 +1995,7 @@ function ShowSelectedRowss(){
 									<label for="createdTo">To</label>
 								</td>
 								<td>
-									<input type="text" name="createdTo" value="<%=sCreatedTo%>" id="createdTo"
+									<input style="width:82px;" type="text" name="createdTo" value="<%=sCreatedTo%>" id="createdTo"
 										size="8" readonly
 										onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchParameters',helpUrl); return false">
 								</td>
@@ -2008,15 +2006,14 @@ function ShowSelectedRowss(){
 									<a href="javascript:clearDate('createdTo');"> Clear </a>
 								</td>
 							</tr>
-							
-							
+
+
 							<!-- creator filter-->
 							<tr>
+                                <td style="height: 20px;" colspan=6 valign=bottom>
+                                <b> <label for="creator">Creator</label> </b>
+                                </td>
 								<td>
-									&nbsp;
-								</td>
-								<td style="height: 20px;" colspan=4 valign=bottom>
-									<b> <label for="creator">Creator</label> </b>
 								</td>
 							<tr>
 							</tr>
@@ -2024,11 +2021,11 @@ function ShowSelectedRowss(){
 								<td>
 									&nbsp;
 								</td>
-								<td style="height: 20px;" colspan=4 valign=top><div style="padding-left: 20px">
+								<td style="height: 20px;" colspan=4 valign=top><div style="padding-left: 0px">
 									<select name="creator" size="1" style="width: 173px;" valign="top" id="creator"
 										onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchParameters',helpUrl); return false">
 										<option value="allUsers"
-											<%if (vUsers == null || vUsers.size()==0 
+											<%if (vUsers == null || vUsers.size()==0
                   || sCreator == null || sCreator.equals("") || sCreator.equals("allUsers")){%>
 											selected <%}%>>
 											All Creators
@@ -2052,20 +2049,19 @@ function ShowSelectedRowss(){
 									</select></div>
 								</td>
 							</tr>
-						
-						
+
+
 						<!-- modified date filter-->
-						
-						
+
+
 							<tr>
+                                <td style="height: 20px;" colspan=7 valign=bottom>
+                                <b> Date Modified </b>&nbsp;(MM/DD/YYYY)
+                                </td>
 								<td>
-									&nbsp;
-								</td>
-								<td style="height: 20px;" colspan=4 valign=bottom>
-									<b> Date Modified </b> &nbsp;&nbsp;(MM/DD/YYYY)
 								</td>
 							</tr>
-							
+
 							<tr>
 								<td>
 									&nbsp;
@@ -2074,7 +2070,7 @@ function ShowSelectedRowss(){
 									<label for="modifiedFrom">From</label>
 								</td>
 								<td>
-									<input type="text" name="modifiedFrom"
+									<input style="width:82px;" type="text" name="modifiedFrom"
 										value="<%=sModifiedFrom%>" size="8" readonly id="modifiedFrom"
 										onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchParameters',helpUrl); return false">
 								</td>
@@ -2085,7 +2081,7 @@ function ShowSelectedRowss(){
 									<a href="javascript:clearDate('modifiedFrom');"> Clear </a>
 								</td>
 							</tr>
-							
+
 							<tr>
 								<td>
 									&nbsp;
@@ -2094,7 +2090,7 @@ function ShowSelectedRowss(){
 									<label for="modifiedTo">To</label>
 								</td>
 								<td>
-									<input type="text" name="modifiedTo" value="<%=sModifiedTo%>" id="modifiedTo"
+									<input style="width:82px;" type="text" name="modifiedTo" value="<%=sModifiedTo%>" id="modifiedTo"
 										size="8" readonly
 										onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchParameters',helpUrl); return false">
 								</td>
@@ -2105,29 +2101,27 @@ function ShowSelectedRowss(){
 									<a href="javascript:clearDate('modifiedTo');"> Clear </a>
 								</td>
 							</tr>
-							
-							
+
+
 							<!-- modifier filter-->
 							<tr>
-								<td>
-									&nbsp;
-								</td>
-								<td style="height: 20px;" colspan=4 valign=bottom>
+								<td style="height: 20px;" colspan=6 valign=bottom>
 									<b> <label for="modifier">Modifier</label> </b>
 								</td>
+                                <td>
+                                </td>
 							</tr>
 							<tr>
 								<td>
 									&nbsp;
 								</td>
-								
 								<td style="height: 35px;" colspan=4 valign=top>
-									<div style="padding-left: 20px">
+									<div style="margin-left: 20px;">
 									<select name="modifier" size="1" style="width: 173px;" id="modifier"
 										valign="top"
 										onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchParameters',helpUrl); return false">
 										<option value="allUsers"
-											<%if (vUsers == null || vUsers.size()==0 
+											<%if (vUsers == null || vUsers.size()==0
                   || sModifier == null || sModifier.equals("") || sModifier.equals("allUsers")){%>
 											selected <%}%>>
 											All Modifiers
@@ -2149,31 +2143,31 @@ function ShowSelectedRowss(){
 												}
 										%>
 									</select></div>
-								
+
 								</td>
-							
+
 							</tr>
 				</table></div>
 					</td>
 				</tr>
 				<%
 				}
-				%>     
-                       
+				%>
+
                 <tr>
                   <td>
                       <div class="scItem">
                          <b><label for="listAttrFilter">Display Attributes</label></b> &nbsp;
-                         <input type="button" name="updateDisplayBtn" value="Update"
-								onClick="<%=updFunction%>" 
-								onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_displayAttributes',helpUrl); return false">                              
-                       </div>  
-                  </td>       
-               </tr>          
+                         <input style="width:60px;" type="button" name="updateDisplayBtn" value="Update"
+								onClick="<%=updFunction%>"
+								onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_displayAttributes',helpUrl); return false">
+                       </div>
+                  </td>
+               </tr>
                <tr>
                 <td>
-                   <div style="padding-left: 20px">
-                      <select name="listAttrFilter" size="5" style="width: 185px;" id="listAttrFilter"
+                   <div style="margin-left: 20px;">
+                      <select name="listAttrFilter" size="5" style="width: 183px;" id="listAttrFilter"
 								multiple valign="bottom"
 								onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_displayAttributes',helpUrl); return false">
 								<%
@@ -2210,7 +2204,7 @@ function ShowSelectedRowss(){
 					<td align="center" class="scItem">
 						<div align="left">
 							<label for="recordsDisplayed">Results Displayed:</label>
-							<select name="recordsDisplayed" size="1" style="width: 160px;" id="recordsDisplayed">
+							<select name="recordsDisplayed" size="1" id="recordsDisplayed">
 							
 								<option value="500" <% if (sessionRecordsDisplayed != null && !sessionRecordsDisplayed.equals("") && sessionRecordsDisplayed.equals("500")){ %>
 								selected<%} %>>
@@ -2907,9 +2901,9 @@ function ShowSelectedRowss(){
                 
                 <p style="margin-left: 0.5in">
 						<span onclick="hideShowDef('<%=id1%>', '<%=id2%>', '<%=id3%>');"
-							style="padding: 2px 2px 2px 2px; font-weight: bold; cursor: default"><img <%if ((j%2) == 0){%>class="stripe"<%}else{%>class="white"<%}%> 
+							style="padding: 2px 2px 2px 2px; font-weight: bold; cursor: default"><img <%if ((j%2) == 0){%>class="stripe"<%}else{%>class="white"<%}%>
 								id="<%=id1%>" src="images/plus_8.gif" border="1" alt="Expand"
-								style="margin: 0px 0px 0px 0px" onmouseover="style.border=('1px solid #4876FF');" onmouseout="setBorder(this, <%=j%>);"></span> Definition: <%=def%><span id="<%=id2%>">&hellip;</span><span id="<%=id3%>" style="display: none"><%=definition%>
+								style="margin: 2px 2px 2px 2px" onmouseover="style.border=('1px solid #4876FF');" onmouseout="setBorder(this, <%=j%>);"></span> Definition: <%=def%><span id="<%=id2%>">&hellip;</span><span id="<%=id3%>" style="display: none"><%=definition%>
 				</span></p></td></tr>			
 	     <%}else{%>
 		        <%if ((j%2) == 0){%>	
