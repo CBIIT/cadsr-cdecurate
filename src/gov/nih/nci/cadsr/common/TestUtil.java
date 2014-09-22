@@ -61,14 +61,23 @@ public class TestUtil {
 			System.out.println("DB is set to DEV");
 		}
 
-		ConnectionUtil cu = new ConnectionUtil();
-		cu.setUserName(username);
-		cu.setPassword(password);
-		cu.setDbms(dbtype);
-		cu.setDbName(dbname);
-		cu.setServerName(dbserver);
-		cu.setPortNumber(port);
-		Connection conn = cu.getConnection();
+//System.out.println("TestUtil 1");
+
+		Connection conn = null;
+		ConnectionUtil cu = null;
+		try {
+			cu = new ConnectionUtil();
+			cu.setUserName(username);
+			cu.setPassword(password);
+			cu.setDbms(dbtype);
+			cu.setDbName(dbname);
+			cu.setServerName(dbserver);
+			cu.setPortNumber(port);
+			conn = cu.getConnection();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+//System.out.println("TestUtil: returning conn [" + conn + "]");
 		return conn;
 	}
 	

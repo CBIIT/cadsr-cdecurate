@@ -59,6 +59,7 @@ public class DataLoader {
 		if(force) {
 			userId = System.getProperty("u");
 			password = System.getProperty("p");
+			System.out.println("initDB userId [" + userId + "]");	// password [" + password + "]");
 			conn = null;
 			boolean donotGiveUp = true, quite = true;
 			int retryLimit = 20, retryCount = 0;
@@ -91,36 +92,66 @@ public class DataLoader {
 	}
 
 	public static void main(String[] args) {
-		String header = "\n--DataLoaderV1.00 build 106 9/19/2014 [autoCleanup:" + autoCleanup+"] [persistToDB:" + persistToDB + "] "+ new Date() + "\n";
+		String header = "\n--DataLoaderV1.00 build 107 9/22/2014 [autoCleanup:" + autoCleanup+"] [persistToDB:" + persistToDB + "] "+ new Date() + "\n";
 		//String header = " ";
 		System.out.println(header);
-		initDB(true);
-		designationUtil = new DesignationUtil();
-		designationUtil.setAutoCleanup(autoCleanup);
-		permissibleValueUtil = new PermissibleValueUtil();
-		permissibleValueUtil.setAutoCleanup(autoCleanup);
-		administeredItemUtil = new AdministeredItemUtil();
-		administeredItemUtil.setAutoCleanup(autoCleanup);
+		DesignationsView designation = null;
+		PermissibleValuesView permissiblevalue = null;
+		try {
+			designation = new DesignationsView();
+			permissiblevalue = new PermissibleValuesView();
+			initDB(true);
+			designationUtil = new DesignationUtil();
+			designationUtil.setAutoCleanup(autoCleanup);
+			permissibleValueUtil = new PermissibleValueUtil();
+			permissibleValueUtil.setAutoCleanup(autoCleanup);
+			administeredItemUtil = new AdministeredItemUtil();
+			administeredItemUtil.setAutoCleanup(autoCleanup);
 
-		desFile = new File(desLoaderFile);
-		pvFile = new File(pvLoaderFile);
+			desFile = new File(desLoaderFile);
+			pvFile = new File(pvLoaderFile);
+		} catch (Exception e1) {
+			e1.printStackTrace();
+		}
         try {
 			FileUtils.writeStringToFile(desFile, header, false);
 	        FileUtils.writeStringToFile(pvFile, header, false);
+	        System.out.println("4");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-
-		DesignationsView designation = new DesignationsView();
-	    PermissibleValuesView permissiblevalue = new PermissibleValuesView();
+	    try {
+			if(args != null && args.length == 2) {
+				String acDataFIle = args[0];
+				String acType = args[1];
+				System.out.println("acDataFile [" + acDataFIle + "]\n");
+				System.out.println("acType [" + acType + "]\n");
+				if(acType != null && acType.equals("des")) {
+				    processDesignationFromCSV(acDataFIle, designation, -1, true);
+				} else 
+				if(acType != null && acType.equals("pv")) {
+				    processPermissibleValueFromCSV(acDataFIle, permissiblevalue, -1, true);
+				} else {
+					System.out.println("Unknown ac type, only Permissible Values (pv) and Designations (des) are supported.");
+				}
+			} else {
+				int argCount = 0;
+				if(args != null && args.length > -1) argCount = args.length;
+				System.out.println("The length or the arguments give was " + argCount + ". The format of the execution should be:\n");
+				System.out.println("jar DataLoader {csv filename} {type: pv|des} e.g. jar DataLoader pv_data.csv pv\n");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	    
 //	    processDesignationFromCSV("C:/Users/ag/demo/cadsr-cdecurate_03122014/test/gov/nih/nci/cadsr/cdecurate/util/SampleForTestingLoader-V3-designation.csv", designation, 7404, true);
 //	    processPermissibleValueFromCSV("C:/Users/ag/demo/cadsr-cdecurate_03122014/test/gov/nih/nci/cadsr/cdecurate/util/SampleForTestingLoader-V3-permissiblevalue.csv", permissiblevalue, -1, true);
 
 	    //first test data set
-	    processDesignationFromCSV("C:/Users/ag/demo/cadsr-cdecurate_03122014/test/gov/nih/nci/cadsr/cdecurate/util/SampleForTestingLoader-V3-designation-small.csv", designation, -1, true);
+//	    processDesignationFromCSV("C:/Users/ag/demo/cadsr-cdecurate_03122014/test/gov/nih/nci/cadsr/cdecurate/util/SampleForTestingLoader-V3-designation-small.csv", designation, -1, true);
 //	    processPermissibleValueFromCSV("C:/Users/ag/demo/cadsr-cdecurate_03122014/test/gov/nih/nci/cadsr/cdecurate/util/SampleForTestingLoader-V3-permissiblevalue-small.csv", permissiblevalue, -1, true);
 	    //second test data set received on 9/18/2014
-	    processPermissibleValueFromCSV("C:/Users/ag/demo/cadsr-cdecurate_03122014/test/gov/nih/nci/cadsr/cdecurate/util/Sample2ForTestingLoader-V3-1-permissiblevalue-small.csv", permissiblevalue, -1, true);
+//	    processPermissibleValueFromCSV("C:/Users/ag/demo/cadsr-cdecurate_03122014/test/gov/nih/nci/cadsr/cdecurate/util/Sample2ForTestingLoader-V3-1-permissiblevalue-small.csv", permissiblevalue, -1, true);
 //	    processPermissibleValueFromCSV("C:/Users/ag/demo/cadsr-cdecurate_03122014/test/gov/nih/nci/cadsr/cdecurate/util/Sample2ForTestingLoader-V3-1-permissiblevalue.csv", permissiblevalue, -1, true);
 	    
 	}
