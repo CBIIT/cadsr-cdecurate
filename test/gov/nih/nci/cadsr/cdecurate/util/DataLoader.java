@@ -25,6 +25,17 @@ import org.apache.commons.io.FileUtils;
 import com.csvparsing.common.ParseHelper;
 import com.csvparsing.common.SQLLoaderHelper;
 
+/*
+ * Sample program arguments:
+ * 
+ * DESIGNATION:
+ *
+ * "C:/Users/ag/demo/cadsr-cdecurate_03122014/test/gov/nih/nci/cadsr/cdecurate/util/SampleForTestingLoader-V3-designation-small.csv" des dev
+ *
+ * PV:
+ * 
+ * "C:/Users/ag/demo/cadsr-cdecurate_03122014/test/gov/nih/nci/cadsr/cdecurate/util/Sample2ForTestingLoader-V3-1-permissiblevalue-small.csv" pv dev
+ */
 public class DataLoader {
 	private static TIER targetTier = TIER.DEV;
 	private static Connection conn;
@@ -116,7 +127,7 @@ public class DataLoader {
 	}
 
 	public static void main(String[] args) {
-		String header = "\n--DataLoaderV1.00 build 107d 9/23/2014 [autoCleanup:" + autoCleanup+"] [persistToDB:" + persistToDB + "] "+ new Date() + "\n";
+		String header = "\n--DataLoaderV1.00 build 107a3 9/23/2014 [autoCleanup:" + autoCleanup+"] [persistToDB:" + persistToDB + "] "+ new Date() + "\n";
 		//String header = " ";
 		System.out.println(header);
 		desFile = new File(desLoaderFile);
@@ -133,13 +144,23 @@ public class DataLoader {
 		designation = new DesignationsView();
 		permissiblevalue = new PermissibleValuesView();
 	    try {
-			if(args != null && args.length == 3) {
+			if(args != null && args.length == 4) {
 				String acDataFIle = args[0];
 				String acType = args[1];
 				String tier = args[2];
 				System.out.println("acDataFile [" + acDataFIle + "]\n");
 				System.out.println("acType [" + acType + "]\n");
 				System.out.println("tier [" + tier + "]\n");
+				long start = -1;
+				try {
+					if(args[3] != null) {
+						start = Integer.valueOf(args[3]);
+						System.out.println("startRow [" + start + "]\n");
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
+					System.out.println("Not able to get the start row properly, set to all rows!\n");
+				}
 				initDB(true, targetTier);
 				designationUtil = new DesignationUtil();
 				designationUtil.setAutoCleanup(autoCleanup);
@@ -148,10 +169,10 @@ public class DataLoader {
 				administeredItemUtil = new AdministeredItemUtil();
 				administeredItemUtil.setAutoCleanup(autoCleanup);
 				if(acType != null && acType.equals("des")) {
-				    processDesignationFromCSV(acDataFIle, designation, -1, true);
+				    processDesignationFromCSV(acDataFIle, designation, start, true);
 				} else 
 				if(acType != null && acType.equals("pv")) {
-				    processPermissibleValueFromCSV(acDataFIle, permissiblevalue, -1, true);
+				    processPermissibleValueFromCSV(acDataFIle, permissiblevalue, start, true);
 				} else {
 					System.out.println("Unknown ac type, only Permissible Values (pv) and Designations (des) are supported.");
 				}
@@ -159,7 +180,7 @@ public class DataLoader {
 				int argCount = 0;
 				if(args != null && args.length > -1) argCount = args.length;
 				System.out.println("The length or the arguments give was " + argCount + ". The format of the execution should be:\n");
-				System.out.println("jar DataLoader {csv filename} {type: pv|des} {tier: dev|qa|sb|stg|prod} e.g. jar DataLoader pv_data.csv pv prod\n");
+				System.out.println("jar DataLoader {csv filename} {type: pv|des} {tier: dev|qa|sb|stg|prod} {startRow: -1 for all rows|any number bigger than -1} e.g. jar DataLoader pv_data.csv pv prod -1\n");
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -220,9 +241,9 @@ order by d.date_modified desc
                     if(columns.length != size) {
 	    				if(showDesSkipped) {
 	    					System.out.println("processDesignationFromCSV: row " + count + " column=" + size + " is not equal to header column=" + columns.length + " [" + values[0] + ", " + values[1] + ", " + values[2] + "] ??? - skipped!");
-                			count++;
-	    					continue;
 	    				}
+            			count++;
+    					continue;
                     }
 
 //                    for(int i=0;i< size;i++){
@@ -261,7 +282,7 @@ order by d.date_modified desc
 		        				}
 		        			} else {
 		        				if(showDesUpdated) {
-		        					System.out.println("processDesignationFromCSV: name [" + name + "] already exists i.e. by [" + values[0] + ", " + values[1] + ", " + values[2] + "] - will be updated");
+		        					System.out.println("processDesignationFromCSV: row " + count + " name [" + name + "] already exists i.e. by [" + values[0] + ", " + values[1] + ", " + values[2] + "] - will be updated");
 		        				}
 		        			}
             				initDB(autoCleanup, targetTier);
@@ -285,12 +306,12 @@ order by d.date_modified desc
                     	newRecord.setDATEMODIFIED(new Date());
 //                    }
                     recordList.add(newRecord);
-                    System.out.println("record: " + count++ + "\n");
-                    if(previousRecord == newRecord) {
-                    	System.out.println("duplicate des found in input file: " + newRecord.toString());
+                    System.out.println("record: " + count + "\n");
+                    if(previousRecord != null && previousRecord.toString().equals(newRecord.toString())) {
+                    	System.out.println("duplicate des found in input file: row " + count + " " + newRecord.toString() + " - will be skipped!\n");
                     } else {
 	                    if(showDesInserted) {
-	                    	System.out.println("new des: " + newRecord.toString());
+	                    	System.out.println("new des: row " + count + " " + newRecord.toString());
 	                    }
 	                    if(sqlLoaderOutput) {
 	                    	FileUtils.writeStringToFile(desFile, SQLLoaderHelper.toDesRow(newRecord), append);
@@ -299,6 +320,7 @@ order by d.date_modified desc
 	                    	persistDesignation(newRecord);
 	                    }
                     }
+        			count++;
                     previousRecord = newRecord;
                 }
                 br.close();
@@ -352,9 +374,9 @@ order by pv.date_modified desc
                     if(columns.length != size) {
         				if(showPVSkipped) {
         					System.out.println("processPermissibleValueFromCSV: row " + count + " column=" + size + " is not equal to header column=" + columns.length + " [" + values[0] + ", " + values[1] + ", " + values[2] + "] ??? - skipped!");
-                			count++;
-        					continue;
         				}
+            			count++;
+    					continue;
                     }
                     
                     //latest business rule as specified in BulkLoadDesignationLogic.docx given by GS (9/19/2014)
@@ -380,8 +402,9 @@ order by pv.date_modified desc
                     				initDB(autoCleanup, targetTier);
     		        				if(showPVSkipped) {
 	            						//pvId = administeredItemUtil.getNewAC_IDSEQ(conn);
-	    		        				System.out.println("processPermissibleValueFromCSV: value [" + value + "] does not exists i.e. by [" + values[0] + ", " + values[1] + ", " + values[2] + "] - skipped!");
+	    		        				System.out.println("processPermissibleValueFromCSV:  row " + count + " value [" + value + "] does not exists i.e. by [" + values[0] + ", " + values[1] + ", " + values[2] + "] - skipped!");
     		        				}
+    	                			count++;
     		        				continue;
             					} catch (Exception e) {
             						e.printStackTrace();
@@ -390,7 +413,7 @@ order by pv.date_modified desc
 //                				initDB(autoCleanup, targetTier);
 		        				if(showPVUpdated) {
 		            				initDB(autoCleanup, targetTier);
-			        				System.out.println("processPermissibleValueFromCSV: value [" + value + "] exists i.e. by [" + values[0] + ", " + values[1] + ", " + values[2] + "] - will be updated");
+			        				System.out.println("processPermissibleValueFromCSV: row " + count + " value [" + value + "] exists i.e. by [" + values[0] + ", " + values[1] + ", " + values[2] + "] - will be updated");
 	            					System.out.println("PV vm = [" + permissibleValueUtil.getPermissibleValueShortMeaning(conn, value) + "]");
 		        				}
             				}
@@ -418,12 +441,12 @@ order by pv.date_modified desc
                         
 //                    }
                     recordList.add(newRecord);
-                    System.out.println("record: " + count++ + "\n");
-                    if(previousRecord == newRecord) {
-                    	System.out.println("duplicate pv found in input file: " + newRecord.toString());
+                    System.out.println("record: " + count + "\n");
+                    if(previousRecord != null && previousRecord.toString().equals(newRecord.toString())) {
+                    	System.out.println("duplicate pv found in input file: row " + count + " " + newRecord.toString() + " - will be skipped!\n");
                     } else {
 	                    if(showPVInserted) {
-	                    	System.out.println("new pv: " + newRecord.toString());
+	                    	System.out.println("new pv: row " + count + " " + newRecord.toString());
 	                    }
 	                    if(sqlLoaderOutput) {
 	                    	FileUtils.writeStringToFile(pvFile, SQLLoaderHelper.toPVRow(newRecord), append);
@@ -432,6 +455,7 @@ order by pv.date_modified desc
 	                    	persistPermissibleValue(newRecord);
 	                    }
                     }
+        			count++;
                     previousRecord = newRecord;
                 }
                 br.close();
