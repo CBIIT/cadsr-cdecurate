@@ -28,7 +28,7 @@ public class TestUtil {
 	private int portNumber = -1;
 	private String dbName;
 	public enum TIER {
-		LOCAL, DEV, QA
+		LOCAL, DEV, QA, STAGE, SANDBOX, PROD
 	}
 	private static TIER targetTier = TIER.DEV;
 	
@@ -56,9 +56,27 @@ public class TestUtil {
 			dbserver = "ncidb-dsr-q.nci.nih.gov";
 			dbname = "DSRQA";
 			port = 1551;
-			System.out.println("DB is set to QA");
+			System.out.println("DB is set to QA (" + dbserver + ":" + port + "/" + dbname + ")");
+		} else
+		if(targetTier == TIER.STAGE) {
+			dbserver = "ncidb-dsr-s.nci.nih.gov";
+			dbname = "DSRSTG";
+			port = 1551;
+			System.out.println("DB is set to STAGE (" + dbserver + ":" + port + "/" + dbname + ")");
+		} else
+//		if(targetTier == TIER.SANDBOX) {
+//			dbserver = "ncidb-dsr-q.nci.nih.gov";
+//			dbname = "DSRSBX";
+//			port = 1551;
+//			System.out.println("DB is set to SANDBOX");
+//		} else
+		if(targetTier == TIER.PROD) {
+			dbserver = "ncidb-dsr-p.nci.nih.gov";
+			dbname = "DSRPROD";
+			port = 1551;
+			System.out.println("DB is set to PROD (" + dbserver + ":" + port + "/" + dbname + ")");
 		} else {
-			System.out.println("DB is set to DEV");
+			System.out.println("DB is set to DEV (" + dbserver + ":" + port + "/" + dbname + ")");
 		}
 
 //System.out.println("TestUtil 1");
