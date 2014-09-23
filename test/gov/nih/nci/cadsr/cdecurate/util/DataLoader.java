@@ -2,8 +2,8 @@ package gov.nih.nci.cadsr.cdecurate.util;
 
 import gov.nih.nci.cadsr.cdecurate.test.helpers.DesignationUtil;
 import gov.nih.nci.cadsr.cdecurate.test.helpers.PermissibleValueUtil;
+import gov.nih.nci.cadsr.common.TIER;
 import gov.nih.nci.cadsr.common.TestUtil;
-import gov.nih.nci.cadsr.common.TestUtil.TIER;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -26,7 +26,7 @@ import com.csvparsing.common.ParseHelper;
 import com.csvparsing.common.SQLLoaderHelper;
 
 public class DataLoader {
-	private static TIER targetTier = null;
+	private static TIER targetTier = TIER.DEV;
 	private static Connection conn;
 	private static String userId;
 	private static String password;
@@ -56,7 +56,28 @@ public class DataLoader {
 	private static boolean persistToDB = false;
 	//private static boolean sqlLoaderOutput = false;
 	private static boolean sqlLoaderOutput = true;
-	
+
+	private static TIER getTier(String param) {
+		TIER ret = TIER.DEV;	//default is always DEV
+
+		if(param != null) {
+			if(param.equals("qa")) {
+				ret = TIER.QA;
+			} else
+			if(param.equals("sbx")) {
+				ret = TIER.SANDBOX;
+			} else
+			if(param.equals("stg")) {
+				ret = TIER.STAGE;
+			} else
+			if(param.equals("prod")) {
+				ret = TIER.PROD;
+			}
+		}
+		
+		return ret;
+	}
+
 	private static void initDB(boolean force, TIER targetTier) {
 		if(force) {
 			userId = System.getProperty("u");
@@ -95,7 +116,7 @@ public class DataLoader {
 	}
 
 	public static void main(String[] args) {
-		String header = "\n--DataLoaderV1.00 build 107a 9/23/2014 [autoCleanup:" + autoCleanup+"] [persistToDB:" + persistToDB + "] "+ new Date() + "\n";
+		String header = "\n--DataLoaderV1.00 build 107d 9/23/2014 [autoCleanup:" + autoCleanup+"] [persistToDB:" + persistToDB + "] "+ new Date() + "\n";
 		//String header = " ";
 		System.out.println(header);
 		desFile = new File(desLoaderFile);
@@ -109,6 +130,8 @@ public class DataLoader {
 		}
 		DesignationsView designation = null;
 		PermissibleValuesView permissiblevalue = null;
+		designation = new DesignationsView();
+		permissiblevalue = new PermissibleValuesView();
 	    try {
 			if(args != null && args.length == 3) {
 				String acDataFIle = args[0];
@@ -117,6 +140,13 @@ public class DataLoader {
 				System.out.println("acDataFile [" + acDataFIle + "]\n");
 				System.out.println("acType [" + acType + "]\n");
 				System.out.println("tier [" + tier + "]\n");
+				initDB(true, targetTier);
+				designationUtil = new DesignationUtil();
+				designationUtil.setAutoCleanup(autoCleanup);
+				permissibleValueUtil = new PermissibleValueUtil();
+				permissibleValueUtil.setAutoCleanup(autoCleanup);
+				administeredItemUtil = new AdministeredItemUtil();
+				administeredItemUtil.setAutoCleanup(autoCleanup);
 				if(acType != null && acType.equals("des")) {
 				    processDesignationFromCSV(acDataFIle, designation, -1, true);
 				} else 
@@ -133,20 +163,6 @@ public class DataLoader {
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
-		}
-		try {
-			designation = new DesignationsView();
-			permissiblevalue = new PermissibleValuesView();
-			initDB(true, targetTier);
-			designationUtil = new DesignationUtil();
-			designationUtil.setAutoCleanup(autoCleanup);
-			permissibleValueUtil = new PermissibleValueUtil();
-			permissibleValueUtil.setAutoCleanup(autoCleanup);
-			administeredItemUtil = new AdministeredItemUtil();
-			administeredItemUtil.setAutoCleanup(autoCleanup);
-
-		} catch (Exception e1) {
-			e1.printStackTrace();
 		}
 	    
 //	    processDesignationFromCSV("C:/Users/ag/demo/cadsr-cdecurate_03122014/test/gov/nih/nci/cadsr/cdecurate/util/SampleForTestingLoader-V3-designation.csv", designation, 7404, true);
@@ -172,8 +188,11 @@ d.date_modified is not NULL and d.date_modified >= sysdate -1
 order by d.date_modified desc
 --order by d.date_created desc
 	 */
-    public static List<Object> processDesignationFromCSV(String fileName, DesignationsView record, long startRow, boolean append) {
-        List<Object> recordList = new ArrayList<Object>();
+    public static List<Object> processDesignationFromCSV(String fileName, DesignationsView record, long startRow, boolean append) throws Exception {
+		if(record == null) {
+			throw new Exception("processDesignationFromCSV: record is NULL or empty.");
+		}
+	     List<Object> recordList = new ArrayList<Object>();
            try{
                    String path = fileName;
                 BufferedReader br = new BufferedReader( new FileReader(path));
@@ -187,6 +206,7 @@ order by d.date_modified desc
     			String contextId = null;
     			String acId = null;
     			long count = 1;
+    			DesignationsView previousRecord = null;
                 while((strLine = br.readLine()) != null){
                 	if(startRow > 0) {
                 		if(count < startRow) {
@@ -266,15 +286,20 @@ order by d.date_modified desc
 //                    }
                     recordList.add(newRecord);
                     System.out.println("record: " + count++ + "\n");
-                    if(showDesInserted) {
-                    	System.out.println("new des: " + newRecord.toString());
+                    if(previousRecord == newRecord) {
+                    	System.out.println("duplicate des found in input file: " + newRecord.toString());
+                    } else {
+	                    if(showDesInserted) {
+	                    	System.out.println("new des: " + newRecord.toString());
+	                    }
+	                    if(sqlLoaderOutput) {
+	                    	FileUtils.writeStringToFile(desFile, SQLLoaderHelper.toDesRow(newRecord), append);
+	                    }
+	                    if(persistToDB) {
+	                    	persistDesignation(newRecord);
+	                    }
                     }
-                    if(sqlLoaderOutput) {
-                    	FileUtils.writeStringToFile(desFile, SQLLoaderHelper.toDesRow(newRecord), append);
-                    }
-                    if(persistToDB) {
-                    	persistDesignation(newRecord);
-                    }
+                    previousRecord = newRecord;
                 }
                 br.close();
             } catch(Exception e){
@@ -296,7 +321,10 @@ and pv.date_modified is not NULL and pv.date_modified >= sysdate -1
 order by pv.date_modified desc
 --order by pv.date_created desc
      */
-    public static List<Object> processPermissibleValueFromCSV(String fileName, PermissibleValuesView record, long startRow, boolean append) {
+    public static List<Object> processPermissibleValueFromCSV(String fileName, PermissibleValuesView record, long startRow, boolean append) throws Exception {
+    	if(record == null) {
+    		throw new Exception("PermissibleValuesView: record is NULL or empty.");
+    	}
         List<Object> recordList = new ArrayList<Object>();
            try{
                    String path = fileName;
@@ -306,10 +334,11 @@ order by pv.date_modified desc
                 String[] columns = ParseHelper.getColumns(br);
             	String value = null;
 //            	String contextName = null;
-    			String pvId = null;
 //    			String contextId = null;
+            	String pvId = null;
 //    			String acId = null;
     			long count = 1;
+    			PermissibleValuesView previousRecord = null;
                 while((strLine = br.readLine()) != null){
                 	if(startRow > 0) {
                 		if(count < startRow) {
@@ -390,15 +419,20 @@ order by pv.date_modified desc
 //                    }
                     recordList.add(newRecord);
                     System.out.println("record: " + count++ + "\n");
-                    if(showPVInserted) {
-                    	System.out.println("new pv: " + newRecord.toString());
+                    if(previousRecord == newRecord) {
+                    	System.out.println("duplicate pv found in input file: " + newRecord.toString());
+                    } else {
+	                    if(showPVInserted) {
+	                    	System.out.println("new pv: " + newRecord.toString());
+	                    }
+	                    if(sqlLoaderOutput) {
+	                    	FileUtils.writeStringToFile(pvFile, SQLLoaderHelper.toPVRow(newRecord), append);
+	                    }
+	                    if(persistToDB) {
+	                    	persistPermissibleValue(newRecord);
+	                    }
                     }
-                    if(sqlLoaderOutput) {
-                    	FileUtils.writeStringToFile(pvFile, SQLLoaderHelper.toPVRow(newRecord), append);
-                    }
-                    if(persistToDB) {
-                    	persistPermissibleValue(newRecord);
-                    }
+                    previousRecord = newRecord;
                 }
                 br.close();
             } catch(Exception e){

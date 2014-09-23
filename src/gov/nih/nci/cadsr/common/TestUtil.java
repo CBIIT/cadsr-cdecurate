@@ -27,9 +27,7 @@ public class TestUtil {
 	private String serverName;
 	private int portNumber = -1;
 	private String dbName;
-	public enum TIER {
-		LOCAL, DEV, QA, STAGE, SANDBOX, PROD
-	}
+
 	private static TIER targetTier = TIER.DEV;
 	
 	public static TIER getTargetTier() {
@@ -64,12 +62,12 @@ public class TestUtil {
 			port = 1551;
 			System.out.println("DB is set to STAGE (" + dbserver + ":" + port + "/" + dbname + ")");
 		} else
-//		if(targetTier == TIER.SANDBOX) {
-//			dbserver = "ncidb-dsr-q.nci.nih.gov";
-//			dbname = "DSRSBX";
-//			port = 1551;
-//			System.out.println("DB is set to SANDBOX");
-//		} else
+		if(targetTier == TIER.SANDBOX) {
+			dbserver = "DSRSBX.nci.nih.gov";
+			dbname = "DSRSBX";
+			port = 1551;
+			System.out.println("DB is set to SANDBOX (" + dbserver + ":" + port + "/" + dbname + ")");
+		} else
 		if(targetTier == TIER.PROD) {
 			dbserver = "ncidb-dsr-p.nci.nih.gov";
 			dbname = "DSRPROD";
