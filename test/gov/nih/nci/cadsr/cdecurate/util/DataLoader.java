@@ -30,11 +30,11 @@ import com.csvparsing.common.SQLLoaderHelper;
  * 
  * DESIGNATION:
  *
- * "C:/Users/ag/demo/cadsr-cdecurate_03122014/test/gov/nih/nci/cadsr/cdecurate/util/SampleForTestingLoader-V3-designation-small.csv" des dev
+ * "C:/Users/ag/demo/cadsr-cdecurate_03122014/test/gov/nih/nci/cadsr/cdecurate/util/SampleForTestingLoader-V3-designation-small.csv" des dev -1
  *
  * PV:
  * 
- * "C:/Users/ag/demo/cadsr-cdecurate_03122014/test/gov/nih/nci/cadsr/cdecurate/util/Sample2ForTestingLoader-V3-1-permissiblevalue-small.csv" pv dev
+ * "C:/Users/ag/demo/cadsr-cdecurate_03122014/test/gov/nih/nci/cadsr/cdecurate/util/Sample2ForTestingLoader-V3-1-permissiblevalue-small.csv" pv dev -1
  */
 public class DataLoader {
 	private static TIER targetTier = TIER.DEV;
@@ -127,7 +127,7 @@ public class DataLoader {
 	}
 
 	public static void main(String[] args) {
-		String header = "\n--DataLoaderV1.00 build 107a3 9/23/2014 [autoCleanup:" + autoCleanup+"] [persistToDB:" + persistToDB + "] "+ new Date() + "\n";
+		String header = "\n--DataLoaderV1.00 build 107a5 9/24/2014 [autoCleanup:" + autoCleanup+"] [persistToDB:" + persistToDB + "] "+ new Date() + "\n";
 		//String header = " ";
 		System.out.println(header);
 		desFile = new File(desLoaderFile);
@@ -135,7 +135,7 @@ public class DataLoader {
         try {
 			FileUtils.writeStringToFile(desFile, header, false);
 	        FileUtils.writeStringToFile(pvFile, header, false);
-	        System.out.println("4");
+	        System.out.println("");
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -144,22 +144,31 @@ public class DataLoader {
 		designation = new DesignationsView();
 		permissiblevalue = new PermissibleValuesView();
 	    try {
-			if(args != null && args.length == 4) {
+			if(args != null && args.length == 5) {
 				String acDataFIle = args[0];
 				String acType = args[1];
 				String tier = args[2];
+				String startStr = args[3];
+				String stopStr = args[4];
 				System.out.println("acDataFile [" + acDataFIle + "]\n");
 				System.out.println("acType [" + acType + "]\n");
 				System.out.println("tier [" + tier + "]\n");
-				long start = -1;
+				System.out.println("start [" + startStr + "]\n");
+				System.out.println("stop [" + stopStr + "]\n");
+				long start = -1, stop = -1;
 				try {
 					if(args[3] != null) {
-						start = Integer.valueOf(args[3]);
+						start = Integer.valueOf(startStr);
 						System.out.println("startRow [" + start + "]\n");
+					}
+					if(args[4] != null) {
+						stop = Integer.valueOf(stopStr);
+						System.out.println("stopRow [" + stop + "]\n");
 					}
 				} catch (Exception e) {
 					e.printStackTrace();
-					System.out.println("Not able to get the start row properly, set to all rows!\n");
+					System.out.println("Not able to get the start/stop row properly, quiting ...\n");
+					System.exit(-1);
 				}
 				initDB(true, targetTier);
 				designationUtil = new DesignationUtil();
@@ -169,10 +178,10 @@ public class DataLoader {
 				administeredItemUtil = new AdministeredItemUtil();
 				administeredItemUtil.setAutoCleanup(autoCleanup);
 				if(acType != null && acType.equals("des")) {
-				    processDesignationFromCSV(acDataFIle, designation, start, true);
+				    processDesignationFromCSV(acDataFIle, designation, start, stop, true);
 				} else 
 				if(acType != null && acType.equals("pv")) {
-				    processPermissibleValueFromCSV(acDataFIle, permissiblevalue, start, true);
+				    processPermissibleValueFromCSV(acDataFIle, permissiblevalue, start, stop, true);
 				} else {
 					System.out.println("Unknown ac type, only Permissible Values (pv) and Designations (des) are supported.");
 				}
@@ -209,7 +218,7 @@ d.date_modified is not NULL and d.date_modified >= sysdate -1
 order by d.date_modified desc
 --order by d.date_created desc
 	 */
-    public static List<Object> processDesignationFromCSV(String fileName, DesignationsView record, long startRow, boolean append) throws Exception {
+    public static List<Object> processDesignationFromCSV(String fileName, DesignationsView record, long startRow, long stopRow, boolean append) throws Exception {
 		if(record == null) {
 			throw new Exception("processDesignationFromCSV: record is NULL or empty.");
 		}
@@ -238,6 +247,10 @@ order by d.date_modified desc
                 	DesignationsView newRecord = record.getClass().newInstance();
                     String[] values = strLine.split(",(?=([^\"]*\"[^\"]*\")*[^\"]*$)");
                     int size = values.length;
+                	if(count > stopRow) {
+    					System.out.println("processDesignationFromCSV: row " + count + " quiting as specified at [" + values[0] + ", " + values[1] + ", " + values[2] + "] - stopped!");
+            			break;
+                	}
                     if(columns.length != size) {
 	    				if(showDesSkipped) {
 	    					System.out.println("processDesignationFromCSV: row " + count + " column=" + size + " is not equal to header column=" + columns.length + " [" + values[0] + ", " + values[1] + ", " + values[2] + "] ??? - skipped!");
@@ -343,7 +356,7 @@ and pv.date_modified is not NULL and pv.date_modified >= sysdate -1
 order by pv.date_modified desc
 --order by pv.date_created desc
      */
-    public static List<Object> processPermissibleValueFromCSV(String fileName, PermissibleValuesView record, long startRow, boolean append) throws Exception {
+    public static List<Object> processPermissibleValueFromCSV(String fileName, PermissibleValuesView record, long startRow, long stopRow, boolean append) throws Exception {
     	if(record == null) {
     		throw new Exception("PermissibleValuesView: record is NULL or empty.");
     	}
@@ -371,6 +384,10 @@ order by pv.date_modified desc
                 	PermissibleValuesView newRecord = record.getClass().newInstance();
                     String[] values = strLine.split(",(?=([^\"]*\"[^\"]*\")*[^\"]*$)");
                     int size = values.length;
+                	if(count > stopRow) {
+    					System.out.println("processPermissibleValueFromCSV: row " + count + " quiting as specified at [" + values[0] + ", " + values[1] + ", " + values[2] + "] - stopped!");
+            			break;
+                	}
                     if(columns.length != size) {
         				if(showPVSkipped) {
         					System.out.println("processPermissibleValueFromCSV: row " + count + " column=" + size + " is not equal to header column=" + columns.length + " [" + values[0] + ", " + values[1] + ", " + values[2] + "] ??? - skipped!");
