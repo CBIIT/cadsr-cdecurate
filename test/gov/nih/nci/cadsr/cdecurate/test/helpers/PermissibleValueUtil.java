@@ -54,6 +54,35 @@ public class PermissibleValueUtil {
         return ret;
     }
 
+	public String getPermissibleValueIdLike(Connection conn, String likeValue) throws Exception {
+    	PreparedStatement pstmt = null;
+        String sql = "select pv_idseq from SBR.PERMISSIBLE_VALUES_VIEW where value like ?";
+        ResultSet rs = null;
+        String ret = null;
+        if(conn == null) {
+        	throw new Exception("Connection is null or empty.");
+        }
+        try {
+            pstmt = conn.prepareStatement( sql );
+            pstmt.setString(1, likeValue);
+			rs = pstmt.executeQuery();
+			if(rs.next()) {
+				ret = rs.getString("pv_idseq");
+			}
+        }
+        catch (SQLException e) {
+            throw new Exception( e );
+        }
+        finally {
+        	if(autoCleanup) {
+	            if (rs != null) { try { rs.close(); } catch (SQLException e) { System.err.println(e.getMessage()); } }
+	            if (pstmt != null) {  try { pstmt.close(); } catch (SQLException e) { System.err.println(e.getMessage()); } }
+	        	if (conn != null) { try { conn.close(); conn = null; } catch (SQLException e) { System.err.println(e.getMessage()); } }
+        	}
+        }
+        return ret;
+    }
+
 	private boolean isPermissibleValueExists(Connection conn, String value) throws Exception {
     	PreparedStatement pstmt = null;
         String sql = "select pv_idseq from SBR.PERMISSIBLE_VALUES_VIEW where value = ?";

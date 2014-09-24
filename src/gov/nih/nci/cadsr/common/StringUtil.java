@@ -8,6 +8,23 @@ import java.util.Arrays;
 
 public class StringUtil {
 
+	public static String trimDoubleQuotes(String value) throws Exception {
+		boolean temp = false;
+		
+		if(value == null) throw new Exception("value is NULL or empty!");
+
+		value = value.trim();
+
+		if (value.indexOf("\"") == 0) {
+			value = value.substring(1, value.length());
+		}
+		if (value.lastIndexOf("\"") == value.length()-1) {
+			value = value.substring(0, value.length()-1);
+		}
+
+		return value;
+	}
+	
 	public static String handleNull(String value) {
 		String retVal = "";
 
