@@ -41,8 +41,8 @@ public class DataLoader {
 	private static Connection conn;
 	private static String userId;
 	private static String password;
-	private static String desLoaderFile = "des.ldr";
-	private static String pvLoaderFile = "pv.ldr";
+//	private static String desLoaderFile = "des.ldr";
+//	private static String pvLoaderFile = "pv.ldr";
 	private static File desFile;
 	private static File pvFile;
 	private static DesignationUtil designationUtil;
@@ -127,34 +127,30 @@ public class DataLoader {
 	}
 
 	public static void main(String[] args) {
-		String header = "\n--DataLoaderV1.00 build 107a5 9/24/2014 [autoCleanup:" + autoCleanup+"] [persistToDB:" + persistToDB + "] "+ new Date() + "\n";
+		String header = "\n\n--DataLoaderV1.00 build 107a9 9/24/2014 [autoCleanup:" + autoCleanup+"] [persistToDB:" + persistToDB + "] "+ new Date() + "\n";
 		//String header = " ";
 		System.out.println(header);
-		desFile = new File(desLoaderFile);
-		pvFile = new File(pvLoaderFile);
-        try {
-			FileUtils.writeStringToFile(desFile, header, false);
-	        FileUtils.writeStringToFile(pvFile, header, false);
-	        System.out.println("");
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
 		DesignationsView designation = null;
 		PermissibleValuesView permissiblevalue = null;
 		designation = new DesignationsView();
 		permissiblevalue = new PermissibleValuesView();
 	    try {
-			if(args != null && args.length == 5) {
+			if(args != null && args.length == 7) {
 				String acDataFIle = args[0];
 				String acType = args[1];
 				String tier = args[2];
 				String startStr = args[3];
 				String stopStr = args[4];
+				String ldrFile = args[5];
+				String appendToLdrFile = args[6];
+				
 				System.out.println("acDataFile [" + acDataFIle + "]\n");
 				System.out.println("acType [" + acType + "]\n");
 				System.out.println("tier [" + tier + "]\n");
 				System.out.println("start [" + startStr + "]\n");
 				System.out.println("stop [" + stopStr + "]\n");
+				System.out.println("ldrFile [" + ldrFile + "]\n");
+				System.out.println("appendToLdrFile [" + appendToLdrFile + "]\n");
 				long start = -1, stop = -1;
 				try {
 					if(args[3] != null) {
@@ -170,7 +166,35 @@ public class DataLoader {
 					System.out.println("Not able to get the start/stop row properly, quiting ...\n");
 					System.exit(-1);
 				}
+				try {
+					targetTier = getTier(tier);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 				initDB(true, targetTier);
+				if(args[4] != null) {
+					stop = Integer.valueOf(stopStr);
+					System.out.println("stopRow [" + stop + "]\n");
+				}
+//				desFile = new File(desLoaderFile);	//default
+//				pvFile = new File(pvLoaderFile);	//default
+	        	boolean append = true;
+		        try {
+		        	if(appendToLdrFile != null) {
+		        		append = Boolean.valueOf(appendToLdrFile);
+		        	}
+		        	if(!append) {
+		        		System.out.println("appendToLdrFile is [" + append + "] *** LOADER FILE WILL BE OVERWRITTEN!!! ***\n");
+		        		System.out.println("You have 5 seconds to change your mind (ctrl + C now if you like)!");
+		        		Thread.sleep(5000);
+		        	} else {
+		        		System.out.println("appendToLdrFile is [" + append + "]");
+		        	}
+			        System.out.println("");
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+
 				designationUtil = new DesignationUtil();
 				designationUtil.setAutoCleanup(autoCleanup);
 				permissibleValueUtil = new PermissibleValueUtil();
@@ -178,10 +202,14 @@ public class DataLoader {
 				administeredItemUtil = new AdministeredItemUtil();
 				administeredItemUtil.setAutoCleanup(autoCleanup);
 				if(acType != null && acType.equals("des")) {
-				    processDesignationFromCSV(acDataFIle, designation, start, stop, true);
+					desFile = new File(ldrFile);
+					FileUtils.writeStringToFile(desFile, header, append);
+				    processDesignationFromCSV(acDataFIle, designation, start, stop, append);
 				} else 
 				if(acType != null && acType.equals("pv")) {
-				    processPermissibleValueFromCSV(acDataFIle, permissiblevalue, start, stop, true);
+					pvFile = new File(ldrFile);
+			        FileUtils.writeStringToFile(pvFile, header, append);
+				    processPermissibleValueFromCSV(acDataFIle, permissiblevalue, start, stop, append);
 				} else {
 					System.out.println("Unknown ac type, only Permissible Values (pv) and Designations (des) are supported.");
 				}
@@ -189,7 +217,7 @@ public class DataLoader {
 				int argCount = 0;
 				if(args != null && args.length > -1) argCount = args.length;
 				System.out.println("The length or the arguments give was " + argCount + ". The format of the execution should be:\n");
-				System.out.println("jar DataLoader {csv filename} {type: pv|des} {tier: dev|qa|sb|stg|prod} {startRow: -1 for all rows|any number bigger than -1} e.g. jar DataLoader pv_data.csv pv prod -1\n");
+				System.out.println("jar DataLoader {csv filename} {type: pv|des} {tier: dev|qa|sb|stg|prod} {startRow: -1 for all rows|any number bigger than -1} {stopRow: -1 for all rows|any number bigger than -1 but should be bigger than startRow} {output loader filename} {appendToLdr: true|false} e.g. jar DataLoader pv_data.csv pv prod 120 200 pv.ldr true\n");
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -238,7 +266,7 @@ order by d.date_modified desc
     			long count = 1;
     			DesignationsView previousRecord = null;
                 while((strLine = br.readLine()) != null){
-                	if(startRow > 0) {
+                	if(startRow > -1) {
                 		if(count < startRow) {
                 			count++;
                 			continue;
@@ -247,9 +275,11 @@ order by d.date_modified desc
                 	DesignationsView newRecord = record.getClass().newInstance();
                     String[] values = strLine.split(",(?=([^\"]*\"[^\"]*\")*[^\"]*$)");
                     int size = values.length;
-                	if(count > stopRow) {
-    					System.out.println("processDesignationFromCSV: row " + count + " quiting as specified at [" + values[0] + ", " + values[1] + ", " + values[2] + "] - stopped!");
-            			break;
+                	if(stopRow > -1) {
+	                	if(count > stopRow) {
+	    					System.out.println("processDesignationFromCSV: row " + count + " quiting as specified at [" + values[0] + ", " + values[1] + ", " + values[2] + "] - stopped!");
+	            			break;
+	                	}
                 	}
                     if(columns.length != size) {
 	    				if(showDesSkipped) {
@@ -375,7 +405,7 @@ order by pv.date_modified desc
     			long count = 1;
     			PermissibleValuesView previousRecord = null;
                 while((strLine = br.readLine()) != null){
-                	if(startRow > 0) {
+                	if(startRow > -1) {
                 		if(count < startRow) {
                 			count++;
                 			continue;
@@ -384,9 +414,11 @@ order by pv.date_modified desc
                 	PermissibleValuesView newRecord = record.getClass().newInstance();
                     String[] values = strLine.split(",(?=([^\"]*\"[^\"]*\")*[^\"]*$)");
                     int size = values.length;
-                	if(count > stopRow) {
-    					System.out.println("processPermissibleValueFromCSV: row " + count + " quiting as specified at [" + values[0] + ", " + values[1] + ", " + values[2] + "] - stopped!");
-            			break;
+                	if(stopRow > -1) {
+	                	if(count > stopRow) {
+	    					System.out.println("processPermissibleValueFromCSV: row " + count + " quiting as specified at [" + values[0] + ", " + values[1] + ", " + values[2] + "] - stopped!");
+	            			break;
+	                	}
                 	}
                     if(columns.length != size) {
         				if(showPVSkipped) {
