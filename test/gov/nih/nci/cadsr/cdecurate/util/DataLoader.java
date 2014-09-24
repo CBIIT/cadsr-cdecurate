@@ -127,7 +127,7 @@ public class DataLoader {
 	}
 
 	public static void main(String[] args) {
-		String header = "\n\n--DataLoaderV1.00 build 107a9 9/24/2014 [autoCleanup:" + autoCleanup+"] [persistToDB:" + persistToDB + "] "+ new Date() + "\n";
+		String header = "\n\n--DataLoaderV1.00 build 107a10 9/24/2014 [autoCleanup:" + autoCleanup+"] [persistToDB:" + persistToDB + "] "+ new Date() + "\n";
 		//String header = " ";
 		System.out.println(header);
 		DesignationsView designation = null;
@@ -446,6 +446,16 @@ order by pv.date_modified desc
                     	//contextName = values[13];
             			if(conn != null) {
             				initDB(autoCleanup, targetTier);
+            				//=== 9/24/2014 get the first 30 characters as per advice of the team lead to work around the following issue:
+            				/*
+            				 * ORA-00972: identifier is too long
+								00972. 00000 -  "identifier is too long"
+								*Cause:    An identifier with more than 30 characters was specified.
+								*Action:   Specify at most 30 characters.
+								Error at Line: 39 Column: 64
+            				 */
+            				if(value != null && value.length() > 30) value = value.substring(0, 30);
+	        				System.out.println("processPermissibleValueFromCSV:  row " + count + " value size is " + value.length() + " of [" + values[0] + ", " + values[1] + ", " + values[2] + "]");
             				if((pvId = permissibleValueUtil.getPermissibleValueId(conn, value)) == null) {
             					try {
                     				initDB(autoCleanup, targetTier);
