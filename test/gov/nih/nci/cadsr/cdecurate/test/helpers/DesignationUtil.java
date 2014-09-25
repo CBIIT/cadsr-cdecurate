@@ -98,4 +98,33 @@ public class DesignationUtil {
 		return ret;
 	}
 
+	public String getDesignationType(Connection conn, String type) throws Exception {
+    	PreparedStatement pstmt = null;
+        String sql = "select detl_name from SBREXT.DESIGNATION_TYPES_LOV where detl_name = ?";
+        ResultSet rs = null;
+        String ret = null;
+        if(conn == null) {
+        	throw new Exception("Connection is null or empty.");
+        }
+        try {
+            pstmt = conn.prepareStatement( sql );
+            pstmt.setString(1, type);
+			rs = pstmt.executeQuery();
+			if(rs.next()) {
+				ret = rs.getString("detl_name");
+			}
+        }
+        catch (SQLException e) {
+            throw new Exception( e );
+        }
+        finally {
+        	if(autoCleanup) {
+	            if (rs != null) { try { rs.close(); } catch (SQLException e) { System.err.println(e.getMessage()); } }
+	            if (pstmt != null) {  try { pstmt.close(); } catch (SQLException e) { System.err.println(e.getMessage()); } }
+	        	if (conn != null) { try { conn.close(); conn = null; } catch (SQLException e) { System.err.println(e.getMessage()); } }
+        	}
+        }
+        return ret;
+    }
+
 }

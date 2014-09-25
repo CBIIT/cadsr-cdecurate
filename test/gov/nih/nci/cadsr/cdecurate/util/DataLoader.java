@@ -127,8 +127,16 @@ public class DataLoader {
 		}
 	}
 
+	private static String getProcessingRate(long currentCount, long accumulatedCount) {
+		String ret = "N/A";
+		float temp = 0;
+		temp = (currentCount / accumulatedCount)*100;
+		ret = Float.toString(temp);
+		return ret;
+	}
+	
 	public static void main(String[] args) {
-		String header = "\n\n--DataLoaderV1.00 build 107a12 9/24/2014 [autoCleanup:" + autoCleanup+"] [persistToDB:" + persistToDB + "] "+ new Date() + "\n";
+		String header = "\n\n--DataLoaderV1.00 build 107a15 9/24/2014 [autoCleanup:" + autoCleanup+"] [persistToDB:" + persistToDB + "] "+ new Date() + "\n";
 		//String header = " ";
 		System.out.println(header);
 		DesignationsView designation = null;
@@ -305,34 +313,49 @@ order by d.date_modified desc
                         
             			//latest business rule as specified in BulkLoadDesignationLogic.docx given by GS (9/19/2014)
                         String relatedVMId = null;
-        				if(showDesSkipped) {
-            				initDB(autoCleanup, targetTier);
-                			contextId = administeredItemUtil.getContextID(conn, contextName);
-        					if(contextId == null) {
+        				initDB(autoCleanup, targetTier);
+            			contextId = administeredItemUtil.getContextID(conn, contextName);
+    					if(contextId == null) {
+            				if(showDesSkipped) {
     	    					System.out.println("processDesignationFromCSV: row " + count + " designation context not found by [" + contextName + "] for designation name [" + name + "] ??? - skipped!");
-    	            			count++;
-    	    					continue;
-        					}
-        				}
+            				}
+	            			count++;
+	    					continue;
+    					}
+    					initDB(autoCleanup, targetTier);
+            			acId = administeredItemUtil.getRelatedAC_IDSEQ(conn, values[0], values[1]);
+    					if(acId == null) {
+            				if(showDesSkipped) {
+    	    					System.out.println("processDesignationFromCSV: row " + count + " designation ac (vm) not found by [" + values[0] + ", " + values[1] + "] for designation name [" + name + "] ??? - skipped!");
+            				}
+	            			count++;
+	    					continue;
+    					}
+    					initDB(autoCleanup, targetTier);
+            			acId = designationUtil.getDesignationType(conn, type);
+    					if(acId == null) {
+            				if(showDesSkipped) {
+    	    					System.out.println("processDesignationFromCSV: row " + count + " designation type not found by [" + type + "] for designation name [" + name + "] ??? - skipped!");
+            				}
+	            			count++;
+	    					continue;
+    					}
 
         				if(conn != null) {
             				initDB(autoCleanup, targetTier);
-		        			if((desigId = designationUtil.getDesignationId(conn, name)) == null) {
-		        				try {
+            				//META-501 as per discussion with GPM on 9/24/2014, there is only insert (no update)
+//		        			if((desigId = designationUtil.getDesignationId(conn, name)) == null) {
+//		        				try {
 		            				initDB(autoCleanup, targetTier);
 		        					desigId = administeredItemUtil.getNewAC_IDSEQ(conn);
-		        				} catch (Exception e) {
-		        					e.printStackTrace();
-		        				}
-		        			} else {
-		        				if(showDesUpdated) {
-		        					System.out.println("processDesignationFromCSV: row " + count + " name [" + name + "] already exists i.e. by [" + values[0] + ", " + values[1] + ", " + values[2] + "] - will be updated");
-		        				}
-		        			}
-            				initDB(autoCleanup, targetTier);
-//	            			contextId = administeredItemUtil.getContextID(conn, contextName);
-            				initDB(autoCleanup, targetTier);
-	            			acId = administeredItemUtil.getRelatedAC_IDSEQ(conn, values[0], values[1]);
+//		        				} catch (Exception e) {
+//		        					e.printStackTrace();
+//		        				}
+//		        			} else {
+//		        				if(showDesUpdated) {
+//		        					System.out.println("processDesignationFromCSV: row " + count + " name [" + name + "] already exists i.e. by [" + values[0] + ", " + values[1] + ", " + values[2] + "] - will be updated");
+//		        				}
+//		        			}
             			}
 //                    	Field f1 = record.getClass().getDeclaredField(columnName);
 //                    	f1.setAccessible(true);
@@ -350,7 +373,8 @@ order by d.date_modified desc
                     	newRecord.setDATEMODIFIED(new Date());
 //                    }
                     recordList.add(newRecord);
-                    System.out.println("record: " + count + "\n");
+                    //getProcessingRate is not accurate as it assumed the total rows is the maximum rows of spreadsheet!!!
+                    System.out.println("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ record: " + count + " current rate: " + getProcessingRate(count, 65536) + " ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n");
                     if(previousRecord != null && previousRecord.toString().equals(newRecord.toString())) {
                     	System.out.println("duplicate des found in input file: row " + count + " " + newRecord.toString() + " - will be skipped!\n");
                     } else {
@@ -358,7 +382,7 @@ order by d.date_modified desc
 	                    	System.out.println("new des: row " + count + " " + newRecord.toString());
 	                    }
 	                    if(sqlLoaderOutput) {
-	                    	FileUtils.writeStringToFile(desFile, SQLLoaderHelper.toDesRow(newRecord), append);
+	                    	FileUtils.writeStringToFile(desFile, SQLLoaderHelper.toDesRow(newRecord), true);
 	                    }
 	                    if(persistToDB) {
 	                    	persistDesignation(newRecord);
@@ -399,10 +423,7 @@ order by pv.date_modified desc
                 
                 String[] columns = ParseHelper.getColumns(br);
             	String value = null;
-//            	String contextName = null;
-//    			String contextId = null;
             	String pvId = null;
-//    			String acId = null;
     			long count = 1;
     			PermissibleValuesView previousRecord = null;
                 while((strLine = br.readLine()) != null){
@@ -509,7 +530,8 @@ order by pv.date_modified desc
                         
 //                    }
                     recordList.add(newRecord);
-                    System.out.println("record: " + count + "\n");
+                    //getProcessingRate is not accurate as it assumed the total rows is the maximum rows of spreadsheet!!!
+                    System.out.println("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ record: " + count + " current rate: " + getProcessingRate(count, 65536) + " ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n");
                     if(previousRecord != null && previousRecord.toString().equals(newRecord.toString())) {
                     	System.out.println("duplicate pv found in input file: row " + count + " " + newRecord.toString() + " - will be skipped!\n");
                     } else {
@@ -517,7 +539,7 @@ order by pv.date_modified desc
 	                    	System.out.println("new pv: row " + count + " " + newRecord.toString());
 	                    }
 	                    if(sqlLoaderOutput) {
-	                    	FileUtils.writeStringToFile(pvFile, SQLLoaderHelper.toPVRow(newRecord), append);
+	                    	FileUtils.writeStringToFile(pvFile, SQLLoaderHelper.toPVRow(newRecord), true);
 	                    }
 	                    if(persistToDB) {
 	                    	persistPermissibleValue(newRecord);
