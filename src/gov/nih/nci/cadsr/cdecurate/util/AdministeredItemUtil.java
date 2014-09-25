@@ -225,9 +225,26 @@ public class AdministeredItemUtil {
 	        return ret;
 	}
 
-	public String getRelatedAC_IDSEQ(Connection conn, String publicId, String version) throws Exception {
-    	PreparedStatement pstmt = null;
+	public String getParentRelatedAC_IDSEQ(Connection conn, String publicId, String version) throws Exception {
         String sql = "select ac_idseq from SBR.ADMINISTERED_COMPONENTS where public_id = ? and version = ?";
+		
+        return getRelatedAC_IDSEQ(conn, sql, publicId, version);
+	}
+
+	public String getDesignationRelatedAC_IDSEQ(Connection conn, String publicId, String version) throws Exception {
+        String sql = "select vm_idseq from SBR.value_meanings where vm_id = ? and version = ?";
+
+        return getRelatedAC_IDSEQ(conn, sql, publicId, version);
+	}
+
+	public String getPermissibleValueRelatedAC_IDSEQ(Connection conn, String publicId, String version) throws Exception {
+        String sql = "SELECT vd.VD_IDSEQ FROM VALUE_DOMAINS vd WHERE VD_ID = ? and VERSION = ?";
+
+        return getRelatedAC_IDSEQ(conn, sql, publicId, version);
+	}
+
+	private String getRelatedAC_IDSEQ(Connection conn, String sql, String publicId, String version) throws Exception {
+    	PreparedStatement pstmt = null;
         ResultSet rs = null;
         String ret = null;
         if(conn == null) {
@@ -255,5 +272,5 @@ public class AdministeredItemUtil {
         }
         return ret;
     }
-	
+
 }

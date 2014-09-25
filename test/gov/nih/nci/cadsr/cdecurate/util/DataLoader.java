@@ -323,7 +323,7 @@ order by d.date_modified desc
 	    					continue;
     					}
     					initDB(autoCleanup, targetTier);
-            			acId = administeredItemUtil.getRelatedAC_IDSEQ(conn, values[0], values[1]);
+            			acId = administeredItemUtil.getDesignationRelatedAC_IDSEQ(conn, values[0], values[1]);
     					if(acId == null) {
             				if(showDesSkipped) {
     	    					System.out.println("processDesignationFromCSV: row " + count + " designation ac (vm) not found by [" + values[0] + ", " + values[1] + "] for designation name [" + name + "] ??? - skipped!");
@@ -454,7 +454,7 @@ order by pv.date_modified desc
                     String relatedVMId = null;
     				if(showPVSkipped) {
         				initDB(autoCleanup, targetTier);
-    					relatedVMId = administeredItemUtil.getRelatedAC_IDSEQ(conn, values[0], values[1]);
+    					relatedVMId = administeredItemUtil.getPermissibleValueRelatedAC_IDSEQ(conn, values[0], values[1]);
     					if(relatedVMId == null) {
 	    					System.out.println("processPermissibleValueFromCSV: row " + count + " related AC(VD) not found, by [" + values[0] + ", " + values[1] + ", " + values[2] + "] ??? - skipped!");
 	            			count++;
