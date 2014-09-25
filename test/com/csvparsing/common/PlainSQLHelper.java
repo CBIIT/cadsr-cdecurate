@@ -30,12 +30,12 @@ public class PlainSQLHelper {
 		StringBuffer ret = new StringBuffer("");
 
 		if(pv != null) {
-			updateSQL_PV.replaceAll("/{{ColumnH}}/" + oldValue, pv.getVALUE());
+			updateSQL_PV.replaceAll("/{{ColumnH}}/g" + oldValue, pv.getVALUE());
 			updateSQL_PV.replaceAll("/{{sysdate}}/g", DateHelper.getCurrentTimeStamp());
-			updateSQL_PV.replaceAll("/{{ColumnG}}/" + oldValue, pv.getMODIFIEDBY());
-			updateSQL_PV.replaceAll("/{{ColumnA}}/" + oldValue, vdId);
-			updateSQL_PV.replaceAll("/{{ColumnB}}/" + oldValue, vdVersion);
-			updateSQL_PV.replaceAll("/{{ColumnE}}/" + oldValue, oldValue);
+			updateSQL_PV.replaceAll("/{{ColumnG}}/g" + oldValue, pv.getMODIFIEDBY());
+			updateSQL_PV.replaceAll("/{{ColumnA}}/g" + oldValue, vdId);
+			updateSQL_PV.replaceAll("/{{ColumnB}}/g" + oldValue, vdVersion);
+			updateSQL_PV.replaceAll("/{{ColumnE}}/g" + oldValue, oldValue);
 		}
 
 		return ret.toString();
