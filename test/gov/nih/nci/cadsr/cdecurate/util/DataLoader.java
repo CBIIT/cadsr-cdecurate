@@ -136,7 +136,7 @@ public class DataLoader {
 	}
 	
 	public static void main(String[] args) {
-		String header = "\n\n--DataLoaderV1.00 build 107a15 9/24/2014 [autoCleanup:" + autoCleanup+"] [persistToDB:" + persistToDB + "] "+ new Date() + "\n";
+		String header = "\n\n--DataLoaderV1.00 build 107a16 9/25/2014 [autoCleanup:" + autoCleanup+"] [persistToDB:" + persistToDB + "] "+ new Date() + "\n";
 		//String header = " ";
 		System.out.println(header);
 		DesignationsView designation = null;
