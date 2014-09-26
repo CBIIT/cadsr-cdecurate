@@ -583,11 +583,11 @@ order by pv.date_modified desc
 
 		try {
 			desDAO = DaoFactory.createDesignationsViewDao(conn);
-			if(desDAO.findByPrimaryKey(des.getDESIGIDSEQ()) != null) {
-				desDAO.update(des.getDESIGIDSEQ(), des);
-			} else {
+//			if(desDAO.findByPrimaryKey(des.getDESIGIDSEQ()) != null) {
+//				desDAO.update(des.getDESIGIDSEQ(), des);
+//			} else {
 				desDAO.insert(des);
-			}
+//			}
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
