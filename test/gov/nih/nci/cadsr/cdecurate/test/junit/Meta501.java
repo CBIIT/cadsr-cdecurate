@@ -365,11 +365,7 @@ AND pv.VALUE = 'FHIT (fragile histidine triad gene, AP3Aase, FRA3B)'
 
 //			assertTrue("Test removal", currentCount == checkSum);
 		} catch (Exception e) {
-			if(e.getMessage() != null && e.getMessage().indexOf("ORA-20999") > -1) {
-				e.printStackTrace();
-			} else {
-				//passed! :)
-			}
+			e.printStackTrace();
 		}
 		System.out.println("testPermissibleValueUpdatePlainSQL: 1 pv sql generated");
 	}
