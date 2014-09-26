@@ -67,18 +67,6 @@ public class Meta501 {
 	}
 
 	@Test
-	public void testEmpty() {
-		boolean ret = false;
-		int count = -1;
-		try {
-			System.out.println("count was " + count);
-			assertTrue("Test empty results", count == 1);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
-	@Test
 	public void testDesignationInsertOneRow() {
 		boolean ret = false;
 		long currentCount = 0, checkSum = -1;
@@ -346,28 +334,50 @@ AND pv.VALUE = 'FHIT (fragile histidine triad gene, AP3Aase, FRA3B)'
 	@Test
 	public void testPermissibleValueUpdatePlainSQL() {
 		boolean ret = false;
-		long currentCount = 0, checkSum = -1;
 		try {
 			conn = TestUtil.getConnection(userId, password);
-			String oldValue = "FHIT (fragile histidine triad gene, AP3Aase, FRA3B)";
-			String newValue = "FHIT (fragile histidine triad gene, AP3Aase, FRA3B)_james123";
+			String fSQL = "";
+			String updateSQL_PV = "";
+			String oldValue = "FHIT (fragile histidine triad gene, AP3Aase, FRA3B)_james123";
+			String newValue = "FHIT (fragile histidine triad gene, AP3Aase, FRA3B)";
+			String vdId = "2015675";
+			long version = 10;
 			String pvId = permissibleValueUtil.getPermissibleValueId(conn, oldValue);
 			if(pvId == null) {
-				throw new Exception("The AC must already exist for update!");
+				System.err.println("The AC must already exist for update!");
+			} else {
+				String terminatedBy = "\n";
+				updateSQL_PV = "UPDATE SBR.PERMISSIBLE_VALUES_VIEW pv "  + terminatedBy;
+				updateSQL_PV += "SET VALUE = '" + newValue + "'  " + terminatedBy;
+				updateSQL_PV += ", DATE_MODIFIED = " + "sysdate" + " " + terminatedBy;
+				updateSQL_PV += ", MODIFIED_BY = 'cadsr_metadata_user' " + terminatedBy;
+				updateSQL_PV += "WHERE pv.PV_IDSEQ in " + terminatedBy;
+				updateSQL_PV += "    (" + terminatedBy;
+				updateSQL_PV += "        SELECT VD_PVS.PV_IDSEQ  " + terminatedBy;
+				updateSQL_PV += "        FROM SBR.VD_PVS " + terminatedBy;
+				updateSQL_PV += "        WHERE VD_PVS.VD_IDSEQ = ( " + terminatedBy;
+				updateSQL_PV += "            SELECT vd.VD_IDSEQ " + terminatedBy;
+				updateSQL_PV += "            FROM SBR.VALUE_DOMAINS vd " + terminatedBy;
+				updateSQL_PV += "            WHERE " + terminatedBy;
+				updateSQL_PV += "            VD_ID = '" + vdId + "' " + terminatedBy;
+				updateSQL_PV += "            AND VERSION = " + version + " " + terminatedBy;
+				updateSQL_PV += "        ) " + terminatedBy;
+				updateSQL_PV += "    ) " + terminatedBy;
+				updateSQL_PV += "AND pv.VALUE = '" + oldValue + "' " + terminatedBy;
+				PermissibleValuesView dto;
+				dto = new PermissibleValuesView();
+				dto.setMODIFIEDBY("cadsr_metadata_user");	//this field can not be changed, database/PL/SQL codes always set it to the executing user/SBR!!!
+				//dto.setLAENAME("ENGLISH");
+				dto.setVALUE(newValue);
+				fSQL = PlainSQLHelper.toPVUpdateRow(dto, oldValue, vdId, version);
+				System.out.println("SQL = [" + fSQL + "]");
 			}
-			PermissibleValuesView dto;
-			dto = new PermissibleValuesView();
-			dto.setMODIFIEDBY("cadsr_metadata_user");	//this field can not be changed, database/PL/SQL codes always set it to the executing user/SBR!!!
-			//dto.setLAENAME("ENGLISH");
-			dto.setVALUE(newValue);
 
-			System.out.println("SQL = [" + PlainSQLHelper.toPVUpdateRow(dto, oldValue, "2015675", 10) + "]");
-
-//			assertTrue("Test removal", currentCount == checkSum);
+			assertTrue("PV Update SQL", fSQL.equals(updateSQL_PV));
+			System.out.println("testPermissibleValueUpdatePlainSQL: 1 pv sql generated");
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		System.out.println("testPermissibleValueUpdatePlainSQL: 1 pv sql generated");
 	}
 
 }

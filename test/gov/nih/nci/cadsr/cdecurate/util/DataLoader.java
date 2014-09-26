@@ -24,6 +24,7 @@ import nci.cadsr.persist.dto.PermissibleValuesView;
 import org.apache.commons.io.FileUtils;
 
 import com.csvparsing.common.ParseHelper;
+import com.csvparsing.common.PlainSQLHelper;
 import com.csvparsing.common.SQLLoaderHelper;
 
 /*
@@ -422,7 +423,10 @@ order by pv.date_modified desc
                 String strLine = "";
                 
                 String[] columns = ParseHelper.getColumns(br);
+                String vdId = null;
+                long vdVersion = -1;
             	String value = null;
+            	String newValue = null;
             	String pvId = null;
     			long count = 1;
     			PermissibleValuesView previousRecord = null;
@@ -464,7 +468,14 @@ order by pv.date_modified desc
                     
 //                    for(int i=0;i< size;i++){
 //                        String columnName = columns[i];
+	                	vdId = values[0];
+	                	try {
+							vdVersion = Integer.valueOf(values[1]);
+						} catch (Exception e1) {
+							e1.printStackTrace();
+						}
                     	value = values[4];
+                    	newValue = values[7];
                     	//contextName = values[13];
             			if(conn != null) {
             				initDB(autoCleanup, targetTier);
@@ -512,7 +523,7 @@ order by pv.date_modified desc
 //                    	f1.set(newRecord, ParseHelper.getTypedValue(f1.getType(),values[i]));
                       	//KISS approach
             			newRecord.setPVIDSEQ(pvId);
-            			newRecord.setVALUE(value);
+            			newRecord.setVALUE(newValue);
             			//dto.setSHORTMEANING("NEED TO DO a VM SM lookup");
             			String dummySM = null;
         				initDB(autoCleanup, targetTier);
@@ -539,7 +550,8 @@ order by pv.date_modified desc
 	                    	System.out.println("new pv: row " + count + " " + newRecord.toString());
 	                    }
 	                    if(sqlLoaderOutput) {
-	                    	FileUtils.writeStringToFile(pvFile, SQLLoaderHelper.toPVRow(newRecord), true);
+//	                    	FileUtils.writeStringToFile(pvFile, SQLLoaderHelper.toPVRow(newRecord), true);
+	                    	FileUtils.writeStringToFile(pvFile, PlainSQLHelper.toPVUpdateRow(newRecord, value, vdId, vdVersion) + ";\n\n", true);
 	                    }
 	                    if(persistToDB) {
 	                    	persistPermissibleValue(newRecord);
