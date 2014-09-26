@@ -137,7 +137,7 @@ public class DataLoader {
 	}
 	
 	public static void main(String[] args) {
-		String header = "\n\n--DataLoaderV1.00 build 107a16 9/25/2014 [autoCleanup:" + autoCleanup+"] [persistToDB:" + persistToDB + "] "+ new Date() + "\n";
+		String header = "\n\n--DataLoaderV1.00 build 107b2 9/26/2014 [autoCleanup:" + autoCleanup+"] [persistToDB:" + persistToDB + "] "+ new Date() + "\n";
 		//String header = " ";
 		System.out.println(header);
 		DesignationsView designation = null;
@@ -267,6 +267,8 @@ order by d.date_modified desc
                 String strLine = "";
                 
                 String[] columns = ParseHelper.getColumns(br);
+                String modifier = null;
+                String language = null;
             	String name = null;
             	String type = null;
             	String contextName = null;
@@ -301,6 +303,8 @@ order by d.date_modified desc
 
 //                    for(int i=0;i< size;i++){
 //                        String columnName = columns[i];
+                    	modifier = values[4];
+                		language = values[8];
                 		name = values[10];
                     	type = values[11];
                     	try {
@@ -362,8 +366,10 @@ order by d.date_modified desc
 //                    	f1.setAccessible(true);
 //                    	f1.set(newRecord, ParseHelper.getTypedValue(f1.getType(),values[i]));
                       	//KISS approach
-                    	newRecord.setLAENAME("ENGLISH");
-                    	newRecord.setCREATEDBY("WARZELD");
+//                    	newRecord.setLAENAME("ENGLISH");
+//                    	newRecord.setCREATEDBY("WARZELD");
+                    	newRecord.setLAENAME(language);
+                    	newRecord.setCREATEDBY(modifier);
                     	newRecord.setNAME(name);
                     	newRecord.setDETLNAME(type);
                     	newRecord.setCONTEIDSEQ(contextId);
@@ -423,6 +429,7 @@ order by pv.date_modified desc
                 String strLine = "";
                 
                 String[] columns = ParseHelper.getColumns(br);
+                String modifier = null;
                 String vdId = null;
                 long vdVersion = -1;
             	String value = null;
@@ -469,6 +476,7 @@ order by pv.date_modified desc
 //                    for(int i=0;i< size;i++){
 //                        String columnName = columns[i];
 	                	vdId = values[0];
+                    	modifier = values[6];
 	                	try {
 							vdVersion = Integer.valueOf(values[1]);
 						} catch (Exception e1) {
@@ -532,7 +540,9 @@ order by pv.date_modified desc
             			}
             			newRecord.setSHORTMEANING(dummySM);
             			newRecord.setDATECREATED(new Date());
-            			newRecord.setCREATEDBY("WARZELD");
+//            			newRecord.setCREATEDBY("WARZELD");
+            			newRecord.setCREATEDBY(modifier);
+                    	newRecord.setMODIFIEDBY(modifier);
         				initDB(autoCleanup, targetTier);
             			newRecord.setVMIDSEQ((relatedVMId));
                     	//the following are optional but needed as they are in the sql loader control file
@@ -551,7 +561,7 @@ order by pv.date_modified desc
 	                    }
 	                    if(sqlLoaderOutput) {
 //	                    	FileUtils.writeStringToFile(pvFile, SQLLoaderHelper.toPVRow(newRecord), true);
-	                    	FileUtils.writeStringToFile(pvFile, PlainSQLHelper.toPVUpdateRow(newRecord, value, vdId, vdVersion) + ";\n\n", true);
+	                    	FileUtils.writeStringToFile(pvFile, PlainSQLHelper.toPVUpdateRow(newRecord, value, vdId, vdVersion) + "/\n\n", true);
 	                    }
 	                    if(persistToDB) {
 	                    	persistPermissibleValue(newRecord);

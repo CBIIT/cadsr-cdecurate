@@ -26,17 +26,37 @@ public class PlainSQLHelper {
 		updateSQL_PV += "AND pv.VALUE = '{{ColumnE}}' " + terminatedBy;
 	}
 	
+	private static String handleMissingStringValue(String value) {
+		String ret = "missing_in_input";
+
+		if(value != null) {
+			ret = value;
+		}
+		
+		return ret;
+	}
+
+	private static long handleMissingLongValue(long value) {
+		long ret = -1;
+
+		if(value > 0) {
+			ret = value;
+		}
+		
+		return ret;
+	}
+
 	public static String toPVUpdateRow(PermissibleValuesView pv, String oldValue, String vdId, long vdVersion) {
 		StringBuffer ret = new StringBuffer("");
 
 		if(pv != null) {
 			//assumption: there is only once instance of each, thus replace is ok
-			updateSQL_PV = updateSQL_PV.replace("{{ColumnH}}", pv.getVALUE());
+			updateSQL_PV = updateSQL_PV.replace("{{ColumnH}}", handleMissingStringValue(pv.getVALUE()));
 			updateSQL_PV = updateSQL_PV.replace("{{sysdate}}", "sysdate");	//DateHelper.getCurrentTimeStamp());
-			updateSQL_PV = updateSQL_PV.replace("{{ColumnG}}", pv.getMODIFIEDBY());
-			updateSQL_PV = updateSQL_PV.replace("{{ColumnA}}", vdId);
-			updateSQL_PV = updateSQL_PV.replace("{{ColumnB}}", String.valueOf(vdVersion));
-			updateSQL_PV = updateSQL_PV.replace("{{ColumnE}}", oldValue);
+			updateSQL_PV = updateSQL_PV.replace("{{ColumnG}}", handleMissingStringValue(pv.getMODIFIEDBY()));
+			updateSQL_PV = updateSQL_PV.replace("{{ColumnA}}", handleMissingStringValue(vdId));
+			updateSQL_PV = updateSQL_PV.replace("{{ColumnB}}", String.valueOf(handleMissingLongValue(vdVersion)));
+			updateSQL_PV = updateSQL_PV.replace("{{ColumnE}}", handleMissingStringValue(oldValue));
 			ret.append(updateSQL_PV);
 		}
 

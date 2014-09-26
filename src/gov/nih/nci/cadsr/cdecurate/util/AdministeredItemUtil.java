@@ -238,7 +238,7 @@ public class AdministeredItemUtil {
 	}
 
 	public String getPermissibleValueRelatedAC_IDSEQ(Connection conn, String publicId, String version) throws Exception {
-        String sql = "SELECT vd.VD_IDSEQ FROM VALUE_DOMAINS vd WHERE VD_ID = ? and VERSION = ?";
+        String sql = "SELECT vd.VD_IDSEQ FROM SBR.VALUE_DOMAINS vd WHERE VD_ID = ? and VERSION = ?";
 
         return getRelatedAC_IDSEQ(conn, sql, publicId, version);
 	}
