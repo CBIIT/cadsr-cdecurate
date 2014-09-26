@@ -26,7 +26,7 @@ public class PlainSQLHelper {
 		updateSQL_PV += "AND pv.VALUE = {{ColumnE}} " + terminatedBy;
 	}
 	
-	public static String toPVUpdateRow(PermissibleValuesView pv, String oldValue, String vdId, String vdVersion) {
+	public static String toPVUpdateRow(PermissibleValuesView pv, String oldValue, String vdId, long vdVersion) {
 		StringBuffer ret = new StringBuffer("");
 
 		if(pv != null) {
@@ -34,7 +34,7 @@ public class PlainSQLHelper {
 			updateSQL_PV.replaceAll("/{{sysdate}}/g", DateHelper.getCurrentTimeStamp());
 			updateSQL_PV.replaceAll("/{{ColumnG}}/g" + oldValue, pv.getMODIFIEDBY());
 			updateSQL_PV.replaceAll("/{{ColumnA}}/g" + oldValue, vdId);
-			updateSQL_PV.replaceAll("/{{ColumnB}}/g" + oldValue, vdVersion);
+			updateSQL_PV.replaceAll("/{{ColumnB}}/g" + oldValue, String.valueOf(vdVersion));
 			updateSQL_PV.replaceAll("/{{ColumnE}}/g" + oldValue, oldValue);
 		}
 

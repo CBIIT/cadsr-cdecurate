@@ -20,6 +20,8 @@ import org.junit.After;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import com.csvparsing.common.PlainSQLHelper;
+
 /**
   * https://tracker.nci.nih.gov/browse/CADSRMETA-501
   * 
@@ -76,7 +78,7 @@ public class Meta501 {
 		}
 	}
 
-	//@Test
+	@Test
 	public void testDesignationInsertOneRow() {
 		boolean ret = false;
 		long currentCount = 0, checkSum = -1;
@@ -110,7 +112,7 @@ public class Meta501 {
 			dto.setDETLNAME("Biomarker Synonym");
 			dto.setCONTEIDSEQ(contextId);
 			dto.setDESIGIDSEQ(desigId);
-			dto.setACIDSEQ(administeredItemUtil.getRelatedAC_IDSEQ(conn, "3334837", "1"));
+			dto.setACIDSEQ(administeredItemUtil.getDesignationRelatedAC_IDSEQ(conn, "3334837", "1"));
 			
 			desDAO.insert( dto );
 			System.out.println("testDesignationInsertOneRow: 1 designation inserted");
@@ -127,7 +129,7 @@ SELECT MODIFIED_BY, d.lae_name, d.name, d.detl_name FROM sbr.designations_view d
 --rownum < 31
 order by d.date_created desc
 	*/
-	//@Test
+	@Test
 	public void testDesignationUpdateOneRow() {
 		boolean ret = false;
 		long currentCount = 0, checkSum = -1;
@@ -157,7 +159,7 @@ order by d.date_created desc
 	  *	The designation was created with SBR, but modified with different user, TANJ.
 	  * It should throws "java.sql.SQLException: ORA-20999: TAPI-0:Insufficient privileges to modify this designation." exception.
 	  */
-	//@Test
+	@Test
 	public void testDesignationUpdateWithDifferentModifier() {
 		boolean ret = false;
 		long currentCount = 0, checkSum = -1;
@@ -194,7 +196,7 @@ from SBR.VALUE_MEANINGS_VIEW vm, SBR.PERMISSIBLE_VALUES_VIEW pv where vm.VM_IDSE
 and vm.vm_id = '4211591'
 order by pv.date_created desc
 	*/
-	//@Test
+	@Test
 	public void testPermissibleValueInsertOneRow() {
 		boolean ret = false;
 		long currentCount = 0, checkSum = -1;
@@ -233,7 +235,7 @@ Value Domain ID	Value Domain Version	Value Domain LongName	Type	Existing PV Valu
 			dto.setSHORTMEANING(dummySM);
 			dto.setDATECREATED(new Date());
 			dto.setCREATEDBY("TANJ");
-			dto.setVMIDSEQ((administeredItemUtil.getRelatedAC_IDSEQ(conn, "4211591", "1")));
+			dto.setVMIDSEQ((administeredItemUtil.getPermissibleValueRelatedAC_IDSEQ(conn, "4211591", "1")));
 			
 			pvDAO.insert( dto );
 			System.out.println("testPermissibleValueInsertOneRow: 1 pv inserted");
@@ -256,7 +258,7 @@ UPDATE permissible_values_view SET MODIFIED_BY='SBR',  WHERE PV_IDSEQ='02E338E4-
 SELECT '02E338E4-E07A-B2AB-E050-BB8921B61594' as "PV_IDSEQ", 'Specified integer number of months_james' as "Existing PV Value", 'value without comma 3' as "splitted value", 'SM' as "SHORT_MEANING", 'grave meaning' as "MEANING_DESCRIPTION", sysdate as "BEGIN_DATE", sysdate as "END_DATE", -1 as "HIGH NUM", -1 as "LOW NUM", sysdate as "DATE_CREATED", 'SBR' as "CREATED_BY", sysdate as "DATE_MODIFIED", 'SBR' as  "MODIFIED_BY", '02B89AB0-7917-E455-E050-BB8921B67D8D' as "VM_IDSEQ" FROM permissible_values_view WHERE 1=1 and rownum < 2
 
 	*/
-	//@Test
+	@Test
 	public void testPermissibleValueUpdateOneRow() {
 		boolean ret = false;
 		long currentCount = 0, checkSum = -1;
@@ -289,7 +291,7 @@ SELECT '02E338E4-E07A-B2AB-E050-BB8921B61594' as "PV_IDSEQ", 'Specified integer 
 	  *	The designation was created with SBR, but modified with different user, TANJ.
 	  * It should throws "java.sql.SQLException: ORA-20999: TAPI-0:Insufficient privileges to modify this designation." exception.
 	  */
-	//@Test
+	@Test
 	public void testPermissibleValueUpdateWithDifferentModifier() {
 		boolean ret = false;
 		long currentCount = 0, checkSum = -1;
@@ -317,5 +319,59 @@ SELECT '02E338E4-E07A-B2AB-E050-BB8921B61594' as "PV_IDSEQ", 'Specified integer 
 		System.out.println("testPermissibleValueUpdateWithDifferentModifier: 1 pv updated");
 	}
 
+	/**
+		Useful SQL:
+UPDATE SBR.PERMISSIBLE_VALUES_VIEW pv
+--SET pv.VALUE = 'FHIT (fragile histidine triad gene, AP3Aase, FRA3B)_james123'
+SET pv.VALUE = 'FHIT (fragile histidine triad gene, AP3Aase, FRA3B)'
+, DATE_MODIFIED = sysdate
+, MODIFIED_BY = 'cadsr_metadata_user'
+select * from SBR.PERMISSIBLE_VALUES_VIEW pv
+WHERE pv.PV_IDSEQ in
+    (
+        -- this returns the PV_IDSEQs for all PVs assoc'd with the VD
+        SELECT VD_PVS.PV_IDSEQ
+        FROM SBR.VD_PVS
+        WHERE VD_PVS.VD_IDSEQ = (
+            SELECT vd.VD_IDSEQ
+            FROM SBR.VALUE_DOMAINS vd
+            WHERE
+            vd.VD_ID = '2015675'
+            AND vd.VERSION = 10
+        )
+    )
+AND pv.VALUE = 'FHIT (fragile histidine triad gene, AP3Aase, FRA3B)'
+--AND pv.VALUE = 'FHIT (fragile histidine triad gene, AP3Aase, FRA3B)_james123'
+	 */
+	@Test
+	public void testPermissibleValueUpdatePlainSQL() {
+		boolean ret = false;
+		long currentCount = 0, checkSum = -1;
+		try {
+			conn = TestUtil.getConnection(userId, password);
+			String oldValue = "FHIT (fragile histidine triad gene, AP3Aase, FRA3B)";
+			String newValue = "FHIT (fragile histidine triad gene, AP3Aase, FRA3B)_james123";
+			String pvId = permissibleValueUtil.getPermissibleValueId(conn, oldValue);
+			if(pvId == null) {
+				throw new Exception("The AC must already exist for update!");
+			}
+			PermissibleValuesView dto;
+			dto = new PermissibleValuesView();
+			dto.setMODIFIEDBY("cadsr_metadata_user");	//this field can not be changed, database/PL/SQL codes always set it to the executing user/SBR!!!
+			//dto.setLAENAME("ENGLISH");
+			dto.setVALUE(newValue);
+
+			System.out.println("SQL = [" + PlainSQLHelper.toPVUpdateRow(dto, oldValue, "2015675", 10) + "]");
+
+//			assertTrue("Test removal", currentCount == checkSum);
+		} catch (Exception e) {
+			if(e.getMessage() != null && e.getMessage().indexOf("ORA-20999") > -1) {
+				e.printStackTrace();
+			} else {
+				//passed! :)
+			}
+		}
+		System.out.println("testPermissibleValueUpdatePlainSQL: 1 pv sql generated");
+	}
 
 }
