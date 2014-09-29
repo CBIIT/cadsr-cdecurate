@@ -377,7 +377,10 @@ L--%>
 							<% } %>
 							<br>
 						</div>
-						<input type="hidden" name="<%=VMForm.ELM_NVP_ORDER%>" id="VM<%=VMForm.ELM_NVP_ORDER%>" value="JT<%=vmCon.size()%>">	<!--JR1013 need to replace vmCon.size() with the value set by form's VMvmConOrder, sent as nvp_CKn to the backend -->
+    <%
+        //TODO JR1013 backend c.f. JR1008 and JR692
+    %>
+						<input type="hidden" name="<%=VMForm.ELM_NVP_ORDER%>" id="VM<%=VMForm.ELM_NVP_ORDER%>" value="<%=vmCon.size()%>">	<!--JR1013 need to replace vmCon.size() with the value set by form's VMvmConOrder, sent as nvp_CKn to the backend -->
 					</form>
 					<div style="display:none">
 						<form name="SearchActionForm" method="post" action="">

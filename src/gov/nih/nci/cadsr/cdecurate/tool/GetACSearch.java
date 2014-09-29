@@ -8153,7 +8153,7 @@ public class GetACSearch implements Serializable
                 vAC = evs.doVocabSearch(vAC, sKeyword, dtsVocab, sSearchInEVS, "", sSearchAC, sRetired, sMetaSource,
                                 intMetaLimit, true, -1, "", new HashSet<String>());
                 // make sure that name value pair is not allowed for primary concepts
-                markNVPForPrimaryConcept(vAC);
+                markNVPForPrimaryConcept(vAC);	//JR1013 tagged
                 // store it in the session
                 DataManager.setAttribute(session, "vACSearch", vAC);
                 evs.get_Result(req, res, vResult, "");
