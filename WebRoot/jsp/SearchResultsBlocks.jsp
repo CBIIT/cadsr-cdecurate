@@ -198,7 +198,8 @@ L--%>
 
     <% } else { %>
         sComp = "<%=StringEscapeUtils.escapeHtml(sSelAC)%>";
-    <% } %>
+    <% }
+    %>
 
       //selected concept info
       <% if (selBean.getLONG_NAME() != null && !selBean.getLONG_NAME().equals(""))
@@ -558,6 +559,7 @@ L--%>
 				<%
     String strResult = "";
     String vName = "";
+    String conceptName = "";    //JR1013
    // String strVocab = "";
     if (results != null)
     {
@@ -572,7 +574,8 @@ L--%>
           String strVocab = eBean.getEVS_DATABASE();  
           vName = eBean.getVocabAttr(uBean, strVocab, EVSSearch.VOCAB_DBORIGIN, EVSSearch.VOCAB_NAME);  // "vocabDBOrigin", "vocabName");
           nvp = eBean.getNAME_VALUE_PAIR_IND();
-          System.out.println("JR1013 Concept Name [" + eBean.getCONCEPT_NAME() + "] nvp " + nvp);
+          conceptName = eBean.getCONCEPT_NAME();
+          System.out.println("JR1013 Concept Name [" + conceptName + "] nvp " + nvp);
         }
          String ckName = ("CK" + j);
          strResult = (String)results.get(i);
@@ -613,10 +616,11 @@ L--%>
 						<%=strResult%>
 						<p>
 						<%
-System.out.println("JR1013 strResult [" + strResult + "] allowNVP [" + allowNVP + "] nvp [" + nvp + "] vSelAttr [" + vSelAttr.toString() + "]");
+System.out.println("JR1013 1 strResult [" + strResult + "] allowNVP [" + allowNVP + "] nvp [" + nvp + "] vSelAttr [" + vSelAttr.toString() + "] nvp_" + ckName + " ac [" + sSelAC + "]");
 						//add the text box for NVP under concept name
-            		if (allowNVP && nvp > 0 && vSelAttr.contains("Concept Name"))
-            		{
+            		if (
+            		(sSelAC.equals("Concept") && conceptName.equals("Integer")) /* JR1013 check exclude Integer */ ||
+            		allowNVP && nvp > 0 && vSelAttr.contains("Concept Name")) {
             	%>
 						<p>
 						&nbsp;&nbsp;Enter Concept Value
@@ -627,7 +631,9 @@ System.out.println("JR1013 strResult [" + strResult + "] allowNVP [" + allowNVP 
                         <br>
                         &nbsp;&nbsp;
 					</td>
-					<%    }else{%>
+					<%
+					    }else{
+					    %>
 				<tr>
 					<td width="5px" valign="top">
 						<input type="checkbox" name="<%=ckName%>" onClick="javascript:EnableButtons(checked,this, true);">
@@ -637,9 +643,13 @@ System.out.println("JR1013 strResult [" + strResult + "] allowNVP [" + allowNVP 
 							<%=strResult%>
 						</a>
                         <p>
-						<% //add the text box for NVP under concept name
-            		if (allowNVP && nvp > 0 && vSelAttr.contains("Concept Name"))
-            		{
+						<%
+						System.out.println("JR1013 2 strResult [" + strResult + "] allowNVP [" + allowNVP + "] nvp [" + nvp + "] vSelAttr [" + vSelAttr.toString() + "] nvp_" + ckName + " ac [" + sSelAC + "]");
+
+						//add the text box for NVP under concept name
+            		if (
+            		(sSelAC.equals("Concept") && conceptName.equals("Integer")) /* JR1013 check exclude Integer */ ||
+            		allowNVP && nvp > 0 && vSelAttr.contains("Concept Name")) {
             	%>
                         <p>
 						&nbsp;&nbsp;Enter Concept Value
@@ -650,7 +660,9 @@ System.out.println("JR1013 strResult [" + strResult + "] allowNVP [" + allowNVP 
                         <br>
                         &nbsp;&nbsp;
 					</td>
-					<%    } %>
+					<%
+					}
+					%>
 					<%
 		   for (int m = 1; m < k; m++)
 		   {

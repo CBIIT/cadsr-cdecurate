@@ -468,7 +468,7 @@ function testIsValidObject(objToTest) {
 			{
                 try {
                 //JR1013 begin
-                conOrd = opener.document.getElementById("vmConOrder");  //9/11/2014 by chance
+                conOrd = opener.document.getElementById("VMvmConOrder");  //JR1013 the fix!
                 if(typeof conOrd === 'undefined' || conOrd == null) {
                     throw new Error("SearchParametersBlocks.jsp error: Not able to retrieve a value from element VMvmConOrder in ValueMeaningDetail.jsp!");
                 }
@@ -1060,7 +1060,7 @@ function doMetaCodeSearch()
 					<td>
 						<input type="hidden" name="actSelect" value="Search"
 							style="visibility: hidden;">
-						<input type="hidden" name="vmConOrder" id="vmConOrder" value="0">   <!--JR1013 add the id!-->
+						<input type="hidden" name="vmConOrder" id="VMvmConOrder" value="0">   <!--JR1013 add the id VMvmConOrder!-->
 						<input type="hidden" name="sCCodeDB" value="">
 						<input type="hidden" name="sCCode" value="">
 						<input type="hidden" name="sCCodeName" value="">
