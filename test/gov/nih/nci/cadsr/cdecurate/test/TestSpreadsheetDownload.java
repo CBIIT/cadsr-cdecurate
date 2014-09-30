@@ -156,10 +156,19 @@ public class TestSpreadsheetDownload {
 //		idArray.add("41BAA115-476B-6112-E044-0003BA3F9857");	//VD
 		//JR1000 4.1 "Alternate Name Or Definition" removed
 		type = "CDE";
-		colString = "Data Element Public ID,Data Element Long Name,Valid Values,Value Meaning Name,Value Meaning Description";
-		idArray.add("8B6FACFE-948B-55CC-E040-BB89AD436343");	//DE public id 3121922
-		idArray.add("E48B2588-E567-D3FA-E040-BB89AD435DA5");	//DE public id 3861416; it has 1 alternate name and 1 alternate definition
-		idArray.add("F6FEB251-3020-4594-E034-0003BA3F9857");
+		//colString = "Data Element Public ID,Data Element Long Name,Valid Values,Value Meaning Name,Value Meaning Description";
+//		idArray.add("8B6FACFE-948B-55CC-E040-BB89AD436343");	//DE public id 3121922
+//		idArray.add("E48B2588-E567-D3FA-E040-BB89AD435DA5");	//DE public id 3861416; it has 1 alternate name and 1 alternate definition
+//		idArray.add("F6FEB251-3020-4594-E034-0003BA3F9857");
+		/*
+		 * JIRA: https://tracker.nci.nih.gov/browse/CURATNTOOL-1062
+		 * sql:
+		 * select DE_IDSEQ, CDE_ID, VERSION from SBR.DATA_ELEMENTS_VIEW where CDE_ID = '2003827' and VERSION = 3
+		 */
+		colString = "Data Element Public ID,Data Element Version,Data Element Long Name,Property Long Name";//,Property Short Name,Property Context Name,Property Version,Property Concept Name,Property Concept Code,Property Concept Public ID,Property Concept Definition Source,Property Concept EVS Source"; //,Property Concept Primary Flag,Value Domain Public ID,Value Domain Short Name,Value Domain Long Name,Value Domain Version,Value Domain Context Name,Value Domain Context Version,Value Domain Type,Value Domain Datatype,Value Domain Min Length,Value Domain Max Length"; //,Value Domain Min value,Value Domain Max Value,Value Domain Decimal Place,Value Domain Format,Value Domain Concept Name,Value Domain Concept Code,Value Domain Concept Public ID,Value Domain Concept Definition Source,Value Domain Concept EVS Source,Value Domain Concept Primary Flag,Representation Public ID,Representation Long Name,Representation Short Name,Representation Context Name,Representation Version,Representation Concept Name,Representation Concept Code,Representation Concept Public ID,Representation Concept Definition Source,Representation Concept EVS Source,Representation Concept Primary Flag,Valid Values,Value Meaning Name,Value Meaning Description,Value Meaning Concepts,PV Begin Date,PV End Date,Value Meaning PublicID,Value Meaning Version,Value Meaning Alternate Definitions,Classification Scheme Short Name,Classification Scheme Version,Classification Scheme Context Name,Classification Scheme Context Version,Classification Scheme Item Name,Classification Scheme Item Type Name,Classification Scheme Item Public Id,Classification Scheme Item Version,Data Element Alternate Name Context Name,Data Element Alternate Name Context Version,Data Element Alternate Name,Data Element Alternate Name Type,Document,Document Name,Document Type,Derivation Type,Derivation Method,Derivation Rule,Concatenation Character,DDE Public ID,DDE Long Name,DDE Version,DDE Workflow Status,DDE Context,DDE Display Order,Data Element RAI,Object Class Concept RAI,Property Concept RAI,Value Domain Concept RAI,Representation Concept RAI";
+//		colString = "Data Element Public ID,Data Element Long Name,Valid Values,Value Meaning Name,Value Meaning Description";
+		idArray.add("A6645A73-4656-49C2-E034-0003BA0B1A09");	//DE public id 2003827, version 3
+
 		download.generateSpreadsheet(type, fillIn, colString, idArray);
 	}
 	

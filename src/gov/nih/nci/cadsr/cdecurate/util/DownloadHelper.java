@@ -88,19 +88,26 @@ public class DownloadHelper {
 			columns = defaultHeaders.toArray(new String[defaultHeaders.size()]);	
 	
 		}
+		logger.info("DownloadHelper.java JR1062 1: columns headers splitted into ["+ columns.length + "] parts");
 
-		int[] colIndices = new int[columns.length];
-		for (int i=0; i < columns.length; i++) {
-			String colName = columns[i];
-			if (allHeaders.indexOf(colName) < 0){
-				String tempType = arrayColumnTypes.get(colName);
-				int temp = allTypes.indexOf(tempType);
-				colIndices[i]=temp;
-			} else {
-				int temp = allHeaders.indexOf(colName);
-				colIndices[i]=temp;
-			}
-		}
+		int[] dbColumnIndices = mapUserSelectedColumnsWithDatabaseColumns(arrayColumnTypes, columns, allTypes, allHeaders);	//new int[columns.length];
+//		for (int i=0; i < columns.length; i++) {
+//			String colName = columns[i];
+//			logger.debug("DownloadHelper.java JR1062 2: processing columns ["+ colName + "] ...");
+//			//=== is the user provided column name part of the known headers?
+//			if (allHeaders.indexOf(colName) < 0){
+//				//=== if it is not, get it from the subtype
+//				logger.debug("DownloadHelper.java JR1062 3: column ["+ colName + "] in the type? ...");
+//				String tempType = arrayColumnTypes.get(colName);
+//				int temp = allTypes.indexOf(tempType);
+//				colIndices[i]=temp;
+//			} else {
+//				//=== if it is, get it from the header
+//				logger.debug("DownloadHelper.java JR1062 4: column ["+ colName + "] must be in the header");
+//				int temp = allHeaders.indexOf(colName);
+//				colIndices[i]=temp;
+//			}
+//		}
 
 		Workbook wb =  new HSSFWorkbook();
 
@@ -118,7 +125,7 @@ public class DownloadHelper {
 			Cell cell = headerRow.createCell(i);
 			temp = columns[i];
 			cell.setCellValue(temp);	//JR1047 just setting column headers
-			logger.info("CustomDownloadServlet.java JR1047 1: cell header set to ["+ temp + "]");
+			logger.info("DownloadHelper.java JR1047 1: cell header set to ["+ temp + "]");
 			cell.setCellStyle(boldCellStyle); //GF30779
 		}
 
@@ -143,10 +150,11 @@ public class DownloadHelper {
 
 				if(allRows.get(i) == null) continue;
 
-				for (int j = 0; j < colIndices.length; j++) {
+				for (int j = 0; j < dbColumnIndices.length; j++) {
 
 					cell = row.createCell(j);
-					String currentType = allTypes.get(colIndices[j]);
+					String currentType = allTypes.get(dbColumnIndices[j]);
+					logger.debug("DownloadHelper.java JR1062 5: type of column ["+ j + "] = [" + currentType + "]");
 					if (currentType.endsWith("_T"))
 					{
 						//Deal with CS/CSI
@@ -187,12 +195,12 @@ public class DownloadHelper {
 										
 								}else 
 									data = nestedData[originalColumnIndex];
-								logger.debug("at line 960 of CustomDownloadServlet.java*****"+ data + currentType);	//JR1047 this data is good
+								logger.debug("DownloadHelper.java*****"+ data + currentType);	//JR1047 this data is good
 								if (currentType.contains("VALID_VALUE") && /* JR1047 */ !currentType.contains("VALID_VALUE_LIST_T")) {
 									data = AdministeredItemUtil.truncateTime(data);	//GF30779
 								}
 								cell.setCellValue(data);
-								logger.debug("CustomDownloadServlet.java JR1047 2: cell value set to ["+ data + "] based on type [" + currentType + "]");
+								logger.debug("DownloadHelper.java JR1047 2: cell value set to ["+ data + "] based on type [" + currentType + "]");
 
 								tempBump++;
 
@@ -220,13 +228,12 @@ public class DownloadHelper {
 							}
 						}
 					} else {
-						temp = allRows.get(i)[colIndices[j]];	//JR1000 JR1053 etc if crashes here, check your colString (user selected columns)!
-						logger.debug("at line 993 of CustomDownloadServlet.java*****"+ temp + currentType);
+						temp = allRows.get(i)[dbColumnIndices[j]];	//JR1000 JR1053 etc if crashes here, check your colString (user selected columns)!
 						if (currentType.equalsIgnoreCase("Date")) { //GF30779
 							temp = AdministeredItemUtil.truncateTime(temp);
 						}
 						cell.setCellValue(temp);
-						logger.debug("CustomDownloadServlet.java JR1047 3: cell value set to ["+ temp + "] based on type [" + currentType + "]");
+						logger.debug("DownloadHelper.java JR1047 3: cell value set to ["+ temp + "] based on type [" + currentType + "]");
 					}
 
 				}
@@ -234,7 +241,7 @@ public class DownloadHelper {
 				bump = bump + maxBump;
 
 				if (fillIn != null && (fillIn.equals("true") || fillIn.equals("yes") && bump > 0)) {
-					sheet = fillInBump(sheet, i, rownum, bump, allRows, allTypes, colIndices);
+					sheet = fillInBump(sheet, i, rownum, bump, allRows, allTypes, dbColumnIndices);
 					rownum = rownum + bump;
 					bump = 0;
 				}
@@ -261,6 +268,28 @@ public class DownloadHelper {
 		return wb;
 	}
 
+	private static int[] mapUserSelectedColumnsWithDatabaseColumns(HashMap<String, String> selectedColumnTypes, String[] selectedColumns, ArrayList<String> databaseHeaderTypes, ArrayList<String> databaseHeaders) {
+		int[] colIndices = new int[selectedColumns.length];
+		for (int i=0; i < selectedColumns.length; i++) {
+			String colName = selectedColumns[i];
+			logger.debug("DownloadHelper.java JR1062 2: processing columns ["+ colName + "] ...");
+			//=== is the user provided column name part of the known headers?
+			if (databaseHeaders.indexOf(colName) < 0){
+				//=== if it is not, get it from the subtype
+				logger.debug("DownloadHelper.java JR1062 3: column ["+ colName + "] in the type? ...");
+				String tempType = selectedColumnTypes.get(colName);
+				int temp = databaseHeaderTypes.indexOf(tempType);
+				colIndices[i]=temp;
+			} else {
+				//=== if it is, get it from the header
+				logger.debug("DownloadHelper.java JR1062 4: column ["+ colName + "] must be in the header");
+				int temp = databaseHeaders.indexOf(colName);
+				colIndices[i]=temp;
+			}
+		}
+		return colIndices;
+	}
+
 	private static Sheet fillInBump(Sheet sheet, int originalRow, int rownum, int bump, ArrayList<String[]> allRows, ArrayList<String> allTypes, int[] colIndices) {
 		String temp = null;
 		for (int a = rownum; a < rownum+bump; a++) {
@@ -276,12 +305,12 @@ public class DownloadHelper {
 				} else {
 					Cell cell = row.createCell(j);
 					temp = allRows.get(originalRow)[colIndices[j]];
-					logger.debug("at line 1061 of CustomDownloadServlet.java*****"+ temp + currentType);
+					logger.debug("DownloadHelper.java*****"+ temp + currentType);
 					if (currentType.equalsIgnoreCase("Date")) { //GF30779
 						temp = AdministeredItemUtil.truncateTime(temp);
 					}
 					cell.setCellValue(temp);
-					logger.debug("CustomDownloadServlet.java JR1047 4: cell value set to ["+ temp + "] based on type [" + currentType + "]");
+					logger.debug("DownloadHelper.java JR1047 4: cell value set to ["+ temp + "] based on type [" + currentType + "]");
 				}
 
 			}
@@ -289,16 +318,28 @@ public class DownloadHelper {
 		return sheet;
 	}
 
-	public static ArrayList<String> handleCDEHeaders(String type, ArrayList<String> list, String col) {
+	/**
+	 * Filter out non CDE headers.
+	 * 
+	 * @param type
+	 * @param list
+	 * @param col
+	 * @return true if it is belong's to CDE, otherwise it is not
+	 */
+	public static boolean handleCDEHeaders(String type, ArrayList<String> list, String col) {
+		boolean belongToCDE = false;
+		
 		if(type != null && type.equals(DownloadType.CDE.toString())) {
 			if(isCDEHeaders(col)) {
 				list.add(col);	//JR987 here - add only if it is DE's header/values
+				belongToCDE = true;
 			}
 		} else {
 			//no check
 			list.add(col);
+			belongToCDE = true;
 		}
-		return list;
+		return belongToCDE;
 	}
 
 	public static ValueHolder setColHeadersAndTypes(
@@ -333,12 +374,11 @@ public class DownloadHelper {
 		
 		ArrayList<String> excluded = new ArrayList<String>();
 		
-		for (String col: sList.split(",")){
+		for (String col: sList.split(",")) {
 			logger.debug("DownloadHelper.java excluded col = [" + col + "]");
 			handleCDEHeaders(type, excluded, col);	//JR987 here - add only if it is DE's header/values
 		}
-		
-		
+
 		try {
 //			String qry = "SELECT * FROM "+type+"_EXCEL_GENERATOR_VIEW where 1=2";
 			String qry = SQL.getExcelTemplateSQL(type, " and 1=2");	//JR1000 TODO
@@ -347,38 +387,39 @@ public class DownloadHelper {
 			ResultSetMetaData rsmd = rs.getMetaData();
 
 			int numColumns = rsmd.getColumnCount();
-			System.out.println("DownloadHelper.java Total columns is " + numColumns);
+			boolean headerIsValid = false;
+			logger.info("DownloadHelper.java Total columns based on the database view is " + numColumns + ". SQL was [" + qry + "]");
 			// Get the column names and types; column indices start from 1
 			for (int i=1; i<numColumns+1; i++) {
 				String columnName = rsmd.getColumnName(i);
 				columnName = prettyName(columnName);
 				logger.debug("DownloadHelper.java included col = [" + columnName + "]");
-				handleCDEHeaders(type, columnHeaders, columnName);	//JR987 columnHeaders.add(columnName);
+				headerIsValid = handleCDEHeaders(type, columnHeaders, columnName);	//JR987 columnHeaders.add(columnName);
 
-				String columnType = rsmd.getColumnTypeName(i);
-
-				if (columnType.endsWith("_T") && !typeMap.containsKey(columnType)) {
-					String typeKey = i+":"+columnType;
-
-					columnTypes.add(typeKey);
-					ArrayList<String[]> typeBreakdown = getType(conn, typeKey, columnName, type);
-					typeMap.put(i+":"+columnType,typeBreakdown);
-
-					if (typeBreakdown.size() >0) {
-						String[] typeColNames = typeBreakdown.get(0);
-						
-						String[] orderedTypeColNames = getOrderedTypeNames(conn, typeKey, columnName,type);
-						for (int c = 0; c<orderedTypeColNames.length; c++) {
-							arrayColumnTypes.put(typeColNames[c], typeKey);  // 2 lists should be same length.
-							handleCDEHeaders(type, allExpandedColumnHeaders, orderedTypeColNames[c]);	//JR987 allExpandedColumnHeaders.add(orderedTypeColNames[c]);  //Adding sorted list to the display list
-						}
-					} else handleCDEHeaders(type, allExpandedColumnHeaders, columnName);	//JR987 allExpandedColumnHeaders.add(columnName);
-
-				} else {
-					columnTypes.add(columnType);
-					handleCDEHeaders(type, allExpandedColumnHeaders, columnName);	//JR987 allExpandedColumnHeaders.add(columnName);
+				if(headerIsValid) {
+					String columnType = rsmd.getColumnTypeName(i);
+	
+					if (columnType.endsWith("_T") && !typeMap.containsKey(columnType)) {
+						String typeKey = i+":"+columnType;
+	
+						columnTypes.add(typeKey);
+						ArrayList<String[]> typeBreakdown = getType(conn, typeKey, columnName, type);
+						typeMap.put(i+":"+columnType,typeBreakdown);
+	
+						if (typeBreakdown.size() >0) {
+							String[] typeColNames = typeBreakdown.get(0);
+							
+							String[] orderedTypeColNames = getOrderedTypeNames(conn, typeKey, columnName,type);
+							for (int c = 0; c<orderedTypeColNames.length; c++) {
+								arrayColumnTypes.put(typeColNames[c], typeKey);  // 2 lists should be same length.
+								handleCDEHeaders(type, allExpandedColumnHeaders, orderedTypeColNames[c]);	//JR987 allExpandedColumnHeaders.add(orderedTypeColNames[c]);  //Adding sorted list to the display list
+							}
+						} else handleCDEHeaders(type, allExpandedColumnHeaders, columnName);	//JR987 allExpandedColumnHeaders.add(columnName);
+					} else {
+						columnTypes.add(columnType);
+						handleCDEHeaders(type, allExpandedColumnHeaders, columnName);	//JR987 allExpandedColumnHeaders.add(columnName);
+					}
 				}
-
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -387,6 +428,7 @@ public class DownloadHelper {
 			if (ps!=null) try{ps.close();}catch(Exception e) {}
 		}
 
+		//===believe me, you do not want to save anything into session if you know how tough it will become for TDD!!!
 //		m_classReq.getSession().setAttribute("excludedHeaders",excluded);
 //		m_classReq.getSession().setAttribute("headers",columnHeaders);
 //		m_classReq.getSession().setAttribute("allExpandedHeaders",allExpandedColumnHeaders);

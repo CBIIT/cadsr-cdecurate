@@ -6,6 +6,9 @@ import gov.nih.nci.cadsr.cdecurate.test.helpers.DBUtil;
 import gov.nih.nci.cadsr.cdecurate.ui.AltNamesDefsSession;
 import gov.nih.nci.cadsr.common.TestUtil;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
 import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -135,6 +138,14 @@ public class JR1000 {
 				}
 			}
 			System.out.println("currentCount was " + count + ", expecting " + checkSum);
+			try {
+				File file = new File("c:/testDownload-JR1000.xls");
+				OutputStream out = new FileOutputStream(file);	//m_classRes.getOutputStream();
+				wb.write(out);
+				out.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 			assertTrue("Test truncation", count == checkSum);
 		} catch (Exception e) {
 			e.printStackTrace();
