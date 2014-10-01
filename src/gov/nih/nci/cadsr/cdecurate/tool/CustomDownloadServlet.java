@@ -313,14 +313,22 @@ public class CustomDownloadServlet extends CurationServlet {
 					ArrayList<String> columnTypes = (ArrayList<String>)data.get(ColumnHeaderTypeLoader.ALL_TYPES_INDEX);	//m_classReq.getSession().getAttribute("types");
 					HashMap<String,ArrayList<String[]>> typeMap = (HashMap<String, ArrayList<String[]>>)data.get(ColumnHeaderTypeLoader.TYPEMAP_INDEX);	//m_classReq.getSession().getAttribute("typeMap");
 
+					String colValue = null;
 					while (rs.next()) {
 						String[] row = new String[numColumns];
 						HashMap<String,List<String[]>> typeArrayData = null;
 
 						for (int i=0; i<numColumns; i++) {
+							if(columnTypes.get(i).equals(DownloadHelper.IGNORE_COLUMN)) continue;	//JR1062
+
+							colValue = rs.getString(i+1);
+							if(i > 67) {
+								System.out.println("CustomDownloadServlet.java i = " + i + " ...");
+							}
+							logger.debug("CustomDownloadServlet.java current column value [" + colValue + "]");
 							if (columnTypes.get(i).endsWith("_T")) {
 								List<String[]> rowArrayData = getRowArrayData(rs, (String)columnTypes.get(i), i);
-System.out.println("=======> columnTypes.get(" + i + ") = [" + columnTypes.get(i) + "] returned = " + rowArrayData + " size = " + rowArrayData.size());
+								logger.debug("=======> columnTypes.get(" + i + ") = [" + columnTypes.get(i) + "] returned = " + rowArrayData + " size = " + rowArrayData.size());
 								if (typeArrayData == null) {
 									typeArrayData = new HashMap<String,List<String[]>>();
 								}
@@ -328,11 +336,11 @@ System.out.println("=======> columnTypes.get(" + i + ") = [" + columnTypes.get(i
 							} else {
 								//GF30779 truncate timestamp
 								if(columnTypes.get(i).equalsIgnoreCase("Date")) {
-									row[i] = AdministeredItemUtil.truncateTime(rs.getString(i+1));
+									row[i] = AdministeredItemUtil.truncateTime(colValue);
 								} else {
-									row[i] = rs.getString(i+1);
+									row[i] = colValue;
 								}
-								//System.out.println("rs.getString(i+1) = " + rs.getString(i+1));
+								//System.out.println("colValue = " + colValue);
 							}
 						}
 						//If there were no arrayData added, add null to keep parity with rows.

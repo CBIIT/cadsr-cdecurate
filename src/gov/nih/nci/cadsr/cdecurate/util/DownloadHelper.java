@@ -40,6 +40,7 @@ public class DownloadHelper {
 		DEC,
 		VD
 	};
+	public static String IGNORE_COLUMN = "ignoreme";	//JR1062
 
 	/**
 	 * Parse the user selected columns (colString) and filter the all rows (allRows) to create the spreadsheet columns and rows.
@@ -151,6 +152,7 @@ public class DownloadHelper {
 				if(allRows.get(i) == null) continue;
 
 				for (int j = 0; j < dbColumnIndices.length; j++) {
+					if(allTypes.get(j).equals(DownloadHelper.IGNORE_COLUMN)) continue;	//JR1062
 
 					cell = row.createCell(j);
 					String currentType = allTypes.get(dbColumnIndices[j]);
@@ -333,6 +335,8 @@ public class DownloadHelper {
 			if(isCDEHeaders(col)) {
 				list.add(col);	//JR987 here - add only if it is DE's header/values
 				belongToCDE = true;
+			} else {
+				list.add(IGNORE_COLUMN);	//JR1062
 			}
 		} else {
 			//no check
@@ -387,6 +391,7 @@ public class DownloadHelper {
 			ResultSetMetaData rsmd = rs.getMetaData();
 
 			int numColumns = rsmd.getColumnCount();
+			String columnType = null;
 			boolean headerIsValid = false;
 			logger.info("DownloadHelper.java Total columns based on the database view is " + numColumns + ". SQL was [" + qry + "]");
 			// Get the column names and types; column indices start from 1
@@ -397,12 +402,12 @@ public class DownloadHelper {
 				headerIsValid = handleCDEHeaders(type, columnHeaders, columnName);	//JR987 columnHeaders.add(columnName);
 
 				if(headerIsValid) {
-					String columnType = rsmd.getColumnTypeName(i);
+					columnType = rsmd.getColumnTypeName(i);
 	
 					if (columnType.endsWith("_T") && !typeMap.containsKey(columnType)) {
 						String typeKey = i+":"+columnType;
 	
-						columnTypes.add(typeKey);
+						columnTypes.add(typeKey);	//JR1062 tagged
 						ArrayList<String[]> typeBreakdown = getType(conn, typeKey, columnName, type);
 						typeMap.put(i+":"+columnType,typeBreakdown);
 	
@@ -419,6 +424,8 @@ public class DownloadHelper {
 						columnTypes.add(columnType);
 						handleCDEHeaders(type, allExpandedColumnHeaders, columnName);	//JR987 allExpandedColumnHeaders.add(columnName);
 					}
+				} else {
+					columnTypes.add(IGNORE_COLUMN);	//JR1062
 				}
 			}
 		} catch (Exception e) {
