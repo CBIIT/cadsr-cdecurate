@@ -624,7 +624,7 @@
         Concepts
         </font>
         </td>
-            <% if (!isView){ %>
+            <% //if (!isView){ %>
         <td align="center" valign="middle">
             <%if (sOCFont.equals("#000000")) {%>
         <font color="#FF0000">
@@ -632,7 +632,7 @@
         Search
         </a>
         </font>
-            <%}%>
+            <%//}%>
         </td>
 
         <td align="center" valign="middle">
@@ -652,7 +652,7 @@
         Concept
         </font>
         </td>
-            <% if (!isView){ %>
+            <% //if (!isView){ %>
         <td align="center" valign="middle">
             <%if (sOCFont.equals("#000000")) {%>
         <font color="#FF0000">
@@ -660,7 +660,7 @@
         Search
         </a>
         </font>
-            <%}%>
+            <%//}%>
         </td>
         <td align="center" valign="middle">
             <%if (sOCFont.equals("#000000")) {%>
@@ -780,7 +780,7 @@
         Concepts
         </font>
         </td>
-            <% if (!isView){ %>
+            <% //if (!isView){ %>
         <td align="center" valign="middle">
             <%if (sPropFont.equals("#000000")) {%>
         <font color="#FF0000">
@@ -788,7 +788,7 @@
         Search
         </a>
         </font>
-            <%}%>
+            <%//}%>
         </td>
         <td align="center" valign="middle">
             <%if (sPropFont.equals("#000000")) {%>
@@ -807,7 +807,7 @@
         Concept
         </font>
         </td>
-            <% if (!isView){ %>
+            <% //if (!isView){ %>
         <td align="center" valign="middle">
             <%if (sPropFont.equals("#000000")) {%>
         <font color="#FF0000">
@@ -815,7 +815,7 @@
         Search
         </a>
         </font>
-            <%}%>
+            <%//}%>
         </td>
         <td align="center" valign="middle">
             <%if (sPropFont.equals("#000000")) {%>
