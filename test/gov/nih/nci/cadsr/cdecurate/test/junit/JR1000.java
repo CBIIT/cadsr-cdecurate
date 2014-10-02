@@ -138,14 +138,14 @@ public class JR1000 {
 				}
 			}
 			System.out.println("currentCount was " + count + ", expecting " + checkSum);
-			try {
-				File file = new File("c:/testDownload-JR1000.xls");
-				OutputStream out = new FileOutputStream(file);	//m_classRes.getOutputStream();
-				wb.write(out);
-				out.close();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+//			try {
+//				File file = new File("c:/testDownload-JR1000.xls");
+//				OutputStream out = new FileOutputStream(file);	//m_classRes.getOutputStream();
+//				wb.write(out);
+//				out.close();
+//			} catch (Exception e) {
+//				e.printStackTrace();
+//			}
 			assertTrue("Test truncation", count == checkSum);
 		} catch (Exception e) {
 			e.printStackTrace();
