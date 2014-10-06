@@ -152,7 +152,7 @@ public class DownloadHelper {
 				if(allRows.get(i) == null) continue;
 
 				for (int j = 0; j < dbColumnIndices.length; j++) {
-					if(allTypes.get(j).equals(DownloadHelper.IGNORE_COLUMN)) continue;	//JR1062
+					if(DownloadHelper.isIgnoredColumn(allTypes, i)) continue;	//JR1062
 
 					cell = row.createCell(j);
 					String currentType = allTypes.get(dbColumnIndices[j]);
@@ -668,6 +668,16 @@ public class DownloadHelper {
 				col.equals("Data Element Concept Registration Status"))) {
 			ret = false;
 		}
+		return ret;
+	}
+
+	public static boolean isIgnoredColumn(ArrayList<String> columns, int columnIndex) {
+		boolean ret = false; 	//you can not ignore something that does not exist!
+
+		if(columns != null && columnIndex > -1) {
+			if(columns.get(columnIndex).equals(DownloadHelper.IGNORE_COLUMN)) ret = true;
+		}
+		
 		return ret;
 	}
 

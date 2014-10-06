@@ -87,6 +87,71 @@ public class JR1062 {
 	}
 
 	@Test
+	public void testDDE() {
+		boolean ret = false;
+		
+		String type = null;
+		String colString = null;
+		String fillIn = null;
+		ArrayList idArray = new ArrayList<String>();
+
+		try {
+			type = "CDE";
+			System.out.println("JR1062: type is " + type);
+			colString = "Data Element Public ID,Data Element Version,Data Element Long Name,DDE Public ID,DDE Long Name,DDE Version,DDE Workflow Status,DDE Context,DDE Display Order,Data Element RAI,Object Class Concept RAI,Property Concept RAI,Value Domain Concept RAI,Representation Concept RAI";
+			idArray.add("D29F7072-2C80-1BD0-E034-0003BA12F5E7");
+			idArray.add("F38AA785-3CCB-5BB7-E034-0003BA3F9857");
+			idArray.add("FC6EF0D8-4F59-6865-E034-0003BA3F9857");
+			Workbook wb = download.generateSpreadsheet(type, fillIn, colString, idArray);
+			Sheet sh = wb.getSheetAt(0);
+			Iterator it = sh.rowIterator();
+			Iterator it2 = sh.rowIterator();
+			Row row = null;
+			java.util.List<String> checkList1 = null;
+			java.util.List<String> checkList2 = null;
+			int i = 0;
+			String tempValue = null;
+			int valueColumn1 = -1;	//starts with 0
+			int checkSum1 = 3, currentCount1 = 0;
+			valueColumn1 = 0;
+			checkList1 = Arrays.asList("2319673","2208252","2008134");	//DE public ids
+			int checkSum2 = 3, currentCount2 = 0;
+			int valueColumn2 = 3;	//DDE Public ID column
+			checkList2 = Arrays.asList("2007718","2008285","2186328");	//DDE public ids (all these belongs to DE public id 2319673)
+			for (; it.hasNext() ; ++i ) {
+				row = (Row) it.next();
+				if(row.getCell(valueColumn1) != null) {
+					tempValue = row.getCell(valueColumn1).toString();
+					System.out.println("Cell value 1 = [" + tempValue + "]");
+					if(checkList1.contains(tempValue)) {
+						currentCount1++;
+					}
+				}
+				if(row.getCell(valueColumn2) != null) {
+					tempValue = row.getCell(valueColumn2).toString();
+					System.out.println("Cell value 2 = [" + tempValue + "]");
+					if(checkList2.contains(tempValue)) {
+						currentCount2++;
+					}
+				}
+			}
+			System.out.println("currentCount1 was " + currentCount1 + ", expecting " + checkSum1);
+			System.out.println("currentCount2 was " + currentCount2 + ", expecting " + checkSum2);
+//			try {
+//				File file = new File("c:/testDownload-JR1000.xls");
+//				OutputStream out = new FileOutputStream(file);	//m_classRes.getOutputStream();
+//				wb.write(out);
+//				out.close();
+//			} catch (Exception e) {
+//				e.printStackTrace();
+//			}
+			assertTrue("Test truncation", currentCount2 == checkSum2);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+//	@Test
 	public void testPositive() {
 		boolean ret = false;
 		

@@ -319,7 +319,7 @@ public class CustomDownloadServlet extends CurationServlet {
 						HashMap<String,List<String[]>> typeArrayData = null;
 
 						for (int i=0; i<numColumns; i++) {
-							if(columnTypes.get(i).equals(DownloadHelper.IGNORE_COLUMN)) continue;	//JR1062
+							if(DownloadHelper.isIgnoredColumn(columnTypes, i)) continue;	//JR1062
 
 							colValue = rs.getString(i+1);
 							if(i > 67) {

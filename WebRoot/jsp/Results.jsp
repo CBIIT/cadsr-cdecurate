@@ -1485,6 +1485,7 @@ function ShowSelectedRowss(){
 							<%if(sContextUse.equals("USED_BY")){%> checked <%}%>
 							onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchParameters',helpUrl); return false">
 						<label for="used">Used By</label>
+                      </div> <!-- NT2 -->
 					</td>
 				</tr>
 
@@ -1494,6 +1495,7 @@ function ShowSelectedRowss(){
 							<%if(sContextUse.equals("BOTH")){%> checked <%}%>
 							onHelp="showHelp('html/Help_SearchAC.html#searchParmsForm_SearchParameters',helpUrl); return false">
 						<label for="both">Owned By/Used By</label>
+                    </div> <!-- NT2 -->
 					</td>
 				</tr>
 
@@ -1628,6 +1630,7 @@ function ShowSelectedRowss(){
                  <tr>
                    <td><div class="scSubItem">
                         <b> <label for="listCDName">Conceptual Domain</label> </b>
+                        </div> <!-- NT2 -->
                    </td>
                  </tr>
                  <tr>
@@ -1666,6 +1669,7 @@ function ShowSelectedRowss(){
                  <td>
                      <div class="scSubItem">
                          <b><label for="listRegStatus">Registration Status</label></b>
+                    </div> <!-- NT2 -->
                  </td>
                 </tr>
                 <tr>
@@ -1709,6 +1713,7 @@ function ShowSelectedRowss(){
                   <tr>
                    <td><div class="scSubItem">
                         <b><label for="listStatusFilter">Workflow Status</label></b>
+                       </div> <!-- NT2 -->
                    </td>
                  </tr>
                  <tr>
@@ -1826,6 +1831,7 @@ function ShowSelectedRowss(){
                  <td>
                      <div class="scSubItem">
                          <b><label for="listRegStatus1">Registration Status</label></b>
+                     </div> <!-- NT2 -->
                  </td>
                 </tr>
                 <tr>
@@ -1867,6 +1873,7 @@ function ShowSelectedRowss(){
                  <td>
                      <div class="scSubItem">
                          <b> <label for="listDataType">Value Domain Data Type</label></b>
+                     </div> <!-- NT2 -->
                  </td>
                 </tr>
                 <tr>
@@ -1915,6 +1922,7 @@ function ShowSelectedRowss(){
                  <td>
                      <div class="scSubItem">
                          <b> <label for="listDeriveType">Derivation Type</label> </b>
+                     </div> <!-- NT2 -->
                  </td>
                 </tr>
                 <tr>
@@ -2950,7 +2958,7 @@ function ShowSelectedRowss(){
 				</select>
 
 				<!-- stores results ID and Short Names -->
-				<select size="1" name="hiddenSearch" style="visibility:hidden;width:50">
+				<select size="1" name="hiddenSearch" style="visibility:hidden;width:50px;"> <!-- NT2 added px -->
 					<%   
       vSearchID = (Vector)session.getAttribute("SearchID");
       if (vSearchID == null)  vSearchID = new Vector();
@@ -2990,7 +2998,7 @@ function ShowSelectedRowss(){
 %>
 				</select>
 				<!-- stores results longname and Designated IDs -->
-				<select size="1" name="hiddenName2" style="visibility:hidden;width:100;">
+				<select size="1" name="hiddenName2" style="visibility:hidden;width:100px;">
 
 					<%    for (int i = 0; vSearchLongName.size()>i; i++)
       {
@@ -3004,7 +3012,7 @@ function ShowSelectedRowss(){
 %>
 				</select>
 				<!-- store definition and context here to use it later in javascript -->
-				<select size="1" name="hiddenDefSource" style="visibility:hidden;width:100">
+				<select size="1" name="hiddenDefSource" style="visibility:hidden;width:100px;">     <!-- NT2 added px -->
 					<%
       String sDef = "";
       for (int i = 0; vSearchDefinitionAC.size()>i; i++)
@@ -3022,7 +3030,7 @@ function ShowSelectedRowss(){
       }
 %>
 				</select>
-				<select size="1" name="hiddenMeanDescription" style="visibility:hidden;width:100">
+				<select size="1" name="hiddenMeanDescription" style="visibility:hidden;width:100px;">       <!-- NT2 added px -->
 					<%
       String sDesc = "";
       for (int i = 0; vSearchMeanDescription.size()>i; i++)
