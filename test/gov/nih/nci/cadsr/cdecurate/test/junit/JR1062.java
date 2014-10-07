@@ -86,7 +86,7 @@ public class JR1062 {
 		}
 	}
 
-	@Test
+//	@Test
 	public void testDDE() {
 		boolean ret = false;
 		
@@ -97,7 +97,7 @@ public class JR1062 {
 
 		try {
 			type = "CDE";
-			System.out.println("JR1062: type is " + type);
+			System.out.println("testDDE: type is " + type);
 			colString = "Data Element Public ID,Data Element Version,Data Element Long Name,DDE Public ID,DDE Long Name,DDE Version,DDE Workflow Status,DDE Context,DDE Display Order,Data Element RAI,Object Class Concept RAI,Property Concept RAI,Value Domain Concept RAI,Representation Concept RAI";
 			idArray.add("D29F7072-2C80-1BD0-E034-0003BA12F5E7");
 			idArray.add("F38AA785-3CCB-5BB7-E034-0003BA3F9857");
@@ -151,6 +151,84 @@ public class JR1062 {
 		}
 	}
 
+	@Test
+	public void testCDEIgnoreColumns() {
+		boolean ret = false;
+		
+		String type = null;
+		String colString = null;
+		String fillIn = null;
+		ArrayList idArray = new ArrayList<String>();
+
+		try {
+			type = "CDE";
+			System.out.println("testCDEIgnoreColumns: type is " + type);
+//			Data Element Concept Registration Status,Data Element Concept Workflow Status,
+			colString = "Value Meaning Alternate Definitions,Data Element Public ID,Data Element Version,Data Element Long Name,DDE Public ID,DDE Long Name,DDE Version,DDE Workflow Status,DDE Context,DDE Display Order,Data Element RAI,Object Class Concept RAI,Property Concept RAI,Value Domain Concept RAI,Representation Concept RAI";
+			idArray.add("D29F7072-2C80-1BD0-E034-0003BA12F5E7");
+			idArray.add("F38AA785-3CCB-5BB7-E034-0003BA3F9857");
+			idArray.add("FC6EF0D8-4F59-6865-E034-0003BA3F9857");
+			Workbook wb = download.generateSpreadsheet(type, fillIn, colString, idArray);
+			Sheet sh = wb.getSheetAt(0);
+			Iterator it = sh.rowIterator();
+			Iterator it2 = sh.rowIterator();
+			Row row = null;
+			java.util.List<String> checkList1 = null;
+			java.util.List<String> checkList2 = null;
+			java.util.List<String> checkList3 = null;
+			int i = 0;
+			String tempValue = null;
+			int valueColumn1 = -1;	//starts with 0
+			int checkSum1 = 0, currentCount1 = 0;
+			valueColumn1 = 0;
+			checkList1 = Arrays.asList("Value Meaning Alternate Definitions");	//should be in sync with DownloadHelper's isCDEHeaders()
+			int checkSum2 = 0, currentCount2 = 0;
+			int valueColumn2 = 1;
+			checkList2 = Arrays.asList("Data Element Concept Registration Status");	//should be in sync with DownloadHelper's isCDEHeaders()
+			int checkSum3 = 0, currentCount3 = 0;
+			int valueColumn3 = 2;
+			checkList3 = Arrays.asList("Data Element Concept Workflow Status");	//should be in sync with DownloadHelper's isCDEHeaders()
+			for (; it.hasNext() ; ++i ) {
+				row = (Row) it.next();
+				if(row.getCell(valueColumn1) != null) {
+					tempValue = row.getCell(valueColumn1).toString();
+					System.out.println("Cell value 1 = [" + tempValue + "]");
+					if(checkList1.contains(tempValue)) {
+						currentCount1++;
+					}
+				}
+				if(row.getCell(valueColumn2) != null) {
+					tempValue = row.getCell(valueColumn2).toString();
+					System.out.println("Cell value 2 = [" + tempValue + "]");
+					if(checkList2.contains(tempValue)) {
+						currentCount2++;
+					}
+				}
+				if(row.getCell(valueColumn3) != null) {
+					tempValue = row.getCell(valueColumn3).toString();
+					System.out.println("Cell value 3 = [" + tempValue + "]");
+					if(checkList3.contains(tempValue)) {
+						currentCount3++;
+					}
+				}
+			}
+			System.out.println("currentCount1 was " + currentCount1 + ", expecting " + checkSum1);
+			System.out.println("currentCount2 was " + currentCount2 + ", expecting " + checkSum2);
+			System.out.println("currentCount3 was " + currentCount3 + ", expecting " + checkSum3);
+			try {
+				File file = new File("c:/testDownload-JR1000.xls");
+				OutputStream out = new FileOutputStream(file);	//m_classRes.getOutputStream();
+				wb.write(out);
+				out.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			assertTrue("Test truncation", currentCount2 == checkSum2);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
 //	@Test
 	public void testPositive() {
 		boolean ret = false;
@@ -162,7 +240,7 @@ public class JR1062 {
 
 		try {
 			type = "CDE";
-			System.out.println("JR1062: type is " + type);
+			System.out.println("testPositive: type is " + type);
 			colString = "Data Element Public ID,Data Element Version,Data Element Long Name,Property Long Name,Object Class Concept Name";
 			idArray.add("D29F7072-2C80-1BD0-E034-0003BA12F5E7");
 			idArray.add("F38AA785-3CCB-5BB7-E034-0003BA3F9857");

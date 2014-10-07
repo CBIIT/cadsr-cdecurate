@@ -373,13 +373,17 @@ public class DownloadHelper {
 	        }
 	      }
 		
-		if (sList == "")
+		if (sList == "") {
 			sList = "CDE_IDSEQ,DEC_IDSEQ,VD_IDSEQ,Conceptual Domain Public ID,Conceptual Domain Short Name,Conceptual Domain Version,Conceptual Domain Context Name";
+			logger.debug("DownloadHelper.java DownloadHelper excluded col = [" + sList + "] based on the default values setup");
+		} else {
+			logger.debug("DownloadHelper.java Tool Option table excluded col = [" + sList + "] based on the default values setup");
+		}
 		
 		ArrayList<String> excluded = new ArrayList<String>();
 		
 		for (String col: sList.split(",")) {
-			logger.debug("DownloadHelper.java excluded col = [" + col + "]");
+			logger.debug("DownloadHelper.java parsing excluded col = [" + col + "] ...");
 			handleCDEHeaders(type, excluded, col);	//JR987 here - add only if it is DE's header/values
 		}
 
@@ -665,7 +669,8 @@ public class DownloadHelper {
 		//=== the following are not part of (C)DE elements
 		if(col != null && (
 				col.equals("Data Element Concept Workflow Status") ||
-				col.equals("Data Element Concept Registration Status"))) {
+				col.equals("Data Element Concept Registration Status") ||
+				col.equals("Value Meaning Alternate Definitions") /* JR1062 ignore for now even though it is required by JR1000 */ )) {
 			ret = false;
 		}
 		return ret;
