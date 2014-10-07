@@ -96,6 +96,16 @@ public class TestSpreadsheetDownload {
 	}
 
 	public static Workbook generateSpreadsheet(String type, String fillAllRows, String selectedColumns, ArrayList idArray) {
+		/** the following mockup is needed as it is too complex to make the test reflect the real use case */
+		//begin of mockup
+//		ArrayList<String> excluded = new ArrayList<String>();
+//		for (String col: selectedColumns.split(",")) {
+//			logger.debug("TestSpreadsheetDownload.java parsing excluded col = [" + col + "] ...");
+//			DownloadHelper.handleCDEHeaders(type, excluded, col);
+//			selectedColumns = excluded.toString();
+//		}
+		//end of mockup
+
 		String colString = selectedColumns;
 		String fillIn = fillAllRows;
 

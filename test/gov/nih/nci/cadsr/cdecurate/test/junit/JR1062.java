@@ -6,9 +6,6 @@ import gov.nih.nci.cadsr.cdecurate.test.helpers.DBUtil;
 import gov.nih.nci.cadsr.cdecurate.ui.AltNamesDefsSession;
 import gov.nih.nci.cadsr.common.TestUtil;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.OutputStream;
 import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -21,8 +18,6 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.junit.After;
 import org.junit.BeforeClass;
 import org.junit.Test;
-
-import antlr.collections.List;
 
 /**
   * https://tracker.nci.nih.gov/browse/CURATNTOOL-1062
@@ -57,7 +52,7 @@ public class JR1062 {
 		altSession.purgeAlternateList();
 	}
 
-//	@Test
+	@Test
 	public void testEmpty() {
 		boolean ret = false;
 		int count = 0;
@@ -86,7 +81,7 @@ public class JR1062 {
 		}
 	}
 
-//	@Test
+	@Test
 	public void testDDE() {
 		boolean ret = false;
 		
@@ -145,7 +140,8 @@ public class JR1062 {
 //			} catch (Exception e) {
 //				e.printStackTrace();
 //			}
-			assertTrue("Test truncation", currentCount2 == checkSum2);
+			assertTrue("Test DDE 1", currentCount1 == checkSum1);
+			assertTrue("Test DDE 2", currentCount2 == checkSum2);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -171,7 +167,6 @@ public class JR1062 {
 			Workbook wb = download.generateSpreadsheet(type, fillIn, colString, idArray);
 			Sheet sh = wb.getSheetAt(0);
 			Iterator it = sh.rowIterator();
-			Iterator it2 = sh.rowIterator();
 			Row row = null;
 			java.util.List<String> checkList1 = null;
 			java.util.List<String> checkList2 = null;
@@ -215,21 +210,23 @@ public class JR1062 {
 			System.out.println("currentCount1 was " + currentCount1 + ", expecting " + checkSum1);
 			System.out.println("currentCount2 was " + currentCount2 + ", expecting " + checkSum2);
 			System.out.println("currentCount3 was " + currentCount3 + ", expecting " + checkSum3);
-			try {
-				File file = new File("c:/testDownload-JR1000.xls");
-				OutputStream out = new FileOutputStream(file);	//m_classRes.getOutputStream();
-				wb.write(out);
-				out.close();
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-			assertTrue("Test truncation", currentCount2 == checkSum2);
+//			try {
+//				File file = new File("c:/testDownload-JR1000.xls");
+//				OutputStream out = new FileOutputStream(file);	//m_classRes.getOutputStream();
+//				wb.write(out);
+//				out.close();
+//			} catch (Exception e) {
+//				e.printStackTrace();
+//			}
+			assertTrue("Test ignore column 1", currentCount1 == checkSum1);
+			assertTrue("Test ignore column 2", currentCount2 == checkSum2);
+			assertTrue("Test ignore column 3", currentCount3 == checkSum3);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
-//	@Test
+	@Test
 	public void testPositive() {
 		boolean ret = false;
 		
@@ -288,7 +285,8 @@ public class JR1062 {
 //			} catch (Exception e) {
 //				e.printStackTrace();
 //			}
-			assertTrue("Test truncation", currentCount2 == checkSum2);
+			assertTrue("Test positive results 1", currentCount1 == checkSum1);
+			assertTrue("Test positive results 2", currentCount2 == checkSum2);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
