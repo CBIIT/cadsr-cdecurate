@@ -67,14 +67,14 @@ public class TestSpreadsheetDownload {
 	static CurationServlet m_servlet;
 	private static ValueHolder downloadRowsArrayData;
 	protected static Connection m_conn = null;
-	private static final int GRID_MAX_DISPLAY = 10;
-	FileOutputStream fileOutputStream = null;
-	ArrayList<String> columnHeaders = new ArrayList<String>();
-	ArrayList<String> columnTypes = new ArrayList<String>();
-	HashMap<String, ArrayList<String[]>> typeMap = new HashMap<String, ArrayList<String[]>>();
-	HashMap<String, String> arrayColumnTypes = new HashMap<String, String>();
-	ArrayList<String> allExpandedColumnHeaders = new ArrayList<String>();
-	ArrayList<HashMap<String, List<String[]>>> arrayData = new ArrayList<HashMap<String, List<String[]>>>();
+//	private static final int GRID_MAX_DISPLAY = 10;
+//	FileOutputStream fileOutputStream = null;
+//	ArrayList<String> columnHeaders = new ArrayList<String>();
+//	ArrayList<String> columnTypes = new ArrayList<String>();
+//	HashMap<String, ArrayList<String[]>> typeMap = new HashMap<String, ArrayList<String[]>>();
+//	HashMap<String, String> arrayColumnTypes = new HashMap<String, String>();
+//	ArrayList<String> allExpandedColumnHeaders = new ArrayList<String>();
+//	ArrayList<HashMap<String, List<String[]>>> arrayData = new ArrayList<HashMap<String, List<String[]>>>();
 
 	public static void connectDB(String username, String password) {
 		try {

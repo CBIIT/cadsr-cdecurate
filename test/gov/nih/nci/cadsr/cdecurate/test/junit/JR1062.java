@@ -4,8 +4,12 @@ import static org.junit.Assert.assertTrue;
 import gov.nih.nci.cadsr.cdecurate.test.TestSpreadsheetDownload;
 import gov.nih.nci.cadsr.cdecurate.test.helpers.DBUtil;
 import gov.nih.nci.cadsr.cdecurate.ui.AltNamesDefsSession;
+import gov.nih.nci.cadsr.cdecurate.util.DownloadHelper;
 import gov.nih.nci.cadsr.common.TestUtil;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
 import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -53,6 +57,58 @@ public class JR1062 {
 	}
 
 	@Test
+	public void testDerivationType() {
+		boolean ret = false;
+		
+		String type = null;
+		String colString = null;
+		String fillIn = null;
+		ArrayList idArray = new ArrayList<String>();
+
+		try {
+			type = "CDE";
+			System.out.println("testDerivationType: type is " + type);
+			colString = "Data Element Public ID,Data Element Version,Data Element Long Name,Derivation Type";
+			idArray.add("D29F7072-2C80-1BD0-E034-0003BA12F5E7");
+			idArray.add("F38AA785-3CCB-5BB7-E034-0003BA3F9857");
+			idArray.add("FC6EF0D8-4F59-6865-E034-0003BA3F9857");
+			Workbook wb = download.generateSpreadsheet(type, fillIn, colString, idArray);
+			Sheet sh = wb.getSheetAt(0);
+			Iterator it = sh.rowIterator();
+			Row row = null;
+			java.util.List<String> checkList1 = null;
+			int i = 0;
+			String tempValue = null;
+			int valueColumn1 = -1;	//starts with 0
+			int checkSum1 = 1, currentCount1 = 0;
+			valueColumn1 = 3;
+			checkList1 = Arrays.asList("CALCULATED");
+			for (; it.hasNext() ; ++i ) {
+				row = (Row) it.next();
+				if(row.getCell(valueColumn1) != null) {
+					tempValue = row.getCell(valueColumn1).toString();
+					System.out.println("Cell value 1 = [" + tempValue + "]");
+					if(checkList1.contains(tempValue)) {
+						currentCount1++;
+					}
+				}
+			}
+			System.out.println("currentCount1 was " + currentCount1 + ", expecting " + checkSum1);
+//			try {
+//				File file = new File("c:/testDownload-JR1062.xls");
+//				OutputStream out = new FileOutputStream(file);	//m_classRes.getOutputStream();
+//				wb.write(out);
+//				out.close();
+//			} catch (Exception e) {
+//				e.printStackTrace();
+//			}
+			assertTrue("Test Derivation Type", currentCount1 == checkSum1);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+//	@Test
 	public void testEmpty() {
 		boolean ret = false;
 		int count = 0;
@@ -81,7 +137,7 @@ public class JR1062 {
 		}
 	}
 
-	@Test
+//	@Test
 	public void testDDE() {
 		boolean ret = false;
 		
@@ -133,7 +189,7 @@ public class JR1062 {
 			System.out.println("currentCount1 was " + currentCount1 + ", expecting " + checkSum1);
 			System.out.println("currentCount2 was " + currentCount2 + ", expecting " + checkSum2);
 //			try {
-//				File file = new File("c:/testDownload-JR1000.xls");
+//				File file = new File("c:/testDownload-JR1062.xls");
 //				OutputStream out = new FileOutputStream(file);	//m_classRes.getOutputStream();
 //				wb.write(out);
 //				out.close();
@@ -147,7 +203,20 @@ public class JR1062 {
 		}
 	}
 
-	@Test
+//	@Test
+	public void testIgnoredColumnTagForUI() {
+		boolean ret = false;
+		
+		ArrayList uiArray = new ArrayList<String>();
+		uiArray.add(DownloadHelper.IGNORE_COLUMN);
+		assertTrue("Test for existence of ignored tag before removal: ", uiArray.contains(DownloadHelper.IGNORE_COLUMN));
+
+		uiArray = (ArrayList) DownloadHelper.removeIgnoreColumn(uiArray, DownloadHelper.IGNORE_COLUMN);
+
+		assertTrue("Test for existence of ignored tag after removal: ", !uiArray.contains(DownloadHelper.IGNORE_COLUMN));
+	}
+
+//	@Test
 	public void testCDEIgnoreColumns() {
 		boolean ret = false;
 		
@@ -211,7 +280,7 @@ public class JR1062 {
 			System.out.println("currentCount2 was " + currentCount2 + ", expecting " + checkSum2);
 			System.out.println("currentCount3 was " + currentCount3 + ", expecting " + checkSum3);
 //			try {
-//				File file = new File("c:/testDownload-JR1000.xls");
+//				File file = new File("c:/testDownload-JR1062.xls");
 //				OutputStream out = new FileOutputStream(file);	//m_classRes.getOutputStream();
 //				wb.write(out);
 //				out.close();
@@ -226,7 +295,7 @@ public class JR1062 {
 		}
 	}
 
-	@Test
+//	@Test
 	public void testPositive() {
 		boolean ret = false;
 		
@@ -278,7 +347,7 @@ public class JR1062 {
 			System.out.println("currentCount1 was " + currentCount1 + ", expecting " + checkSum1);
 			System.out.println("currentCount2 was " + currentCount2 + ", expecting " + checkSum2);
 //			try {
-//				File file = new File("c:/testDownload-JR1000.xls");
+//				File file = new File("c:/testDownload-JR1062.xls");
 //				OutputStream out = new FileOutputStream(file);	//m_classRes.getOutputStream();
 //				wb.write(out);
 //				out.close();

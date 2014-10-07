@@ -84,6 +84,7 @@ public class CustomDownloadServlet extends CurationServlet {
 	private ValueHolder setColHeadersAndTypes(HttpServletRequest m_classReq, HttpServletResponse m_classRes, CurationServlet servlet, Connection m_conn, String ac) {
 		ValueHolder valueHolder = DownloadHelper.setColHeadersAndTypes(m_classReq, m_classRes, servlet, m_conn, ac);
 		List data = (ArrayList) valueHolder.getValue();
+		data.set(0, DownloadHelper.removeIgnoreColumn((ArrayList)data.get(0), DownloadHelper.IGNORE_COLUMN));	//JR1062 needs to remove DownloadHelper.IGNORE_COLUMN from the UI
 		m_classReq.getSession().setAttribute("excludedHeaders", data.get(0) /*excluded*/);
 		m_classReq.getSession().setAttribute("headers", data.get(1) /*columnHeaders*/);
 		m_classReq.getSession().setAttribute("allExpandedHeaders", data.get(2) /*allExpandedColumnHeaders*/);

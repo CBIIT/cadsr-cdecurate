@@ -42,6 +42,14 @@ public class DownloadHelper {
 	};
 	public static String IGNORE_COLUMN = "ignoreme";	//JR1062
 
+	public static List removeIgnoreColumn(List list, String key) {
+		if(list != null) {
+			list.remove(key);
+		}
+		
+		return list;
+	}
+
 	/**
 	 * Parse the user selected columns (colString) and filter the all rows (allRows) to create the spreadsheet columns and rows.
 	 * @param colString

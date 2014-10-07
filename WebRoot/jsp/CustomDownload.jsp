@@ -6,6 +6,7 @@
 L--%>
 
 <%@ page language="java" import="java.util.*" pageEncoding="ISO-8859-1"%>
+<%@ page import="gov.nih.nci.cadsr.cdecurate.util.DownloadHelper" %>
 <%@taglib uri="/WEB-INF/tld/curate.tld" prefix="curate"%>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
@@ -432,7 +433,11 @@ L--%>
                 var notSel = dojo.byId('notSelectedCols');
                 var sel = dojo.byId('selectedCols');
                 
-                <% for (int colLoop = 0; colLoop < allExpandedHeaders.size(); colLoop++) { 
+                <%
+                    //JR1062 remove ignored tag(s)
+                    //allExpandedHeaders =
+		            DownloadHelper.removeIgnoreColumn((ArrayList)allExpandedHeaders, DownloadHelper.IGNORE_COLUMN);
+                    for (int colLoop = 0; colLoop < allExpandedHeaders.size(); colLoop++) {
                 	if (!allExpandedHeaders.get(colLoop).endsWith("IDSEQ")){
                 	
                 %>
