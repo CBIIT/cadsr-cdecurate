@@ -29,8 +29,14 @@ import org.junit.Test;
   * Setup: Enter userId and password in the VM argument (NOT program argument!!!) in the following format:
   * 
   * -Du=SBREXT -Dp=[replace with the password]
+  *
+  * JIRA: https://tracker.nci.nih.gov/browse/CURATNTOOL-1062
   * 
-  */
+  * Useful sqls:
+  * 
+  * select DE_IDSEQ, CDE_ID, VERSION from SBR.DATA_ELEMENTS_VIEW where CDE_ID = '2003827' and VERSION = 3
+  * select DE_IDSEQ, CDE_ID, VERSION from SBR.DATA_ELEMENTS_VIEW where (CDE_ID = '2008134' and VERSION = 40.0) or (CDE_ID = '2208252' and VERSION = 1.0) or (CDE_ID = '2319673' and VERSION = 2.0)
+*/
 public class JR1062 {
 	private static String userId;
 	private static String password;
@@ -72,17 +78,24 @@ public class JR1062 {
 			idArray.add("D29F7072-2C80-1BD0-E034-0003BA12F5E7");
 			idArray.add("F38AA785-3CCB-5BB7-E034-0003BA3F9857");
 			idArray.add("FC6EF0D8-4F59-6865-E034-0003BA3F9857");
+			idArray.add("AC58218D-650B-E10D-E040-BB89AD436AE9");			//public id 3270148
+			idArray.add("B642B920-1BFA-ABA3-E040-BB89AD437679");			//public id 3349536
 			Workbook wb = download.generateSpreadsheet(type, fillIn, colString, idArray);
 			Sheet sh = wb.getSheetAt(0);
 			Iterator it = sh.rowIterator();
 			Row row = null;
 			java.util.List<String> checkList1 = null;
+			java.util.List<String> checkList2 = null;
 			int i = 0;
 			String tempValue = null;
 			int valueColumn1 = -1;	//starts with 0
 			int checkSum1 = 1, currentCount1 = 0;
 			valueColumn1 = 3;
 			checkList1 = Arrays.asList("CALCULATED");
+			int valueColumn2 = -1;	//starts with 0
+			int checkSum2 = 2, currentCount2 = 0;
+			valueColumn2 = 3;	//yes, same column on purpose
+			checkList2 = Arrays.asList("COMPOUND");
 			for (; it.hasNext() ; ++i ) {
 				row = (Row) it.next();
 				if(row.getCell(valueColumn1) != null) {
@@ -91,18 +104,23 @@ public class JR1062 {
 					if(checkList1.contains(tempValue)) {
 						currentCount1++;
 					}
+					if(checkList2.contains(tempValue)) {
+						currentCount2++;
+					}
 				}
 			}
 			System.out.println("currentCount1 was " + currentCount1 + ", expecting " + checkSum1);
-//			try {
-//				File file = new File("c:/testDownload-JR1062.xls");
-//				OutputStream out = new FileOutputStream(file);	//m_classRes.getOutputStream();
-//				wb.write(out);
-//				out.close();
-//			} catch (Exception e) {
-//				e.printStackTrace();
-//			}
-			assertTrue("Test Derivation Type", currentCount1 == checkSum1);
+			System.out.println("currentCount1 was " + currentCount2 + ", expecting " + checkSum2);
+			try {
+				File file = new File("c:/testDownload-JR1062.xls");
+				OutputStream out = new FileOutputStream(file);	//m_classRes.getOutputStream();
+				wb.write(out);
+				out.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			assertTrue("Test Derivation Type 1", currentCount1 == checkSum1);
+			assertTrue("Test Derivation Type 2", currentCount2 == checkSum2);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
