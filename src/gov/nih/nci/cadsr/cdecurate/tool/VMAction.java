@@ -93,7 +93,7 @@ public class VMAction implements Serializable
 				// parse the string.
 				String sDef = util.parsedStringSingleQuoteOracle(data.getSearchFilterDef());
 				String sTerm = util.parsedStringSingleQuoteOracle(data.getSearchTerm());
-				String sCon = util.parsedStringSingleQuoteOracle(data.getSearchFilterConName());
+				String sCon = util.parsedStringSingleQuoteOracle(data.getSearchFilterConName());	//JR1024 when the PV saved is clicked
 
 				// cstmt =
 				// data.getCurationServlet().getConn().prepareCall("{call
@@ -704,7 +704,7 @@ public class VMAction implements Serializable
 		data.setVMBean(vm);
 		// if (vm.getVM_IDSEQ() == null || vm.getVM_IDSEQ().equals(""))
 		// this.doChangeVM(data);
-		VM_Bean exVM = validateVMData(data);
+		VM_Bean exVM = validateVMData(data);	//JR1024 TODO this should only be applicable to only non-date changes
 		if (exVM == null)
 		{
 			vm.setVM_IDSEQ("");
@@ -1389,7 +1389,7 @@ public class VMAction implements Serializable
 		// add the name matched one to the vector of nameMatchVMs; mark this one
 		// as (name) match
 		if (nameList.size() > 0)
-			getFlaggedMessageVM(data, 'E');
+			getFlaggedMessageVM(data, 'E');		//JR1024 get the message for UI
 		else
 			data.setExistVMList(new Vector<VM_Bean>()); // make it empty because
 														// found the existing
@@ -1402,7 +1402,7 @@ public class VMAction implements Serializable
 		if (!checkDefaultDefinition(VMDef, vCon))
 		{
 			// check for vm defn match
-			this.getExistingVM("", "", VMDef, data);
+			this.getExistingVM("", "", VMDef, data);	//JR1024 JT this should not happend as it is supposed to be found already?
 			Vector<VM_Bean> defList = data.getDefnVMList();
 			// add the list of definitionMatchVMs to existing list if not
 			// existed already
@@ -1920,7 +1920,7 @@ public class VMAction implements Serializable
 						break;
 					// mark the message
 					vm.setVM_COMMENT_FLAG("Name matches.");
-					vErrMsg.addElement(vm);
+					vErrMsg.addElement(vm);		//JR1024 this will prompt the UI to ask user
 				}
 			}
 			if (vmFlag != 'A')
@@ -2048,7 +2048,7 @@ public class VMAction implements Serializable
 		if (vmList != null && vmList.size() > 0)
 		{
 			if (!vmName.equals(""))
-				data.setExistVMList(vmList);
+				data.setExistVMList(vmList);	//JR1024 this is populated
 			else if (!sCondr.equals(""))
 				data.setConceptVMList(vmList);
 			else if (!sDef.equals(""))
@@ -2102,7 +2102,7 @@ public class VMAction implements Serializable
 			bDefault = true;
 		// make the default defintion from the concepts to match the selected
 		// definition
-		if (vmCon.size() > 1)
+		if (vmCon.size() > 0)	//JR1024 TODO more than 1, isn't supposed to be > 0 to match? was 1, changed to 0
 		{
 			bDefault = true; // assume default defintion when concept exists
 			for (int i = 0; i < vmCon.size(); i++)

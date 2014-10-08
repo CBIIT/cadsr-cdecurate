@@ -1179,7 +1179,7 @@ public class GetACService implements Serializable
                 m_servlet.ErrorLogin(m_classReq, m_classRes);
             else
             {
-                cstmt = m_servlet.getConn().prepareCall("{call SBREXT_CDE_CURATOR_PKG.GET_AC_CONCEPTS(?,?)}");	//GF32723
+                cstmt = m_servlet.getConn().prepareCall("{call SBREXT_CDE_CURATOR_PKG.GET_AC_CONCEPTS(?,?)}");	//GF32723 //JR1024 when a VD is edited from the home page search
                 // out parameter
                 cstmt.registerOutParameter(2, OracleTypes.CURSOR);
                 // in parameter

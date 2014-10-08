@@ -407,7 +407,7 @@ private void setVersionValues(VMForm vmData,HttpServletRequest req, HttpSession 
       vmData.setVMBean(vm);
       Vector<VM_Bean> vmList = vmData.getExistVMList();
       if (vmList.size() > 0)
-          httpRequest.setAttribute("vmNameMatch", "true");  
+          httpRequest.setAttribute("vmNameMatch", "true");  	//JR1024 this is false positive to the UI, due to the defect
     }
   }
   

@@ -168,7 +168,7 @@ public class ConceptAction implements Serializable
         if (data.getCurationServlet().getConn() != null)
         {
           stmt = data.getCurationServlet().getConn().createStatement();
-          rs = stmt.executeQuery("select SBREXT_COMMON_ROUTINES.CHECK_DERIVATION_EXISTS('" + conArray + "') from DUAL");	//JR1046 reviewed
+          rs = stmt.executeQuery("select SBREXT_COMMON_ROUTINES.CHECK_DERIVATION_EXISTS('" + conArray + "') from DUAL");	//JR1046 reviewed //JR1024 do not think this is causing the issue
           //loop through to printout the outstrings
           while(rs.next())
           {

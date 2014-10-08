@@ -469,14 +469,14 @@ public class PVServlet implements Serializable
           if (newVM.getVM_SUBMIT_ACTION().equals(VMForm.CADSR_ACTION_INS))
             newVM._alts = null;
           data.setNewVM(newVM);
-          selectPV = pvAction.changePVAttributes(chgName, pvInd, data);
+          selectPV = pvAction.changePVAttributes(chgName, pvInd, data);		//JR1024 no matter what, PV's begin and end dates should look good at this point
         }
         else
             selectPV.setPV_VM(useVM);
         
         String erVM = (String)data.getRequest().getAttribute("ErrMsgAC");
         if (erVM == null || erVM.equals(""))
-            updateVDPV(selectPV, pvInd);
+            updateVDPV(selectPV, pvInd);	//JR1024 this is what should happened! aka just update with the dates changed
         else
         {
             //store it in the session
@@ -485,7 +485,7 @@ public class PVServlet implements Serializable
         }
         //status messae
         if (!data.getStatusMsg().equals(""))
-          logger.info("PV Status " + data.getStatusMsg());
+          logger.info("PV Status (JR1024 with issue): " + data.getStatusMsg());
       }
       return "/PermissibleValue.jsp";
    }
