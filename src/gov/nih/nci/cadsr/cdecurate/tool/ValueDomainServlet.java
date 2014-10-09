@@ -14,6 +14,7 @@ import gov.nih.nci.cadsr.cdecurate.ui.AltNamesDefsSession;
 import gov.nih.nci.cadsr.cdecurate.util.AdministeredItemUtil;
 import gov.nih.nci.cadsr.cdecurate.util.DataManager;
 import gov.nih.nci.cadsr.common.StringUtil;
+import gov.nih.nci.cadsr.common.TestUtil;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
@@ -40,7 +41,7 @@ public class ValueDomainServlet extends CurationServlet {
 			doCreateVDActions();
 			break;
 		case editVD:
-			doEditVDActions();
+			doEditVDActions();	//JR1024 when a PV tab is clicked during edit VD
 			break;
 		case createNewVD:
 			doOpenCreateVDPage();
@@ -241,6 +242,7 @@ public class ValueDomainServlet extends CurationServlet {
 	 */
 	private void doEditVDActions() throws Exception
 	{
+		//TestUtil.dumpAllHttpRequests("ValueDomainServlet.java: JR1024 pv tab is clicked in vd - doEditVDActions()<<<", m_classReq);
 		HttpSession session = m_classReq.getSession();
 		//begin GF7680
 		String workflowStatus = /* app scan fix */ StringUtil.cleanJavascriptAndHtml( (String) m_classReq.getParameter("selStatus") );

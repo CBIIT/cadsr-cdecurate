@@ -20,6 +20,7 @@ import gov.nih.nci.cadsr.cdecurate.database.SQLHelper;
 import gov.nih.nci.cadsr.cdecurate.util.AdministeredItemUtil;
 import gov.nih.nci.cadsr.cdecurate.util.DataManager;
 import gov.nih.nci.cadsr.cdecurate.util.ToolException;
+import gov.nih.nci.cadsr.common.TestUtil;
 
 import java.io.Serializable;
 import java.sql.CallableStatement;
@@ -31,6 +32,7 @@ import java.util.StringTokenizer;
 import java.util.Vector;
 
 import javax.servlet.http.HttpServletRequest;
+
 
 //import oracle.jdbc.driver.OracleTypes;
 import oracle.jdbc.OracleTypes;		//GF30779
@@ -704,6 +706,7 @@ public class VMAction implements Serializable
 		data.setVMBean(vm);
 		// if (vm.getVM_IDSEQ() == null || vm.getVM_IDSEQ().equals(""))
 		// this.doChangeVM(data);
+		TestUtil.dumpAllHttpRequests("VMAction.java: JR1024 pv Save is clicked in pv row doEditVDActions()<<<", data.getRequest());
 		VM_Bean exVM = validateVMData(data);	//JR1024 TODO this should only be applicable to only non-date changes
 		if (exVM == null)
 		{
@@ -1362,7 +1365,6 @@ public class VMAction implements Serializable
 	 */
 	public VM_Bean validateVMData(VMForm data)
 	{
-
 		VM_Bean vmBean = data.getVMBean();
 		// String VMName = vmBean.getVM_SHORT_MEANING();
 		String VMName = vmBean.getVM_LONG_NAME();
