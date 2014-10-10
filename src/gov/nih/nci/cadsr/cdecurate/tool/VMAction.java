@@ -19,8 +19,10 @@ import gov.nih.nci.cadsr.cdecurate.database.DBAccess;
 import gov.nih.nci.cadsr.cdecurate.database.SQLHelper;
 import gov.nih.nci.cadsr.cdecurate.util.AdministeredItemUtil;
 import gov.nih.nci.cadsr.cdecurate.util.DataManager;
+import gov.nih.nci.cadsr.cdecurate.util.ModelHelper;
 import gov.nih.nci.cadsr.cdecurate.util.ToolException;
 import gov.nih.nci.cadsr.common.TestUtil;
+import gov.nih.nci.cadsr.domain.PermissibleValues;
 
 import java.io.Serializable;
 import java.sql.CallableStatement;
@@ -28,10 +30,14 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 import java.util.StringTokenizer;
 import java.util.Vector;
 
 import javax.servlet.http.HttpServletRequest;
+
+
+
 
 
 //import oracle.jdbc.driver.OracleTypes;
@@ -706,13 +712,22 @@ public class VMAction implements Serializable
 		data.setVMBean(vm);
 		// if (vm.getVM_IDSEQ() == null || vm.getVM_IDSEQ().equals(""))
 		// this.doChangeVM(data);
-		TestUtil.dumpAllHttpRequests("VMAction.java: JR1024 pv Save is clicked in pv row doEditVDActions()<<<", data.getRequest());
-		VM_Bean exVM = validateVMData(data);	//JR1024 TODO this should only be applicable to only non-date changes
-		if (exVM == null)
-		{
-			vm.setVM_IDSEQ("");
-			vm.setVM_SUBMIT_ACTION(data.CADSR_ACTION_INS);
-		}
+		//TestUtil.dumpAllHttpRequests("VMAction.java: JR1024 pv Save is clicked in pv row doEditVDActions()<<<", data.getRequest());
+		//begin JR1024 this should only be applicable to only non-date changes
+		List submittedPVData = ModelHelper.toPermissibleValuesArray(data.getRequest());
+		PermissibleValues userSelectedPV = ModelHelper.toPermissibleValues(submittedPVData);
+		PermissibleValues originalPV = ModelHelper.toPermissibleValues(pv);
+		if(!userSelectedPV.equals(originalPV) && 
+				!userSelectedPV.getShortMeaning().equals(originalPV.getShortMeaning())
+//				userSelectedPV.getBeginDate().equals(originalPV.getBeginDate()) && userSelectedPV.getEndDate().equals(originalPV.getEndDate())
+				) {
+			VM_Bean exVM = validateVMData(data);
+			if (exVM == null)
+			{
+				vm.setVM_IDSEQ("");
+				vm.setVM_SUBMIT_ACTION(data.CADSR_ACTION_INS);
+			}
+		} //end JR1024
 	}
 
 	/**
@@ -2104,7 +2119,7 @@ public class VMAction implements Serializable
 			bDefault = true;
 		// make the default defintion from the concepts to match the selected
 		// definition
-		if (vmCon.size() > 0)	//JR1024 TODO more than 1, isn't supposed to be > 0 to match? was 1, changed to 0
+		if (vmCon.size() > 1)	//JR1024 reverted back to 1 (as it was originally)
 		{
 			bDefault = true; // assume default defintion when concept exists
 			for (int i = 0; i < vmCon.size(); i++)

@@ -10,6 +10,7 @@ import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
+import gov.nih.nci.cadsr.cdecurate.tool.PV_Bean;
 import gov.nih.nci.cadsr.domain.PermissibleValues;
 
 public class ModelHelper {
@@ -80,6 +81,11 @@ public class ModelHelper {
 		return ret;
 	}
 
+	/**
+	 * Turn a list into a PV domain object.
+	 * @param request
+	 * @return
+	 */
 	public static final PermissibleValues toPermissibleValues(List request) {
 		String attributeValue = null;
 
@@ -98,6 +104,29 @@ public class ModelHelper {
 		pv.setBeginDate(dt.toDate());
 		attributeValue = (String) request.get(PV_END_DATE);
 		dt = formatter.parseDateTime(attributeValue);
+		pv.setEndDate(dt.toDate());
+
+		return pv;
+	}
+
+	/**
+	 * Turn a (legacy) PV javabean into a PV domain object.
+	 * @param request
+	 * @return
+	 */
+	public static final PermissibleValues toPermissibleValues(PV_Bean bean) {
+		String attributeValue = null;
+
+		PermissibleValues pv = new PermissibleValues();
+		pv.setValue(bean.getPV_VALUE());
+		pv.setShortMeaning(bean.getPV_SHORT_MEANING());
+		pv.setMeaningDescription(bean.getPV_MEANING_DESCRIPTION());
+
+		DateTime dt = null;
+		DateTimeFormatter formatter = DateTimeFormat.forPattern("MM/dd/yyyy");
+		dt = formatter.parseDateTime(bean.getPV_BEGIN_DATE());
+		pv.setBeginDate(dt.toDate());
+		dt = formatter.parseDateTime(bean.getPV_END_DATE());
 		pv.setEndDate(dt.toDate());
 
 		return pv;
