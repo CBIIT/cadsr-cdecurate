@@ -6,14 +6,20 @@ import gov.nih.nci.cadsr.cdecurate.tool.CurationServlet;
 import gov.nih.nci.cadsr.cdecurate.tool.EVS_UserBean;
 import gov.nih.nci.cadsr.cdecurate.tool.GetACSearch;
 import gov.nih.nci.cadsr.cdecurate.tool.Session_Data;
+import gov.nih.nci.cadsr.cdecurate.util.ModelHelper;
 import gov.nih.nci.cadsr.common.TestUtil;
+import gov.nih.nci.cadsr.domain.PermissibleValues;
 
 import java.sql.Connection;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.joda.time.format.DateTimeFormat;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -55,21 +61,21 @@ public class JR1024 {
 
 	@Before
 	public void setup() {
-		mock = new JR1024Mock();
-		session = mock.getSession();
-		m_classReq = mock.getServletRequest();
-		m_classRes = mock.getServletResponse();
-		//=== mocking app server environment
-		CurationServlet m_servlet = new CurationServlet();
-		m_servlet.sessionData = new Session_Data();
-		m_servlet.sessionData.EvsUsrBean = new EVS_UserBean();
-		m_servlet.setConn(conn);
-        GetACSearch getACSearch = new GetACSearch(m_classReq, m_classRes, m_servlet);
-		//=== mocking SearchServlet.java#menuAction.equals("searchForCreate")
-        boolean initialSearch = false;
-    	session.setAttribute("ApprovedRepTerm", initialSearch);
-    	getACSearch.getACSearchForCreate(m_classReq, m_classRes, false);
-    	mock.verifyAll();
+//		mock = new JR1024Mock();
+//		session = mock.getSession();
+//		m_classReq = mock.getServletRequest();
+//		m_classRes = mock.getServletResponse();
+//		//=== mocking app server environment
+//		CurationServlet m_servlet = new CurationServlet();
+//		m_servlet.sessionData = new Session_Data();
+//		m_servlet.sessionData.EvsUsrBean = new EVS_UserBean();
+//		m_servlet.setConn(conn);
+//        GetACSearch getACSearch = new GetACSearch(m_classReq, m_classRes, m_servlet);
+//		//=== mocking SearchServlet.java#menuAction.equals("searchForCreate")
+//        boolean initialSearch = false;
+//    	session.setAttribute("ApprovedRepTerm", initialSearch);
+//    	getACSearch.getACSearchForCreate(m_classReq, m_classRes, false);
+//    	mock.verifyAll();
 	}
 
 	@After
@@ -82,6 +88,36 @@ public class JR1024 {
 	}
 
 	@Test
+	public void testPVPopulation() {
+		String v1 = "Don't Know";
+		String v2 = "Does Not Know";
+		String v3 = "The answer is not known by the person answering.";
+		String v4 = "12/01/2012";
+		String v5 = "10/02/2014";
+		List req = new ArrayList();
+		//modelling after PV "Don't Know" (2654058v1.0 on DEV)
+		req.add(v1);
+		req.add(v2);
+		req.add(v3);
+		req.add(v4);
+		req.add(v5);
+		PermissibleValues submittedPV = ModelHelper.toPermissibleValues(req);
+		PermissibleValues pv = new PermissibleValues();
+		pv.setValue(v1);
+		pv.setShortMeaning(v2);
+		pv.setMeaningDescription(v3);
+		Date beginDate = DateTimeFormat.forPattern("MM/dd/yyyy").parseDateTime(v4).toDate();
+		pv.setBeginDate(beginDate);
+		Date endDate = DateTimeFormat.forPattern("MM/dd/yyyy").parseDateTime(v5).toDate();
+		pv.setEndDate(endDate);
+		try {
+			assertTrue("Similar pv as submitted", pv.equals(submittedPV));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+//	@Test
 	public void testDefinitionSimilarToEVS() {
 		boolean ret = false;
 		String cadsrDef = "";

@@ -1,94 +1,119 @@
 package gov.nih.nci.cadsr.domain;
 
-import java.sql.Date;
+import java.util.Date;
 
 public class PermissibleValues {
 
-//    private String id;
-    private String value;
-    private String shortMeaning;		//legacy; not used anymore
-    private String meaningDescription;	//legacy; not used anymore
-    private Date beginDate;
-    private Date endDate;
-    private Long highValueNumber;			//legacy; not used anymore
-    private Long lowValueNumber;			//legacy; not used anymore
-    private Date dateCreated;
-    private String createdBy;
-    private Date dateModified;
-    private String modifiedBy;
-    private ValueMeanings valueMeaning;
+	// private String id;
+	private String value;
+	private String shortMeaning; // legacy; not used anymore
+	private String meaningDescription; // legacy; not used anymore
+	private Date beginDate;
+	private Date endDate;
+	private Long highValueNumber; // legacy; not used anymore
+	private Long lowValueNumber; // legacy; not used anymore
+	private Date dateCreated;
+	private String createdBy;
+	private Date dateModified;
+	private String modifiedBy;
+	private ValueMeanings valueMeaning;
+
 	public String getValue() {
 		return value;
 	}
+
 	public void setValue(String value) {
 		this.value = value;
 	}
+
 	public String getShortMeaning() {
 		return shortMeaning;
 	}
+
 	public void setShortMeaning(String shortMeaning) {
 		this.shortMeaning = shortMeaning;
 	}
+
 	public String getMeaningDescription() {
 		return meaningDescription;
 	}
+
 	public void setMeaningDescription(String meaningDescription) {
 		this.meaningDescription = meaningDescription;
 	}
+
 	public Date getBeginDate() {
 		return beginDate;
 	}
+
 	public void setBeginDate(Date beginDate) {
 		this.beginDate = beginDate;
 	}
+
 	public Date getEndDate() {
 		return endDate;
 	}
+
 	public void setEndDate(Date endDate) {
 		this.endDate = endDate;
 	}
+
 	public Long getHighValueNumber() {
 		return highValueNumber;
 	}
+
 	public void setHighValueNumber(Long highValueNumber) {
 		this.highValueNumber = highValueNumber;
 	}
+
 	public Long getLowValueNumber() {
 		return lowValueNumber;
 	}
+
 	public void setLowValueNumber(Long lowValueNumber) {
 		this.lowValueNumber = lowValueNumber;
 	}
+
 	public Date getDateCreated() {
 		return dateCreated;
 	}
+
 	public void setDateCreated(Date dateCreated) {
 		this.dateCreated = dateCreated;
 	}
+
 	public String getCreatedBy() {
 		return createdBy;
 	}
+
 	public void setCreatedBy(String createdBy) {
 		this.createdBy = createdBy;
 	}
+
 	public Date getDateModified() {
 		return dateModified;
 	}
+
 	public void setDateModified(Date dateModified) {
 		this.dateModified = dateModified;
 	}
+
 	public String getModifiedBy() {
 		return modifiedBy;
 	}
+
 	public void setModifiedBy(String modifiedBy) {
 		this.modifiedBy = modifiedBy;
 	}
+
 	public ValueMeanings getValueMeaning() {
 		return valueMeaning;
 	}
+
 	public void setValueMeaning(ValueMeanings valueMeaning) {
 		this.valueMeaning = valueMeaning;
 	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -107,6 +132,7 @@ public class PermissibleValues {
 		result = prime * result + ((valueMeaning == null) ? 0 : valueMeaning.hashCode());
 		return result;
 	}
+
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -178,11 +204,10 @@ public class PermissibleValues {
 			return false;
 		return true;
 	}
+
 	@Override
 	public String toString() {
 		return "PermissibleValues [value=" + value + ", shortMeaning=" + shortMeaning + ", meaningDescription=" + meaningDescription + ", beginDate=" + beginDate + ", endDate=" + endDate + ", highValueNumber=" + highValueNumber + ", lowValueNumber=" + lowValueNumber + ", dateCreated=" + dateCreated + ", createdBy=" + createdBy + ", dateModified=" + dateModified + ", modifiedBy=" + modifiedBy + ", valueMeaning=" + valueMeaning + "]";
 	}
-    
-    
 
 }
