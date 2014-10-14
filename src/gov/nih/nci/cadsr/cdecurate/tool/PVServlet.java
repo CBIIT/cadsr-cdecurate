@@ -257,7 +257,7 @@ public class PVServlet implements Serializable
      {
        pvAction.doResetViewTypes(vVDPV, vwTypes);
       // DataManager.setAttribute(session, "VDPVList", vVDPV);
-       vd.setVD_PV_List(vVDPV);
+       vd.setVD_PV_List(vVDPV);		//JR1024 TODO need to update the dates in here???
 
 //       handlePVDates(session, vd);	//JR1025
        
@@ -707,9 +707,21 @@ public class PVServlet implements Serializable
      String chgBD = (String)data.getRequest().getParameter("currentBD");  //edited begom date
      if (chgBD != null && !chgBD.equals(""))
      {
-       if (changeType.equals("changeAll")
-//    	   || changeType.equals("changeOne")	//JR1024
-       )
+       //begin JR1024
+       if (changeType.equals("changeOne")) {
+           logger.debug("change only one PV's begin date");
+    	   HttpSession session = data.getRequest().getSession();
+           VD_Bean vd = (VD_Bean)session.getAttribute(PVForm.SESSION_SELECT_VD);
+           data.setVD(vd);
+           try {
+               pvAction.doSingleEditPV(data, "begindate", chgBD);
+               DataManager.setAttribute(session, PVForm.SESSION_SELECT_VD, data.getVD());
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+       } else
+       //end JR1024
+       if (changeType.equals("changeAll"))
        {
          //System.out.println("all begin date");
          HttpSession session = data.getRequest().getSession();
@@ -726,17 +738,30 @@ public class PVServlet implements Serializable
      String chgED = (String)data.getRequest().getParameter("currentED");  //edited end date
      if (chgED != null && !chgED.equals(""))
      {
-         if (changeType.equals("changeAll")
-//             || changeType.equals("changeOne")	//JR1024
-         )
+         //begin JR1024
+         if (changeType.equals("changeOne")) {
+             logger.debug("change only one PV's end date");
+      	   	 HttpSession session = data.getRequest().getSession();
+             VD_Bean vd = (VD_Bean)session.getAttribute(PVForm.SESSION_SELECT_VD);
+             data.setVD(vd);
+             try {
+            	 pvAction.doSingleEditPV(data, "enddate", chgED);
+	             DataManager.setAttribute(session, PVForm.SESSION_SELECT_VD, data.getVD());
+			 } catch (Exception e) {
+				e.printStackTrace();
+			 }
+	         return;
+         } else
+         //end JR1024
+         if (changeType.equals("changeAll"))
          {
-         //System.out.println("all end date");
-         HttpSession session = data.getRequest().getSession();
-         VD_Bean vd = (VD_Bean)session.getAttribute(PVForm.SESSION_SELECT_VD);
-         data.setVD(vd);
-         pvAction.doBlockEditPV(data, "enddate", chgED);
-         DataManager.setAttribute(session, PVForm.SESSION_SELECT_VD, data.getVD());
-         return;
+	         //System.out.println("all end date");
+	         HttpSession session = data.getRequest().getSession();
+	         VD_Bean vd = (VD_Bean)session.getAttribute(PVForm.SESSION_SELECT_VD);
+	         data.setVD(vd);
+	         pvAction.doBlockEditPV(data, "enddate", chgED);
+	         DataManager.setAttribute(session, PVForm.SESSION_SELECT_VD, data.getVD());
+	         return;
        }
        //else
        pv.setPV_END_DATE(chgED);
