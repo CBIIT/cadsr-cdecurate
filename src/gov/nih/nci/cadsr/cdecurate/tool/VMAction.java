@@ -717,17 +717,20 @@ public class VMAction implements Serializable
 		List submittedPVData = ModelHelper.toPermissibleValuesArray(data.getRequest());
 		PermissibleValues userSelectedPV = ModelHelper.toPermissibleValues(submittedPVData);
 		PermissibleValues originalPV = ModelHelper.toPermissibleValues(pv);
-		if(!userSelectedPV.equals(originalPV) && 
-				!userSelectedPV.getShortMeaning().equals(originalPV.getShortMeaning())
-//				userSelectedPV.getBeginDate().equals(originalPV.getBeginDate()) && userSelectedPV.getEndDate().equals(originalPV.getEndDate())
-				) {
+//		if(!userSelectedPV.equals(originalPV) && 
+//				!userSelectedPV.getShortMeaning().equals(originalPV.getShortMeaning())
+				//userSelectedPV.getBeginDate().equals(originalPV.getBeginDate()) && userSelectedPV.getEndDate().equals(originalPV.getEndDate())
+//				) {
 			VM_Bean exVM = validateVMData(data);
 			if (exVM == null)
 			{
 				vm.setVM_IDSEQ("");
 				vm.setVM_SUBMIT_ACTION(data.CADSR_ACTION_INS);
 			}
-		} //end JR1024
+//		} else {
+//			vm.setVM_IDSEQ("");
+//			vm.setVM_SUBMIT_ACTION(data.CADSR_ACTION_UPD);
+//		} //end JR1024
 	}
 
 	/**
