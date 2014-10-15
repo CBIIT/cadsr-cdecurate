@@ -989,27 +989,23 @@ public class PVAction implements Serializable {
 	} //END setVD_PVS
 
 	//JR1024
-	public void doSingleEditPV(PVForm data, String changeField, String changeData) throws Exception {
+	public void doSingleEditPV(PVForm data, String changeField, String changeData, int changedPVIndex) throws Exception {
 		VD_Bean vd = data.getVD();
 		Vector<PV_Bean> vdpv = vd.getVD_PV_List();
-		int index = -1;
-		String pvIndex = data.getRequest().getAttribute("editPVInd").toString();
-		if(pvIndex != null && pvIndex.length() > 2) {
-			index = Integer.valueOf(pvIndex.substring(2, pvIndex.length()));
-		}
-		if(index > -1) {
+		if(changedPVIndex > -1) {
 			for (int i = 0; i < vdpv.size(); i++) {
-				PV_Bean pv = (PV_Bean) vdpv.elementAt(i);
-				if (changeField.equals("origin"))
-					pv.setPV_VALUE_ORIGIN(changeData);
-				else if (changeField.equals("begindate"))
-					pv.setPV_BEGIN_DATE(changeData);
-				else if (changeField.equals("enddate"))
-					pv.setPV_END_DATE(changeData);
-				//change the submit action
-				pv.setVP_SUBMIT_ACTION(PVForm.CADSR_ACTION_UPD);
-				vdpv.setElementAt(pv, i);
-				if(index == i) break;	//that's it
+				if(changedPVIndex == i) {
+					PV_Bean pv = (PV_Bean) vdpv.elementAt(i);
+					if (changeField.equals("origin"))
+						pv.setPV_VALUE_ORIGIN(changeData);
+					else if (changeField.equals("begindate"))
+						pv.setPV_BEGIN_DATE(changeData);
+					else if (changeField.equals("enddate"))
+						pv.setPV_END_DATE(changeData);
+					//change the submit action
+					pv.setVP_SUBMIT_ACTION(PVForm.CADSR_ACTION_UPD);
+					vdpv.setElementAt(pv, i);
+				}
 			}
 			vd.setVD_PV_List(vdpv);
 			data.setVD(vd);

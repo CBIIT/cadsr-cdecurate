@@ -4,8 +4,11 @@ import gov.nih.nci.cadsr.cdecurate.tool.EVS_Bean;
 import gov.nih.nci.cadsr.cdecurate.tool.PV_Bean;
 import gov.nih.nci.cadsr.cdecurate.tool.VD_Bean;
 import gov.nih.nci.cadsr.cdecurate.tool.VM_Bean;
+import gov.nih.nci.cadsr.common.TestUtil;
 
 import java.util.Vector;
+
+import javax.servlet.http.HttpServletRequest;
 
 public class PVHelper {
 
@@ -71,6 +74,19 @@ public class PVHelper {
 		}
 		
 		return ret;
+	}
+
+	public static int getPVIndex(HttpServletRequest req, String reqName) { 
+		TestUtil.dumpAllHttpRequests("PVHelper.java: <<<", req);
+		int index = -1;
+		Object value = req.getParameter(reqName);
+		if(value != null) {
+			String pvIndex = value.toString();
+			if(pvIndex != null && pvIndex.length() > 2) {
+				index = Integer.valueOf(pvIndex.substring(2, pvIndex.length()));
+			}
+		}
+		return index;
 	}
 
 }

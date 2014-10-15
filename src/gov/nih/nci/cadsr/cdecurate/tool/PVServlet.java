@@ -714,7 +714,8 @@ public class PVServlet implements Serializable
            VD_Bean vd = (VD_Bean)session.getAttribute(PVForm.SESSION_SELECT_VD);
            data.setVD(vd);
            try {
-               pvAction.doSingleEditPV(data, "begindate", chgBD);
+        	   int idx = PVHelper.getPVIndex(data.getRequest(), "currentPVInd");
+               pvAction.doSingleEditPV(data, "begindate", chgBD, idx);
                DataManager.setAttribute(session, PVForm.SESSION_SELECT_VD, data.getVD());
 			} catch (Exception e) {
 				e.printStackTrace();
@@ -745,7 +746,8 @@ public class PVServlet implements Serializable
              VD_Bean vd = (VD_Bean)session.getAttribute(PVForm.SESSION_SELECT_VD);
              data.setVD(vd);
              try {
-            	 pvAction.doSingleEditPV(data, "enddate", chgED);
+          	   	 int idx = PVHelper.getPVIndex(data.getRequest(), "currentPVInd");
+            	 pvAction.doSingleEditPV(data, "enddate", chgED, idx);
 	             DataManager.setAttribute(session, PVForm.SESSION_SELECT_VD, data.getVD());
 			 } catch (Exception e) {
 				e.printStackTrace();
