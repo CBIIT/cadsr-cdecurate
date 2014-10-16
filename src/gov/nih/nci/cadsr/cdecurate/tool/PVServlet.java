@@ -19,6 +19,7 @@ import gov.nih.nci.cadsr.cdecurate.util.DataManager;
 
 import gov.nih.nci.cadsr.cdecurate.util.PVHelper;
 import gov.nih.nci.cadsr.common.StringUtil;
+import gov.nih.nci.cadsr.common.TestUtil;
 
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
@@ -124,7 +125,7 @@ public class PVServlet implements Serializable
          else if (sAction.equals("save"))
          {
            //System.out.println("mark the pv to be saved");
-           retData = savePVAttributes();
+           retData = savePVAttributes();	//JR1024 tagged
          }
          else if (sAction.equals("cancelNewPV"))
          {
@@ -210,7 +211,7 @@ public class PVServlet implements Serializable
       catch (RuntimeException e)
       {
         logger.error("ERROR - doEditPVAction ", e);
-        //e.printStackTrace();
+        e.printStackTrace();
       }
       return retData;
   }
@@ -453,7 +454,7 @@ public class PVServlet implements Serializable
         String chgName = (String)data.getRequest().getParameter("txtpv" + pvInd + "Value");  //pvName  
         chgName = chgName.trim();
         //handle pv changes
-        VM_Bean useVM = this.getDuplicateVMUse();
+        VM_Bean useVM = this.getDuplicateVMUse();	//this should be more appropriately named, getExistingVM(), that's it!
         if (useVM == null)
         {
           VMServlet vmser = new VMServlet(data.getRequest(), data.getResponse(), data.getCurationServlet());
@@ -685,6 +686,12 @@ public class PVServlet implements Serializable
    */
   private void addPVOtherAttributes(PV_Bean pv, String changeType, String pvID)
    {
+	  //JR1024 TODO need to save PV value, vm long name, desc and somehow concept list here!!!
+	  TestUtil.dumpAllHttpRequests("PVServlet.java: addPVOtherAttributes()<<<", data.getRequest());
+	  
+	  
+	  
+	  
      if (pv == null)
        pv = data.getSelectPV();
      String chgOrg = (String)data.getRequest().getParameter("currentOrg");  //edited origin

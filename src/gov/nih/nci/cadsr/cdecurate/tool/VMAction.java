@@ -717,20 +717,20 @@ public class VMAction implements Serializable
 		List submittedPVData = ModelHelper.toPermissibleValuesArray(data.getRequest());
 		PermissibleValues userSelectedPV = ModelHelper.toPermissibleValues(submittedPVData);
 		PermissibleValues originalPV = ModelHelper.toPermissibleValues(pv);
-//		if(!userSelectedPV.equals(originalPV) && 
-//				!userSelectedPV.getShortMeaning().equals(originalPV.getShortMeaning())
+		if(!userSelectedPV.equals(originalPV) && 
+				userSelectedPV.getShortMeaning() != null && !userSelectedPV.getShortMeaning().equals(originalPV.getShortMeaning())
 				//userSelectedPV.getBeginDate().equals(originalPV.getBeginDate()) && userSelectedPV.getEndDate().equals(originalPV.getEndDate())
-//				) {
+				) {
 			VM_Bean exVM = validateVMData(data);
 			if (exVM == null)
 			{
 				vm.setVM_IDSEQ("");
 				vm.setVM_SUBMIT_ACTION(data.CADSR_ACTION_INS);
 			}
-//		} else {
-//			vm.setVM_IDSEQ("");
-//			vm.setVM_SUBMIT_ACTION(data.CADSR_ACTION_UPD);
-//		} //end JR1024
+		} else {
+			vm.setVM_IDSEQ("");
+			vm.setVM_SUBMIT_ACTION(data.CADSR_ACTION_INS);
+		} //end JR1024
 	}
 
 	/**
@@ -823,7 +823,7 @@ public class VMAction implements Serializable
 	 * @param vm
 	 *            VMBEan object
 	 * @param iFrom
-	 *            int value of which page teh action going to be
+	 *            int value of which page teh action going to be (affected PV index?)
 	 */
 	public void makeVMNameFromConcept(VM_Bean vm, int iFrom)
 	{
@@ -873,7 +873,7 @@ public class VMAction implements Serializable
 			vmDef += con.getPREFERRED_DEFINITION();
 		}
 		// change the name only from new vm
-		switch (iFrom)
+		switch (iFrom)	//JR1024 iFrom corresponds to PV index?!
 		{
 		case ConceptForm.FOR_PV_PAGE_CONCEPT:
 			// vm.setVM_DESCRIPTION(vmDef);

@@ -379,7 +379,7 @@ private void setVersionValues(VMForm vmData,HttpServletRequest req, HttpSession 
     vmData.setVMBean(vm);
     
     VD_Bean oldvd = (VD_Bean)session.getAttribute("oldVDBean");
-    Vector<PV_Bean> vdpvs = oldvd.getVD_PV_List();
+    Vector<PV_Bean> vdpvs = oldvd.getVD_PV_List();	//JR1024 JT why would one get the oldVD???? :o
     if (pvInd > -1 && vdpvs.size() > 0)  // (selvm != null)
     {
         for (int i=0; i<vdpvs.size(); i++)
@@ -1032,7 +1032,7 @@ private String goBackToSearch()
     if (vm == null || vm.getVM_LONG_NAME() == null || vm.getVM_LONG_NAME().equals("")) 
       vm = new VM_Bean().copyVMBean(pv.getPV_VM());
     Vector vmCon = vm.getVM_CONCEPT_LIST();
-    String[] sCons = req.getParameterValues("hiddenConVM");
+    String[] sCons = req.getParameterValues("hiddenConVM");		//JR1024 not related to the ticket, but extra spaces is trimmed in StringUtil.safeString e.g. "     C17049     "
     if (sCons == null) {
     	sCons = new String[0];
     }

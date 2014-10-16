@@ -1,12 +1,18 @@
 package gov.nih.nci.cadsr.common;
 
+import gov.nih.nci.cadsr.cdecurate.tool.PVAction;
+
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.text.CharacterIterator;
 import java.text.StringCharacterIterator;
 import java.util.Arrays;
 
+import org.apache.log4j.Logger;
+
 public class StringUtil {
+
+	private static final Logger logger = Logger.getLogger(StringUtil.class.getName());
 
 	public static String trimDoubleQuotes(String value) throws Exception {
 		boolean temp = false;
@@ -85,7 +91,7 @@ public class StringUtil {
 	}
 
 	/*
-	 * Escape special characters
+	 * Escape special characters and trim any trailing spaces as well
 	 * Source: http://www.javapractices.com/topic/TopicAction.do?Id=96
 	 */
 	public static String safeString(String str) throws Exception {
@@ -105,9 +111,9 @@ public class StringUtil {
 			character = iterator.next();
 		}
 		if (found) {
-			System.out.println("Ctrl char detected in the original string [" + str + "] xstring [" + toASCIICode(str) + "] filtered string [" + result + "]");
+			logger.debug("Ctrl char detected in the original string [" + str + "] xstring [" + toASCIICode(str) + "] filtered string [" + result + "]");
 		}
-		return result.toString();
+		return result.toString().trim();	//JR1024 trim extra spaces, if any
 	}
 
 	/** "xray" function - prints out its ASCII value */

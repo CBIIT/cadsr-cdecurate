@@ -66,17 +66,20 @@ public class ModelHelper {
 		List ret = new ArrayList();
 
 		String attributeValue = null;
-		String pvIndex = attributeValue = (request.getAttribute("editPVInd")).toString();
-		attributeValue = (request.getAttribute("txt" + pvIndex + "Value")).toString();
-		ret.add(attributeValue);
-		attributeValue = (request.getAttribute("txt" + pvIndex + "Mean")).toString();
-		ret.add(attributeValue);
-		attributeValue = (request.getAttribute("txt" + pvIndex + "Def")).toString();
-		ret.add(attributeValue);
-		attributeValue = (request.getAttribute("currentBD")).toString();
-		ret.add(attributeValue);
-		attributeValue = (request.getAttribute("currentED")).toString();
-		ret.add(attributeValue);
+		Object value = request.getAttribute("editPVInd");
+		if(value != null) {
+			String pvIndex = value.toString();
+			attributeValue = (request.getAttribute("txt" + pvIndex + "Value")).toString();
+			ret.add(attributeValue);
+			attributeValue = (request.getAttribute("txt" + pvIndex + "Mean")).toString();
+			ret.add(attributeValue);
+			attributeValue = (request.getAttribute("txt" + pvIndex + "Def")).toString();
+			ret.add(attributeValue);
+			attributeValue = (request.getAttribute("currentBD")).toString();
+			ret.add(attributeValue);
+			attributeValue = (request.getAttribute("currentED")).toString();
+			ret.add(attributeValue);
+		}
 
 		return ret;
 	}
@@ -90,21 +93,23 @@ public class ModelHelper {
 		String attributeValue = null;
 
 		PermissibleValues pv = new PermissibleValues();
-		attributeValue = (String) request.get(PV_VALUE);
-		pv.setValue(attributeValue);
-		attributeValue = (String) request.get(PV_MEAN);
-		pv.setShortMeaning(attributeValue);
-		attributeValue = (String) request.get(PV_DEF);
-		pv.setMeaningDescription(attributeValue);
-
-		DateTime dt = null;
-		DateTimeFormatter formatter = DateTimeFormat.forPattern("MM/dd/yyyy");
-		attributeValue = (String) request.get(PV_BEGIN_DATE);
-		dt = formatter.parseDateTime(attributeValue);
-		pv.setBeginDate(dt.toDate());
-		attributeValue = (String) request.get(PV_END_DATE);
-		dt = formatter.parseDateTime(attributeValue);
-		pv.setEndDate(dt.toDate());
+		if(request != null && request.size() > 1) {
+			attributeValue = (String) request.get(PV_VALUE);
+			pv.setValue(attributeValue);
+			attributeValue = (String) request.get(PV_MEAN);
+			pv.setShortMeaning(attributeValue);
+			attributeValue = (String) request.get(PV_DEF);
+			pv.setMeaningDescription(attributeValue);
+	
+			DateTime dt = null;
+			DateTimeFormatter formatter = DateTimeFormat.forPattern("MM/dd/yyyy");
+			attributeValue = (String) request.get(PV_BEGIN_DATE);
+			dt = formatter.parseDateTime(attributeValue);
+			pv.setBeginDate(dt.toDate());
+			attributeValue = (String) request.get(PV_END_DATE);
+			dt = formatter.parseDateTime(attributeValue);
+			pv.setEndDate(dt.toDate());
+		}
 
 		return pv;
 	}
