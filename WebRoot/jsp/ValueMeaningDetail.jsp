@@ -10,7 +10,7 @@ L--%>
     $Name: not supported by cvs2svn $
 -->
 
-<%@ page language="java" import="java.util.*"%>
+<%@ page language="java" import="java.util.*, gov.nih.nci.cadsr.cdecurate.util.*"%>
 <html>
 	<head>
 		<title>
@@ -237,7 +237,7 @@ L--%>
 										<tr <% if (i%2 == 0) { %> class="rowColor" <% } %>>
 										
 											<td> <%if (!isView){ %>	
-												<a href="javascript:deleteConcept('<%=i%>', '<%=cBean.getLONG_NAME()%>');" title="Remove Item">
+												<a href="javascript:deleteConcept('<%=i%>', '<%=ConceptUtil.handleLongName(cBean.getLONG_NAME())%>');" title="Remove Item">
 													<img src="images/delete_white.gif" border="0" alt="Remove Item">
 												</a>
 												<% if (i != 0) { %>
@@ -253,7 +253,7 @@ L--%>
 											</td>
 											
 											<td>
-												<%=cBean.getLONG_NAME()%>
+												<%=ConceptUtil.handleLongName(cBean.getLONG_NAME())%>
 											</td>
 											<td>
 												<%=cBean.getCONCEPT_IDENTIFIER()%>
