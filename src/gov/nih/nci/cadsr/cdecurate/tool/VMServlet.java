@@ -379,7 +379,7 @@ private void setVersionValues(VMForm vmData,HttpServletRequest req, HttpSession 
     vmData.setVMBean(vm);
     
     VD_Bean oldvd = (VD_Bean)session.getAttribute("oldVDBean");
-    Vector<PV_Bean> vdpvs = oldvd.getVD_PV_List();	//JR1024 JT why would one get the oldVD???? :o
+    Vector<PV_Bean> vdpvs = oldvd.getVD_PV_List();	//JR1024
     if (pvInd > -1 && vdpvs.size() > 0)  // (selvm != null)
     {
         for (int i=0; i<vdpvs.size(); i++)

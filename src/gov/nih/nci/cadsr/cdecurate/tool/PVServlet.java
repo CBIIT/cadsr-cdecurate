@@ -258,7 +258,7 @@ public class PVServlet implements Serializable
      {
        pvAction.doResetViewTypes(vVDPV, vwTypes);
       // DataManager.setAttribute(session, "VDPVList", vVDPV);
-       vd.setVD_PV_List(vVDPV);		//JR1024 TODO need to update the dates in here???
+       vd.setVD_PV_List(vVDPV);		//JR1024
 
 //       handlePVDates(session, vd);	//JR1025
        
