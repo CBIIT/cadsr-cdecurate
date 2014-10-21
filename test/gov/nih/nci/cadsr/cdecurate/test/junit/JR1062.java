@@ -167,7 +167,7 @@ public class JR1062 {
 		try {
 			type = "CDE";
 			System.out.println("testDDE: type is " + type);
-			colString = "Data Element Public ID,Data Element Version,Data Element Long Name,DDE Public ID,DDE Long Name,DDE Version,DDE Workflow Status,DDE Context,DDE Display Order,Data Element RAI,Object Class Concept RAI,Property Concept RAI,Value Domain Concept RAI,Representation Concept RAI";
+			colString = "Data Element Public ID,Data Element Version,Data Element Long Name,DDE Public ID,DDE Long Name,DDE Version,DDE Workflow Status,DDE Context,DDE Display Order,Data Element RAI,Object Class RAI,Property RAI,Value Domain RAI,Representation RAI";
 			idArray.add("D29F7072-2C80-1BD0-E034-0003BA12F5E7");
 			idArray.add("F38AA785-3CCB-5BB7-E034-0003BA3F9857");
 			idArray.add("FC6EF0D8-4F59-6865-E034-0003BA3F9857");
@@ -247,7 +247,7 @@ public class JR1062 {
 			type = "CDE";
 			System.out.println("testCDEIgnoreColumns: type is " + type);
 //			Data Element Concept Registration Status,Data Element Concept Workflow Status,
-			colString = "Value Meaning Alternate Definitions,Data Element Public ID,Data Element Version,Data Element Long Name,DDE Public ID,DDE Long Name,DDE Version,DDE Workflow Status,DDE Context,DDE Display Order,Data Element RAI,Object Class Concept RAI,Property Concept RAI,Value Domain Concept RAI,Representation Concept RAI";
+			colString = "Value Meaning Alternate Definitions,Data Element Public ID,Data Element Version,Data Element Long Name,DDE Public ID,DDE Long Name,DDE Version,DDE Workflow Status,DDE Context,DDE Display Order,Data Element RAI,Object Class RAI,Property RAI,Value Domain RAI,Representation RAI";
 			idArray.add("D29F7072-2C80-1BD0-E034-0003BA12F5E7");
 			idArray.add("F38AA785-3CCB-5BB7-E034-0003BA3F9857");
 			idArray.add("FC6EF0D8-4F59-6865-E034-0003BA3F9857");

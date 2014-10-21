@@ -17,10 +17,10 @@ public class SQL {
 	public static final String EXCEL_TEMPLATE_SQL5 = "SELECT de.*"
 //	+	/*", '' as \"Alternate Name Or Definition\"" */
 	+	", '2.16.840.1.113883.3.26.2' as \"Data Element RAI\""
-	+	", '2.16.840.1.113883.3.26.2' as \"Object Class Concept RAI\""
-	+	", '2.16.840.1.113883.3.26.2' as \"Property Concept RAI\""
-	+	", '2.16.840.1.113883.3.26.2' as \"Value Domain Concept RAI\""
-	+	", '2.16.840.1.113883.3.26.2' as \"Representation Concept RAI\""
+	+	", '2.16.840.1.113883.3.26.2' as \"Object Class RAI\""
+	+	", '2.16.840.1.113883.3.26.2' as \"Property RAI\""
+	+	", '2.16.840.1.113883.3.26.2' as \"Value Domain RAI\""
+	+	", '2.16.840.1.113883.3.26.2' as \"Representation RAI\""
 	+ " FROM ";
 	public static final String EXCEL_TEMPLATE_SQL6 = "_EXCEL_GENERATOR_VIEW de "
 	+ "WHERE 1=1 ";
