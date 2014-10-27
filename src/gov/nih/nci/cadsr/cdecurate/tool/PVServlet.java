@@ -257,7 +257,7 @@ public class PVServlet implements Serializable
      if (vwTypes != null)
      {
        pvAction.doResetViewTypes(vVDPV, vwTypes);
-      // DataManager.setAttribute(session, "VDPVList", vVDPV);
+      // DataManager.setAttribute(session, "VDPVList", vVDPV);	//this has been commented out since 2011 due to the following addition!
        vd.setVD_PV_List(vVDPV);		//JR1024
 
 //       handlePVDates(session, vd);	//JR1025

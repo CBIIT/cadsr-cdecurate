@@ -6,6 +6,7 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang.StringUtils;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
@@ -69,16 +70,26 @@ public class ModelHelper {
 		Object value = request.getAttribute("editPVInd");
 		if(value != null) {
 			String pvIndex = value.toString();
-			attributeValue = (request.getAttribute("txt" + pvIndex + "Value")).toString();
-			ret.add(attributeValue);
-			attributeValue = (request.getAttribute("txt" + pvIndex + "Mean")).toString();
-			ret.add(attributeValue);
-			attributeValue = (request.getAttribute("txt" + pvIndex + "Def")).toString();
-			ret.add(attributeValue);
-			attributeValue = (request.getAttribute("currentBD")).toString();
-			ret.add(attributeValue);
-			attributeValue = (request.getAttribute("currentED")).toString();
-			ret.add(attributeValue);
+			if(request.getAttribute("txt" + pvIndex + "Value") != null) {
+				attributeValue = (String)(request.getAttribute("txt" + pvIndex + "Value"));
+				ret.add(attributeValue.toString());
+			}
+			if(request.getAttribute("txt" + pvIndex + "Mean") != null) {
+				attributeValue = (String)(request.getAttribute("txt" + pvIndex + "Mean"));
+				ret.add(attributeValue.toString());
+			}
+			if(request.getAttribute("txt" + pvIndex + "Def") != null) {
+				attributeValue = (String)(request.getAttribute("txt" + pvIndex + "Def"));
+				ret.add(attributeValue.toString());
+			}
+			if(request.getAttribute("txt" + pvIndex + "currentBD") != null) {
+				attributeValue = (String)(request.getAttribute("currentBD"));
+				ret.add(attributeValue.toString());
+			}
+			if(request.getAttribute("txt" + pvIndex + "currentED") != null) {
+				attributeValue = (String)(request.getAttribute("currentED"));
+				ret.add(attributeValue.toString());
+			}
 		}
 
 		return ret;
@@ -104,11 +115,15 @@ public class ModelHelper {
 			DateTime dt = null;
 			DateTimeFormatter formatter = DateTimeFormat.forPattern("MM/dd/yyyy");
 			attributeValue = (String) request.get(PV_BEGIN_DATE);
-			dt = formatter.parseDateTime(attributeValue);
-			pv.setBeginDate(dt.toDate());
+			if(!StringUtils.isEmpty(attributeValue)) {
+				dt = formatter.parseDateTime(attributeValue);
+				pv.setBeginDate(dt.toDate());
+			}
 			attributeValue = (String) request.get(PV_END_DATE);
-			dt = formatter.parseDateTime(attributeValue);
-			pv.setEndDate(dt.toDate());
+			if(!StringUtils.isEmpty(attributeValue)) {
+				dt = formatter.parseDateTime(attributeValue);
+				pv.setEndDate(dt.toDate());
+			}
 		}
 
 		return pv;
@@ -129,10 +144,14 @@ public class ModelHelper {
 
 		DateTime dt = null;
 		DateTimeFormatter formatter = DateTimeFormat.forPattern("MM/dd/yyyy");
-		dt = formatter.parseDateTime(bean.getPV_BEGIN_DATE());
-		pv.setBeginDate(dt.toDate());
-		dt = formatter.parseDateTime(bean.getPV_END_DATE());
-		pv.setEndDate(dt.toDate());
+		if(!StringUtils.isEmpty(bean.getPV_BEGIN_DATE())) {
+			dt = formatter.parseDateTime(bean.getPV_BEGIN_DATE());
+			pv.setBeginDate(dt.toDate());
+		}
+		if(!StringUtils.isEmpty(bean.getPV_END_DATE())) {
+			dt = formatter.parseDateTime(bean.getPV_END_DATE());
+			pv.setEndDate(dt.toDate());
+		}
 
 		return pv;
 	}
