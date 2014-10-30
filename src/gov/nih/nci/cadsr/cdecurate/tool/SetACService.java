@@ -2255,7 +2255,7 @@ public class SetACService implements Serializable
 					pvIdseq = rs.getString(1);
 				}// end of while
 				if (pvIdseq == null)
-					createNewPVVM(req, res, sValue, sMeaning, sCD);
+					createNewPVVM(req, res, sValue, sMeaning, sCD);	//JR1024 tagged
 			}
 		}
 		catch(Exception e)

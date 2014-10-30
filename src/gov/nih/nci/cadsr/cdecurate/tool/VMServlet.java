@@ -340,7 +340,7 @@ private void setVersionValues(VMForm vmData,HttpServletRequest req, HttpSession 
       {
         sVM = StringUtil.cleanJavascriptAndHtml((String)req.getParameter("pvNewVM"));  //vm name
         sVMD = StringUtil.cleanJavascriptAndHtml((String)req.getParameter("pvNewVMD"));  //vm desc  
-        vm.setVM_SUBMIT_ACTION(VMForm.CADSR_ACTION_INS);
+        vm.setVM_SUBMIT_ACTION(VMForm.CADSR_ACTION_INS);	//JR1024 why would we insert a VM if it is blank???
      // System.out.println(sVM + " new " + sVMD);
       }
       else
@@ -376,11 +376,11 @@ private void setVersionValues(VMForm vmData,HttpServletRequest req, HttpSession 
     }
     //call the action change VM to validate the vm
     VD_Bean vd = (VD_Bean)session.getAttribute(PVForm.SESSION_SELECT_VD);  //vm cd
-    vmData.setVMBean(vm);
+    vmData.setVMBean(vm);	//JR1024 probably if vm's long name is null, just set this to null to avoid API_VM_105 error during insert?
     
     VD_Bean oldvd = (VD_Bean)session.getAttribute("oldVDBean");
     Vector<PV_Bean> vdpvs = oldvd.getVD_PV_List();	//JR1024
-    if (pvInd > -1 && vdpvs.size() > 0)  // (selvm != null)
+    if (pvInd > -1 && vdpvs.size() > 0)  // (selvm != null)	//JR1024 this should be true for a new new PV?
     {
         for (int i=0; i<vdpvs.size(); i++)
         {

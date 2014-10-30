@@ -102,7 +102,7 @@ public class StringUtil {
 		boolean found = false;
 		while (character != CharacterIterator.DONE) {
 			if ((int) character < 32 || (int) character > 126) {
-				//result.append(" ");		//JR1024 just ignore it instead of converting to whitespace
+				result.append(" ");		//JR1024 just ignore it instead of converting to whitespace; rolled back due to breaking changes for totally new PV without any VM
 				found = true;
 				// System.out.println("Ctrl char detected -"+(int)character+"-, filtered with a space!");
 			} else {
@@ -113,7 +113,7 @@ public class StringUtil {
 		if (found) {
 			logger.debug("Ctrl char detected in the original string [" + str + "] xstring [" + toASCIICode(str) + "] filtered string [" + result + "]");
 		}
-		return result.toString().trim();	//JR1024 trim extra spaces, if any
+		return result.toString();	//JR1024 trim extra spaces, if any; rolled back due to breaking changes for totally new PV without any VM
 	}
 
 	/** "xray" function - prints out its ASCII value */

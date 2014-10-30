@@ -1437,7 +1437,7 @@ public class ValueDomainServlet extends CurationServlet {
 				if (sVDAction.equals("NewVD") && sOriginAction.equals("NewVDFromMenu"))
 					doInsertVDfromMenuAction();
 				else if (sVDAction.equals("EditVD") && !sOriginAction.equals("BlockEditVD"))
-					doUpdateVDAction();
+					doUpdateVDAction();		//JR1024 breaking change tagged
 				else if (sVDEditAction.equals("VDBlockEdit"))
 					doUpdateVDActionBE();
 				// if create new vd from create/edit DE page.
@@ -1505,6 +1505,7 @@ public class ValueDomainServlet extends CurationServlet {
 			// go to search page with refreshed list
 			else
 			{
+				//JR1024 tagged (not related to the ticket) - back to home page and rememebering the previous search results!!!
 				VDBean.setVD_ALIAS_NAME(VDBean.getVD_PREFERRED_NAME());
 				// VDBean.setVD_TYPE_NAME("PRIMARY");
 				DataManager.setAttribute(session, Session_Data.SESSION_MENU_ACTION, "editVD");

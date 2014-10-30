@@ -258,7 +258,7 @@ public class PVServlet implements Serializable
      {
        pvAction.doResetViewTypes(vVDPV, vwTypes);
       // DataManager.setAttribute(session, "VDPVList", vVDPV);	//this has been commented out since 2011 due to the following addition!
-       vd.setVD_PV_List(vVDPV);		//JR1024
+       vd.setVD_PV_List(vVDPV);		//JR1024 tagged
 
 //       handlePVDates(session, vd);	//JR1025
        
@@ -418,7 +418,7 @@ public class PVServlet implements Serializable
           VMServlet vmser = new VMServlet(data.getRequest(), data.getResponse(), data.getCurationServlet());
           vmser.readDataForCreate(pv, -1);
           vm = vmser.vmData.getVMBean();
-          data.setStatusMsg(data.getStatusMsg() + vmser.vmData.getStatusMsg());
+          data.setStatusMsg(data.getStatusMsg() + vmser.vmData.getStatusMsg());	//TODO JR1024 seems like there is an error here
         }
         pv.setPV_VM(vm);
         pv.setPV_VIEW_TYPE("expand");
