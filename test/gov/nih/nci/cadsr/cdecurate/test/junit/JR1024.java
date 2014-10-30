@@ -142,8 +142,9 @@ public class JR1024 {
 //		data.setVD(vd);
 
 		HttpSession session = m_classReq.getSession();
-		VD_Bean VDBean = (VD_Bean) session.getAttribute("m_VD");
-		VD_Bean oldVDBean = (VD_Bean) session.getAttribute("oldVDBean");
+		VD_Bean VDBean = new VD_Bean();	//(VD_Bean) session.getAttribute("m_VD");
+//		VDBean
+		VD_Bean oldVDBean = new VD_Bean();	//(VD_Bean) session.getAttribute("oldVDBean");
 		//  String sMenu = (String) session.getAttribute(Session_Data.SESSION_MENU_ACTION);
 //		doInsertVDBlocks(null);
 //		// udpate the status message with DE name and ID
@@ -153,9 +154,6 @@ public class JR1024 {
 		String ret = insAC.setVD("UPD", VDBean, "Edit", oldVDBean);
 
     }
-
-
-	}
 	
 	@Test
 	public void testUnchangedPV() {
