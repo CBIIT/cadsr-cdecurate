@@ -25,7 +25,7 @@ public class EasyMockAdapter {
 	UtilService m_util = new UtilService();
 	// CurationServlet m_servlet = null;
 	CurationServlet instance;
-	// public static HttpServletRequest m_classReq = null;
+	protected static HttpServletRequest m_classReq = null;
 	protected HttpServletRequest request = null;
 	protected HttpServletResponse response = null;
 	protected HttpSession session = null;

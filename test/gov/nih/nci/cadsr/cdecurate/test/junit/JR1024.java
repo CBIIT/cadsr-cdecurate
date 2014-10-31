@@ -9,6 +9,7 @@ import gov.nih.nci.cadsr.cdecurate.tool.InsACService;
 import gov.nih.nci.cadsr.cdecurate.tool.PVForm;
 import gov.nih.nci.cadsr.cdecurate.tool.PV_Bean;
 import gov.nih.nci.cadsr.cdecurate.tool.Session_Data;
+import gov.nih.nci.cadsr.cdecurate.tool.UtilService;
 import gov.nih.nci.cadsr.cdecurate.tool.VD_Bean;
 import gov.nih.nci.cadsr.cdecurate.tool.VM_Bean;
 import gov.nih.nci.cadsr.cdecurate.util.ModelHelper;
@@ -68,7 +69,7 @@ public class JR1024 {
 	public void setup() {
 		mock = new JR1024Mock();
 		session = mock.getSession();
-		m_classReq = mock.getServletRequest();
+		m_classReq = mock.getServletRequest();	//mock.getM_classReq();
 		m_classRes = mock.getServletResponse();
 		//=== mocking app server environment
 		m_servlet = new CurationServlet();
@@ -93,7 +94,7 @@ public class JR1024 {
 //        boolean initialSearch = false;
 //    	session.setAttribute("ApprovedRepTerm", initialSearch);
 //    	getACSearch.getACSearchForCreate(m_classReq, m_classRes, false);
-    	mock.verifyAll();
+//    	mock.verifyAll();
 
     	VM_Bean vm = new VM_Bean();
 //        if (this.getDuplicateVMUse() != null)
@@ -141,7 +142,7 @@ public class JR1024 {
 //		vd.setVD_PV_List(vdpvs);
 //		data.setVD(vd);
 
-		HttpSession session = m_classReq.getSession();
+//		HttpSession session = m_classReq.getSession();
 		VD_Bean VDBean = new VD_Bean();	//(VD_Bean) session.getAttribute("m_VD");
 		VDBean.setRETURN_CODE(null);
 		VDBean.setVD_VD_IDSEQ("F68C95A7-A441-6927-E040-BB8921B663B2");
@@ -347,6 +348,15 @@ public class JR1024 {
 //		// udpate the status message with DE name and ID
 //		storeStatusMsg("Value Domain Name : " + VDBean.getVD_LONG_NAME());
 //		storeStatusMsg("Public ID : " + VDBean.getVD_VD_ID());
+
+		//=== inject nice mocks first
+		//=== mocking app server environment
+		m_servlet = new CurationServlet();
+		insAC.setM_servlet(m_servlet);
+//		insAC.setM_util(m_util)
+		insAC.setM_classReq(m_classReq);
+		insAC.setM_classRes(m_classRes);
+
 		// call stored procedure to update attributes
 		String ret = insAC.setVD("UPD", VDBean, "Edit", oldVDBean);
 		System.out.println("Value Domain Name : " + VDBean.getVD_LONG_NAME());

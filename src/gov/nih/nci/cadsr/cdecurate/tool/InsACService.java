@@ -163,6 +163,26 @@ public class InsACService implements Serializable {
 	HttpServletResponse m_classRes = null;
 
 	Logger logger = Logger.getLogger(InsACService.class.getName());
+	
+	public void setM_servlet(CurationServlet m_servlet) {
+		this.m_servlet = m_servlet;
+	}
+
+	public void setM_util(UtilService m_util) {
+		this.m_util = m_util;
+	}
+
+	public void setM_classReq(HttpServletRequest m_classReq) {
+		this.m_classReq = m_classReq;
+	}
+
+	public void setM_classRes(HttpServletResponse m_classRes) {
+		this.m_classRes = m_classRes;
+	}
+
+	public void setLogger(Logger logger) {
+		this.logger = logger;
+	}
 
 	/**
 	 * Constructs a new instance.
