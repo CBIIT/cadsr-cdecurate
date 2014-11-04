@@ -56,9 +56,11 @@ import javax.servlet.http.HttpSession;
 
 
 
+
 //import oracle.jdbc.driver.OracleTypes;
 import oracle.jdbc.OracleTypes;		//GF30779
 
+import org.apache.commons.lang.math.NumberUtils;
 import org.apache.log4j.Logger;
 //import org.joda.time.DateTimeUtils;
 
@@ -463,7 +465,7 @@ public class InsACService implements Serializable {
 				if (sAction.equals("INS"))
 					cstmt.setString(12, "Yes");
 				cstmt.setString(13, sDtlName);
-				if (sMaxLength != null && sMaxLength.length() > 0) {
+				if (sMaxLength != null && sMaxLength.length() > 0 && NumberUtils.isNumber(sMaxLength)) {	//JR1024 not related to ticket, just make it more robust by making sure it is a number
 					Integer IntTmp = new Integer(sMaxLength);
 					cstmt.setInt(14, IntTmp.intValue());
 				}
@@ -472,11 +474,11 @@ public class InsACService implements Serializable {
 				cstmt.setString(19, sUomlName);
 				cstmt.setString(22, sLowValue);
 				cstmt.setString(23, sHighValue);
-				if (sMinLength != null && sMinLength.length() > 0) {
+				if (sMinLength != null && sMinLength.length() > 0 && NumberUtils.isNumber(sMinLength)) {
 					Integer IntTmp = new Integer(sMinLength);
 					cstmt.setInt(24, IntTmp.intValue());
 				}
-				if (sDecimalPlace != null && sDecimalPlace.length() > 0) {
+				if (sDecimalPlace != null && sDecimalPlace.length() > 0 && NumberUtils.isNumber(sDecimalPlace)) {
 					Integer IntTmp = new Integer(sDecimalPlace);
 					cstmt.setInt(25, IntTmp.intValue());
 				}

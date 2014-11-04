@@ -843,6 +843,7 @@ public final class EVS_UserBean implements Serializable
   	 */
 	public List getFormalName2CodingSchemeNameMap(String eURL) {
 	     java.util.List<String> vocabList = null;	//yes, this needs to be null! :(
+//	     java.util.List<String> vocabList = new ArrayList<String>();
 
 		long ms = System.currentTimeMillis();
 		//HashMap map = new HashMap();
@@ -872,6 +873,7 @@ public final class EVS_UserBean implements Serializable
 							isResolvedValueSet = isResolvedValueSetCodingScheme(cs) ;
 							if (!isResolvedValueSet) {
 								//map.put(css.getFormalName(), cs.getCodingSchemeName() + " (URI: " + css.getCodingSchemeURI() + ")");
+								vocabList = new ArrayList<String>();	//JR1067 just avoid NPE, not a real fix
 								vocabList.add(css.getFormalName());
 								System.out.println(css.getFormalName() + " --> " + cs.getCodingSchemeName() + " (URI: " + css.getCodingSchemeURI() + ")");
 							}

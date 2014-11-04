@@ -49,6 +49,7 @@ public class JR1024 {
 	HttpServletRequest m_classReq;
 	HttpServletResponse m_classRes;
 	CurationServlet m_servlet;
+	UtilService m_util = new UtilService();
 
 	@BeforeClass
 	public static void initDB() {
@@ -56,13 +57,12 @@ public class JR1024 {
 		password = System.getProperty("p");
 		boolean ret;
 		DBUtil db;
-		//String dec_id = "4191717";
-//		try {
-//			conn = TestUtil.getConnection(userId, password);
-//			db = new DBUtil(conn);
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
+		try {
+			conn = TestUtil.getConnection(userId, password);
+			db = new DBUtil(conn);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Before
@@ -352,8 +352,9 @@ public class JR1024 {
 		//=== inject nice mocks first
 		//=== mocking app server environment
 		m_servlet = new CurationServlet();
+		m_servlet.setConn(conn);
 		insAC.setM_servlet(m_servlet);
-//		insAC.setM_util(m_util)
+		insAC.setM_util(m_util);
 		insAC.setM_classReq(m_classReq);
 		insAC.setM_classRes(m_classRes);
 
