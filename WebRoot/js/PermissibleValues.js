@@ -198,6 +198,16 @@
     //when Add new pv button clicked; check if mandatory values exist
     function AddNewPV()
     {
+		//alert('JR1068');
+		var vmValue1 = document.getElementById('pvNewVM').value;
+		if( isEmptyString(vmValue1) ){
+			alert('Please enter the text for Value Meaning Description.');
+			return false;	//do not submit;
+		}
+		//else {
+		//	alert('vmValue1: pvNewVM is [' + vmValue1 + ']');
+		//}
+
     	var alertMsg = "";
     	var txtVM = "";
     	//first if user entered

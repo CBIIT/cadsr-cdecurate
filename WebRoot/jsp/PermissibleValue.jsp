@@ -35,7 +35,8 @@ L--%>
 		<SCRIPT LANGUAGE="JavaScript" SRC="js/VDPVS.js"></SCRIPT>
         <SCRIPT LANGUAGE="JavaScript" SRC="js/date.js"></SCRIPT>
 		<SCRIPT LANGUAGE="JavaScript" SRC="js/HelpFunctions.js"></SCRIPT>
-		<%  
+		<SCRIPT LANGUAGE="JavaScript" SRC="js/CommonUtil.js"></SCRIPT>
+		<%
       String sMenuAction = (String) session.getAttribute(Session_Data.SESSION_MENU_ACTION);
       String sSearchAC = (String) session.getAttribute("creSearchAC");
       String vocab= (String)session.getAttribute("preferredVocab");
@@ -596,7 +597,7 @@ L--%>
 																		<%=newVM.getVM_LONG_NAME()%>
 																	</div>
 																	<div id="pvNewVMEdit" style="display: <%if (newVMCon.size() > 0) { %>none<%} else {%>block<% } %>">
-																		<textarea name="pvNewVM" style="width: 90%" rows="2" onblur="javascript:checkNameLen(this, 255);" onkeyup="javascript:getORsetEdited('pvNew', 'pv');"><%=newVMjsp%></textarea>
+																		<textarea name="pvNewVM" id="pvNewVM" style="width: 90%" rows="2" onblur="javascript:checkNameLen(this, 255);" onkeyup="javascript:getORsetEdited('pvNew', 'pv');"><%=newVMjsp%></textarea>
 																	</div>
 																</td>
 																<td>
