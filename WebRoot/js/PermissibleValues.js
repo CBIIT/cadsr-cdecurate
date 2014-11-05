@@ -200,9 +200,12 @@
     {
 		//alert('JR1068');
 		var vmValue1 = document.getElementById('pvNewVM').value;
-		if( isEmptyString(vmValue1) ){
-			alert('Please enter the text for Value Meaning Description.');
-			return false;	//do not submit;
+		if( isEmptyString(vmValue1) ) {
+			var vmValue2 = document.getElementById('pvNewVMDView');	//was it a new PV and the concept has been populated by evs search?
+			if( isEmptyString(vmValue2) ) {
+				alert('Please enter the text for Value Meaning Description.');
+				return false;	//do not submit;
+			}
 		}
 		//else {
 		//	alert('vmValue1: pvNewVM is [' + vmValue1 + ']');
