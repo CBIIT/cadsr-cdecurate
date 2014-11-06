@@ -199,17 +199,27 @@
     function AddNewPV()
     {
 		//alert('JR1068');
-		var vmValue1 = document.getElementById('pvNewVM').value;
-		if( isEmptyString(vmValue1) ) {
-			var vmValue2 = document.getElementById('pvNewVMDView');	//was it a new PV and the concept has been populated by evs search?
+		var invalidMsg = "";
+		var vmValue1 = document.getElementById('pvNewVMDView').value;
+		if( !isEmptyString(vmValue1) ) {
+			var vmValue2 = document.getElementById('pvNewVM');	//was it a new PV and the concept has been populated by evs search?
 			if( isEmptyString(vmValue2) ) {
-				alert('Please enter the text for Value Meaning Description.');
-				return false;	//do not submit;
+				invalidMsg = 'Please enter the text for Value Meaning Description.';
 			}
+		} else {
+			invalidMsg = 'Please enter the text for Value Meaning Description.';
+		}
+		var pvValue = document.getElementById('pvNewValue').value;
+		if( isEmptyString(pvValue) ) {
+			invalidMsg = invalidMsg + '\n' + 'Please enter the text for Permissible Value.';
 		}
 		//else {
 		//	alert('vmValue1: pvNewVM is [' + vmValue1 + ']');
 		//}
+		if(!isEmptyString(invalidMsg)) {
+			alert(invalidMsg);
+			return false;	//do not submit
+		}
 
     	var alertMsg = "";
     	var txtVM = "";

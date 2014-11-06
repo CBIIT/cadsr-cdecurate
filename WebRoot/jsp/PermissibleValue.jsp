@@ -574,7 +574,7 @@ L--%>
 									%>
 													<td valign="top">
 														&nbsp;&nbsp;
-														<input type="text" name="pvNewValue" style="width:90%" size="20" maxlength="255" value="<%=newPVjsp%>" onkeyup="javascript:getORsetEdited('pvNew', 'pv');">
+														<input type="text" name="pvNewValue" id="pvNewValue" style="width:90%" size="20" maxlength="255" value="<%=newPVjsp%>" onkeyup="javascript:getORsetEdited('pvNew', 'pv');">
 													</td>
 													<td valign="top">
 														<table width="98%" border="0">
