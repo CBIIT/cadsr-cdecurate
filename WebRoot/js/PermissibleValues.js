@@ -201,12 +201,12 @@
 		//alert('JR1068');
 		var invalidMsg = "";
 		var vmValue1 = document.getElementById('pvNewVMDView').value;
-		if( !isEmptyString(vmValue1) ) {
-			var vmValue2 = document.getElementById('pvNewVM');	//was it a new PV and the concept has been populated by evs search?
-			if( isEmptyString(vmValue2) ) {
-				invalidMsg = 'Please enter the text for Value Meaning Description.';
-			}
-		} else {
+		if( isEmptyString(vmValue1) ) {
+		//	var vmValue2 = document.getElementById('pvNewVM');	//was it a new PV and the concept has been populated by evs search?
+		//	if( isEmptyString(vmValue2) ) {
+		//		invalidMsg = 'Please enter the text for Value Meaning Description.';
+		//	}
+		//} else {
 			invalidMsg = 'Please enter the text for Value Meaning Description.';
 		}
 		var pvValue = document.getElementById('pvNewValue').value;
