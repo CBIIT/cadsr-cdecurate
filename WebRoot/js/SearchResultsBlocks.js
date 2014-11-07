@@ -26,7 +26,7 @@
    var detailWindow = null;
 
 
-//   dojo && window.console && console.log("DOJO version used = [" + dojo.version.toString() + "]");
+//   dojo && //window.console && console.log("DOJO version used = [" + dojo.version.toString() + "]");
 
    
   
@@ -159,7 +159,7 @@ function toTitleCase(str)
       
  function ShowUseSelection(vCompAction)
  {
-     window.console && console.log("GF32723 2 in SearchResultsBlocks.js ShowUseSelection()");
+     //window.console && console.log("GF32723 2 in SearchResultsBlocks.js ShowUseSelection()");
 
      if(vCompAction == "BEDisplay") vCompAction = "searchForCreate";
     var LongName = "";
@@ -167,7 +167,7 @@ function toTitleCase(str)
     if (vCompAction == "searchForCreate")
     { 
       var blName = editName + "\n &nbsp;&nbsp;" + sCCodeDB + "\n &nbsp;&nbsp;" + sCCode;
-      window.console && console.log('SearchResultsBlocks.js ShowUseSelection() opener.document.newDECForm [' + opener.document.newDECForm + ']');
+      //window.console && console.log('SearchResultsBlocks.js ShowUseSelection() opener.document.newDECForm [' + opener.document.newDECForm + ']');
       //building blocks from DEC page
       if (opener.document.newDECForm && // != null && //GF32723
           (sComp == "ObjectClass" || sComp == "PropertyClass" || sComp == "Property" || 
@@ -930,7 +930,7 @@ function createNames(acType)
 	    if (editName.length > 30)
         editName = editName.substring(0,30);
 
-     window.console && console.log("SearchResultsBlocks.js StoreSelectedRow() editName = [" + editName + "] (GF32723)");
+     //window.console && console.log("SearchResultsBlocks.js StoreSelectedRow() editName = [" + editName + "] (GF32723)");
      //alert("SearchResultsBlocks.js StoreSelectedRow() editName = [" + editName + "]");
 
       editLevel = conArray[rowNo].conLevel;  // document.searchResultsForm.hiddenName[rowNo].text;

@@ -20,7 +20,7 @@ var propCTerm2 = "";
 
 //var prevCSCSI = "";
 
-window.console && console.log("CreateDEC.js DOJO version used = [" + dojo.version.toString() + "]");
+//window.console && console.log("CreateDEC.js DOJO version used = [" + dojo.version.toString() + "]");
 
 function removeAllText(thisBlock)
 {
@@ -198,19 +198,19 @@ function SearchBuildingBlocks(thisBlock, openToTree)
 
 function closeDep()
 {
-    window.console && console.log('CreateDEC.js closeDep()');
+    //window.console && console.log('CreateDEC.js closeDep()');
 
     if (searchWindow && !searchWindow.closed) {// && searchWindow.open
-        window.console && console.log('CreateDEC.js closing searchWindow (GF32723) ...');
+        //window.console && console.log('CreateDEC.js closing searchWindow (GF32723) ...');
         searchWindow.close();
-        //window.console && console.log('CreateDEC.js closing of searchWindow prevented (GF32723)');
+        ////window.console && console.log('CreateDEC.js closing of searchWindow prevented (GF32723)');
     }
     if(altWindow && !altWindow.closed) {  // && altWindow.open
-        window.console && console.log('CreateDEC.js closing altWindow (GF32723) ...');
+        //window.console && console.log('CreateDEC.js closing altWindow (GF32723) ...');
         altWindow.close();
     }
     if(statusWindow && !statusWindow.closed) { // && statusWindow.open
-        window.console && console.log('CreateDEC.js closing statusWindow (GF32723) ...');
+        //window.console && console.log('CreateDEC.js closing statusWindow (GF32723) ...');
         statusWindow.close();
     }
 }
@@ -475,7 +475,7 @@ function SubmitValidate(origin)
         if (origin == "refresh") origin = "refreshCreateDEC";
         document.newDECForm.pageAction.value = origin;
         window.status = "Submitting data, it may take a minute, please wait.....";
-        window.console && console.log("GF32723 CreateDEC.js " + window.status);
+        //window.console && console.log("GF32723 CreateDEC.js " + window.status);
         //document.newDECForm.Message.style.visibility="visible";  //GF32723
         //disable the buttons
         document.newDECForm.btnValidate.disabled = true;
@@ -488,19 +488,19 @@ function SubmitValidate(origin)
         //begin GF32723
         function dojoCheckEVSStatus() {
             showWaitMessage(); //GF32723
-            window.console && console.log('dojoCheckEVSStatus called');
+            //window.console && console.log('dojoCheckEVSStatus called');
             dojo.xhrGet({
                 // The URL to request
                 url: "jsp/CheckEVSStatus.jsp",
                 // The method that handles the request's successful result
                 // Handle the response any way you'd like!
                 load: function(result) {
-                    window.console && console.log("10.0 The flag is: " + result.trim());
+                    //window.console && console.log("10.0 The flag is: " + result.trim());
                     if(result.indexOf("true") > -1) {
                         clearInterval(timer);
-                        window.console && console.log("20.0 The flag is cleared!");
+                        //window.console && console.log("20.0 The flag is cleared!");
                         //refreshCreateDEC(timer);
-                        //window.console && console.log("30.0 The refresh complete");
+                        ////window.console && console.log("30.0 The refresh complete");
                     }
                 }
             });
@@ -513,34 +513,34 @@ function SubmitValidate(origin)
         } else {
             userSelectedVocabName = document.newDECForm.userSelectedVocab.value;    //document.searchParmsForm.listContextFilterVocab[document.searchParmsForm.listContextFilterVocab.selectedIndex].text;
         }
-        window.console && console.log('CreateDEC.js SubmitValidate(origin) userSelectedVocabName is [' + userSelectedVocabName + ']');
+        //window.console && console.log('CreateDEC.js SubmitValidate(origin) userSelectedVocabName is [' + userSelectedVocabName + ']');
         if(userSelectedVocabName !== 'nothing') {
-            window.console && console.log('calling dojoCheckEVSStatus ...');
+            //window.console && console.log('calling dojoCheckEVSStatus ...');
             timer = setInterval(dojoCheckEVSStatus, 5000);
 //            dojoCheckEVSStatus();
         } else {
-            window.console && console.log('CreateDEC.js SubmitValidate(origin) dojoCheckEVSStatus skipped as vocab is ['+ userSelectedVocabName + ']');
+            //window.console && console.log('CreateDEC.js SubmitValidate(origin) dojoCheckEVSStatus skipped as vocab is ['+ userSelectedVocabName + ']');
         }
 
         //submit the form
-        window.console && console.log('CreateDEC.js SubmitValidate(origin) submitting form to DataElementConceptServlet.java doDECUseSelection() ...');
+        //window.console && console.log('CreateDEC.js SubmitValidate(origin) submitting form to DataElementConceptServlet.java doDECUseSelection() ...');
         document.newDECForm.submit();
-        window.console && console.log('CreateDEC.js SubmitValidate(origin) form submitted');
+        //window.console && console.log('CreateDEC.js SubmitValidate(origin) form submitted');
         //end GF32723
     }
 }
 
 function refreshCreateDEC(timer) {
-    window.console && console.log('refreshCreateDEC called');
+    //window.console && console.log('refreshCreateDEC called');
     dojo.xhrGet({
         // The URL to refresh the changes (e.g. the user selected vocab should be NCIt if a match is found)
         url: "NCICurationServlet?reqType=newDECfromForm",
         // The method that handles the request's successful result
         // Handle the response any way you'd like!
         load: function(result) {
-            window.console && console.log("10.1 The results lenght = " + result.length);
+            //window.console && console.log("10.1 The results lenght = " + result.length);
             if(timer && result.length > 0) {
-                window.console && console.log("20.1 The evs check completed successfully and dec create page refreshed");
+                //window.console && console.log("20.1 The evs check completed successfully and dec create page refreshed");
                 clearInterval(timer);
             }
         }
@@ -548,7 +548,7 @@ function refreshCreateDEC(timer) {
 }
 
 function showWaitMessage() {
-    window.console && console.log('CreateDEC.js showWaitMessage() called!');
+    //window.console && console.log('CreateDEC.js showWaitMessage() called!');
     //alert('showWaitMessage called!');
     hourglass();  //GF32723
     document.newDECForm.Message.style.visibility="visible";  //GF32723

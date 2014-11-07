@@ -172,7 +172,7 @@ L--%>
 
    function getSearchComponent()
    {
-     window.console && console.log('SearchResultsBlocks.jsp getSearchComponent() called (GF32723)');
+     //window.console && console.log('SearchResultsBlocks.jsp getSearchComponent() called (GF32723)');
 
      var type = "";
       sComp = opener.document.SearchActionForm.searchComp.value;
@@ -216,7 +216,7 @@ L--%>
 	      	window.close();
       <% } %>
 
-    window.console && console.log('SearchResultsBlocks.jsp getSearchComponent() sComp = ['+ sComp + '] (GF32723)');
+    //window.console && console.log('SearchResultsBlocks.jsp getSearchComponent() sComp = ['+ sComp + '] (GF32723)');
 
     }
 
@@ -227,7 +227,7 @@ L--%>
     hourglass();
     //end GF32723
 
-    window.console && console.log("GF32723 1 in ShowSelection()");
+    //window.console && console.log("GF32723 1 in ShowSelection()");
      if (opener.document == null)
         window.close();
       ShowUseSelection("<%=StringEscapeUtils.escapeJavaScript(sMAction)%>");
@@ -258,7 +258,7 @@ L--%>
       var userVocab = document.searchParmsForm.listContextFilterVocab[document.searchParmsForm.listContextFilterVocab.selectedIndex].text;            //window.userSelectedVocab
       try {
         opener.document.newDECForm.value = userVocab;
-        window.console && console.log('SearchResultsBlocks.jsp EnableButtons opener.document.newDECForm.value = [' + opener.document.newDECForm.value + ']');
+        //window.console && console.log('SearchResultsBlocks.jsp EnableButtons opener.document.newDECForm.value = [' + opener.document.newDECForm.value + ']');
       } catch(e) {
         window.console && console.log("SearchResultsBlocks.jsp EnableButtons error: " + e);
       }

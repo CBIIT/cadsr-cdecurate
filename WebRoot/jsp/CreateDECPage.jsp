@@ -31,7 +31,7 @@ L--%>
         <script>
         <%--require(["dojo"], function(dojo){--%>
         <%--dojo.ready(function(){--%>
-        window.console && console.log("CreateDEC.jsp DOJO version used = [" + dojo.version.toString() + "]");
+        //window.console && console.log("CreateDEC.jsp DOJO version used = [" + dojo.version.toString() + "]");
         <%--});--%>
         <%--});--%>
         </script>
