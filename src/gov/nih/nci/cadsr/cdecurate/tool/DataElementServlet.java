@@ -123,7 +123,7 @@ public class DataElementServlet extends CurationServlet{
         String sPageAction = StringUtil.cleanJavascriptAndHtml((String) m_classReq.getParameter("pageAction"));
         if (sPageAction != null)
             DataManager.setAttribute(session, "sCDEAction", sPageAction);
-        String sMenuAction = (String) m_classReq.getParameter("MenuAction");
+        String sMenuAction = StringUtil.cleanJavascriptAndHtml((String) m_classReq.getParameter("MenuAction"));
         if (sMenuAction != null)
             DataManager.setAttribute(session, Session_Data.SESSION_MENU_ACTION, sMenuAction);
         String sSubAction = (String) m_classReq.getParameter("DEAction");

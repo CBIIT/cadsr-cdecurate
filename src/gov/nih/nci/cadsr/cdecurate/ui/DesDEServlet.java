@@ -125,13 +125,13 @@ public class DesDEServlet
         if (vACName == null)
             vACName = new Vector<String>();
         String sContID = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml((String) req.getParameter("selContext"));
-        String sContext = (String) req.getParameter("contextName");
+        String sContext = /*CURATNTOOL-1058*/ StringUtil.cleanJavascriptAndHtml((String) req.getParameter("contextName"));
         if (sContID != null)
             req.setAttribute("desContext", sContID);
-        String sLang = (String) req.getParameter("dispLanguage");
+        String sLang = /*CURATNTOOL-1058*/ StringUtil.cleanJavascriptAndHtml((String) req.getParameter("dispLanguage"));
         if (sLang != null)
             req.setAttribute("desLang", sLang);
-        String selType = (String) req.getParameter("selAltType");
+        String selType = /*CURATNTOOL-1058*/ StringUtil.cleanJavascriptAndHtml((String) req.getParameter("selAltType"));
         // handle the context and ac name for new AC (DE, DEC and VD)
         if (vACId.size() < 1)
             vACId.addElement("new");
@@ -202,7 +202,7 @@ public class DesDEServlet
     private void doMarkAddRefDocs(HttpServletRequest req) throws Exception
     {
         HttpSession session = req.getSession();
-        String selName = (String) req.getParameter("txtRefName");
+        String selName = /*CURATNTOOL-1058*/ StringUtil.cleanJavascriptAndHtml((String) req.getParameter("txtRefName"));
         if (selName == null)
             selName = "";
         selName = selName.trim();
@@ -224,15 +224,15 @@ public class DesDEServlet
             vContext = new Vector();
         // get request attributes
         String sContID = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml((String) req.getParameter("selContext"));
-        String sContext = (String) req.getParameter("contextName");
+        String sContext = /*CURATNTOOL-1058*/ StringUtil.cleanJavascriptAndHtml((String) req.getParameter("contextName"));
         if (sContID != null)
             req.setAttribute("desContext", sContID);
-        String sLang = (String) req.getParameter("dispLanguage");
+        String sLang = /*CURATNTOOL-1058*/ StringUtil.cleanJavascriptAndHtml((String) req.getParameter("dispLanguage"));
         if (sLang != null)
             req.setAttribute("desLang", sLang);
-        String selType = (String) req.getParameter("selRefType");
-        String selText = (String) req.getParameter("txtRefText");
-        String selUrl = (String) req.getParameter("txtRefURL");
+        String selType = /*CURATNTOOL-1058*/ StringUtil.cleanJavascriptAndHtml((String) req.getParameter("selRefType"));
+        String selText = /*CURATNTOOL-1058*/ StringUtil.cleanJavascriptAndHtml((String) req.getParameter("txtRefText"));
+        String selUrl = /*CURATNTOOL-1058*/ StringUtil.cleanJavascriptAndHtml((String) req.getParameter("txtRefURL"));
         // handle the context and ac name for new AC (DE, DEC and VD)
         if (vACId.size() < 1)
             vACId.addElement("new");

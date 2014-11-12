@@ -873,7 +873,7 @@ public final class EVS_UserBean implements Serializable
 							isResolvedValueSet = isResolvedValueSetCodingScheme(cs) ;
 							if (!isResolvedValueSet) {
 								//map.put(css.getFormalName(), cs.getCodingSchemeName() + " (URI: " + css.getCodingSchemeURI() + ")");
-								vocabList = new ArrayList<String>();	//JR1067 just avoid NPE, not a real fix
+								//vocabList = new ArrayList<String>();	//JR1067 just avoid NPE, not a real fix
 								vocabList.add(css.getFormalName());
 								System.out.println(css.getFormalName() + " --> " + cs.getCodingSchemeName() + " (URI: " + css.getCodingSchemeURI() + ")");
 							}
@@ -1169,7 +1169,8 @@ public final class EVS_UserBean implements Serializable
       }
 
       //get vocab names from the evs and make sure they match with the cadsr.
-      java.util.List arrEVSVocab = getFormalName2CodingSchemeNameMap(eURL);	//this.getEVSVocabs(eURL);		//JR1040 replaced with 6.x codes
+      //Replaced the commented code for testing
+      java.util.List arrEVSVocab = this.getEVSVocabs(eURL);//getFormalName2CodingSchemeNameMap(eURL);	//this.getEVSVocabs(eURL);		//JR1040 replaced with 6.x codes
       if (vocabname != null && arrEVSVocab != null)
       {
         for (int i = 0; i<vocabname.size(); i++)

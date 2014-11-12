@@ -72,7 +72,7 @@ public class PVServlet implements Serializable
          DataManager.setAttribute(session, "vStatMsg", null);  //reset the status message
          String sAction = (String)data.getRequest().getParameter("pageAction");
          data.setPageAction(sAction);	//JR1025 sAction == "save" is what we focus on (possibly "validate" as well)
-         String sMenuAction = (String)data.getRequest().getParameter("MenuAction");	//JR1025 should be "EditVD"
+         String sMenuAction = StringUtil.cleanJavascriptAndHtml((String)data.getRequest().getParameter("MenuAction"));	//JR1025 should be "EditVD"
          if (sMenuAction != null)
            DataManager.setAttribute(session, Session_Data.SESSION_MENU_ACTION, sMenuAction);
          sMenuAction = (String)session.getAttribute(Session_Data.SESSION_MENU_ACTION);

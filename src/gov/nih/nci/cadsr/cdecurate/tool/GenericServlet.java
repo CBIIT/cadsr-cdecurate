@@ -15,6 +15,7 @@
 package gov.nih.nci.cadsr.cdecurate.tool;
 
 import gov.nih.nci.cadsr.cdecurate.util.DataManager;
+import gov.nih.nci.cadsr.common.StringUtil;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -52,7 +53,7 @@ public class GenericServlet
   {
     HttpSession session = httpRequest.getSession();
     //keep this reset
-    String sMenuAction = (String)httpRequest.getParameter(VMForm.ELM_MENU_ACTION);
+    String sMenuAction = StringUtil.cleanJavascriptAndHtml((String)httpRequest.getParameter(VMForm.ELM_MENU_ACTION));
     if (sMenuAction != null)
       DataManager.setAttribute(session, Session_Data.SESSION_MENU_ACTION, sMenuAction);
     

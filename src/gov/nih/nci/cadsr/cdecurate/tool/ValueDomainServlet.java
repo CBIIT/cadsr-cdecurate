@@ -117,7 +117,7 @@ public class ValueDomainServlet extends CurationServlet {
 	private void doCreateVDActions() throws Exception
 	{
 		HttpSession session = m_classReq.getSession();
-		String sMenuAction = (String) m_classReq.getParameter("MenuAction");
+		String sMenuAction = StringUtil.cleanJavascriptAndHtml((String) m_classReq.getParameter("MenuAction"));
 		if (sMenuAction != null)
 			DataManager.setAttribute(session, Session_Data.SESSION_MENU_ACTION, sMenuAction);
 		String sAction = (String) m_classReq.getParameter("pageAction");
