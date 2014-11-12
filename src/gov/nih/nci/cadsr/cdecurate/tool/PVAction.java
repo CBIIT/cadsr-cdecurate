@@ -178,6 +178,7 @@ public class PVAction implements Serializable {
 		ResultSet rs = null;
 		PreparedStatement pstmt = null;
 		boolean isValid = false;
+		long totalCount = 0, validCount = 0;
 		
 		try {
 			if ((vpIDseq != null && !vpIDseq.equals(""))
@@ -187,15 +188,18 @@ public class PVAction implements Serializable {
 							.getCurationServlet()
 							.getConn()
 							.prepareStatement(
-									"select SBREXT_COMMON_ROUTINES.VD_PVS_QC_EXISTS(?,?) from DUAL");
+									"select SBREXT_COMMON_ROUTINES.VD_PVS_QC_EXISTS(?,?) from DUAL");	//JR1065
 					// register the Out parameters
 					pstmt.setString(1, vpIDseq);
 					pstmt.setString(2, vdIDseq);
 					// Now we are ready to call the function
 					rs = pstmt.executeQuery();
 					while (rs.next()) {
-						if (rs.getString(1).equalsIgnoreCase("TRUE"))
+						totalCount++;
+						if (rs.getString(1).equalsIgnoreCase("TRUE")) {
 							isValid = true;
+							validCount++;
+						}
 					}
 				}
 			}
@@ -210,6 +214,9 @@ public class PVAction implements Serializable {
 			rs = SQLHelper.closeResultSet(rs);
             pstmt = SQLHelper.closePreparedStatement(pstmt);
 		}
+
+		logger.debug("PVAction.java totalCount [" + totalCount + "] validCount [" + validCount + "]");
+
 		return isValid;
 	} //end checkPVQCExists
 
