@@ -407,6 +407,11 @@ public class DataElementConceptServlet extends CurationServlet {
 		String sDECid[] = /*SECURITYTEAM-299*/StringUtil.cleanJavascriptAndHtmlArray(m_classReq.getParameterValues("selDEC"));
 		if (sDECid != null)
 			sDEC_ID = sDECid[0];
+		//input validation for appscan
+		if(sDEC_ID!=null){
+			if(!StringUtil.validateElementIdSequence(sDEC_ID))
+				throw new Exception("selDEC contains characters or combinations of characters that are not allowed because of security concerns.");
+		}
 		// get the dec bean for this id
 		if (sDEC_ID != null)
 		{
@@ -2400,6 +2405,11 @@ public class DataElementConceptServlet extends CurationServlet {
 		String acID = (String) m_classReq.getAttribute("acIdseq");
 		if (acID.equals(""))
         	acID = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml((String) m_classReq.getParameter("idseq"));
+		//input validation for appscan
+		if(acID!=null){
+			if(!StringUtil.validateElementIdSequence(acID))
+				throw new Exception("idseq contains characters or combinations of characters that are not allowed because of security concerns.");
+		}
         Vector<DEC_Bean> vList = new Vector<DEC_Bean>();
 		// get DE's attributes from the database again
 		GetACSearch serAC = new GetACSearch(m_classReq, m_classRes, this);

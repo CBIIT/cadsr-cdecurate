@@ -334,6 +334,10 @@ public class SearchServlet extends CurationServlet {
             actType = "";
         String sSearchFor = StringUtil.cleanJavascriptAndHtml( (String) m_classReq.getParameter("listSearchFor") );
         String sKeyword = StringUtil.cleanJavascriptAndHtml( (String) m_classReq.getParameter("keyword") );
+        if(sKeyword!=null){
+        	if(!StringUtil.validateVersion(sKeyword))
+        		throw new Exception("keyword contains characters or combinations of characters that are not allowed because of security concerns.");
+        }
         String dtsVocab = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml((String) m_classReq.getParameter("listContextFilterVocab"));
         // String sSearchInEVS = "";
        // String sUISearchType = "";
@@ -728,6 +732,10 @@ public class SearchServlet extends CurationServlet {
         HttpSession session = m_classReq.getSession();
         // same for both searchfor create and regular search
         String sSearchIn = StringUtil.cleanJavascriptAndHtml( (String) m_classReq.getParameter("listSearchIn") );
+        if(sSearchIn!=null){
+	        if(!StringUtil.validateSearchParameterType(sSearchIn))
+	        	throw new Exception("listSearchIn contains characters or combinations of characters that are not allowed because of security concerns.");
+        }
         if (sSearchIn == null)
             sSearchIn = "longName";
         // same for both searchfor create and regular search
@@ -742,6 +750,11 @@ public class SearchServlet extends CurationServlet {
             for (int i = 0; i < selAttrs.length; i++)
             {
                 sID = selAttrs[i];
+              //Input validation for appscan
+                if(sID!=null){
+                	if(!StringUtil.validateSearchParameterType(sID))
+                		throw new Exception("listAttrFilter contains characters or combinations of characters that are not allowed because of security concerns.");
+                }
                 if ((sID != null) && (!sID.equals("")))
                     vSelAttrs.addElement(sID);
             }
@@ -1319,15 +1332,28 @@ public class SearchServlet extends CurationServlet {
         // store the all the attributes in search parameter jsp
         String sProtoID = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml((String) m_classReq.getParameter("protoKeyword"));
         String sKeyword = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml((String) m_classReq.getParameter("keyword"));
+        if(sKeyword!=null){
+        	if(!StringUtil.validateVersion(sKeyword))
+        		throw new Exception("keyword contains characters or combinations of characters that are not allowed because of security concerns.");
+        }
         String sContext = (String) m_classReq.getParameter("listContextFilter"); // filter by context
         String sContextUse = (String) m_classReq.getParameter("rContextUse"); // filter by contextUse
         String sVersion = /*SECURITYTEAM-299*/StringUtil.cleanJavascriptAndHtml((String) m_classReq.getParameter("rVersion")); // filter by version
+        //input validation for appscan
+        if(sVersion!=null){
+        	if(!StringUtil.validateVersion(sVersion))
+        		throw new Exception("rVersion contains characters or combinations of characters that are not allowed because of security concerns.");
+        }
         String sVDTypeEnum = (String) m_classReq.getParameter("typeEnum"); // filter by value domain type enumerated
         String sVDTypeNonEnum = (String) m_classReq.getParameter("typeNonEnum"); // filter by value domain type non
                                                                             // enumerated
         String sVDTypeRef = (String) m_classReq.getParameter("typeEnumRef"); // filter by value domain type enumerated by
                                                                         // reference
         String sRegStatus = (String) m_classReq.getParameter("listRegStatus"); // filter by registration status
+        if(sRegStatus!=null){
+        	if(!StringUtil.validateSearchParameterType(sRegStatus))
+        		throw new Exception("listRegStatus contains characters or combinations of characters that are not allowed because of security concerns.");
+        }
         @SuppressWarnings("unused") String sStatus = "";
         String sCreFrom = "", sCreTo = "", sModFrom = "", sModTo = "", sCre = "", sMod = "";
         if (actType.equals("ChangeSearchIn"))
@@ -2578,6 +2604,11 @@ public class SearchServlet extends CurationServlet {
     private void doShowUsedBy() throws Exception
     {
         String idseq = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml((String) m_classReq.getParameter("idseq"));
+      //input validation for appscan
+  		if(idseq!=null){
+  			if(!StringUtil.validateElementIdSequence(idseq))
+  				throw new Exception("idseq contains characters or combinations of characters that are not allowed because of security concerns.");
+  		}
         String type = m_classReq.getParameter("type");
     	
     	m_classReq.getSession().setAttribute("usedByResults", null);

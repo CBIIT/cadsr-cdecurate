@@ -408,6 +408,10 @@ public class CurationServlet
 			DataManager.setAttribute(session, "ErrorMessage", errMsg);
 			// get the menu action from request
 			String mnReq = /*SECURITYTEAM-299*/StringUtil.cleanJavascriptAndHtml((String) m_classReq.getParameter("serMenuAct"));
+			if(mnReq!=null){
+				if(!StringUtil.validateSearchParameterType(mnReq))
+					throw new Exception("serMenuAct contains characters or combinations of characters that are not allowed because of security concerns.");
+			}
 			if (mnReq == null)
 			mnReq = "";
 			DataManager.setAttribute(session, "serMenuAct", mnReq);
@@ -609,6 +613,10 @@ public class CurationServlet
                         DataManager.setAttribute(session, "ErrorMessage", errMsg);
                         // get the menu action from request
                         String mnReq = /*SECURITYTEAM-299*/StringUtil.cleanJavascriptAndHtml((String) m_classReq.getParameter("serMenuAct"));
+                        if(mnReq!=null){
+                        	if(!StringUtil.validateSearchParameterType(mnReq))
+                        		throw new Exception("serMenuAct contains characters or combinations of characters that are not allowed because of security concerns.");
+                        }
                         if (mnReq == null)
                             mnReq = "";
                         DataManager.setAttribute(session, "serMenuAct", mnReq);
@@ -3943,6 +3951,11 @@ public class CurationServlet
     	boolean  flag = false;
 		String acIDSEQ = StringUtil.cleanJavascriptAndHtml(m_classReq.getParameter("idseq"));
 		try {
+			//input validation for appscan
+			if(acIDSEQ!=null){
+				if(!StringUtil.validateElementIdSequence(acIDSEQ))
+					throw new Exception("idseq contains characters or combinations of characters that are not allowed because of security concerns.");
+			}
 			if (acIDSEQ == null) {
                 sPublicId = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml((String) m_classReq.getParameter("publicId"));
                 for (int i=0; i<sPublicId.length(); i++){

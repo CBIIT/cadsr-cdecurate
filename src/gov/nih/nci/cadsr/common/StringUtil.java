@@ -7,30 +7,40 @@ import java.io.StringWriter;
 import java.text.CharacterIterator;
 import java.text.StringCharacterIterator;
 import java.util.Arrays;
+import java.util.regex.Pattern;
 
 import org.apache.log4j.Logger;
 
 public class StringUtil {
 
-	private static final Logger logger = Logger.getLogger(StringUtil.class.getName());
+	private static final Logger logger = Logger.getLogger(StringUtil.class
+			.getName());
+	private static Pattern idSequencePattern = Pattern
+			.compile("^[A-Za-z0-9_-]{36}$");
+	private static Pattern publicIdPattern = Pattern.compile("^[0-9]+$");
+	private static Pattern searchParameterTypePattern = Pattern
+			.compile("^[a-zA-Z\\s]*$");
+	private static Pattern versionPattern = Pattern
+			.compile("^[a-zA-Z0-9\\s\\*\\_\\.\\(\\)]*$");
 
 	public static String trimDoubleQuotes(String value) throws Exception {
 		boolean temp = false;
-		
-		if(value == null) throw new Exception("value is NULL or empty!");
+
+		if (value == null)
+			throw new Exception("value is NULL or empty!");
 
 		value = value.trim();
 
 		if (value.indexOf("\"") == 0) {
 			value = value.substring(1, value.length());
 		}
-		if (value.lastIndexOf("\"") == value.length()-1) {
-			value = value.substring(0, value.length()-1);
+		if (value.lastIndexOf("\"") == value.length() - 1) {
+			value = value.substring(0, value.length() - 1);
 		}
 
 		return value;
 	}
-	
+
 	public static String handleNull(String value) {
 		String retVal = "";
 
@@ -91,8 +101,8 @@ public class StringUtil {
 	}
 
 	/*
-	 * Escape special characters and trim any trailing spaces as well
-	 * Source: http://www.javapractices.com/topic/TopicAction.do?Id=96
+	 * Escape special characters and trim any trailing spaces as well Source:
+	 * http://www.javapractices.com/topic/TopicAction.do?Id=96
 	 */
 	public static String safeString(String str) throws Exception {
 		final StringBuilder result = new StringBuilder();
@@ -102,7 +112,10 @@ public class StringUtil {
 		boolean found = false;
 		while (character != CharacterIterator.DONE) {
 			if ((int) character < 32 || (int) character > 126) {
-				result.append(" ");		//JR1024 just ignore it instead of converting to whitespace; rolled back due to breaking changes for totally new PV without any VM
+				result.append(" "); // JR1024 just ignore it instead of
+									// converting to whitespace; rolled back due
+									// to breaking changes for totally new PV
+									// without any VM
 				found = true;
 				// System.out.println("Ctrl char detected -"+(int)character+"-, filtered with a space!");
 			} else {
@@ -111,9 +124,13 @@ public class StringUtil {
 			character = iterator.next();
 		}
 		if (found) {
-			logger.debug("Ctrl char detected in the original string [" + str + "] xstring [" + toASCIICode(str) + "] filtered string [" + result + "]");
+			logger.debug("Ctrl char detected in the original string [" + str
+					+ "] xstring [" + toASCIICode(str) + "] filtered string ["
+					+ result + "]");
 		}
-		return result.toString();	//JR1024 trim extra spaces, if any; rolled back due to breaking changes for totally new PV without any VM
+		return result.toString(); // JR1024 trim extra spaces, if any; rolled
+									// back due to breaking changes for totally
+									// new PV without any VM
 	}
 
 	/** "xray" function - prints out its ASCII value */
@@ -124,7 +141,7 @@ public class StringUtil {
 		char character = iterator.current();
 		while (character != CharacterIterator.DONE) {
 			if ((int) character < 32 || (int) character > 126) {
-				result.append("{").append((int)character).append("}");
+				result.append("{").append((int) character).append("}");
 			} else {
 				result.append(character);
 			}
@@ -151,10 +168,11 @@ public class StringUtil {
 		e.printStackTrace(pw);
 
 		return sw.toString();
-	}	
-	
-	public static long countWords(String text, String delimiter) throws Exception {
-		if(text == null || delimiter == null) {
+	}
+
+	public static long countWords(String text, String delimiter)
+			throws Exception {
+		if (text == null || delimiter == null) {
 			throw new Exception("Text or delimiter can not be NULL or empty.");
 		}
 		return Arrays.asList(text.split(delimiter)).size();
@@ -169,7 +187,7 @@ public class StringUtil {
 	public static String cleanJavascriptAndHtml(String stringToClean) {
 		if (stringToClean == null)
 			return stringToClean;
-		
+
 		stringToClean = stringToClean.replaceAll("alert\\(", "(");
 		stringToClean = stringToClean.replaceAll("<script", "<");
 		stringToClean = stringToClean.replaceAll("</script", "</");
@@ -177,16 +195,61 @@ public class StringUtil {
 		stringToClean = stringToClean.replaceAll(".html", "");
 		stringToClean = stringToClean.replaceAll("iframe", "");
 		stringToClean = stringToClean.replaceAll("UTL_HTTP.REQUEST", "");
-		
+
 		return stringToClean;
 	}
-	
+
 	public static String[] cleanJavascriptAndHtmlArray(String[] stringToClean) {
-		if(stringToClean != null && stringToClean.length > 0) {
-			for(int i=0;i<stringToClean.length;i++) {
+		if (stringToClean != null && stringToClean.length > 0) {
+			for (int i = 0; i < stringToClean.length; i++) {
 				stringToClean[i] = cleanJavascriptAndHtml(stringToClean[i]);
 			}
 		}
 		return stringToClean;
+	}
+
+	/**
+	 * Validate the ID sequence 
+	 * 
+	 * @param idSequenceToCheck
+	 * @return
+	 */
+	public static boolean validateElementIdSequence(String idSequenceToCheck) {
+		return validatePatternAndValue(idSequencePattern, idSequenceToCheck);
+	}
+
+	/**
+	 * Validate the search parameter type
+	 * 
+	 * @param parameterTypeToCheck
+	 * @return
+	 */
+	public static boolean validateSearchParameterType(
+			String parameterTypeToCheck) {
+		return validatePatternAndValue(searchParameterTypePattern,
+				parameterTypeToCheck);
+	}
+
+	/**
+	 * Validate the Public Id of a CDE Element
+	 * 
+	 * @param publicIdToCheck
+	 * @return
+	 */
+	public static boolean validateElementPublicId(String publicIdToCheck) {
+		return validatePatternAndValue(publicIdPattern, publicIdToCheck);
+	}
+	public static boolean validateVersion(String versionToCheck) {
+		return validatePatternAndValue(versionPattern, versionToCheck);
+	}
+
+	private static boolean validatePatternAndValue(Pattern checkPattern,
+			String valueToCheck) {
+		try {
+			return checkPattern.matcher(valueToCheck).matches();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return false;
 	}
 }

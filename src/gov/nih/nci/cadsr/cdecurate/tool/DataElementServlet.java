@@ -1660,6 +1660,11 @@ public class DataElementServlet extends CurationServlet{
     	String acID = (String) m_classReq.getAttribute("acIdseq");
     	if (acID.equals(""))
             acID = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml((String) m_classReq.getParameter("idseq"));
+    	//input validation for appscan
+		if(acID!=null){
+			if(!StringUtil.validateElementIdSequence(acID))
+				throw new Exception("idseq contains characters or combinations of characters that are not allowed because of security concerns.");
+		}
     	Vector<DE_Bean> vList = new Vector<DE_Bean>();
         // get DE's attributes from the database again
         GetACSearch serAC = new GetACSearch(m_classReq, m_classRes, this);

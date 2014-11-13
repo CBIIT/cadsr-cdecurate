@@ -1074,6 +1074,12 @@ public void doOpenViewPage() throws Exception{
     HttpServletRequest req = httpRequest;
    	HttpSession session = req.getSession();
     String acID = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml((String) req.getParameter("idseq"));
+    //input validation for appscan
+	if(acID!=null){
+		if(!StringUtil.validateElementIdSequence(acID))
+			throw new Exception("idseq contains characters or combinations of characters that are not allowed because of security concerns.");
+	}
+    
     if (acID == null){
 		acID = (String) req.getAttribute("acIdseq");
 	}

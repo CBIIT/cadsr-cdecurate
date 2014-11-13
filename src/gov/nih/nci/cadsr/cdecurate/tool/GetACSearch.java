@@ -118,6 +118,10 @@ public class GetACSearch implements Serializable
             DataManager.setAttribute(session, "serProtoID", "");
             // get the selected Administed component for Search
             String sRecordsDisplayed = StringUtil.cleanJavascriptAndHtml( (String) req.getParameter("recordsDisplayed") );
+            if(sRecordsDisplayed!=null){
+            	if(!StringUtil.validateVersion(sRecordsDisplayed))
+            		throw new Exception("recordsDisplayed contains characters or combinations of characters that are not allowed because of security concerns.");
+            }
             logger.info("$$$$$$$$$$$$$$$$$$$$"+sRecordsDisplayed);
             String sComponent = StringUtil.cleanJavascriptAndHtml( (String) req.getParameter("listSearchFor") );
             String sSearchAC = (String) session.getAttribute("searchAC");
@@ -134,6 +138,10 @@ public class GetACSearch implements Serializable
             sSearchAC = (String) session.getAttribute("searchAC");
             // do the keyword search for the selected component
             String sKeyword = StringUtil.cleanJavascriptAndHtml( (String) req.getParameter("keyword") );
+            if(sKeyword!=null){
+            	if(!StringUtil.validateVersion(sKeyword))
+            		throw new Exception("keyword contains characters or combinations of characters that are not allowed because of security concerns.");
+            }
             if(sKeyword == null && sSearchAC.equals("PermissibleValue"))
             	sKeyword = (String)session.getAttribute("serKeyword");
             if (sKeyword != null)
@@ -156,11 +164,20 @@ public class GetACSearch implements Serializable
                     sContextUse = "";
                 // filter by version
                 String sVersion = /*SECURITYTEAM-299*/StringUtil.cleanJavascriptAndHtml((String) req.getParameter("rVersion"));
+                //input validation for appscan
+                if(sVersion!=null){
+                	if(!StringUtil.validateVersion(sVersion))
+                		throw new Exception("rVersion contains characters or combinations of characters that are not allowed because of security concerns.");
+                }
                 DataManager.setAttribute(session, "serVersion", sVersion);
                 // get the version number if other
                 String txVersion = "";
                 if (sVersion != null && sVersion.equals("Other"))
                     txVersion = StringUtil.cleanJavascriptAndHtml((String) req.getParameter("tVersion"));
+                if(txVersion!=null){
+                	if(!StringUtil.validateVersion(txVersion))
+                		throw new Exception("tVersion contains characters or combinations of characters that are not allowed because of security concerns.");
+                }
                 if (txVersion == null)
                     txVersion = "";
                 DataManager.setAttribute(session, "serVersionNum", txVersion);
@@ -216,6 +233,10 @@ public class GetACSearch implements Serializable
                 DataManager.setAttribute(session, "selCS", sSchemes);
                 String sCDid = "";
                 sCDid = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml((String) m_classReq.getParameter("listCDName"));
+                if(sCDid!=null){
+	                if(!StringUtil.validateSearchParameterType(sCDid))
+	                	throw new Exception("listCDName contains characters or combinations of characters that are not allowed because of security concerns.");
+                }
                 DataManager.setAttribute(session, "serSelectedCD", sCDid);
                 if (sCDid != null && sCDid.equalsIgnoreCase("All Domains"))
                     sCDid = "";
@@ -228,6 +249,10 @@ public class GetACSearch implements Serializable
                     sStatus = "";
                 // filter by registration status
                 String sRegStatus = (String) req.getParameter("listRegStatus");
+                if(sRegStatus!=null){
+                	if(!StringUtil.validateSearchParameterType(sRegStatus))
+                		throw new Exception("listRegStatus contains characters or combinations of characters that are not allowed because of security concerns.");
+                }
                 logger.debug("at line 215 of GetACSearch.java***********"+ sRegStatus);
                 DataManager.setAttribute(session, "serRegStatus", sRegStatus);
                 if (sRegStatus == null || sRegStatus.equals("allReg"))
@@ -239,6 +264,10 @@ public class GetACSearch implements Serializable
                     sDerType = "";
                 // filter by domain data type
                 String sDataType = (String) req.getParameter("listDataType");
+                if(sDataType!=null){
+                	if(!StringUtil.validateVersion(sDataType))
+                		throw new Exception("listDataType contains characters or combinations of characters that are not allowed because of security concerns.");
+                }
                 DataManager.setAttribute(session, "serDataType", sDataType);
                 if (sDataType == null || sDataType.equals("allData"))
                     sDataType = "";
@@ -274,6 +303,10 @@ public class GetACSearch implements Serializable
                     sCreator = "";
                 // get value of search in
                 String sSearchIn = (String) req.getParameter("listSearchIn");
+               if(sSearchIn!=null){
+	                if(!StringUtil.validateSearchParameterType(sSearchIn))
+	                	throw new Exception("listSearchIn contains characters or combinations of characters that are not allowed because of security concerns.");
+               }
                 if (sSearchIn == null)
                     sSearchIn = "longName";
                 DataManager.setAttribute(session, "serSearchIn", sSearchIn);
@@ -899,6 +932,10 @@ public class GetACSearch implements Serializable
             String menuAction = (String) session.getAttribute(Session_Data.SESSION_MENU_ACTION);
             // do the keyword search for the selected component
             String sKeyword = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml((String) m_classReq.getParameter("keyword"));
+            if(sKeyword!=null){
+            	if(!StringUtil.validateVersion(sKeyword))
+            		throw new Exception("keyword contains characters or combinations of characters that are not allowed because of security concerns.");
+            }
             // String sComponent = "";
             if (menuAction.equals("searchForCreate"))
                 sSearchAC = (String) session.getAttribute("creSearchAC");
@@ -2473,6 +2510,11 @@ public class GetACSearch implements Serializable
                     if (sAttrList[i] != null)
                     {
                         String sAttr = new String(sAttrList[i]);
+                        //Input validation for appscan
+                        if(sAttr!=null){
+                        	if(!StringUtil.validateSearchParameterType(sAttr))
+                        		throw new Exception("listAttrFilter contains characters or combinations of characters that are not allowed because of security concerns.");
+                        }
                         vAttrList.addElement(sAttr);
                         if (sAttr.equals("All Attributes"))
                         {
@@ -7695,7 +7737,15 @@ public class GetACSearch implements Serializable
             DataManager.setAttribute(session, "creSearchAC", sSearchAC);
             // get the search in data
             String sRecordsDisplayed = StringUtil.cleanJavascriptAndHtml( req.getParameter("recordsDisplayed") );
+            if(sRecordsDisplayed!=null){
+            	if(!StringUtil.validateVersion(sRecordsDisplayed))
+            		throw new Exception("recordsDisplayed contains characters or combinations of characters that are not allowed because of security concerns.");
+            }
             String sSearchIn = StringUtil.cleanJavascriptAndHtml( (String) req.getParameter("listSearchIn") );
+            if(sSearchIn!=null){
+	            if(!StringUtil.validateSearchParameterType(sSearchIn))
+	            	throw new Exception("listSearchIn contains characters or combinations of characters that are not allowed because of security concerns.");
+            }
             if (sSearchIn == null)
                 sSearchIn = "longName";
             req.setAttribute("creSearchIn", sSearchIn);
@@ -7737,6 +7787,10 @@ public class GetACSearch implements Serializable
                 intMetaLimit = 100;
             // do the keyword search for the selected component
             String sKeyword = StringUtil.cleanJavascriptAndHtml( (String) req.getParameter("keyword") );
+            if(sKeyword!=null){
+            	if(!StringUtil.validateVersion(sKeyword))
+            		throw new Exception("keyword contains characters or combinations of characters that are not allowed because of security concerns.");
+            }
             if (sKeyword == null)
                 sKeyword = "";
             if (isIntSearch == true)
@@ -7778,6 +7832,11 @@ public class GetACSearch implements Serializable
                 sContextUse = "";
             // filter by version
             String sVersion = StringUtil.cleanJavascriptAndHtml( (String) req.getParameter("rVersion") );
+           //input validation for appscan
+            if(sVersion!=null){
+            	if(!StringUtil.validateVersion(sVersion))
+            		throw new Exception("rVersion contains characters or combinations of characters that are not allowed because of security concerns.");
+            }
             if (isIntSearch == true && sSearchAC.equals("ConceptualDomain"))
                 sVersion = "Yes";
             DataManager.setAttribute(session, "creVersion", sVersion);
@@ -7785,6 +7844,10 @@ public class GetACSearch implements Serializable
             String txVersion = "";
             if (sVersion != null && sVersion.equals("Other"))
                 txVersion = StringUtil.cleanJavascriptAndHtml( (String) req.getParameter("tVersion") );
+            if(txVersion!=null){
+            	if(!StringUtil.validateVersion(txVersion))
+            		throw new Exception("tVersion contains characters or combinations of characters that are not allowed because of security concerns.");
+            }
             if (txVersion == null)
                 txVersion = "";
             DataManager.setAttribute(session, "creVersionNum", txVersion);
@@ -7851,6 +7914,10 @@ public class GetACSearch implements Serializable
                 DataManager.setAttribute(session, "creStatusBlocks", sStatus);
             // filter by registration status
             String sRegStatus = (String) req.getParameter("listRegStatus");
+            if(sRegStatus!=null){
+            	if(!StringUtil.validateSearchParameterType(sRegStatus))
+            		throw new Exception("listRegStatus contains characters or combinations of characters that are not allowed because of security concerns.");
+            }
             DataManager.setAttribute(session, "creRegStatus", sRegStatus);
             if (sRegStatus == null || sRegStatus.equals("allReg"))
                 sRegStatus = "";
@@ -7861,6 +7928,10 @@ public class GetACSearch implements Serializable
                 sDerType = "";
             // filter by data type
             String sDataType = (String) req.getParameter("listDataType");
+            if(sDataType!=null){
+            	if(!StringUtil.validateVersion(sDataType))
+            		throw new Exception("listDataType contains characters or combinations of characters that are not allowed because of security concerns.");
+            }
             DataManager.setAttribute(session, "creDataType", sDataType);
             if (sDataType == null || sDataType.equals("allData"))
                 sDataType = "";
@@ -8110,6 +8181,10 @@ public class GetACSearch implements Serializable
                 // store the CRFValue id in the session
                 String crfValueID = StringUtil.cleanJavascriptAndHtml(req.getParameter("QCValueIDseq"));
                 String crfValueName = req.getParameter("QCValueName");
+                if(crfValueName!=null){
+                	if(!StringUtil.validateSearchParameterType(crfValueName))
+                		throw new Exception("QCValueName contains characters or combinations of characters that are not allowed because of security concerns.");
+                }
                 if (crfValueID != null && !crfValueID.equals(""))
                 {
                     DataManager.setAttribute(session, "selCRFValueID", crfValueID);
@@ -10399,9 +10474,15 @@ public class GetACSearch implements Serializable
         String sCUIString = "";
         String compType = "";
         conID = StringUtil.cleanJavascriptAndHtml(m_classReq.getParameter("conid"));
+        
         if (ASLName.equals("")) ASLName=new String("%"); 
         try
         {
+        	//input validation for appscan
+        	if(conID!=null){
+            	if(!StringUtil.validateElementIdSequence(conID))
+            		throw new Exception("conid contains characters or combinations of characters that are not allowed because of security concerns.");
+            }
             if (m_servlet.getConn() == null)
                 m_servlet.ErrorLogin(m_classReq, m_classRes);
            
