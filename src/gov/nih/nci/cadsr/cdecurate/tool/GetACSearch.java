@@ -234,7 +234,7 @@ public class GetACSearch implements Serializable
                 String sCDid = "";
                 sCDid = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml((String) m_classReq.getParameter("listCDName"));
                 if(sCDid!=null){
-	                if(!StringUtil.validateSearchParameterType(sCDid))
+	                if(!StringUtil.validateVersion(sCDid))
 	                	throw new Exception("listCDName contains characters or combinations of characters that are not allowed because of security concerns.");
                 }
                 DataManager.setAttribute(session, "serSelectedCD", sCDid);
