@@ -16,7 +16,7 @@ Insert into SBREXT.TOOL_OPTIONS_VIEW_EXT (TOOL_NAME,PROPERTY,VALUE) values ('CUR
 -- delete from sbrext.tool_options_view_ext where TOOL_NAME = 'CURATION' and PROPERTY in ('EVS.VOCAB.10.DISPLAY', 'EVS.VOCAB.10.EVSNAME');
 Insert into SBREXT.TOOL_OPTIONS_VIEW_EXT (TOOL_NAME,PROPERTY,VALUE) values ('CURATION','EVS.VOCAB.10.EVSNAME','HL7');
 Insert into SBREXT.TOOL_OPTIONS_VIEW_EXT (TOOL_NAME,PROPERTY,VALUE) values ('CURATION','EVS.VOCAB.10.METASOURCE','HL7');
-Update sbrext.tool_options_view_ext set VALUE = 'HL7' where TOOL_NAME = 'CURATION' and PROPERTY = 'EVS.VOCAB.10.EVSNAME';
+Update sbrext.tool_options_view_ext set VALUE = 'HL7 Vocabulary' where TOOL_NAME = 'CURATION' and PROPERTY = 'EVS.VOCAB.10.EVSNAME';
 Insert into SBREXT.TOOL_OPTIONS_VIEW_EXT (TOOL_NAME,PROPERTY,VALUE) values ('CURATION','EVS.VOCAB.10.DISPLAY','HL7');
 Update sbrext.tool_options_view_ext set VALUE = 'HL7' where TOOL_NAME = 'CURATION' and PROPERTY = 'EVS.VOCAB.10.DISPLAY';
 --Insert into SBREXT.TOOL_OPTIONS_VIEW_EXT (TOOL_NAME,PROPERTY,VALUE) values ('CURATION','EVS.VOCAB.9.DISPLAY','HGNC');
@@ -28,6 +28,7 @@ Update sbrext.tool_options_view_ext set VALUE = 'HGNC' where TOOL_NAME = 'CURATI
 Update sbrext.tool_options_view_ext set VALUE = 'ICD-9-CM' where TOOL_NAME = 'CURATION' and PROPERTY = 'EVS.VOCAB.12.DISPLAY';
 Update sbrext.tool_options_view_ext set VALUE = 'ICD10' where TOOL_NAME = 'CURATION' and PROPERTY = 'EVS.VOCAB.14.DISPLAY';
 Insert into SBREXT.TOOL_OPTIONS_VIEW_EXT (TOOL_NAME,PROPERTY,VALUE) values ('CURATION','EVS.VOCAB.16.DISPLAY','ICD-10-CM');
+Update sbrext.tool_options_view_ext set VALUE = 'International Classification of Disease, Tenth Revision, Clinical Modification' where TOOL_NAME = 'CURATION' and PROPERTY = 'EVS.VOCAB.16.EVSNAME';
 Update sbrext.tool_options_view_ext set VALUE = 'ICD-10-CM' where TOOL_NAME = 'CURATION' and PROPERTY = 'EVS.VOCAB.16.DISPLAY';
 Update sbrext.tool_options_view_ext set VALUE = 'LNC' where TOOL_NAME = 'CURATION' and PROPERTY = 'EVS.VOCAB.18.DISPLAY';
 Update sbrext.tool_options_view_ext set VALUE = 'MDR' where TOOL_NAME = 'CURATION' and PROPERTY = 'EVS.VOCAB.20.DISPLAY';
@@ -47,8 +48,8 @@ Update sbrext.tool_options_view_ext set VALUE = 'Anatomical Dictionary for the A
 
 Insert into SBREXT.TOOL_OPTIONS_VIEW_EXT (TOOL_NAME,PROPERTY,VALUE) values ('CURATION','EVS.VOCAB.44.DISPLAY','ChEBI');
 Update sbrext.tool_options_view_ext set VALUE = 'ChEBI' where TOOL_NAME = 'CURATION' and PROPERTY = 'EVS.VOCAB.44.DISPLAY';
-Insert into SBREXT.TOOL_OPTIONS_VIEW_EXT (TOOL_NAME,PROPERTY,VALUE) values ('CURATION','EVS.VOCAB.44.EVSNAME','Chemical Entities of Biological Interest');
-Update sbrext.tool_options_view_ext set VALUE = 'Chemical Entities of Biological Interest' where TOOL_NAME = 'CURATION' and PROPERTY = 'EVS.VOCAB.44.EVSNAME';
+Insert into SBREXT.TOOL_OPTIONS_VIEW_EXT (TOOL_NAME,PROPERTY,VALUE) values ('CURATION','EVS.VOCAB.44.EVSNAME','ChEBI');
+Update sbrext.tool_options_view_ext set VALUE = 'ChEBI' where TOOL_NAME = 'CURATION' and PROPERTY = 'EVS.VOCAB.44.EVSNAME';
 
 commit;
 
