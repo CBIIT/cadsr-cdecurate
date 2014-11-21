@@ -69,7 +69,7 @@ public class ConceptUtil {
 					temp1 = token[i].substring(0, token[i].length()-1);
 					if((j = token[i].indexOf("::")) > -1) {
 						numberStr = token[i].substring(j+offset, temp1.length());
-						if(StringUtils.isNumeric(numberStr)) {
+						if(StringUtils.isNumeric(numberStr) && !temp1.startsWith("Integer::")) {
 							k = (j > 2)?j-2:0;
 							target4Removal = token[i].substring(k+offset, token[i].length());
 							arrList.add(target4Removal);

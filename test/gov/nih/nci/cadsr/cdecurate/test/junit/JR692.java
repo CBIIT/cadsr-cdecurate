@@ -110,17 +110,46 @@ public class JR692 {
 
 	@Test
 	public void testDescriptionPositive() {
-		String badName = null;
-		String fixedName = null;
+		String input = null;
+		String output = null;
 		try {
-			badName = "Any small compartment.::1: No Value Exists::2: Something distinguishable as an identifiable class based on common qualities.::3: An indication that an investigational drug or substance has been added to the existing treatment regimen.&nbsp;";
-			fixedName = ConceptUtil.handleDescription(badName);
-			assertTrue("Description check 1", fixedName.indexOf("::1") == -1);
-			assertTrue("Description check 2", fixedName.indexOf("::2") == -1);
-			assertTrue("Description check 3", fixedName.indexOf("::3") == -1);
+			input = "Any small compartment.::1: No Value Exists::2: Something distinguishable as an identifiable class based on common qualities.::3: An indication that an investigational drug or substance has been added to the existing treatment regimen.&nbsp;";
+			output = ConceptUtil.handleDescription(input);
+			System.out.println(input + " filtered to [" + output);
+			assertTrue("Description positive check 1", output.indexOf("::1") == -1);
+			assertTrue("Description positive check 2", output.indexOf("::2") == -1);
+			assertTrue("Description positive check 3", output.indexOf("::3") == -1);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
+	@Test
+	public void testDescriptionNegative() {
+		String input = null;
+		String output = null;
+		try {
+			input = "Any small compartment. No Value Exists Something distinguishable as an identifiable class based on common qualities. An indication that an investigational drug or substance has been added to the existing treatment regimen.&nbsp;";
+			output = ConceptUtil.handleDescription(input);
+			assertTrue("Description negative check 1", output.equals(input));
+			System.out.println(input + " filtered to [" + output);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	@Test
+	public void testDescriptionSpecialCases() {
+		String input = null;
+		String output = null;
+		try {
+			input = "Integer::1. Any small compartment. Integer::60 No Value Exists Integer::60: &nbsp;";
+			output = ConceptUtil.handleDescription(input);
+			assertTrue("Description special case check 1", output.equals(input));
+			System.out.println(input + " filtered to [" + output);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
 }
