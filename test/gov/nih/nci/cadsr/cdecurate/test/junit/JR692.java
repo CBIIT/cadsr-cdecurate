@@ -80,7 +80,7 @@ public class JR692 {
 	public void cleanup() {
 	}
 
-	@Test
+//	@Test
 	public void testLongNamePositive() {
 		String badName = null;
 		String fixedName = null;
@@ -96,7 +96,7 @@ public class JR692 {
 		}
 	}
 
-	@Test
+//	@Test
 	public void testLongNameNegative() {
 		String goodName = "Name 2";
 		String fixedName = null;
@@ -109,13 +109,13 @@ public class JR692 {
 	}
 
 	@Test
-	public void testDescriptionPositive() {
+	public void testDescriptionPositiveA() {
 		String input = null;
 		String output = null;
 		try {
 			input = "Any small compartment.::1: No Value Exists::2: Something distinguishable as an identifiable class based on common qualities.::3: An indication that an investigational drug or substance has been added to the existing treatment regimen.&nbsp;";
 			output = ConceptUtil.handleDescription(input);
-			System.out.println(input + " filtered to [" + output);
+			System.out.println("[" + output + "] original text = [" + input + "]");
 			assertTrue("Description positive check 1", output.indexOf("::1") == -1);
 			assertTrue("Description positive check 2", output.indexOf("::2") == -1);
 			assertTrue("Description positive check 3", output.indexOf("::3") == -1);
@@ -125,28 +125,93 @@ public class JR692 {
 	}
 
 	@Test
+	public void testDescriptionPositiveB() {
+		String input = null;
+		String output = null;
+		try {
+			input = "The smallest units of living structure capable of independent existence, composed of a membrane-enclosed mass of protoplasm and containing a nucleus or nucleoid.::1";
+			output = ConceptUtil.handleDescription(input);
+			System.out.println("[" + output + "] original text = [" + input + "]");
+			assertTrue("Description positive check 4", output.indexOf("::1") == -1);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Test
+	public void testDescriptionPositiveC() {
+		String input = null;
+		String output = null;
+		try {
+			input = "The smallest units of living structure capable of independent existence, composed of a membrane-enclosed mass of protoplasm and containing a nucleus or nucleoid.::1: The words or language units by which a thing is known.::2: Something distinguishable as an identifiable class based on common qualities.::3: An indication that an investigational drug or substance has been added to the existing treatment regimen. ";
+			output = ConceptUtil.handleDescription(input);
+			System.out.println("[" + output + "] original text = [" + input + "]");
+			assertTrue("Description positive check 5", output.indexOf("::1: ") == -1);
+			assertTrue("Description positive check 6", output.indexOf("::2: ") == -1);
+			assertTrue("Description positive check 7", output.indexOf("::3: ") == -1);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Test
+	public void testDescriptionPositiveD() {
+		String input = null;
+		String output = null;
+		try {
+			input = "Cell::1 : C12508" + "<br>" +
+			"Name::2 : C42614" + "<br>" +
+			"Type::3 : C25284" + "<br>" +
+			"Test Product Added to Existing Treatment : C49703";
+			output = ConceptUtil.handleDescription(input);
+			System.out.println("[" + output + "] original text = [" + input + "]");
+			assertTrue("Description positive check 8", output.indexOf("::1 ") == -1);
+			assertTrue("Description positive check 9", output.indexOf("::2 ") == -1);
+			assertTrue("Description positive check 10", output.indexOf("::3 ") == -1);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Test
+	public void testDescriptionPositiveE() {
+		String input = null;
+		String output = null;
+		try {
+			input = "The smallest units of living structure capable of independent existence, composed of a membrane-enclosed mass of protoplasm and containing a nucleus or nucleoid.::1: The words or language units by which a thing is known.::2: Something distinguishable as an identifiable class based on common qualities.::3: An indication that an investigational drug or substance has been added to the existing treatment regimen.  ";
+			output = ConceptUtil.handleDescription(input);
+			System.out.println("[" + output + "] original text = [" + input + "]");
+			assertTrue("Description positive check 11", output.indexOf("::1: ") == -1);
+			assertTrue("Description positive check 12", output.indexOf("::2: ") == -1);
+			assertTrue("Description positive check 13", output.indexOf("::3: ") == -1);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+//	@Test
 	public void testDescriptionNegative() {
 		String input = null;
 		String output = null;
 		try {
 			input = "Any small compartment. No Value Exists Something distinguishable as an identifiable class based on common qualities. An indication that an investigational drug or substance has been added to the existing treatment regimen.&nbsp;";
 			output = ConceptUtil.handleDescription(input);
+			System.out.println("[" + output + "] original text = [" + input + "]");
 			assertTrue("Description negative check 1", output.equals(input));
-			System.out.println(input + " filtered to [" + output);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 	
-	@Test
+//	@Test
 	public void testDescriptionSpecialCases() {
 		String input = null;
 		String output = null;
 		try {
 			input = "Integer::1. Any small compartment. Integer::60 No Value Exists Integer::60: &nbsp;";
 			output = ConceptUtil.handleDescription(input);
+			System.out.println("[" + output + "] original text = [" + input + "]");
 			assertTrue("Description special case check 1", output.equals(input));
-			System.out.println(input + " filtered to [" + output);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
