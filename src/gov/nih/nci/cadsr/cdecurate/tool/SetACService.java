@@ -650,8 +650,9 @@ public class SetACService implements Serializable
 				DEC_Bean oldDEC = (DEC_Bean)session.getAttribute("oldDECBean");
 				if (oldDEC != null && sDECAction.equals("Edit"))
 				{
-					String oName = oldDEC.getDEC_LONG_NAME();	//oldDEC.getDEC_PREFERRED_NAME();	//JR1036 do not use preferred name!
-					String oStatus = oldDEC.getDEC_ASL_NAME();
+					s= m_DEC.getDEC_PREFERRED_NAME(); //CURATNTOOL-672 should use Preferred_name to check if the workflowstatus is "RELEASED"
+					String oName = oldDEC.getDEC_PREFERRED_NAME();	//oldDEC.getDEC_LONG_NAME();	//CURATNTOOL-672 do not use long name!
+					String oStatus = m_DEC.getDEC_ASL_NAME(); //oldDEC.getDEC_ASL_NAME(); //CURATNTOOL-672 should use current DEC, not old DEC
 					strInValid = strInValid + checkNameDiffForReleased(oName, s, oStatus);
 				}
 			}
