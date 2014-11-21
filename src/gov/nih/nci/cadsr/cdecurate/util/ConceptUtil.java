@@ -31,4 +31,8 @@ public class ConceptUtil {
 		return retVal;
 	}
 
+	//TODO
+	public static String handleDescription(String desc) {
+		return handleLongName(desc);
+	}
 }

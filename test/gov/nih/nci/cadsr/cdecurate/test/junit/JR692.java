@@ -81,7 +81,7 @@ public class JR692 {
 	}
 
 	@Test
-	public void testPositive() {
+	public void testLongNamePositive() {
 		String badName = null;
 		String fixedName = null;
 		try {
@@ -97,12 +97,27 @@ public class JR692 {
 	}
 
 	@Test
-	public void testNegative() {
+	public void testLongNameNegative() {
 		String goodName = "Name 2";
 		String fixedName = null;
 		try {
 			fixedName = ConceptUtil.handleLongName(goodName);
 			assertTrue("Long name check", fixedName.equals(goodName));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Test
+	public void testDescriptionPositive() {
+		String badName = null;
+		String fixedName = null;
+		try {
+			badName = "Any small compartment.::1: No Value Exists::2: Something distinguishable as an identifiable class based on common qualities.::3: An indication that an investigational drug or substance has been added to the existing treatment regimen.&nbsp;";
+			fixedName = ConceptUtil.handleDescription(badName);
+			assertTrue("Description check 1", fixedName.indexOf("::1") == -1);
+			assertTrue("Description check 2", fixedName.indexOf("::2") == -1);
+			assertTrue("Description check 3", fixedName.indexOf("::3") == -1);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

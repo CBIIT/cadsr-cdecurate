@@ -16,6 +16,7 @@ L--%>
 <%@ page import="java.util.*"%>
 <%@ page import="gov.nih.nci.cadsr.cdecurate.tool.*"%>
 <%@ page import="gov.nih.nci.cadsr.common.StringUtil"%>
+<%@ page import="gov.nih.nci.cadsr.cdecurate.util.*"%>
 <html>
 	<head>
 		<title>
@@ -121,7 +122,7 @@ L--%>
     for (int i = 0; vValidate.size()>i; i = i+3)
     {
       String sItem = StringUtil.cleanJavascriptAndHtml((String)vValidate.elementAt(i));
-      String sContent = StringUtil.cleanJavascriptAndHtml((String)vValidate.elementAt(i+1));
+      String sContent = StringUtil.cleanJavascriptAndHtml((String)vValidate.elementAt(i+1));	//JR692
       if (sContent == null) sContent = "";
       String sStat = StringUtil.cleanJavascriptAndHtml((String)vValidate.elementAt(i+2));
       String sFont = "#000000";
@@ -137,7 +138,7 @@ L--%>
 						</strong>
 					</td>
 					<td valign="top" bgcolor="#FFFFFF" width="487" bordercolor="#000000">
-						<%=sContent%>
+						<%=ConceptUtil.handleDescription(sContent)%>
 						&nbsp;
 					</td>
 					<td valign="top" bgcolor="#FFFFFF" width="151" bordercolor="#000000">

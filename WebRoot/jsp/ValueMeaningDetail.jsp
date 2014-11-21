@@ -273,7 +273,7 @@ L--%>
 														Description:
 													</b>
 													<br>
-													<%=cBean.getPREFERRED_DEFINITION()%>
+													<%=ConceptUtil.handleDescription(cBean.getPREFERRED_DEFINITION())%>
 												</div>
 											</td>
 										</tr>
