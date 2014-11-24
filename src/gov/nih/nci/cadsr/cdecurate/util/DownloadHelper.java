@@ -676,8 +676,8 @@ public class DownloadHelper {
 
 		//=== the following are not part of (C)DE elements
 		if(col != null && (
-				col.equals("Data Element Concept Workflow Status") ||
-				col.equals("Data Element Concept Registration Status") ||
+//				col.equals("Data Element Concept Workflow Status") ||        //CURATNTOOL-1050 commented these two fields to add them in the excluded list
+//				col.equals("Data Element Concept Registration Status") ||
 				col.equals("Value Meaning Alternate Definitions") /* JR1062 ignore for now even though it is required by JR1000 */ )) {
 			ret = false;
 		}
