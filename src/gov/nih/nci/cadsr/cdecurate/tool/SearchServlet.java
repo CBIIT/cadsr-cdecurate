@@ -752,7 +752,7 @@ public class SearchServlet extends CurationServlet {
                 sID = selAttrs[i];
               //Input validation for appscan
                 if(sID!=null){
-                	if(!StringUtil.validateSearchParameterType(sID))
+                	if(!StringUtil.validateVersion(sID))
                 		throw new Exception("listAttrFilter contains characters or combinations of characters that are not allowed because of security concerns.");
                 }
                 if ((sID != null) && (!sID.equals("")))

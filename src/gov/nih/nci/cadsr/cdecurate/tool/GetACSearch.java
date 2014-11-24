@@ -2512,7 +2512,7 @@ public class GetACSearch implements Serializable
                         String sAttr = new String(sAttrList[i]);
                         //Input validation for appscan
                         if(sAttr!=null){
-                        	if(!StringUtil.validateSearchParameterType(sAttr))
+                        	if(!StringUtil.validateVersion(sAttr))
                         		throw new Exception("listAttrFilter contains characters or combinations of characters that are not allowed because of security concerns.");
                         }
                         vAttrList.addElement(sAttr);

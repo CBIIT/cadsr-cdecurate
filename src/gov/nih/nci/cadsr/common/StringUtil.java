@@ -21,7 +21,7 @@ public class StringUtil {
 	private static Pattern searchParameterTypePattern = Pattern
 			.compile("^[a-zA-Z\\s]*$");
 	private static Pattern versionPattern = Pattern
-			.compile("^[a-zA-Z0-9\\s\\,\\-\\$\\*\\_\\.\\(\\)]*$");
+			.compile("^[a-zA-Z0-9\\s\\,\\/\\-\\$\\'\\*\\_\\.\\(\\)]*$");
 
 	public static String trimDoubleQuotes(String value) throws Exception {
 		boolean temp = false;

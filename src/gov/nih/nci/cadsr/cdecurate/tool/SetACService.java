@@ -3689,10 +3689,10 @@ public class SetACService implements Serializable
 				if(sName != null) m_DE.setDE_DEC_NAME(sName);
 			}
 			//input validation for appscan
-			if(sID!=null){
-				if(!StringUtil.validateElementIdSequence(sID))
-					throw new Exception("selDEC contains characters or combinations of characters that are not allowed because of security concerns.");
-			}
+//			if(sID!=null){
+//				if(!StringUtil.validateElementIdSequence(sID))
+//					throw new Exception("selDEC contains characters or combinations of characters that are not allowed because of security concerns.");
+//			}
 
 			String sVDid[] = req.getParameterValues("selVD");
 			if(sVDid != null)
