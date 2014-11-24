@@ -80,7 +80,7 @@ public class JR692 {
 	public void cleanup() {
 	}
 
-//	@Test
+	@Test
 	public void testLongNamePositive() {
 		String badName = null;
 		String fixedName = null;
@@ -96,7 +96,7 @@ public class JR692 {
 		}
 	}
 
-//	@Test
+	@Test
 	public void testLongNameNegative() {
 		String goodName = "Name 2";
 		String fixedName = null;
@@ -189,7 +189,7 @@ public class JR692 {
 		}
 	}
 	
-//	@Test
+	@Test
 	public void testDescriptionNegative() {
 		String input = null;
 		String output = null;
@@ -203,7 +203,7 @@ public class JR692 {
 		}
 	}
 	
-//	@Test
+	@Test
 	public void testDescriptionSpecialCases() {
 		String input = null;
 		String output = null;

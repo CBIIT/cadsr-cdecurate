@@ -53,7 +53,7 @@ public class ConceptUtil {
 		String ret = desc;
 		
 		if(ret != null) {
-			String sep = " ";
+			String sep = " |\\.";
 			String token[] = ret.split(sep);
 			String temp1 = "";
 			String numberStr = "";
@@ -65,7 +65,7 @@ public class ConceptUtil {
 			//analyze what to remove
 			String target4Removal = "";
 			for(int i=0; i < token.length; i++) {
-				if(token[i].endsWith(":")) {
+				if(token[i].endsWith(":") || token[i].startsWith("::")) {
 					temp1 = token[i].substring(0, token[i].length()-1);
 					if((j = token[i].indexOf("::")) > -1) {
 						numberStr = token[i].substring(j+offset, temp1.length());
