@@ -84,6 +84,43 @@ public class ConceptUtil {
 			}
 		}
 		
+		ret = removeQualifiersCount(ret);
+		
 		return ret;
 	}
+	
+	private static String removeQualifiersCount(String tok) {
+		String ret = tok;
+		
+		if(ret != null) {
+			String sep = " ";
+			String token[] = ret.split(sep);
+			String numberStr = "";
+			int j, k;
+			String beginDelimiter = "::";
+			int offset = beginDelimiter.length();
+			String endDelimiter = ":";
+			ArrayList <String>arrList = new ArrayList<String>();
+			//analyze what to remove
+			String target4Removal = "";
+			int foundAtIndex = -1;
+			for(int i=0; i < token.length; i++) {
+				if((foundAtIndex = token[i].indexOf("::")) > -1) {
+					numberStr = token[i].substring(foundAtIndex+2, token[i].length());
+					if(StringUtils.isNumeric(numberStr) && !token[i].startsWith("Integer::")) {
+						target4Removal = token[i].substring(foundAtIndex, token[i].length());
+						arrList.add(target4Removal);
+					}
+				}
+			}
+			//start removal now
+			Iterator<String> it = (Iterator<String>) arrList.iterator();
+			while(it.hasNext()) {
+				ret = ret.replaceAll(it.next(), "");
+			}
+		}
+		
+		return ret;
+	}
+
 }
