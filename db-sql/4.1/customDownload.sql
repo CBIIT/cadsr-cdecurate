@@ -345,7 +345,7 @@ AS
           dec_conte.name dec_conte_name,
           dec_conte.version dec_conte_version,
           dec.asl_name dec_wk_flow_status, --GF32667
-          acr.registration_status, --GF32667
+          acr_dec.registration_status, --GF32667,JR1050
           oc.oc_id,
           oc.long_name oc_long_name,
           oc.preferred_name oc_preferred_name,
@@ -393,7 +393,7 @@ AS
           vd.long_name vd_long_name,
           vd.version vd_version,
           vd.asl_name vd_wk_flow_status, --GF32667
-          acr.registration_status, --GF32667, JR1050
+          acr_vd.registration_status, --GF32667, JR1050
           vd_conte.name vd_conte_name,
           vd_conte.version vd_conte_version,          
           DECODE (vd.vd_type_flag,
@@ -452,15 +452,15 @@ AS
                                  pv.end_date,
                                  vm.vm_id,
                                  vm.version,
-                                 defs.definition --GF32647
+                                 defs.definition --GF32647  
                           FROM sbr.permissible_values pv,
                                sbr.vd_pvs vp,
-                               sbr.definitions_view defs,--GF32647
+                               sbr.definitions_view defs,--GF32647   
                                value_meanings vm
                           WHERE     vp.vd_idseq = vd.vd_idseq
                                 AND vp.pv_idseq = pv.pv_idseq
                                 AND pv.vm_idseq = vm.vm_idseq
-                                AND vm.vm_idseq = defs.ac_idseq(+) --GF32647
+                                AND vm.vm_idseq = defs.ac_idseq(+) --GF32647  
                 ) AS valid_value_list_t
           )
              valid_values,
@@ -523,6 +523,8 @@ AS
         sbr.contexts vd_conte,
         sbr.contexts dec_conte,
         sbr.ac_registrations acr,
+        sbr.ac_registrations acr_dec,
+        sbr.ac_registrations acr_vd,
         cdebrowser_complex_de_view ccd,
         conceptual_domains cd,
         contexts cd_conte,
@@ -542,6 +544,8 @@ AS
          AND dec.conte_idseq = dec_conte.conte_idseq
          AND de.de_idseq = rd.ac_idseq(+)
          AND de.de_idseq = acr.ac_idseq(+)
+         AND de.dec_idseq = acr_dec.ac_idseq(+)
+         AND de.vd_idseq = acr_vd.ac_idseq(+)
          AND de.de_idseq = ccd.p_de_idseq(+)
          AND vd.cd_idseq = cd.cd_idseq
          AND cd.conte_idseq = cd_conte.conte_idseq
