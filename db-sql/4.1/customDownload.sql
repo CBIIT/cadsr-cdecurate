@@ -335,7 +335,7 @@ AS
           de_conte.version de_conte_version,
           de.cde_id,
           de.asl_name de_wk_flow_status,
-          de.registration_status, --JR1050
+          acr.registration_status, 
           de.begin_date,
           de.origin,
           dec.dec_id,
@@ -345,7 +345,7 @@ AS
           dec_conte.name dec_conte_name,
           dec_conte.version dec_conte_version,
           dec.asl_name dec_wk_flow_status, --GF32667
-          dec.registration_status, --GF32667, JR1050
+          acr.registration_status, --GF32667
           oc.oc_id,
           oc.long_name oc_long_name,
           oc.preferred_name oc_preferred_name,
@@ -393,7 +393,7 @@ AS
           vd.long_name vd_long_name,
           vd.version vd_version,
           vd.asl_name vd_wk_flow_status, --GF32667
-          vd.registration_status, --GF32667, JR1050
+          acr.registration_status, --GF32667, JR1050
           vd_conte.name vd_conte_name,
           vd_conte.version vd_conte_version,          
           DECODE (vd.vd_type_flag,
