@@ -164,7 +164,7 @@ L--%>
 								</b>
 							</div>
 							<div class="readonlybox" style="width: 90%;">
-								<%=thisForm.systemDescription%>
+								<%=ConceptUtil.handleDescription(thisForm.systemDescription)%> <!-- JR692 -->
 							</div>
 							<% } %>
 							<div class="ind2">
@@ -237,7 +237,7 @@ L--%>
 										<tr <% if (i%2 == 0) { %> class="rowColor" <% } %>>
 										
 											<td> <%if (!isView){ %>	
-												<a href="javascript:deleteConcept('<%=i%>', '<%=ConceptUtil.handleLongName(cBean.getLONG_NAME())%>');" title="Remove Item">
+												<a href="javascript:deleteConcept('<%=i%>', '<%=ConceptUtil.handleDescription(cBean.getLONG_NAME())%>');" title="Remove Item">
 													<img src="images/delete_white.gif" border="0" alt="Remove Item">
 												</a>
 												<% if (i != 0) { %>
