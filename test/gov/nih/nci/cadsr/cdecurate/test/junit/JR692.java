@@ -87,10 +87,14 @@ public class JR692 {
 		try {
 			badName = "Name:1";
 			fixedName = ConceptUtil.handleLongName(badName);
-			assertTrue("Long name check 1", fixedName.indexOf(":1") == -1);
+			assertTrue("Long name check 1", fixedName.indexOf(":1") > -1);
 			badName = "Name::2";
 			fixedName = ConceptUtil.handleLongName(badName);
 			assertTrue("Long name check 2", fixedName.indexOf("::2") == -1);
+			badName = "Prior::1 Blood";
+			fixedName = ConceptUtil.handleLongName(badName);
+			assertTrue("Long name check 3a", fixedName.indexOf("::1") == -1);
+			assertTrue("Long name check 3b", fixedName.equals("Prior Blood"));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -116,9 +120,12 @@ public class JR692 {
 			input = "Any small compartment.::1: No Value Exists::2: Something distinguishable as an identifiable class based on common qualities.::3: An indication that an investigational drug or substance has been added to the existing treatment regimen.&nbsp;";
 			output = ConceptUtil.handleDescription(input);
 			System.out.println("[" + output + "] original text = [" + input + "]");
-			assertTrue("Description positive check 1", output.indexOf("::1") == -1);
-			assertTrue("Description positive check 2", output.indexOf("::2") == -1);
-			assertTrue("Description positive check 3", output.indexOf("::3") == -1);
+			assertTrue("Description positive check 1a", output.indexOf("::1") == -1);
+			assertTrue("Description positive check 1b", output.indexOf("compartment.:") > -1);
+			assertTrue("Description positive check 2a", output.indexOf("::2") == -1);
+			assertTrue("Description positive check 2b", output.indexOf("No Value Exists:") > -1);
+			assertTrue("Description positive check 3a", output.indexOf("::3") == -1);
+			assertTrue("Description positive check 3b", output.indexOf("common qualities.:") > -1);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -204,6 +211,7 @@ public class JR692 {
 	}
 	
 	@Test
+	/** This case should never happends as it is taken care by the front end! */
 	public void testDescriptionSpecialCases() {
 		String input = null;
 		String output = null;
@@ -211,7 +219,11 @@ public class JR692 {
 			input = "Integer::1. Any small compartment. Integer::60 No Value Exists Integer::60: &nbsp;";
 			output = ConceptUtil.handleDescription(input);
 			System.out.println("[" + output + "] original text = [" + input + "]");
-			assertTrue("Description special case check 1", output.equals(input));
+			assertTrue("Description special case check 1a", output.equals("Integer. Any small compartment. Integer::60 No Value Exists Integer::60: &nbsp;"));
+			input = "Integer::1. Any small compartment. Integer::60 No Value Exists Integer::60 : &nbsp;";
+			output = ConceptUtil.handleDescription(input);
+			System.out.println("[" + output + "] original text = [" + input + "]");
+			assertTrue("Description special case check 1b", output.equals("Integer. Any small compartment. Integer::60 No Value Exists Integer::60 : &nbsp;"));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
