@@ -199,7 +199,7 @@ L--%>
 									<%=VMForm.ELM_LBL_CON_SUM%>
 									:
 								</b>
-								<%=thisForm.conceptSummary%>
+								<%=ConceptUtil.handleLongName(thisForm.conceptSummary)%> <!-- JR692 -->
 							</div>
 							<div class="table">
 								<table width="95%" border="0">
@@ -237,7 +237,7 @@ L--%>
 										<tr <% if (i%2 == 0) { %> class="rowColor" <% } %>>
 										
 											<td> <%if (!isView){ %>	
-												<a href="javascript:deleteConcept('<%=i%>', '<%=ConceptUtil.handleDescription(cBean.getLONG_NAME())%>');" title="Remove Item">
+												<a href="javascript:deleteConcept('<%=i%>', '<%=ConceptUtil.handleLongName(cBean.getLONG_NAME())%>');" title="Remove Item"> <!-- JR692 -->
 													<img src="images/delete_white.gif" border="0" alt="Remove Item">
 												</a>
 												<% if (i != 0) { %>
@@ -253,7 +253,7 @@ L--%>
 											</td>
 											
 											<td>
-												<%=ConceptUtil.handleLongName(cBean.getLONG_NAME())%>
+												<%=ConceptUtil.handleLongName(cBean.getLONG_NAME())%> <!-- JR692 -->
 											</td>
 											<td>
 												<%=cBean.getCONCEPT_IDENTIFIER()%>
@@ -273,7 +273,7 @@ L--%>
 														Description:
 													</b>
 													<br>
-													<%=ConceptUtil.handleDescription(cBean.getPREFERRED_DEFINITION())%>
+													<%=ConceptUtil.handleDescription(cBean.getPREFERRED_DEFINITION())%> <!-- JR692 -->
 												</div>
 											</td>
 										</tr>
