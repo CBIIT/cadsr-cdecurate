@@ -20,7 +20,7 @@
 		DisableButtons();
 		//submit the form
 		if (document.VMDetail != null)
-			document.VMDetail.submit();
+			document.VMDetail.submit();		//JR692 this is invoked
 		else if (document.VMUse != null)
 			document.VMUse.submit();		
 	}
@@ -86,7 +86,8 @@
 	  		SubmitValidate(mAct);
 	    }
 	}
-	
+
+	//JR692 called by ShowUseSelection(vCompAction) in SearchResultsBlocks.js with integer value nvpValue (Integer::nvpValue)
 	function appendConcept(iRow, nvpValue)
 	{
     	var selRowObj = document.getElementsByName(elmSelectRow);
@@ -94,7 +95,7 @@
     	{
     		selRowObj[0].value = iRow;
     		//get the nvp value
-    		var nvpObj = document.getElementById(elmNVP);
+    		var nvpObj = document.getElementById(elmNVP); //JR692 this gets null; is vmConOrder supposed to be VMvmConOrder???
     		if (nvpObj != null)
     			nvpObj.value = nvpValue;
     		//submit the form

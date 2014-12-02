@@ -340,8 +340,10 @@ function toTitleCase(str)
         //get teh nvp value from teh text field
         var ckField = "nvp_CK"+rowNo;
 		var nvpObj = document.getElementById(ckField);
-		if (nvpObj !== null && nvpObj.value !== null)
-			sNVP = nvpObj.value;
+		if (nvpObj !== null && nvpObj.value !== null) {
+            sNVP = nvpObj.value;    //JR692 has to use this n user entered value i.e. Integer::n
+            window.opener.document.getElementById('VMvmConOrder').value = sNVP; //JR692 bad idea, we know
+        }
 	   //submit the page
 		opener.appendConcept(rowNo, sNVP);
 		window.close();
