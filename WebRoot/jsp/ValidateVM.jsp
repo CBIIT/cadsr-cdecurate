@@ -138,7 +138,7 @@ L--%>
 						</strong>
 					</td>
 					<td valign="top" bgcolor="#FFFFFF" width="487" bordercolor="#000000">
-						<%=ConceptUtil.handleDescription(sContent)%>
+						<%=sContent%>
 						&nbsp;
 					</td>
 					<td valign="top" bgcolor="#FFFFFF" width="151" bordercolor="#000000">
