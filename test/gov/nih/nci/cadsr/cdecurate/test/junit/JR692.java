@@ -139,7 +139,7 @@ public class JR692 {
 			input = "The smallest units of living structure capable of independent existence, composed of a membrane-enclosed mass of protoplasm and containing a nucleus or nucleoid.::1";
 			output = ConceptUtil.handleDescription(input);
 			System.out.println("[" + output + "] original text = [" + input + "]");
-			assertTrue("Description positive check 4", output.indexOf("::1") == -1);
+			assertTrue("Description positive check 4", output.indexOf("::1") > -1);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -219,11 +219,22 @@ public class JR692 {
 			input = "Integer::1. Any small compartment. Integer::60 No Value Exists Integer::60: &nbsp;";
 			output = ConceptUtil.handleDescription(input);
 			System.out.println("[" + output + "] original text = [" + input + "]");
-			assertTrue("Description special case check 1a", output.equals("Integer. Any small compartment. Integer::60 No Value Exists Integer::60: &nbsp;"));
+			assertTrue("Description special case check 1a", output.equals("::1. Any small compartment. ::60 No Value Exists ::60: &nbsp;"));
+
 			input = "Integer::1. Any small compartment. Integer::60 No Value Exists Integer::60 : &nbsp;";
 			output = ConceptUtil.handleDescription(input);
 			System.out.println("[" + output + "] original text = [" + input + "]");
-			assertTrue("Description special case check 1b", output.equals("Integer. Any small compartment. Integer::60 No Value Exists Integer::60 : &nbsp;"));
+			assertTrue("Description special case check 1b", output.equals("::1. Any small compartment. ::60 No Value Exists ::60 : &nbsp;"));
+			
+			input = "A number with no fractional part, including the negative and positive numbers as well as zero.Integer::324";
+			output = ConceptUtil.handleDescription(input);
+			System.out.println("[" + output + "] original text = [" + input + "]");
+			assertTrue("Description special case check 1c", output.equals("A number with no fractional part, including the negative and positive numbers as well as zero.::324"));
+			
+			input = "A number with no fractional part, including the negative and positive numbers as well as zero.::324";
+			output = ConceptUtil.handleDescription(input);
+			System.out.println("[" + output + "] original text = [" + input + "]");
+			assertTrue("Description special case check 1d", output.equals("A number with no fractional part, including the negative and positive numbers as well as zero.::324"));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

@@ -273,6 +273,10 @@ L--%>
 														Description:
 													</b>
 													<br>
+	<%
+		//just for test
+		System.out.println("cBean.getPREFERRED_DEFINITION() = [" + cBean.getPREFERRED_DEFINITION() + "]");
+	%>
 													<%=ConceptUtil.handleDescription(cBean.getPREFERRED_DEFINITION())%> <!-- JR692 -->
 												</div>
 											</td>

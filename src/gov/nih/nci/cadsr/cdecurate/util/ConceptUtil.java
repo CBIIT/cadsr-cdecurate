@@ -58,7 +58,8 @@ public class ConceptUtil {
 		String ret = desc;
 		
 		if(ret != null) {
-			String sep = " |\\.";
+//			String sep = " |\\.";
+			String sep = " ";
 			String token[] = ret.split(sep);
 			String temp1 = "";
 			String numberStr = "";
@@ -94,8 +95,10 @@ public class ConceptUtil {
 			}
 		}
 		
-		ret = removeQualifiersCount(ret);
+//		ret = removeQualifiersCount(ret);
 		
+		ret = ret.replaceAll("Integer::", "::");
+
 		return ret;
 	}
 	

@@ -10,7 +10,7 @@ L--%>
     $Name: not supported by cvs2svn $
 -->
 
-<%@ page language="java" import="java.util.*"%>
+<%@ page language="java" import="java.util.*, gov.nih.nci.cadsr.cdecurate.util.*"%>
 <%@ page import="gov.nih.nci.cadsr.cdecurate.database.Alternates" %>
 <%@ page import="gov.nih.nci.cadsr.common.Constants" %>
 <html>
@@ -618,7 +618,7 @@ L--%>
 																</td>
 																<td align="left" colspan="2">
 																	<div id="pvNewVMDView" style="display: <%if (newVMCon.size() > 0) { %>block<%} else {%>none<% } %>">
-																		<%=newVM.getVM_PREFERRED_DEFINITION().trim()%>
+																		<%=ConceptUtil.handleDescription(newVM.getVM_PREFERRED_DEFINITION().trim())%> <!-- JR692 -->
 																	</div>
 																	<div id="pvNewVMDEdit" style="display: <%if (newVMCon.size() > 0) { %>none<%} else {%>block<% } %>">
 																		<!-- javascript:disableSearch('pvNew'); -->
@@ -1288,10 +1288,10 @@ L--%>
 																				</td>
 																				<td>
 																					<div id="<%=pvCount%>VMDView" style="display: block">
-																						<%=sPVDesc%>
+																						<%=ConceptUtil.handleDescription(sPVDesc)%> <!-- JR692 -->
 																					</div>
 																					<% //if (vmCon.size() < 1) { %>
-																					<div id="<%=pvCount%>VMDEdit" style="display: none"><textarea name="txt<%=pvCount%>Def" rows="4" style="width: 100%" onkeyup="javascript:getORsetEdited('<%=pvCount%>', 'vmd');"><%=sPVDesc%></textarea></div>
+																					<div id="<%=pvCount%>VMDEdit" style="display: none"><textarea name="txt<%=pvCount%>Def" rows="4" style="width: 100%" onkeyup="javascript:getORsetEdited('<%=pvCount%>', 'vmd');"><%=ConceptUtil.handleDescription(sPVDesc)%></textarea></div>
 																					<% //} %>
 																					<br>
 																				</td>
@@ -1349,7 +1349,7 @@ L--%>
 																									</div>
 																								</td>
 																								<td valign="top" nowrap="nowrap">
-																									<%=conName%>
+																									<%=ConceptUtil.handleLongName(conName)%> <!-- JR692 -->
 																								</td>
 																								<td valign="top" nowrap="nowrap">
 																									&nbsp;&nbsp;&nbsp;&nbsp;
@@ -1367,7 +1367,7 @@ L--%>
 																								</td>
 																								<td valign="top" nowrap="nowrap" style="visibility:hidden" width="0.1px">&quot;
 																									<div style="display:none; width:0.1px">
-																										<%=conDesc%>
+																										<%=ConceptUtil.handleDescription(conDesc)%>
 																									</div>
 																								</td>
 																							</tr>
