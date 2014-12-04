@@ -95,7 +95,7 @@ public class ConceptUtil {
 			}
 		}
 		
-//		ret = removeQualifiersCount(ret);
+		ret = removeQualifiersCount(ret);
 		
 		ret = ret.replaceAll("Integer::", "::");
 
@@ -136,11 +136,14 @@ public class ConceptUtil {
 			//start removal now
 			Iterator<String> it = (Iterator<String>) arrList.iterator();
 			while(it.hasNext()) {
+				//only if it does not starts with "Integer::" (as it will/already taken care by other part of the codes)
+				//TODO!!!
+				
 				ret = ret.replaceAll(it.next(), "");
 			}
 		}
 		
-		ret = removeQualifiersCount(ret, 1, 1000);	//assuming that the user/UI would never have any qualifiers larger than 1000! 
+//		ret = removeQualifiersCount(ret, 1, 1000);	//assuming that the user/UI would never have any qualifiers larger than 1000! 
 
 		return ret;
 	}

@@ -80,6 +80,19 @@ public class JR692 {
 	public void cleanup() {
 	}
 
+	/**
+	 * NOTES:
+	 * 
+	 * positive means removal is successful
+	 * negative means removal is avoided/failed/not complete
+	 * 
+	 * SUMMARY:
+	 * 
+	 * Generally for any ::n in the name/description/definition, it will be removed unless it is a user entered value of Integer concept (in
+	 * which case, only :: is removed and n will be left alone).
+	 * 
+	 */
+	
 	@Test
 	public void testLongNamePositive() {
 		String badName = null;
@@ -87,14 +100,20 @@ public class JR692 {
 		try {
 			badName = "Name:1";
 			fixedName = ConceptUtil.handleLongName(badName);
-			assertTrue("Long name check 1", fixedName.indexOf(":1") > -1);
+			assertTrue("Long name check 1", fixedName.indexOf(":1") > -1);	//we do not care about :n just ::n !
+
 			badName = "Name::2";
 			fixedName = ConceptUtil.handleLongName(badName);
 			assertTrue("Long name check 2", fixedName.indexOf("::2") == -1);
+			
 			badName = "Prior::1 Blood";
 			fixedName = ConceptUtil.handleLongName(badName);
 			assertTrue("Long name check 3a", fixedName.indexOf("::1") == -1);
 			assertTrue("Long name check 3b", fixedName.equals("Prior Blood"));
+			
+			badName = "Prior Integer::25 Blood";
+			fixedName = ConceptUtil.handleLongName(badName);
+			assertTrue("Long name check 3c", fixedName.equalsIgnoreCase("Prior Integer::25 Blood"));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -139,7 +158,7 @@ public class JR692 {
 			input = "The smallest units of living structure capable of independent existence, composed of a membrane-enclosed mass of protoplasm and containing a nucleus or nucleoid.::1";
 			output = ConceptUtil.handleDescription(input);
 			System.out.println("[" + output + "] original text = [" + input + "]");
-			assertTrue("Description positive check 4", output.indexOf("::1") > -1);
+			assertTrue("Description positive check 4", output.indexOf("::1") == -1);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -234,7 +253,7 @@ public class JR692 {
 			input = "A number with no fractional part, including the negative and positive numbers as well as zero.::324";
 			output = ConceptUtil.handleDescription(input);
 			System.out.println("[" + output + "] original text = [" + input + "]");
-			assertTrue("Description special case check 1d", output.equals("A number with no fractional part, including the negative and positive numbers as well as zero.::324"));
+			assertTrue("Description special case check 1d", output.equals("A number with no fractional part, including the negative and positive numbers as well as zero."));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
