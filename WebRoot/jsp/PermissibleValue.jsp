@@ -618,7 +618,7 @@ L--%>
 																</td>
 																<td align="left" colspan="2">
 																	<div id="pvNewVMDView" style="display: <%if (newVMCon.size() > 0) { %>block<%} else {%>none<% } %>">
-																		<%=ConceptUtil.handleDescription(newVM.getVM_PREFERRED_DEFINITION().trim())%> <!-- JR692 -->
+																		<%=newVM.getVM_PREFERRED_DEFINITION().trim()%> <!-- JR692 rolled back -->
 																	</div>
 																	<div id="pvNewVMDEdit" style="display: <%if (newVMCon.size() > 0) { %>none<%} else {%>block<% } %>">
 																		<!-- javascript:disableSearch('pvNew'); -->
@@ -1288,10 +1288,10 @@ L--%>
 																				</td>
 																				<td>
 																					<div id="<%=pvCount%>VMDView" style="display: block">
-																						<%=ConceptUtil.handleDescription(sPVDesc)%> <!-- JR692 -->
+																						<%=sPVDesc %> <!-- JR692 rolled back -->
 																					</div>
 																					<% //if (vmCon.size() < 1) { %>
-																					<div id="<%=pvCount%>VMDEdit" style="display: none"><textarea name="txt<%=pvCount%>Def" rows="4" style="width: 100%" onkeyup="javascript:getORsetEdited('<%=pvCount%>', 'vmd');"><%=ConceptUtil.handleDescription(sPVDesc)%></textarea></div>
+																					<div id="<%=pvCount%>VMDEdit" style="display: none"><textarea name="txt<%=pvCount%>Def" rows="4" style="width: 100%" onkeyup="javascript:getORsetEdited('<%=pvCount%>', 'vmd');"><%=sPVDesc %></textarea></div>
 																					<% //} %>
 																					<br>
 																				</td>
@@ -1349,7 +1349,7 @@ L--%>
 																									</div>
 																								</td>
 																								<td valign="top" nowrap="nowrap">
-																									<%=ConceptUtil.handleLongName(conName)%> <!-- JR692 -->
+																									<%=conName %> <!-- JR692 rolled back -->
 																								</td>
 																								<td valign="top" nowrap="nowrap">
 																									&nbsp;&nbsp;&nbsp;&nbsp;
@@ -1367,7 +1367,7 @@ L--%>
 																								</td>
 																								<td valign="top" nowrap="nowrap" style="visibility:hidden" width="0.1px">&quot;
 																									<div style="display:none; width:0.1px">
-																										<%=ConceptUtil.handleDescription(conDesc)%>
+																										<%=conDesc %> <!-- JR692  rolled back -->
 																									</div>
 																								</td>
 																							</tr>
