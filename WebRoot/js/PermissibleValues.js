@@ -481,6 +481,9 @@
 	}
     function view(pvd, imgdhide, imgddisp, action, pvNo, vdwfstatus, vdusedinform, pvusedinform, fmwfstatus) //GF7680 added 4 formal parameters
     {
+		if(pvusedinform == true) {
+			alert('This element is used in a form. Any edits will put the form out of sync. Are you sure you want to edit?');	//TODO JR1074 the text should have been a constant defined somewhere as it is used in PermissibleValue.jsp as well
+		}
         var pvdiv = document.getElementById(pvd);
         var imgdivhide = document.getElementById(imgdhide);
         var imgdivdisp = document.getElementById(imgddisp);
