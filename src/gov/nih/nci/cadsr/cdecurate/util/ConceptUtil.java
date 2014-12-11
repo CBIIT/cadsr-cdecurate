@@ -55,7 +55,9 @@ public class ConceptUtil {
 	 * @return
 	 */
 	public static String handleDescription(String desc) {
-		String ret = desc;
+		return desc;	//buggy logic, skipped
+		
+/*		String ret = desc;
 		
 		if(ret != null) {
 //			String sep = " |\\.";
@@ -100,7 +102,7 @@ public class ConceptUtil {
 		ret = ret.replaceAll("Integer::", "::");
 
 		return ret;
-	}
+*/	}
 	
 	/**
 	 * Remove qualifiers but must be separated by at least a space.
