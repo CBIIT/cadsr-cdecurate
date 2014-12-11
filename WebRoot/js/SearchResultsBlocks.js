@@ -342,7 +342,11 @@ function toTitleCase(str)
 		var nvpObj = document.getElementById(ckField);
 		if (nvpObj !== null && nvpObj.value !== null) {
             sNVP = nvpObj.value;    //JR692 has to use this n user entered value i.e. Integer::n
+            console.log(nvpObj);
             window.opener.document.getElementById('VMvmConOrder').value = sNVP; //JR692 bad idea, we know
+        } else {
+            //JR692 - if the user entered value is null, set it to null, not the display order value!!!
+            window.opener.document.getElementById('VMvmConOrder').value = '';
         }
 	   //submit the page
 		opener.appendConcept(rowNo, sNVP);

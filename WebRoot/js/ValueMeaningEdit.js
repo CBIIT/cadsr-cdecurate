@@ -6,11 +6,9 @@
 	var secondWindow;
 	
 	//submit the page
-	function SubmitValidate(sAction)
-	{   
+	function SubmitValidate(sAction) {
 		var actObject = document.getElementsByName(elmPageAction);
-		if ( actObject[0] == null || sAction == "")
-		{
+		if (actObject[0] == null || sAction == "") {
 			alert("what is the action");
 			return;
 		}
@@ -19,10 +17,13 @@
 		//disable the button and display wait message
 		DisableButtons();
 		//submit the form
-		if (document.VMDetail != null)
+		if (document.VMDetail != null) {
+			//console.log(VMDetail);
 			document.VMDetail.submit();		//JR692 this is invoked
-		else if (document.VMUse != null)
-			document.VMUse.submit();		
+		}
+		else if (document.VMUse != null) {
+			document.VMUse.submit();
+		}
 	}
 	
    function formValidator(oldVer,oldLN,oldWS,oldCN)
