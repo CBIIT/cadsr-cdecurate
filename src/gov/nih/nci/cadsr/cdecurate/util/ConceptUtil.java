@@ -165,4 +165,40 @@ public class ConceptUtil {
 		return ret;
 	}
 
+	/** 
+	 * Remove qualifiers with count e.g. ::1, ::2 ... ::n where n is any number (minus, zero or otherwise) but not 
+	 * user entered e.g. Integer::n.
+	 */
+	@Deprecated
+	public static String removeNonUserEnteredQualifiersCount(String tok, long startCount, long endCount) {
+		String ret = tok;
+		
+		if(ret != null) {
+			//escape all qualifiers first
+			for(long i=startCount; i <= endCount; i++) {
+				try {
+					ret = ret.replaceAll(("Integer::"+i), URLEncoder.encode(("Integer--"+i), "UTF-8"));
+				} catch (UnsupportedEncodingException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			//escape all qualifiers first
+			for(long i=startCount; i <= endCount; i++) {
+				ret = ret.replaceAll(("::"+i), "");
+			}
+			//put user entered qualifiers back
+			for(long i=startCount; i <= endCount; i++) {
+				try {
+					ret = ret.replaceAll(URLEncoder.encode(("Integer--"+i), "UTF-8"), ("Integer::"+i));
+				} catch (UnsupportedEncodingException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
+		
+		return ret;
+	}
+
 }
