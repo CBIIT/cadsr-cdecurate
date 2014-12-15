@@ -36,7 +36,7 @@ public class ModelHelper {
 		oEditVDActions()<<< Parameter Name - currentPVViewType, Value -
 		oEditVDActions()<<< Parameter Name - currentVM, Value - Malignant Neoplasm
 		oEditVDActions()<<< Parameter Name - editPVInd, Value - pv1
-		oEditVDActions()<<< Parameter Name - hiddenConVM, Value - áááá C9305 áááá
+		oEditVDActions()<<< Parameter Name - hiddenConVM, Value - aaaa C9305 aaaa (real metacharacter replaced)
 		oEditVDActions()<<< Parameter Name - hiddenParentCode, Value -
 		oEditVDActions()<<< Parameter Name - hiddenParentDB, Value -
 		oEditVDActions()<<< Parameter Name - hiddenParentListString, Value -

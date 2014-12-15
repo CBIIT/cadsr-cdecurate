@@ -1032,7 +1032,7 @@ private String goBackToSearch()
     if (vm == null || vm.getVM_LONG_NAME() == null || vm.getVM_LONG_NAME().equals("")) 
       vm = new VM_Bean().copyVMBean(pv.getPV_VM());
     Vector vmCon = vm.getVM_CONCEPT_LIST();
-    String[] sCons = req.getParameterValues("hiddenConVM");		//JR1024 not related to the ticket, but extra spaces is trimmed in StringUtil.safeString e.g. "     C17049     "
+    String[] sCons = req.getParameterValues("hiddenConVM");		//JR1024 not related to the ticket, but extra spaces is trimmed in StringUtil.safeString e.g. "     C17049      "
     if (sCons == null) {
     	sCons = new String[0];
     }
