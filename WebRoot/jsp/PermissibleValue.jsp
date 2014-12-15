@@ -30,6 +30,7 @@ L--%>
         //window.console && console.log("CreateDEC.jsp DOJO version used = [" + dojo.version.toString() + "]");
         <%--});--%>
         <%--});--%>
+		var inFormArray = [];	//TODO JR1073 avoid global
         </script>
 		<SCRIPT LANGUAGE="JavaScript" SRC="js/PermissibleValues.js"></SCRIPT>
 		<SCRIPT LANGUAGE="JavaScript" SRC="js/VDPVS.js"></SCRIPT>
@@ -862,9 +863,12 @@ L--%>
 										<div style="display:inline">
 											<b><%=sPVRecs%></b>  Records &nbsp;&nbsp;&nbsp;&nbsp;
 										</div> 
-										<% if ((vVDPVList.size() > 0) && (!isView)){ %>
+										<%
+										    int index = -1;
+										    if ((vVDPVList.size() > 0) && (!isView)){ %>
+											index++;
 											<div class="ind3" align="right" style="display:inline">
-												<input onclick="javascript:confirmRM('All', 'remove', 'all Permissible Values');" type="button" value="Delete All" name="btnDeleteAll">
+												<input onclick="javascript:confirmRM('All', 'remove', 'all Permissible Values', inFormArray[<%= index %>]);" type="button" value="Delete All" name="btnDeleteAll">
 											</div>
 										<% } %>
 									</td>
@@ -1046,7 +1050,7 @@ L--%>
 										if (vdPVs > 0 && vVDPVList != null && vVDPVList.size() > 0)
 						        {
 						          int ckCount = 0;
-						         
+
 						          for (int i = 0; i < vVDPVList.size(); i++)
 						          {
 						            PV_Bean pvBean = (PV_Bean) vVDPVList.elementAt(i);
@@ -1098,22 +1102,29 @@ L--%>
 						            String viewType = (String)pvBean.getPV_VIEW_TYPE();
 						            if (viewType.equals("")) viewType = "expand";
 						    		boolean inForm = pvBean.getPV_IN_FORM();
+						    		%>
+	<script>
+		//JR1073 more like a hack
+		inFormArray[<%= i%>] = <%= inForm%>;
+		<%--console.log(inFormArray);--%>
+	</script>
+									<%
 						    		String sVDPVSIDseq = pvBean.getPV_VDPVS_IDSEQ();
-						    		
+
 						            //get the pvvm combination to use it later
 						        //    String sPVVM = sPVVal.toLowerCase() + sPVMean.toLowerCase();
 						        //    sPVVM = sPVVM.replace(" ", "");  //remove spaces
 						      //   System.out.println(pvCount + " jsp " + vmCon.size() + " value " + sPVVal + " viewType " + viewType);
 						            //TODO - figure out this later; cannot use the type cast for vectors in jsp
 						           // Vector<EVS_Bean> vmCon = vm.getVM_CONCEPT_LIST();
-						            		
+
 						            String dispStyle = "inline"; //GF33140 display by default
 						            Boolean vdUsedInForm = (Boolean)session.getAttribute(Constants.VD_USED_IN_FORM);  //GF7680
 									String workflowStatus = (String)session.getAttribute("selStatus");
 									String crfWorkflowStatus = pvBean.getCRF_WORKFLOW();    //GF7680
 						            /*
 									if(workflowStatus != null && workflowStatus.equals(Constants.WORKFLOW_STATUS_RELEASED) || inForm) {
-										dispStyle = "none";		
+										dispStyle = "none";
 									}
 									*/
 						            %>
@@ -1138,10 +1149,10 @@ L--%>
 																		<a id="<%=pvCount%>ImgSaveLink" href="javascript:view('<%=pvCount%>View', '<%=pvCount%>ImgSave', '<%=pvCount%>ImgEdit', 'save', '<%=pvCount%>', '<%=workflowStatus%>','<%=vdUsedInForm%>','<%=inForm%>','<%=crfWorkflowStatus%>');"><img src="images/save.gif" border="0" alt="Save"></a>
 																	</div>
 																	<div id="<%=pvCount%>ImgDelete" style="display: <%=dispStyle%>">
-																	 <a href="javascript:confirmRM('<%=pvCount%>', 'remove', 'the Permissible Value : <%=sPVValJ%>');"><img src="images/delete.gif" border="0" alt="Remove" style="display: <%=dispStyle%>"></a>
+																	 <a href="javascript:confirmRM('<%=pvCount%>', 'remove', 'the Permissible Value : <%=sPVValJ%>', inFormArray[<%= i %>]);"><img src="images/delete.gif" border="0" alt="Remove" style="display: <%=dispStyle%>"></a>
 																	</div>
 																	<div id="<%=pvCount%>ImgRestore" style="display: none">
-																		<a href="javascript:confirmRM('<%=pvCount%>', 'restore', 'restore');"><img src="images/restore.gif" border="0" alt="Restore"></a>
+																		<a href="javascript:confirmRM('<%=pvCount%>', 'restore', 'restore', inFormArray[<%= i %>]);"><img src="images/restore.gif" border="0" alt="Restore"></a>
 																	</div>
 																  <% } %>	
 																</td>
@@ -1414,7 +1425,7 @@ L--%>
 																							<!-- Save the current Name and Description as Alternate Name and Definition <br>  -->
 																						</td>
 																						<td align="right">
-																							<input type="button" id="btnCancelUS" value="Cancel" onClick="javascript:confirmRM('<%=sEditPV%>', 'restore', 'restore');">
+																							<input type="button" id="btnCancelUS" value="Cancel" onClick="javascript:confirmRM('<%=sEditPV%>', 'restore', 'restore', inFormArray[<%= i %>]);">
 																						</td>
 																					</tr>
 																				</table>
