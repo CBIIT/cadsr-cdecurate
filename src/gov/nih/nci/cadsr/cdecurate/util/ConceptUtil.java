@@ -1,5 +1,7 @@
 package gov.nih.nci.cadsr.cdecurate.util;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
