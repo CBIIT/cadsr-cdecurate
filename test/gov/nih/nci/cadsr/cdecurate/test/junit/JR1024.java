@@ -1,7 +1,6 @@
 package gov.nih.nci.cadsr.cdecurate.test.junit;
 
 import static org.junit.Assert.assertTrue;
-import gov.nih.nci.cadsr.cdecurate.test.helpers.DBUtil;
 import gov.nih.nci.cadsr.cdecurate.tool.CurationServlet;
 import gov.nih.nci.cadsr.cdecurate.tool.EVS_UserBean;
 import gov.nih.nci.cadsr.cdecurate.tool.GetACSearch;
@@ -56,10 +55,10 @@ public class JR1024 {
 		userId = System.getProperty("u");
 		password = System.getProperty("p");
 		boolean ret;
-		DBUtil db;
+		gov.nih.nci.cadsr.cdecurate.test.helpers.DBUtil db;
 		try {
 			conn = TestUtil.getConnection(userId, password);
-			db = new DBUtil(conn);
+			db = new gov.nih.nci.cadsr.cdecurate.test.helpers.DBUtil(conn);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
