@@ -865,8 +865,9 @@ L--%>
 										</div> 
 										<%
 										    int index = -1;
-										    if ((vVDPVList.size() > 0) && (!isView)){ %>
+										    if ((vVDPVList.size() > 0) && (!isView)){
 											index++;
+											 %>
 											<div class="ind3" align="right" style="display:inline">
 												<input onclick="javascript:confirmRM('All', 'remove', 'all Permissible Values', inFormArray[<%= index %>]);" type="button" value="Delete All" name="btnDeleteAll">
 											</div>
