@@ -865,9 +865,8 @@ L--%>
 										</div> 
 										<%
 										    int index = -1;
-										    if ((vVDPVList.size() > 0) && (!isView)){
+										    if ((vVDPVList.size() > 0) && (!isView)){ %>
 											index++;
-											 %>
 											<div class="ind3" align="right" style="display:inline">
 												<input onclick="javascript:confirmRM('All', 'remove', 'all Permissible Values', inFormArray[<%= index %>]);" type="button" value="Delete All" name="btnDeleteAll">
 											</div>
@@ -1107,7 +1106,7 @@ L--%>
 	<script>
 		//JR1073 more like a hack
 		inFormArray[<%= i%>] = <%= inForm%>;
-		<%--console.log(inFormArray);--%>
+		console.log(inFormArray);
 	</script>
 									<%
 						    		String sVDPVSIDseq = pvBean.getPV_VDPVS_IDSEQ();
@@ -1153,7 +1152,7 @@ L--%>
 																	 <a href="javascript:confirmRM('<%=pvCount%>', 'remove', 'the Permissible Value : <%=sPVValJ%>', inFormArray[<%= i %>]);"><img src="images/delete.gif" border="0" alt="Remove" style="display: <%=dispStyle%>"></a>
 																	</div>
 																	<div id="<%=pvCount%>ImgRestore" style="display: none">
-																		<a href="javascript:confirmRM('<%=pvCount%>', 'restore', 'restore', inFormArray[<%= i %>]);"><img src="images/restore.gif" border="0" alt="Restore"></a>
+																		<a href="javascript:confirmRM('<%=pvCount%>', 'restore', 'restore');"><img src="images/restore.gif" border="0" alt="Restore"></a>
 																	</div>
 																  <% } %>	
 																</td>
@@ -1426,7 +1425,7 @@ L--%>
 																							<!-- Save the current Name and Description as Alternate Name and Definition <br>  -->
 																						</td>
 																						<td align="right">
-																							<input type="button" id="btnCancelUS" value="Cancel" onClick="javascript:confirmRM('<%=sEditPV%>', 'restore', 'restore', inFormArray[<%= i %>]);">
+																							<input type="button" id="btnCancelUS" value="Cancel" onClick="javascript:confirmRM('<%=sEditPV%>', 'restore', 'restore');">
 																						</td>
 																					</tr>
 																				</table>

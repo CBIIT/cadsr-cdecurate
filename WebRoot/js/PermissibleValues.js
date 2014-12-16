@@ -151,7 +151,7 @@
     {
 		if(pvusedinform == true) {
 			var answer;
-			answer = confirm('This element is used in a form. Delete will put the form out of sync. Are you sure you want to delete?');	//TODO JR1073 the text should have been a constant defined somewhere as it is used in PermissibleValue.jsp as well
+			answer = confirm('Deleting this PV/VM pair will cause form(s) using it to be out of synch with the CDE. This means that forms using this CDE will not have a Question Value Meaning PublidID/Version for this PV/VM pair. To restore the association to the edited CDE please remove and then re-add the CDE to effected forms.\n\nIf deleting a valid/existing PV/VM pair, please create a new version of this Value Domain per the caDSR metadata versioning rules.');	//TODO JR1073 the text should have been a constant defined somewhere as it is used in PermissibleValue.jsp as well
 			if(!answer) return;
 		}
 
@@ -161,7 +161,7 @@
 		  	if (!validatePVAction('remove')) {
 		  		return;
             }
-	    	confirmOK = confirm("Click OK to remove " + itmMsg + ".");
+	    	confirmOK = confirm("Are you sure you want to delete " + itmMsg + ".");	//JR1073
 	    	if (confirmOK === false) {
 	    		return;
             }
