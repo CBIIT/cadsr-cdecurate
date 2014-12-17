@@ -136,7 +136,7 @@ public class VMAction implements Serializable
 					// loop through the resultSet and add them to the bean
 					while (rs.next() && g < recordsDisplayed)
 					{
-						g = g + 1;
+						g++;
 						VM_Bean vmBean = doSetVMAttributes(rs, data.getCurationServlet().getConn());
 						vmBean.setVM_BEGIN_DATE(rs.getString("begin_date"));
 						vmBean.setVM_END_DATE(rs.getString("end_date"));

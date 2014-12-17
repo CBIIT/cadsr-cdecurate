@@ -23,6 +23,11 @@ import java.sql.SQLException;
  */
 public class SQLSelectAlts
 {
+    /**
+     * CURATNTOOL-1064 - this is slowing down detail display
+     * @param sortByName_
+     * @return
+     */
     public static String getAlternates(boolean sortByName_)
     {
         String except = DBAccess._addDesigType;

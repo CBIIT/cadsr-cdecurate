@@ -803,46 +803,55 @@ public class PVServlet implements Serializable
      return "/ValidateVDPage.jsp";
   }
 
-   /** collects the pv attributes when opened to edit vd
+   /** collects the pv attributes when opened to edit vd   CURATNTOOL-1064
    * @param vd  VD_Bean object
    * @param sMenu menu action to get teh original action it started
    */
-  public void getPVAttributes(VD_Bean vd, String sMenu)  // 
+   public void getPVAttributes(VD_Bean vd, String sMenu)  //
    {
-      try
-      {
-        String pvAct = "Search";
-         if (sMenu.equals("NewVDTemplate") || sMenu.equals("NewVDVersion")) 	//TODO might cause NPE
-             pvAct = "NewUsing"; 
+       logger.warn("time tracking - in getPVattributes");
+       try
+       {
+           String pvAct = "Search";
+           if (sMenu.equals("NewVDTemplate") || sMenu.equals("NewVDVersion")) 	//TODO might cause NPE
+               pvAct = "NewUsing";
 
-         String acIdseq = vd.getVD_VD_IDSEQ();	//TODO might cause NPE
-         //String acName = vd.getVD_LONG_NAME();
-         Vector<PV_Bean> vdpv = pvAction.doPVACSearch(acIdseq, pvAct, data);
-         vd.setVD_PV_List(vdpv);
-         //pvCount = this.doPVACSearch(VDBean.getVD_VD_IDSEQ(), VDBean.getVD_LONG_NAME(), pvAct);
-         GetACSearch serAC = new GetACSearch(data.getRequest(), data.getResponse(), data.getCurationServlet());
-         if (sMenu.equals("Questions"))
-           serAC.getACQuestionValue(vd);
-   
-         //get vd parent attributes
-         GetACService getAC = new GetACService(data.getRequest(), data.getResponse(), data.getCurationServlet());
-         Vector<EVS_Bean> vParent = new Vector<EVS_Bean>();
-         String sCondr = vd.getVD_PAR_CONDR_IDSEQ();
-         if (sCondr != null && !sCondr.equals(""))
-           vParent = getAC.getAC_Concepts(vd.getVD_PAR_CONDR_IDSEQ(), vd, true);
-         //get the system name and for new template make the vd_id null
-         if (sMenu.equals("NewVDTemplate")) 
-             vd.setVD_VD_ID("");
-         vd = (VD_Bean) data.getCurationServlet().getSystemName(vd, vParent);
-         vParent = serAC.getNonEVSParent(vParent, vd, sMenu);
-          
-         //DataManager.setAttribute(session, "VDParentConcept", vParent);  
-         vd.setReferenceConceptList(vParent);
-      }
-      catch (Exception e)
-      {
-        logger.error("Error getPVattributes - " + e.toString(), e);
-      }
+           String acIdseq = vd.getVD_VD_IDSEQ();	//TODO might cause NPE
+           //String acName = vd.getVD_LONG_NAME();
+           logger.warn("time tracking - calling doPVACSearch()");
+           Vector<PV_Bean> vdpv = pvAction.doPVACSearch(acIdseq, pvAct, data);
+           logger.warn("time tracking - out of doPVACSearch()");
+           vd.setVD_PV_List(vdpv);
+           //pvCount = this.doPVACSearch(VDBean.getVD_VD_IDSEQ(), VDBean.getVD_LONG_NAME(), pvAct);
+           GetACSearch serAC = new GetACSearch(data.getRequest(), data.getResponse(), data.getCurationServlet());
+           logger.warn("time tracking - finished GetACSearch()");
+           if (sMenu.equals("Questions"))
+               serAC.getACQuestionValue(vd);
+
+           //get vd parent attributes
+           GetACService getAC = new GetACService(data.getRequest(), data.getResponse(), data.getCurationServlet());
+           logger.warn("time tracking - finished GetACService()");
+           Vector<EVS_Bean> vParent = new Vector<EVS_Bean>();
+           String sCondr = vd.getVD_PAR_CONDR_IDSEQ();
+           if (sCondr != null && !sCondr.equals(""))
+               vParent = getAC.getAC_Concepts(vd.getVD_PAR_CONDR_IDSEQ(), vd, true);
+           logger.warn("time tracking - finished getVD_PAR_CONDR_IDSEQ()");
+           //get the system name and for new template make the vd_id null
+           if (sMenu.equals("NewVDTemplate"))
+               vd.setVD_VD_ID("");
+           vd = (VD_Bean) data.getCurationServlet().getSystemName(vd, vParent);
+           vParent = serAC.getNonEVSParent(vParent, vd, sMenu);
+           logger.warn("time tracking - finished getNonEVSParent()");
+
+           //DataManager.setAttribute(session, "VDParentConcept", vParent);
+           vd.setReferenceConceptList(vParent);
+           logger.warn("time tracking - finished setReferenceConceptList()");
+       }
+       catch (Exception e)
+       {
+           logger.error("Error getPVattributes - " + e.toString(), e);
+       }
+       logger.warn("time tracking - leaving getPVAttributes()");
    }  //doPVACSearch search
 
    /** call to do the pv search 
@@ -858,7 +867,7 @@ public class PVServlet implements Serializable
      return vdpv;
    }
 
-   /** to display / get the pv resutls from the ac
+   /** to display / get the pv results from the ac
    * @param vd VD Bean object
    * @param iUPD int value to reset after versioning
    * @param acID String ac_idseq to filter
@@ -908,7 +917,7 @@ public class PVServlet implements Serializable
    public String submitPV(VD_Bean vd)
    {
      String errMsg = "";
-     //delete teh vdpv relationship if it was deleted from teh page
+     //delete the vdpv relationship if it was deleted from the page
      errMsg = doRemoveVDPV(vd);
      
      //insert or update vdpvs relationship

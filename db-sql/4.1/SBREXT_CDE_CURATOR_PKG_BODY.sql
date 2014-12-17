@@ -3487,6 +3487,10 @@ AND   vd.vd_idseq   = vc.vd_idseq    (+) ';   -- 31-Mar-2003, W. Ver Hoef added 
     -- Modified By:  W. Ver Hoef
     -- Reason:  replaced pv_meaning_description with vm_description per mod to SPRF_2.1_09a
     --
+    -- Date: 16-Dec-2014
+    -- Modified By:  Jeff Lavezzo
+    -- Reason:  Combined with a sub query to fetch Workflow value for speed reasons.
+    --
     BEGIN
         IF p_pv_search_res%ISOPEN THEN
             CLOSE p_pv_search_res;
@@ -3494,30 +3498,35 @@ AND   vd.vd_idseq   = vc.vd_idseq    (+) ';   -- 31-Mar-2003, W. Ver Hoef added 
 
         OPEN p_pv_search_res FOR
             SELECT   pv.pv_idseq
-                    ,pv.VALUE
-                    ,vm.long_name short_meaning
-                    ,vp.vp_idseq
-                    ,vp.origin
-                    ,vm.description vm_description   -- 08-Apr-2004, W. Ver Hoef added to replace pv desc
-                    ,vp.begin_date
-                    ,vp.end_date
-                    ,vp.con_idseq
-                     ,vm.VM_IDSEQ
-                    ,vm.LONG_NAME
-                    ,vm.PREFERRED_DEFINITION
-                    ,vm.VERSION
-                    ,vm.condr_idseq
-                    ,vm.vm_id
-                     ,vm.conte_idseq
-                     ,vm.asl_name
-                     ,vm.change_note
-                     ,vm.comments
-                     ,vm.latest_version_ind
+                    , pv.VALUE
+                    , vm.long_name short_meaning
+                    , vp.vp_idseq
+                    , vp.origin
+                    , vm.description vm_description   -- 08-Apr-2004, W. Ver Hoef added to replace pv desc
+                    , vp.begin_date
+                    , vp.end_date
+                    , vp.con_idseq
+                    , vm.VM_IDSEQ
+                    , vm.LONG_NAME
+                    , vm.PREFERRED_DEFINITION
+                    , vm.VERSION
+                    , vm.condr_idseq
+                    , vm.vm_id
+                    , vm.conte_idseq
+                    , vm.asl_name
+                    , vm.change_note
+                    , vm.comments
+                    , vm.latest_version_ind
+                    , crf.workflow
 
                 FROM value_domains_view vd
-                    ,vd_pvs vp
-                    ,permissible_values_view pv
-                    ,value_meanings_view vm   -- 08-Apr-2004, W. Ver Hoef added
+                  , permissible_values_view pv
+                  , value_meanings_view vm   -- 08-Apr-2004, W. Ver Hoef added
+                  , vd_pvs vp
+                  LEFT OUTER JOIN quest_contents_view_ext qc
+                  ON vp.vp_idseq = qc.vp_idseq
+                  LEFT OUTER JOIN fb_forms_view crf
+                  ON qc.dn_crf_idseq = crf.qc_idseq
             WHERE    vd.vd_idseq = vp.vd_idseq
                  AND vp.pv_idseq = pv.pv_idseq
                  AND pv.vm_idseq = vm.vm_idseq   -- 08-Apr-2004, W. Ver Hoef added
