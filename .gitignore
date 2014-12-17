@@ -55,3 +55,6 @@ test/js/runcasper.cmd
 agitar 
 agitar/ 
 test/js/functional/logininfo.js
+*.iml
+
+build.properties.local
