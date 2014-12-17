@@ -642,7 +642,7 @@ public class DBAccess
         Alternates[] list = new Alternates[0];
         PreparedStatement pstmt = null;
         ResultSet rs =null;
-        String select = SQLSelectAlts.getAlternates(sortByName_);
+        String select = SQLSelectAlts.getAlternates(sortByName_);  //CURATNTOOL-1064
         try
         {
             // It is important for the data to match the values expected in the logic. This also provides a means to

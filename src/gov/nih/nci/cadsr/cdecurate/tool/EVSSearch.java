@@ -399,8 +399,7 @@ public class EVSSearch implements Serializable {
                                         m_servlet);
                         Vector vRepConcepts = new Vector();
                         if (rep_condr_idseq != null && !rep_condr_idseq.equals(""))
-                                vRepConcepts = getAC
-                                .getAC_Concepts(rep_condr_idseq, null, true);
+                                vRepConcepts = getAC.getAC_Concepts(rep_condr_idseq, null, true);
 
                         if (vRepConcepts != null && vRepConcepts.size() > 0) {
                                 DataManager.setAttribute(session, "vRepTerm", vRepConcepts);

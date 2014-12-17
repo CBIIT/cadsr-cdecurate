@@ -1173,12 +1173,18 @@ public class GetACService implements Serializable
         ResultSet rs = null;
         Vector<EVS_Bean> vList = new Vector<EVS_Bean>();
         GetACSearch serAC = new GetACSearch(m_classReq, m_classRes, m_servlet);
+
+        if (vd != null && m_classReq.getAttribute("AllRefDocList") == null) {
+            serAC.doRefDocSearch(vd.getVD_VD_IDSEQ(), "META_CONCEPT_SOURCE", "open");
+        }
+
         try
         {
             if (m_servlet.getConn() == null)
                 m_servlet.ErrorLogin(m_classReq, m_classRes);
             else
             {
+                logger.trace("in getAC_Concepts.  condrID is " + condrID);
                 cstmt = m_servlet.getConn().prepareCall("{call SBREXT_CDE_CURATOR_PKG.GET_AC_CONCEPTS(?,?)}");	//GF32723 //JR1024 when a VD is edited from the home page search
                 // out parameter
                 cstmt.registerOutParameter(2, OracleTypes.CURSOR);

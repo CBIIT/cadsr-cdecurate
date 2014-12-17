@@ -4560,7 +4560,7 @@ public class GetACSearch implements Serializable
                             // DEBean = (DE_Bean)selectedRows.elementAt(i);
                             DEBean = DEBean.cloneDE_Bean((DE_Bean) selectedRows.elementAt(i), "Complete");
                             String sContextID = DEBean.getDE_CONTE_IDSEQ();
-                            // check the permissiion if not template and not designation
+                            // check the permission if not template and not designation
                             if (sMenuAction.equals("NewDETemplate"))
                                 DEBean.markNewAC();
                             else if (!sMenuAction.equals("EditDesDE"))
@@ -5059,15 +5059,22 @@ public class GetACSearch implements Serializable
         if (!sMenu.equals("NewVDTemplate"))
         {
             Vector vACCSI = doCSCSI_ACSearch(VDBean.getVD_VD_IDSEQ(), VDBean.getVD_LONG_NAME());
+            logger.trace("getVDAttributes - finished doCSCSI_ACSearch()");
             Vector vCS = (Vector) m_classReq.getAttribute("selCSNames");
             Vector vCSid = (Vector) m_classReq.getAttribute("selCSIDs");
             VDBean.setAC_CS_NAME(vCS);
             VDBean.setAC_CS_ID(vCSid);
             VDBean.setAC_AC_CSI_VECTOR(vACCSI);
-            // get ref docs alt names for this vd
-            Vector vRef = doRefDocSearch(VDBean.getVD_VD_IDSEQ(), "ALL TYPES", "open");
-            VDBean.setAC_REF_DOCS(vRef);
+
+            // get ref docs alt names for this vd only if we haven't already done it
+            if (m_classReq.getAttribute("AllRefDocList") == null) {
+                Vector vRef = doRefDocSearch(VDBean.getVD_VD_IDSEQ(), "ALL TYPES", "open");
+                VDBean.setAC_REF_DOCS(vRef);
+                logger.trace("getVDAttributes - finished doRefDocSearch()");
+            }
+
             Vector vAlt = doAltNameSearch(VDBean.getVD_VD_IDSEQ(), "", "", "EditDesDE", "open");
+            logger.trace("getVDAttributes - finished doAltNameSearch()");
             VDBean.setAC_ALT_NAMES(vAlt);
         }
         // make some attributes default/empty for NUE action
@@ -5121,8 +5128,10 @@ public class GetACSearch implements Serializable
 	            DataManager.setAttribute(session, "vdStatusBean", statusBean);
             }
             // make the abbreviated name if existing one is system name
-            EVS_Bean nullEVS = null; 
+            EVS_Bean nullEVS = null;
+            logger.trace("getVDAttributes - calling getACNames()");
             VDBean = (VD_Bean) m_servlet.getACNames(nullEVS, "OpenVD", VDBean);
+            logger.trace("getVDAttributes - finished getACNames()");
         }
         // get contexts selected so far
         Vector selContext = (Vector) m_classReq.getAttribute("SelectedContext");
@@ -5139,10 +5148,12 @@ public class GetACSearch implements Serializable
         acName = getCDContext(VDBean.getVD_CD_IDSEQ());
         if (acName != null && !acName.equals(""))
             VDBean.setVD_CD_NAME(acName);
-        // get pv and parent atttirbutes if not block edit
+        // get pv and parent attributes if not block edit
         PVServlet pvser = new PVServlet(m_classReq, m_classRes, m_servlet);
         if (!sAction.equalsIgnoreCase("BlockEdit"))
+            logger.trace("getVDAttributes - calling getPVAttributes()");
             pvser.getPVAttributes(VDBean, sMenu);
+        logger.trace("getVDAttributes - finished getPVAttributes()");
         if (!sMenu.equals("NewVDTemplate") && !sAction.equals("Template"))
             VDBean.setAC_CONTACTS(getAC_Contacts(VDBean.getVD_VD_IDSEQ(), ""));
         // store ac names and ids in the req attribute
@@ -5165,7 +5176,10 @@ public class GetACSearch implements Serializable
         String sUMLS_CUI = "";
         if (PageVD != null)
         {
+            /* because getMetaParentSource() is called inside a while() in GetACService.getAC_Concepts() this
+                sql query is run for every ac concept
             Vector vRef = doRefDocSearch(PageVD.getVD_VD_IDSEQ(), "META_CONCEPT_SOURCE", "open");
+            */
             Vector vList = (Vector) m_classReq.getAttribute("RefDocList");
             if (vList != null && vList.size() > 0)
             {
@@ -5202,31 +5216,33 @@ public class GetACSearch implements Serializable
      */
     public Vector<EVS_Bean> getNonEVSParent(Vector<EVS_Bean> vParent, VD_Bean vd, String menuAct) throws Exception
     {
-        // search the existing reference document
-        Vector vRef = doRefDocSearch(vd.getVD_VD_IDSEQ(), "VD REFERENCE", "open");
-        Vector vList = (Vector) m_classReq.getAttribute("RefDocList");
-        if (vList != null && vList.size() > 0)
+        /* 2014-12-12 - Jeff Lavezzo.  The results of doRefDocSearch are not used. removing call.
+            // search the existing reference document
+            Vector vRef = doRefDocSearch(vd.getVD_VD_IDSEQ(), "VD REFERENCE", "open");
+        */
+        Vector refDocList = (Vector) m_classReq.getAttribute("RefDocList");
+        if (refDocList != null && refDocList.size() > 0)
         {
-            for (int i = 0; i < vList.size(); i++)
+            for (int i = 0; i < refDocList.size(); i++)
             {
-                REF_DOC_Bean RDBean = (REF_DOC_Bean) vList.elementAt(i);
+                REF_DOC_Bean refDocBean = (REF_DOC_Bean) refDocList.elementAt(i);
                 // copy rd attributes to evs attribute
-                if (RDBean != null && RDBean.getDOCUMENT_NAME() != null && !RDBean.getDOCUMENT_NAME().equals(""))
+                if (refDocBean != null && refDocBean.getDOCUMENT_NAME() != null && !refDocBean.getDOCUMENT_NAME().equals(""))
                 {
-                    // since already created by api reset it to do upate action for new version
+                    // since already created by api reset it to do update action for new version
                     if (menuAct != null && menuAct.equals("versionSubmit"))
                     {
                         for (int j = 0; j < vParent.size(); j++)
                         {
-                            EVS_Bean nBean = (EVS_Bean) vParent.elementAt(j);
-                            if (nBean.getEVS_DATABASE() != null && nBean.getEVS_DATABASE().equals("Non_EVS"))
+                            EVS_Bean evsBean = (EVS_Bean) vParent.elementAt(j);
+                            if (evsBean.getEVS_DATABASE() != null && evsBean.getEVS_DATABASE().equals("Non_EVS"))
                             {
                                 // reset rd id seq
-                                if (RDBean.getDOC_TYPE_NAME().equals(nBean.getCONCEPT_IDENTIFIER())
-                                                && RDBean.getDOCUMENT_NAME().equals(nBean.getLONG_NAME()))
+                                if (refDocBean.getDOC_TYPE_NAME().equals(evsBean.getCONCEPT_IDENTIFIER())
+                                                && refDocBean.getDOCUMENT_NAME().equals(evsBean.getLONG_NAME()))
                                 {
-                                    nBean.setIDSEQ(RDBean.getREF_DOC_IDSEQ());
-                                    vParent.setElementAt(nBean, j);
+                                    evsBean.setIDSEQ(refDocBean.getREF_DOC_IDSEQ());
+                                    vParent.setElementAt(evsBean, j);
                                 }
                             }
                         }
@@ -5234,12 +5250,12 @@ public class GetACSearch implements Serializable
                     else
                     {
                         EVS_Bean eBean = new EVS_Bean();
-                        eBean.setIDSEQ(RDBean.getREF_DOC_IDSEQ());
-                        eBean.setCONCEPT_IDENTIFIER(RDBean.getDOC_TYPE_NAME());
-                        eBean.setLONG_NAME(RDBean.getDOCUMENT_NAME());
-                        eBean.setPREFERRED_DEFINITION(RDBean.getDOCUMENT_TEXT());
-                        eBean.setEVS_DEF_SOURCE(RDBean.getDOCUMENT_URL());
-                        eBean.setCONTE_IDSEQ(RDBean.getCONTE_IDSEQ());
+                        eBean.setIDSEQ(refDocBean.getREF_DOC_IDSEQ());
+                        eBean.setCONCEPT_IDENTIFIER(refDocBean.getDOC_TYPE_NAME());
+                        eBean.setLONG_NAME(refDocBean.getDOCUMENT_NAME());
+                        eBean.setPREFERRED_DEFINITION(refDocBean.getDOCUMENT_TEXT());
+                        eBean.setEVS_DEF_SOURCE(refDocBean.getDOCUMENT_URL());
+                        eBean.setCONTE_IDSEQ(refDocBean.getCONTE_IDSEQ());
                         eBean.setEVS_DATABASE("Non_EVS");
                         eBean.setCON_AC_SUBMIT_ACTION("UPD");
                         // new one to be created
@@ -9468,11 +9484,19 @@ public class GetACSearch implements Serializable
     {
         ResultSet rs = null;
         CallableStatement cstmt = null;
-        try
-        {
+        try {
             HttpSession session = m_classReq.getSession();
             // VD_Bean vd = (VD_Bean)session.getAttribute("m_VD");
-            Vector<PV_Bean> pvList = vd.getVD_PV_List();
+            //Vector<PV_Bean> pvList = vd.getVD_PV_List();
+            //Put the PV Beans in a hashmap to try to speed this up:
+            HashMap<String, PV_Bean> pvBeanHashMap = new HashMap<String, PV_Bean>();
+            if (vd.getVD_PV_List() != null && vd.getVD_PV_List().size() > 0) {
+                for (PV_Bean pvBean : vd.getVD_PV_List()) {
+                    if (pvBean != null && pvBean.getPV_VDPVS_IDSEQ() != null) {
+                        pvBeanHashMap.put(pvBean.getPV_VDPVS_IDSEQ(), pvBean);
+                    }
+                }
+            }
             // Vector pvList = (Vector)session.getAttribute("VDPVList");
             Vector vvList = new Vector();
             if (m_servlet.getConn() == null)
@@ -9494,32 +9518,30 @@ public class GetACSearch implements Serializable
                 if (rs != null)
                 {
                     // loop through the resultSet and add them to the bean
-                    while (rs.next())
-                    {
+                    while (rs.next()) {
                         Quest_Value_Bean QuestValueBean = new Quest_Value_Bean();
                         QuestValueBean.setQUESTION_VALUE_IDSEQ(rs.getString(1));
                         QuestValueBean.setQUESTION_VALUE(rs.getString(2));
                         QuestValueBean.setVP_IDSEQ(rs.getString(3));
                         vList.addElement(QuestValueBean);
-                        if (pvList == null)
-                            pvList = new Vector();
+//                        if (pvList == null)
+//                            pvList = new Vector();
                         // match the vp id with the VD's PV if valid values allready been matched.
                         boolean isMatched = false;
-                        for (int i = 0; i < pvList.size(); i++)
-                        {
-                            PV_Bean pvBean = (PV_Bean) pvList.elementAt(i);
-                            if (pvBean != null && pvBean.getPV_VDPVS_IDSEQ() != null)
-                            {
-                                if (pvBean.getPV_VDPVS_IDSEQ().equals(QuestValueBean.getVP_IDSEQ()))
-                                {
-                                    pvBean.setQUESTION_VALUE_IDSEQ(rs.getString(1));
-                                    pvBean.setQUESTION_VALUE(rs.getString(2));
-                                    pvList.setElementAt(pvBean, i);
-                                    isMatched = true;
-                                    break;
-                                }
-                            }
+//                        for (int i = 0; i < pvList.size(); i++)
+//                        {
+//                            PV_Bean pvBean = (PV_Bean) pvList.elementAt(i);
+//                            if (pvBean != null && pvBean.getPV_VDPVS_IDSEQ() != null)
+//                            {
+                        PV_Bean pvBean = pvBeanHashMap.get(QuestValueBean.getVP_IDSEQ());
+                        if (pvBean != null) {
+                            pvBean.setQUESTION_VALUE_IDSEQ(rs.getString(1));
+                            pvBean.setQUESTION_VALUE(rs.getString(2));
+//                                    pvList.setElementAt(pvBean, i);
+                            isMatched = true;
                         }
+//                            }
+//                        }
                         // add as a new item to the pv bean if not matched
                         if (!isMatched)
                         {
@@ -9527,10 +9549,12 @@ public class GetACSearch implements Serializable
                         }
                     }
                 }
-                if (pvList != null)
+                if (pvBeanHashMap.values() != null)
                 {
                     // DataManager.setAttribute(session, "VDPVList", pvList);
-                    vd.setVD_PV_List(pvList);
+                    Vector pvListVector = new Vector();
+                    pvListVector.addAll(pvBeanHashMap.values());
+                    vd.setVD_PV_List(pvListVector);
                     DataManager.setAttribute(session, "m_VD", vd);
                 }
             }
@@ -9907,7 +9931,7 @@ public class GetACSearch implements Serializable
                     docType = "";
                 cstmt.setString(2, docType);
                 // Now we are ready to call the stored procedure
-                boolean bExcuteOk = cstmt.execute();
+                boolean bExecuteOk = cstmt.execute();
                 // store the output in the resultset
                 rs = (ResultSet) cstmt.getObject(3);
                 String s;
@@ -10411,13 +10435,12 @@ public class GetACSearch implements Serializable
         }
         return true;
     }
+
     /**
      * Refreshes the Reference documents list after selecting the DE, deleting the attachment or uploading the attachment.
-     * 
-     * @param req The HttpServletRequest object.
-     * @param String acType.
-     * 
-      */
+     * @param req
+     * @param acType
+     */
     public void refreshUploadRefDoc(HttpServletRequest req, String acType)
     {
     	HttpSession session = req.getSession();

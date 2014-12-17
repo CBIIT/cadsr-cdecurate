@@ -300,7 +300,7 @@ public class NCICurationServlet extends HttpServlet
 		if(TimeWatch.ENABLED) {
 			long passedTimeInSeconds = watch.time(TimeUnit.SECONDS);	
 			//long passedTimeInMs = watch.time();
-			System.out.println(this.getClass().getName() +":execute elaped time in s = " + passedTimeInSeconds);
+			System.out.println(this.getClass().getName() +":execute elapsed time in s = " + passedTimeInSeconds);
 		}
     }
 

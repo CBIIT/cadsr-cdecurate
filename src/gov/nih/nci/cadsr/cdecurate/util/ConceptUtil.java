@@ -179,7 +179,7 @@ public class ConceptUtil {
 			//escape all qualifiers first
 			for(long i=startCount; i <= endCount; i++) {
 				try {
-					ret = ret.replaceAll(("Integer::"+i), URLEncoder.encode(("Integer--"+i), "UTF-8"));
+					ret = ret.replaceAll(("Integer::"+i), URLEncoder.encode(("Integer--" + i), "UTF-8"));
 				} catch (UnsupportedEncodingException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();

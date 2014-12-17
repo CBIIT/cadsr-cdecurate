@@ -382,7 +382,7 @@ public class PVAction implements Serializable {
 		vd.setValidateList(vValidate);
 	}
 	
-	//GF7680
+	//GF7680   CURATNTOOL-1064
 	/**
 	 * Method to get workflow of the form referring to the PV/VM. It will just returns either "RELEASED" or "NON RELEASED".
 	 * @param data
@@ -396,16 +396,23 @@ public class PVAction implements Serializable {
 		}
 		String retVal = Constants.WORKFLOW_STATUS_NOT_RELEASED;
 		PreparedStatement pstmt = null;
-		String sql = "SELECT " +
-                "DISTINCT " +
-                "crf.long_name as \"Form Name\", crf.public_id as \"Pub. Id\", CRF.VERSION as \"Ver.\", " +
-                "CRF.WORKFLOW as \"Workflow\" " +
-                ",CRF.CONTEXT_NAME as \"Context\", UA.NAME as \"Created By\", CRF.CREATED_BY, crf.qc_idseq " +
-                "FROM SBREXT.FB_FORMS_VIEW crf ,SBREXT.QUEST_CONTENTS_VIEW_EXT qc ,SBR.VD_PVS_VIEW vdpvs1 ,SBR.USER_ACCOUNTS_VIEW ua " +
-                "WHERE " +
-                "(qc.VP_IDSEQ = vdpvs1.VP_IDSEQ) AND (qc.DN_CRF_IDSEQ = crf.QC_IDSEQ) AND (CRF.CREATED_BY = UA.UA_NAME) AND " +
-                "VDPVS1.VP_IDSEQ = ? order by crf.long_name desc";
+//		String sql = "SELECT " +
+//                "DISTINCT " +
+//                "crf.long_name as \"Form Name\", crf.public_id as \"Pub. Id\", CRF.VERSION as \"Ver.\", " +
+//                "CRF.WORKFLOW as \"Workflow\" " +
+//                ",CRF.CONTEXT_NAME as \"Context\", UA.NAME as \"Created By\", CRF.CREATED_BY, crf.qc_idseq " +
+//                "FROM SBREXT.FB_FORMS_VIEW crf ,SBREXT.QUEST_CONTENTS_VIEW_EXT qc ,SBR.VD_PVS_VIEW vdpvs1 ,SBR.USER_ACCOUNTS_VIEW ua " +
+//                "WHERE " +
+//                "(qc.VP_IDSEQ = vdpvs1.VP_IDSEQ) AND (qc.DN_CRF_IDSEQ = crf.QC_IDSEQ) AND (CRF.CREATED_BY = UA.UA_NAME) AND " +
+//                "VDPVS1.VP_IDSEQ = ? order by crf.long_name desc";
 
+		String sql = "SELECT " +
+                "DISTINCT crf.long_name as FormName" +
+                ", crf.workflow as Workflow " +
+                "FROM sbrext.fb_forms_view crf" +
+                ", sbrext.quest_contents_view_ext qc " +
+                "WHERE qc.vp_idseq = ? " +
+                "AND qc.dn_crf_idseq = crf.qc_idseq";
 		pstmt = data
 				.getCurationServlet()
 				.getConn()
@@ -449,7 +456,7 @@ public class PVAction implements Serializable {
 		try {
 			if (data.getCurationServlet().getConn() != null) {
 				cstmt = data.getCurationServlet().getConn().prepareCall(
-						"{call SBREXT.SBREXT_CDE_CURATOR_PKG.SEARCH_PV(?,?)}");		//CADSRMETA-501
+						"{call SBREXT.SBREXT_CDE_CURATOR_PKG.SEARCH_PV(?,?)}");		//CADSRMETA-501  CURATNTOOL-1064
 				// Now tie the placeholders for out parameters.
 				cstmt.registerOutParameter(2, OracleTypes.CURSOR);
 				// Now tie the placeholders for In parameters.
@@ -465,51 +472,54 @@ public class PVAction implements Serializable {
 						PV_Bean pvBean = new PV_Bean();
 						pvBean.setPV_PV_IDSEQ(rs.getString("pv_idseq"));
 						pvBean.setPV_VALUE(rs.getString("value"));
-						pvBean.setPV_SHORT_MEANING(rs
-								.getString("short_meaning"));
+						pvBean.setPV_SHORT_MEANING(rs.getString("short_meaning"));
 												 
-						if (sAction.equals("NewUsing"))
-							pvBean.setPV_VDPVS_IDSEQ("");
-						else
-							pvBean.setPV_VDPVS_IDSEQ(rs.getString("vp_idseq"));
+						if (sAction.equals("NewUsing")) {
+                            pvBean.setPV_VDPVS_IDSEQ("");
+                        } else {
+                            pvBean.setPV_VDPVS_IDSEQ(rs.getString("vp_idseq"));
+                        }
 /*
 						pvBean.setPV_MEANING_DESCRIPTION(rs
 								.getString("vm_description"));*/
-						pvBean.setPV_MEANING_DESCRIPTION(rs
-								.getString("PREFERRED_DEFINITION"));
+						pvBean.setPV_MEANING_DESCRIPTION(rs.getString("PREFERRED_DEFINITION"));
 						pvBean.setPV_VALUE_ORIGIN(rs.getString("origin"));
 						String sDate = rs.getString("begin_date");
-						if (sDate != null && !sDate.equals(""))
-							sDate = data.getUtil().getCurationDate(sDate);
+						if (sDate != null && !sDate.equals("")) {
+                            sDate = data.getUtil().getCurationDate(sDate);
+                        }
 						pvBean.setPV_BEGIN_DATE(sDate);
 						sDate = rs.getString("end_date");
-						if (sDate != null && !sDate.equals(""))
-							sDate = data.getUtil().getCurationDate(sDate);
+						if (sDate != null && !sDate.equals("")) {
+                            sDate = data.getUtil().getCurationDate(sDate);
+                        }
 						pvBean.setPV_END_DATE(sDate);
-						if (sAction.equals("NewUsing"))
-							pvBean.setVP_SUBMIT_ACTION("INS");
-						else
-							pvBean.setVP_SUBMIT_ACTION("NONE");
+						if (sAction.equals("NewUsing")) {
+                            pvBean.setVP_SUBMIT_ACTION("INS");
+                        } else {
+                            pvBean.setVP_SUBMIT_ACTION("NONE");
+                        }
 						//get valid value attributes
 						pvBean.setQUESTION_VALUE("");
 						pvBean.setQUESTION_VALUE_IDSEQ("");
 						//get vm concept attributes
 						// String sCondr = rs.getString("vm_condr_idseq");
 						VMAction vmact = new VMAction();
-						pvBean.setPV_VM(vmact.doSetVMAttributes(rs, data
-								.getCurationServlet().getConn()));
+						pvBean.setPV_VM(vmact.doSetVMAttributes(rs, data.getCurationServlet().getConn()));
 						//get parent concept attributes
 						String sCon = rs.getString("con_idseq");
 						this.doSetParentAttributes(sCon, pvBean, data);
+                        //String formWorkflow = getCRFWorkflowStatus(data, rs.getString("vp_idseq"));
 
-						//begin GF7680
-						//begin JR1032 Replaced pvBean.getPV_VDPVS_IDSEQ() with rs.getString("vp_idseq") as it always gets null for "New/Using Existing" 
-					//	String formWorkflow = getCRFWorkflowStatus(data, pvBean.getPV_VDPVS_IDSEQ());	//rs.getString("WORKFLOW");
-						String formWorkflow = getCRFWorkflowStatus(data, rs.getString("vp_idseq"));	//rs.getString("WORKFLOW");
-						//end JR1032 
-						pvBean.setCRF_WORKFLOW(formWorkflow);
-						//end GF7680
-						
+//						String formWorkflow = getCRFWorkflowStatus(data, rs.getString("vp_idseq"));	//rs.getString("WORKFLOW");  CURATNTOOL-1064
+
+                        String formWorkflow = rs.getString("workflow");
+                        String formWorkflowStatus = Constants.WORKFLOW_STATUS_NOT_RELEASED;
+                        if(formWorkflow != null && formWorkflow.trim().equalsIgnoreCase(Constants.WORKFLOW_STATUS_RELEASED)) {
+                            formWorkflowStatus = Constants.WORKFLOW_STATUS_RELEASED;
+                        }
+                        pvBean.setCRF_WORKFLOW(formWorkflowStatus);
+
 						pvBean.setPV_VIEW_TYPE("expand");
 						//add pv idseq in the pv id vector
 						vList.addElement(pvBean); //add the bean to a vector
@@ -594,7 +604,7 @@ public class PVAction implements Serializable {
 		vd.setVD_PV_List(verList);
 	}
 
-	/** get concept attributes for parent concept id
+	/** get concept attributes for parent concept id   CURATNTOOL-1064
 	 * @param conIDseq String con idseq
 	 * @param pvBean PVBean object
 	 * @param data PVForm object
@@ -660,7 +670,7 @@ public class PVAction implements Serializable {
 					int recordsDisplayed = GetACSearch.getInt(sRecordsDisplayed);
 					//loop through the resultSet and add them to the bean
 					while (rs.next() && g < recordsDisplayed) {
-						g = g + 1;
+						g++;
 						PV_Bean PVBean = new PV_Bean();
 						PVBean.setPV_PV_IDSEQ(rs.getString("pv_idseq"));
 						PVBean.setPV_VALUE(rs.getString("value"));
