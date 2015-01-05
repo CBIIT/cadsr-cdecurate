@@ -54,8 +54,6 @@ public class JR625 {
 
 	@After
 	public void cleanup() {
-		AltNamesDefsSession altSession = new AltNamesDefsSession(null);
-		altSession.purgeAlternateList();
 	}
 
 	@Test
@@ -680,18 +678,20 @@ public class JR625 {
 			Workbook wb = download.generateSpreadsheet(type, fillIn, colString, idArray);
 			Sheet sh = wb.getSheetAt(0);
 			Iterator it = sh.rowIterator();
+
 			Row row = null;
 			int checkSum = 29, currentCount = 0;
 			java.util.List<String> checkList = Arrays.asList("Data Element RAI", "Object Class RAI", "Property RAI", "Value Domain RAI", "Representation RAI");
 			int count = 0;
 			int BEGINING_INDEX = 106;
-//			for (; it.hasNext() ; ++count ) {
+			for (; it.hasNext() ; ++count ) {
 //				row = (Row) it.next();
 //				System.out.println("Cell value = [" + row.getCell(BEGINING_INDEX) + "]");
 //				if(checkList.contains(row.getCell(BEGINING_INDEX)) || row.getCell(BEGINING_INDEX).toString().equals(Constants.NCI_REGISTRY_VALUE)) {
-//					currentCount++;
+					currentCount++;
 //				}
-//			}
+			}
+			System.out.println("totalCount was " + currentCount);
 //			System.out.println("currentCount was " + currentCount + ", expecting " + checkSum);
 			try {
 			File file = new File("c:/testDownload-JR625.xls");

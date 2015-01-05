@@ -150,7 +150,9 @@ public class DownloadHelper {
 		long startTime = System.currentTimeMillis();
 		try {
 			System.out.println("Total CDEs to download ["+allRows.size()+"]");
-			for (i = 0; i < allRows.size(); i++, rownum++) {
+			for (i = 0; i < allRows.size(); i++, rownum++) {	//JR625 all rows still good!
+				logger.debug("DownloadHelper.java JR625: rownum ["+ rownum + "]");
+
 				//Check if row already exists
 				int maxBump = 0;
 				if (sheet.getRow(rownum+bump) == null) {
@@ -687,7 +689,9 @@ public class DownloadHelper {
 	public static boolean isIgnoredColumn(ArrayList<String> columns, int columnIndex) {
 		boolean ret = false; 	//you can not ignore something that does not exist!
 
-		if(columns != null && columnIndex > -1) {
+		if(columns != null && columnIndex > -1
+				&& columnIndex < columns.size() //JR625 fix
+				) {
 			if(columns.get(columnIndex).equals(DownloadHelper.IGNORE_COLUMN)) ret = true;
 		}
 		
