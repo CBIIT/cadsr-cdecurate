@@ -1,0 +1,711 @@
+package gov.nih.nci.cadsr.cdecurate.test.junit;
+
+import static org.junit.Assert.assertTrue;
+import gov.nih.nci.cadsr.cdecurate.test.TestSpreadsheetDownload;
+import gov.nih.nci.cadsr.cdecurate.test.helpers.DBUtil;
+import gov.nih.nci.cadsr.cdecurate.ui.AltNamesDefsSession;
+import gov.nih.nci.cadsr.common.Constants;
+import gov.nih.nci.cadsr.common.TestUtil;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
+import java.sql.Connection;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Iterator;
+
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.junit.After;
+import org.junit.BeforeClass;
+import org.junit.Test;
+
+import antlr.collections.List;
+
+/**
+  * https://tracker.nci.nih.gov/browse/CURATNTOOL-1000
+  * 
+  * Setup: Enter userId and password in the VM argument (NOT program argument!!!) in the following format:
+  * 
+  * -Du=SBREXT -Dp=[replace with the password]
+  * 
+  */
+public class JR625 {
+	private static String userId;
+	private static String password;
+	private Connection conn;
+	private static TestSpreadsheetDownload download;
+
+	@BeforeClass
+	public static void init() {
+		userId = System.getProperty("u");
+		password = System.getProperty("p");
+		try {
+			DBUtil db = new DBUtil(TestUtil.getConnection(userId, password));
+			download = new TestSpreadsheetDownload();
+			download.init(userId, password);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	@After
+	public void cleanup() {
+		AltNamesDefsSession altSession = new AltNamesDefsSession(null);
+		altSession.purgeAlternateList();
+	}
+
+	@Test
+	public void testEmpty() {
+		boolean ret = false;
+		int count = 0;
+		String type = null;
+		String colString = null;
+		String fillIn = null;
+		ArrayList idArray = new ArrayList<String>();
+		try {
+			type = "CDE";
+			colString = "";
+			idArray.add("");
+			Workbook wb = download.generateSpreadsheet(type, fillIn, colString, idArray);
+			Sheet sh = wb.getSheetAt(0);
+			Iterator it = sh.rowIterator();
+			Row row = null;
+			Cell checkString = null;
+			for (; it.hasNext(); count++) {
+				row = (Row) it.next();
+				checkString = row.getCell(0);
+				System.out.println("Cell value = [" + checkString + "]");
+			}
+			System.out.println("count was " + count);
+			assertTrue("Test empty results", count == 1 && checkString != null && checkString.getStringCellValue().equals("Data Element Short Name"));
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	@Test
+	public void testPositive() {
+		boolean ret = false;
+		
+		String type = null;
+		String colString = null;
+		String fillIn = null;
+		ArrayList idArray = new ArrayList<String>();
+		try {
+			//4.1 with RAI
+			type = "CDE";
+			fillIn = "true";
+			colString = "Data Element Short Name,Data Element Long Name,Data Element Preferred Question Text,Data Element Preferred Definition,Data Element Version,Data Element Context Name,Data Element Context Version,Data Element Public ID,Data Element Workflow Status,Data Element Registration Status,Data Element Begin Date,Data Element Source,Data Element Concept Public ID,Data Element Concept Short Name,Data Element Concept Long Name,Data Element Concept Version,Data Element Concept Context Name,Data Element Concept Context Version,Object Class Public ID,Object Class Long Name,Object Class Short Name,Object Class Context Name,Object Class Version,Object Class Concept Name,Object Class Concept Code,Object Class Concept Public ID,Object Class Concept Definition Source,Object Class Concept EVS Source,Object Class Concept Primary Flag,Property Public ID,Property Long Name,Property Short Name,Property Context Name,Property Version,Property Concept Name,Property Concept Code,Property Concept Public ID,Property Concept Definition Source,Property Concept EVS Source,Property Concept Primary Flag,Value Domain Public ID,Value Domain Short Name,Value Domain Long Name,Value Domain Version,Value Domain Context Name,Value Domain Context Version,Value Domain Type,Value Domain Datatype,Value Domain Min Length,Value Domain Max Length,Value Domain Min value,Value Domain Max Value,Value Domain Decimal Place,Value Domain Format,Value Domain Concept Name,Value Domain Concept Code,Value Domain Concept Public ID,Value Domain Concept Definition Source,Value Domain Concept EVS Source,Value Domain Concept Primary Flag,Representation Public ID,Representation Long Name,Representation Short Name,Representation Context Name,Representation Version,Representation Concept Name,Representation Concept Code,Representation Concept Public ID,Representation Concept Definition Source,Representation Concept EVS Source,Representation Concept Primary Flag,Valid Values,Value Meaning Name,Value Meaning Description,Value Meaning Concepts,PV Begin Date,PV End Date,Value Meaning PublicID,Value Meaning Version,Value Meaning Alternate Definitions,Classification Scheme Short Name,Classification Scheme Version,Classification Scheme Context Name,Classification Scheme Context Version,Classification Scheme Item Name,Classification Scheme Item Type Name,Classification Scheme Item Public Id,Classification Scheme Item Version,Data Element Alternate Name Context Name,Data Element Alternate Name Context Version,Data Element Alternate Name,Data Element Alternate Name Type,Document,Document Name,Document Type,Derivation Type,Derivation Method,Derivation Rule,Concatenation Character,DDE Public ID,DDE Long Name,DDE Version,DDE Workflow Status,DDE Context,DDE Display Order,Data Element RAI,Object Class RAI,Property RAI,Value Domain RAI,Representation RAI";
+			//=== added 576 DEs
+			idArray.add("A0596FA8-E36C-019C-E040-BB89AD433454"); //DE
+			idArray.add("F63D93A3-6DD7-37E9-E034-0003BA3F9857"); //DE
+			idArray.add("7087376D-500B-815C-E040-BB89AD4303CA"); //DE
+			idArray.add("39697E0C-C464-4E07-E044-0003BA3F9857"); //DE
+			idArray.add("70873780-43FF-F3B9-E040-BB89AD4303E5"); //DE
+			idArray.add("40A34F9C-E3D2-2156-E044-0003BA3F9857"); //DE
+			idArray.add("708708E9-9006-5EB7-E040-BB89AD43321F"); //DE
+			idArray.add("1E4C6D56-CA57-37DB-E044-0003BA3F9857"); //DE
+			idArray.add("41AA593A-4FFB-0A42-E044-0003BA3F9857"); //DE
+			idArray.add("A059B46D-9932-2F56-E040-BB89AD4306B7"); //DE
+			idArray.add("708708FD-643F-C894-E040-BB89AD433239"); //DE
+			idArray.add("1E4C6EDD-63A3-39CE-E044-0003BA3F9857"); //DE
+			idArray.add("41AA5963-CD2B-0A6E-E044-0003BA3F9857"); //DE
+			idArray.add("A0596FA8-E3CB-019C-E040-BB89AD433454"); //DE
+			idArray.add("70873719-AFCF-FAD9-E040-BB89AD43034A"); //DE
+			idArray.add("1E4C6F33-BB24-39E2-E044-0003BA3F9857"); //DE
+			idArray.add("4ED6EA65-995B-1E44-E044-0003BA3F9857"); //DE
+			idArray.add("A0592385-B1DF-C995-E040-BB89AD4320E9"); //DE
+			idArray.add("70873702-5244-D3BC-E040-BB89AD430330"); //DE
+			idArray.add("4ED6EBC4-A3A1-1FD7-E044-0003BA3F9857"); //DE
+			idArray.add("A058FC46-E4A6-AC72-E040-BB89AD4365D6"); //DE
+			idArray.add("70870911-6E54-001B-E040-BB89AD433264"); //DE
+			idArray.add("66836346-18C8-CB07-E040-BB89AD435FD2"); //DE
+			idArray.add("66836329-67A5-FED5-E040-BB89AD435FAE"); //DE
+			idArray.add("6BD94B11-CB09-3DF9-E040-BB89AD436C18"); //DE
+			idArray.add("6BD94AF8-F304-E599-E040-BB89AD436BF4"); //DE
+			idArray.add("F63DDB28-EF4D-45DB-E034-0003BA3F9857"); //DE
+			idArray.add("6BD94AE0-23A5-5ADC-E040-BB89AD436BD0"); //DE
+			idArray.add("6683630C-FFE7-DBB7-E040-BB89AD435F89"); //DE
+			idArray.add("F63EDF15-EE15-0A82-E034-0003BA3F9857"); //DE
+			idArray.add("5F315324-DE20-0D48-E040-BB89AD434939"); //DE
+			idArray.add("F63EDDF4-216E-0A4E-E034-0003BA3F9857"); //DE
+			idArray.add("F63EDD03-2640-0A32-E034-0003BA3F9857"); //DE
+			idArray.add("FA0E9D61-FF6C-14D1-E034-0003BA3F9857"); //DE
+			idArray.add("41AA2F73-D19D-4F6F-E044-0003BA3F9857"); //DE
+			idArray.add("2E556CED-715C-280A-E044-0003BA3F9857"); //DE
+			idArray.add("70873731-D32F-1DE6-E040-BB89AD430367"); //DE
+			idArray.add("1E4C6D3A-7ACF-37C1-E044-0003BA3F9857"); //DE
+			idArray.add("2E556CC2-0480-27E6-E044-0003BA3F9857"); //DE
+			idArray.add("41AA2F4C-26C3-4F47-E044-0003BA3F9857"); //DE
+			idArray.add("2E5573A3-F339-2DA1-E044-0003BA3F9857"); //DE
+			idArray.add("53F724E7-1FEF-6843-E044-0003BA3F9857"); //DE
+			idArray.add("5F315313-474B-B992-E040-BB89AD43491E"); //DE
+			idArray.add("2E556D6D-A9DA-288E-E044-0003BA3F9857"); //DE
+			idArray.add("F63EE036-C2AB-0AB4-E034-0003BA3F9857"); //DE
+			idArray.add("2E557408-CC03-2DFF-E044-0003BA3F9857"); //DE
+			idArray.add("6BD96260-32BD-2AE1-E040-BB89AD4331EE"); //DE
+			idArray.add("062D1E77-B5A0-737E-E044-0003BA3F9857"); //DE
+			idArray.add("6BD96246-A322-3DE7-E040-BB89AD4331CA"); //DE
+			idArray.add("24FBC2EB-A74A-660A-E044-0003BA3F9857"); //DE
+			idArray.add("F63D92C5-3B58-37C9-E034-0003BA3F9857"); //DE
+			idArray.add("41AA3016-1DA4-5015-E044-0003BA3F9857"); //DE
+			idArray.add("6BD96279-0A82-9DAB-E040-BB89AD433212"); //DE
+			idArray.add("062D1FF4-F94F-73CA-E044-0003BA3F9857"); //DE
+			idArray.add("2E5573C4-A73E-2DBF-E044-0003BA3F9857"); //DE
+			idArray.add("7DCCE760-6618-4F8D-E040-BB89AD4367E9"); //DE
+			idArray.add("745F0E9D-202C-BAB0-E040-BB89AD436AC5"); //DE
+			idArray.add("24FBC27B-06FC-65BC-E044-0003BA3F9857"); //DE
+			idArray.add("2E5573E6-C805-2DDF-E044-0003BA3F9857"); //DE
+			idArray.add("8EDA0818-6C71-DE57-E040-BB89AD433F22"); //DE
+			idArray.add("4ED6F3A4-B922-299C-E044-0003BA3F9857"); //DE
+			idArray.add("24FBC2C9-12E8-65F0-E044-0003BA3F9857"); //DE
+			idArray.add("2E556B90-4B89-26CF-E044-0003BA3F9857"); //DE
+			idArray.add("22B2AD1A-A38C-3545-E044-0003BA3F9857"); //DE
+			idArray.add("24FBC246-62BA-6588-E044-0003BA3F9857"); //DE
+			idArray.add("2E557382-AE6A-2D85-E044-0003BA3F9857"); //DE
+			idArray.add("87706E76-B803-C93E-E040-BB89AD431736"); //DE
+			idArray.add("745F0E72-69B8-CA29-E040-BB89AD436A84"); //DE
+			idArray.add("24FBC1FC-6554-655E-E044-0003BA3F9857"); //DE
+			idArray.add("41AA2FC3-262E-4FC1-E044-0003BA3F9857"); //DE
+			idArray.add("41AA2FEA-04B3-4FEB-E044-0003BA3F9857"); //DE
+			idArray.add("F63EE136-31CE-0AD8-E034-0003BA3F9857"); //DE
+			idArray.add("8EDA0818-6CC2-DE57-E040-BB89AD433F22"); //DE
+			idArray.add("41AA2F9B-8893-4F97-E044-0003BA3F9857"); //DE
+			idArray.add("41AA5913-D369-0A1A-E044-0003BA3F9857"); //DE
+			idArray.add("4ED6EB8D-C2E7-1F95-E044-0003BA3F9857"); //DE
+			idArray.add("41AA58ED-97F3-09F2-E044-0003BA3F9857"); //DE
+			idArray.add("99BA9DC8-3650-4E69-E034-080020C9C0E0"); //DE
+			idArray.add("99BA9DC8-3354-4E69-E034-080020C9C0E0"); //DE
+			idArray.add("99BA9DC8-3357-4E69-E034-080020C9C0E0"); //DE
+			idArray.add("99BA9DC8-334E-4E69-E034-080020C9C0E0"); //DE
+			idArray.add("B0D9F8AE-ACC6-4884-E034-0003BA12F5E7"); //DE
+			idArray.add("99BA9DC8-3653-4E69-E034-080020C9C0E0"); //DE
+			idArray.add("99BA9DC8-3360-4E69-E034-080020C9C0E0"); //DE
+			idArray.add("99BA9DC8-335A-4E69-E034-080020C9C0E0"); //DE
+			idArray.add("FA0F5E53-0227-0973-E034-0003BA3F9857"); //DE
+			idArray.add("FA0F5A8D-EB1E-08B6-E034-0003BA3F9857"); //DE
+			idArray.add("1E791BEE-635D-71F8-E044-0003BA3F9857"); //DE
+			idArray.add("24FBC114-C9E0-6497-E044-0003BA3F9857"); //DE
+			idArray.add("1E791AF2-5506-70E5-E044-0003BA3F9857"); //DE
+			idArray.add("24FBC2A0-D637-65D6-E044-0003BA3F9857"); //DE
+			idArray.add("99BA9DC8-3351-4E69-E034-080020C9C0E0"); //DE
+			idArray.add("1E7919B2-AFF9-6FAB-E044-0003BA3F9857"); //DE
+			idArray.add("1E79198F-A3E1-6F8B-E044-0003BA3F9857"); //DE
+			idArray.add("F63DD0D2-93C9-43C3-E034-0003BA3F9857"); //DE
+			idArray.add("F63DD01C-A108-43A3-E034-0003BA3F9857"); //DE
+			idArray.add("05DE3AF8-8672-5387-E044-0003BA3F9857"); //DE
+			idArray.add("344B6A49-57B9-0F15-E044-0003BA3F9857"); //DE
+			idArray.add("24FBC1B2-9E55-652A-E044-0003BA3F9857"); //DE
+			idArray.add("6734D283-4D7C-31DA-E040-BB89AD433C30"); //DE
+			idArray.add("24FBC1D8-0000-6544-E044-0003BA3F9857"); //DE
+			idArray.add("87706E0B-657A-493D-E040-BB89AD43144F"); //DE
+			idArray.add("6734D29A-E49C-24CB-E040-BB89AD433C4E"); //DE
+			idArray.add("24FBC160-2F67-64DE-E044-0003BA3F9857"); //DE
+			idArray.add("87706DF0-F42F-7DB4-E040-BB89AD431410"); //DE
+			idArray.add("39697782-33A8-45CF-E044-0003BA3F9857"); //DE
+			idArray.add("24FBC182-D96C-64F8-E044-0003BA3F9857"); //DE
+			idArray.add("41AA5C84-CC8B-0E7C-E044-0003BA3F9857"); //DE
+			idArray.add("24FBC0A8-A711-6445-E044-0003BA3F9857"); //DE
+			idArray.add("F63DD333-26AF-4423-E034-0003BA3F9857"); //DE
+			idArray.add("24FBC30E-29E1-6624-E044-0003BA3F9857"); //DE
+			idArray.add("41AA5D16-3CF7-0F1B-E044-0003BA3F9857"); //DE
+			idArray.add("24FBC0CC-A40F-6463-E044-0003BA3F9857"); //DE
+			idArray.add("24FBC0F3-0153-647D-E044-0003BA3F9857"); //DE
+			idArray.add("87706E32-F3E9-71E6-E040-BB89AD43169A"); //DE
+			idArray.add("87706E4D-F243-CFE6-E040-BB89AD4316DC"); //DE
+			idArray.add("87706E5A-A6C7-5DBD-E040-BB89AD4316F7"); //DE
+			idArray.add("87706E69-191A-6C4A-E040-BB89AD431717"); //DE
+			idArray.add("24FBC07C-7690-640B-E044-0003BA3F9857"); //DE
+			idArray.add("99BA9DC8-334B-4E69-E034-080020C9C0E0"); //DE
+			idArray.add("87706DFE-57DF-1CEC-E040-BB89AD431434"); //DE
+			idArray.add("99BA9DC8-3348-4E69-E034-080020C9C0E0"); //DE
+			idArray.add("87706E18-EB0C-0FDA-E040-BB89AD43165C"); //DE
+			idArray.add("73290462-4F30-937B-E040-BB89AD4357D6"); //DE
+			idArray.add("87706E25-F369-3751-E040-BB89AD431678"); //DE
+			idArray.add("344B6A6A-6431-0F2F-E044-0003BA3F9857"); //DE
+			idArray.add("87706E40-FEF1-B89E-E040-BB89AD4316BE"); //DE
+			idArray.add("344B69E7-0D39-0EC8-E044-0003BA3F9857"); //DE
+			idArray.add("99BA9DC8-3298-4E69-E034-080020C9C0E0"); //DE
+			idArray.add("DBCE1CC4-7ECC-2394-E034-0003BA12F5E7"); //DE
+			idArray.add("99BA9DC8-335D-4E69-E034-080020C9C0E0"); //DE
+			idArray.add("99BA9DC8-3363-4E69-E034-080020C9C0E0"); //DE
+			idArray.add("DBCE1CC4-2A05-2394-E034-0003BA12F5E7"); //DE
+			idArray.add("DBCE1CC4-4784-2394-E034-0003BA12F5E7"); //DE
+			idArray.add("DBCE1CC4-4B98-2394-E034-0003BA12F5E7"); //DE
+			idArray.add("2E556BB9-17D8-26F5-E044-0003BA3F9857"); //DE
+			idArray.add("DBCE1CC4-2B8E-2394-E034-0003BA12F5E7"); //DE
+			idArray.add("D00DF17A-0C97-06B7-E040-BB89AD433E18"); //DE
+			idArray.add("D020F62D-B0F8-DD09-E040-BB89AD431380"); //DE
+			idArray.add("62269671-9C4E-D140-E040-BB89AD4338E0"); //DE
+			idArray.add("2E556C3A-0581-276D-E044-0003BA3F9857"); //DE
+			idArray.add("7D863D75-B125-DED0-E040-BB89AD431B39"); //DE
+			idArray.add("7D863D75-B184-DED0-E040-BB89AD431B39"); //DE
+			idArray.add("24FBC137-E5E1-64B1-E044-0003BA3F9857"); //DE
+			idArray.add("88B7C79A-6456-1B0B-E040-BB89AD4301DA"); //DE
+			idArray.add("88B6A68F-DE79-2BEF-E040-BB89AD436ECE"); //DE
+			idArray.add("4ED6BDFF-82A9-5A9D-E044-0003BA3F9857"); //DE
+			idArray.add("F7926F71-293B-4715-E040-BB8921B62381"); //DE
+			idArray.add("CC20BD87-F845-6910-E040-BB89AD4301EB"); //DE
+			idArray.add("4ED82F30-7C2D-7453-E044-0003BA3F9857"); //DE
+			idArray.add("08265BE5-6941-A769-E050-BB8921B619DA"); //DE
+			idArray.add("2E556C94-C655-27C0-E044-0003BA3F9857"); //DE
+			idArray.add("4ED82F9B-9179-74D5-E044-0003BA3F9857"); //DE
+			idArray.add("665A232C-DBE9-0CE2-E040-BB89AD430B8D"); //DE
+			idArray.add("2E556C0D-F187-273D-E044-0003BA3F9857"); //DE
+			idArray.add("4ED82F66-2767-7493-E044-0003BA3F9857"); //DE
+			idArray.add("665A22EC-AD0B-69BF-E040-BB89AD430B3C"); //DE
+			idArray.add("4ED81C6E-D532-5C49-E044-0003BA3F9857"); //DE
+			idArray.add("665A2317-A44D-590E-E040-BB89AD430B72"); //DE
+			idArray.add("4ED81C93-EFAB-5C7B-E044-0003BA3F9857"); //DE
+			idArray.add("665A2302-5607-4D51-E040-BB89AD430B58"); //DE
+			idArray.add("4ED82FD1-593A-7517-E044-0003BA3F9857"); //DE
+			idArray.add("62C115EE-094A-A8CF-E040-BB89AD43747B"); //DE
+			idArray.add("4ED81C4B-63F2-5C21-E044-0003BA3F9857"); //DE
+			idArray.add("62C11606-E306-0753-E040-BB89AD437498"); //DE
+			idArray.add("CAC5A810-B311-47AC-E040-BB89AD43233F"); //DE
+			idArray.add("062D1D83-83B5-734C-E044-0003BA3F9857"); //DE
+			idArray.add("DCA7FFA4-60F4-E34B-E040-BB89AD4306CC"); //DE
+			idArray.add("62C115D2-B553-F886-E040-BB89AD437450"); //DE
+			idArray.add("CC20F2D9-D3F7-56DC-E040-BB89AD437FBD"); //DE
+			idArray.add("CAC5A7F6-7A89-49AE-E040-BB89AD432322"); //DE
+			idArray.add("DBCE1CC4-2B5C-2394-E034-0003BA12F5E7"); //DE
+			idArray.add("CC20BD45-2ED9-513E-E040-BB89AD437A1C"); //DE
+			idArray.add("53F724AE-00EF-6805-E044-0003BA3F9857"); //DE
+			idArray.add("CC20F2AE-FBE2-60B8-E040-BB89AD437F67"); //DE
+			idArray.add("53F72471-AEA6-67CF-E044-0003BA3F9857"); //DE
+			idArray.add("DBCE1CC4-4AB5-2394-E034-0003BA12F5E7"); //DE
+			idArray.add("CC20BD5C-1682-29B2-E040-BB89AD437C40"); //DE
+			idArray.add("DBCE1CC4-496E-2394-E034-0003BA12F5E7"); //DE
+			idArray.add("CC20BD71-E807-5B94-E040-BB89AD437D66"); //DE
+			idArray.add("2BA5E7D0-F2DC-41CD-E044-0003BA3F9857"); //DE
+			idArray.add("456B8880-532A-4CFD-E044-0003BA3F9857"); //DE
+			idArray.add("456B88B5-9158-4D45-E044-0003BA3F9857"); //DE
+			idArray.add("456B88EA-9AA5-4DA4-E044-0003BA3F9857"); //DE
+			idArray.add("2BA70A89-6E71-5F5D-E044-0003BA3F9857"); //DE
+			idArray.add("DBCE1CC4-4867-2394-E034-0003BA12F5E7"); //DE
+			idArray.add("CFB29E48-5C2E-5B55-E034-0003BA12F5E7"); //DE
+			idArray.add("DCA7FFD9-31E2-F541-E040-BB89AD4306F0"); //DE
+			idArray.add("2E556C6A-18E6-2794-E044-0003BA3F9857"); //DE
+			idArray.add("2E556D18-2149-283A-E044-0003BA3F9857"); //DE
+			idArray.add("1E4C6E27-E435-3902-E044-0003BA3F9857"); //DE
+			idArray.add("1E4C6E07-C6A1-38C5-E044-0003BA3F9857"); //DE
+			idArray.add("1E4C6D01-6D12-378D-E044-0003BA3F9857"); //DE
+			idArray.add("1E4C6D1E-33D2-37A7-E044-0003BA3F9857"); //DE
+			idArray.add("1E4C6CE2-6CE2-3761-E044-0003BA3F9857"); //DE
+			idArray.add("2E556D44-38B0-286A-E044-0003BA3F9857"); //DE
+			idArray.add("4DDEDB20-6D4D-418C-E044-0003BA3F9857"); //DE
+			idArray.add("4DDED204-01D8-3BCE-E044-0003BA3F9857"); //DE
+			idArray.add("4DDEC8BA-C3A9-3741-E044-0003BA3F9857"); //DE
+			idArray.add("4DDED4D4-1F8E-3D5C-E044-0003BA3F9857"); //DE
+			idArray.add("4DDEC82F-C438-36F7-E044-0003BA3F9857"); //DE
+			idArray.add("4DDEC7D4-51A7-36CD-E044-0003BA3F9857"); //DE
+			idArray.add("CC20F2C4-B9F3-EC62-E040-BB89AD437F84"); //DE
+			idArray.add("4DDEC908-0BB1-376F-E044-0003BA3F9857"); //DE
+			idArray.add("456B87B7-B7C9-4C13-E044-0003BA3F9857"); //DE
+			idArray.add("456C3FE9-A960-6F2D-E044-0003BA3F9857"); //DE
+			idArray.add("456C6844-72EC-26E8-E044-0003BA3F9857"); //DE
+			idArray.add("2135E88B-B57B-194A-E044-0003BA3F9857"); //DE
+			idArray.add("DBCE1CC4-7DED-2394-E034-0003BA12F5E7"); //DE
+			idArray.add("1AC0520B-2F9A-3422-E044-0003BA3F9857"); //DE
+			idArray.add("456C3F78-3083-6EB8-E044-0003BA3F9857"); //DE
+			idArray.add("CC20FB32-5FF6-CDE3-E040-BB89AD433239"); //DE
+			idArray.add("21359797-ACEA-6AFA-E044-0003BA3F9857"); //DE
+			idArray.add("CC20FB1B-01F6-9348-E040-BB89AD43321B"); //DE
+			idArray.add("2135EF58-BDD3-1BC2-E044-0003BA3F9857"); //DE
+			idArray.add("2135EF8D-A6AF-1BDA-E044-0003BA3F9857"); //DE
+			idArray.add("4DDED540-B8DA-3D93-E044-0003BA3F9857"); //DE
+			idArray.add("4DDED427-D774-3CDF-E044-0003BA3F9857"); //DE
+			idArray.add("4DDED3B7-B14D-3CB0-E044-0003BA3F9857"); //DE
+			idArray.add("4DDED85C-89BA-3F8A-E044-0003BA3F9857"); //DE
+			idArray.add("4DDEC548-236F-3496-E044-0003BA3F9857"); //DE
+			idArray.add("4DDED996-9E0E-4077-E044-0003BA3F9857"); //DE
+			idArray.add("4DDEC6A2-7E2D-35B8-E044-0003BA3F9857"); //DE
+			idArray.add("DBCE1CC4-2BC0-2394-E034-0003BA12F5E7"); //DE
+			idArray.add("21359868-6B3D-6B57-E044-0003BA3F9857"); //DE
+			idArray.add("DBCE1CC4-1B9D-2394-E034-0003BA12F5E7"); //DE
+			idArray.add("DBCE1CC4-4A12-2394-E034-0003BA12F5E7"); //DE
+			idArray.add("2BA5E03F-DADD-3811-E044-0003BA3F9857"); //DE
+			idArray.add("2BA5E05E-4B61-382C-E044-0003BA3F9857"); //DE
+			idArray.add("CFB2B34B-B001-593D-E034-0003BA12F5E7"); //DE
+			idArray.add("DBCE1CC4-493C-2394-E034-0003BA12F5E7"); //DE
+			idArray.add("DBCE1CC4-1053-2394-E034-0003BA12F5E7"); //DE
+			idArray.add("4DDECF7A-F521-3AB1-E044-0003BA3F9857"); //DE
+			idArray.add("DBCE1CC4-4A83-2394-E034-0003BA12F5E7"); //DE
+			idArray.add("4DDECB6D-315A-389C-E044-0003BA3F9857"); //DE
+			idArray.add("4DDED6A2-84D3-3E82-E044-0003BA3F9857"); //DE
+			idArray.add("4DDED0FC-84DE-3B69-E044-0003BA3F9857"); //DE
+			idArray.add("4DDED09A-B676-3B39-E044-0003BA3F9857"); //DE
+			idArray.add("4DDED30A-2CD9-3C5F-E044-0003BA3F9857"); //DE
+			idArray.add("4DDED2A9-C078-3C35-E044-0003BA3F9857"); //DE
+			idArray.add("4DDECFDD-90A1-3AF1-E044-0003BA3F9857"); //DE
+			idArray.add("4DDECEE1-1E5B-3A6B-E044-0003BA3F9857"); //DE
+			idArray.add("40A289CC-AFCF-6258-E044-0003BA3F9857"); //DE
+			idArray.add("FA0EA2C1-4202-15EF-E034-0003BA3F9857"); //DE
+			idArray.add("FA0E9E59-E483-151F-E034-0003BA3F9857"); //DE
+			idArray.add("4ED6E17F-8035-12E8-E044-0003BA3F9857"); //DE
+			idArray.add("FA0EA21A-A7CB-15C7-E034-0003BA3F9857"); //DE
+			idArray.add("4ED6E1CB-F76A-13A9-E044-0003BA3F9857"); //DE
+			idArray.add("4ED6E1A4-AD48-1337-E044-0003BA3F9857"); //DE
+			idArray.add("DBCE1CC4-42A5-2394-E034-0003BA12F5E7"); //DE
+			idArray.add("7328E41D-052B-C499-E040-BB89AD4304AC"); //DE
+			idArray.add("DBCE1CC4-454E-2394-E034-0003BA12F5E7"); //DE
+			idArray.add("F63D9645-C559-38E6-E034-0003BA3F9857"); //DE
+			idArray.add("A0F1622E-9E5B-3EE0-E034-080020C9C0E0"); //DE
+			idArray.add("FD988F53-3571-1047-E034-0003BA3F9857"); //DE
+			idArray.add("A55CC8DE-35B4-72BF-E034-080020C9C0E0"); //DE
+			idArray.add("DBCE1CC4-0FEF-2394-E034-0003BA12F5E7"); //DE
+			idArray.add("456B8783-EAC9-4BD3-E044-0003BA3F9857"); //DE
+			idArray.add("456B8751-3214-4B99-E044-0003BA3F9857"); //DE
+			idArray.add("4DDEDA77-E066-411C-E044-0003BA3F9857"); //DE
+			idArray.add("456C3FB0-224F-6EF3-E044-0003BA3F9857"); //DE
+			idArray.add("4DDEDAC1-AA02-414C-E044-0003BA3F9857"); //DE
+			idArray.add("D38FEF19-C0F6-6BA4-E034-0003BA12F5E7"); //DE
+			idArray.add("4DDEDB61-DD5A-41C4-E044-0003BA3F9857"); //DE
+			idArray.add("D38FEF19-BE87-6BA4-E034-0003BA12F5E7"); //DE
+			idArray.add("4DDECD71-1238-39C3-E044-0003BA3F9857"); //DE
+			idArray.add("4DDECDF1-DF7C-39F2-E044-0003BA3F9857"); //DE
+			idArray.add("4DDECC31-655E-390D-E044-0003BA3F9857"); //DE
+			idArray.add("4DDECBC6-5901-38CF-E044-0003BA3F9857"); //DE
+			idArray.add("4DDECAE4-36FD-3857-E044-0003BA3F9857"); //DE
+			idArray.add("4DDECA40-F4EE-3803-E044-0003BA3F9857"); //DE
+			idArray.add("456C6881-A0B5-2725-E044-0003BA3F9857"); //DE
+			idArray.add("8AF57260-0406-BAED-E040-BB89AD4332C0"); //DE
+			idArray.add("53F5F913-E081-3959-E044-0003BA3F9857"); //DE
+			idArray.add("6BD94B6D-4B6B-283A-E040-BB89AD436CA5"); //DE
+			idArray.add("6BD94B85-D9B0-3277-E040-BB89AD436CCB"); //DE
+			idArray.add("6BD94B9E-93E9-AAAA-E040-BB89AD436CF4"); //DE
+			idArray.add("456C3EA0-44F5-6D81-E044-0003BA3F9857"); //DE
+			idArray.add("E5184AC1-C119-9921-E040-BB89AD434BAC"); //DE
+			idArray.add("456C3EE8-1E17-6DB7-E044-0003BA3F9857"); //DE
+			idArray.add("40A2894F-1272-61D6-E044-0003BA3F9857"); //DE
+			idArray.add("734E6261-78EC-0103-E040-BB89AD432FB3"); //DE
+			idArray.add("53F5F8E0-BFEA-3918-E044-0003BA3F9857"); //DE
+			idArray.add("2135A88A-CB52-7344-E044-0003BA3F9857"); //DE
+			idArray.add("53F5F8A9-E374-38B4-E044-0003BA3F9857"); //DE
+			idArray.add("456C3F37-089E-6E62-E044-0003BA3F9857"); //DE
+			idArray.add("456C3E61-4607-6D35-E044-0003BA3F9857"); //DE
+			idArray.add("4DDECE92-0D86-3A3C-E044-0003BA3F9857"); //DE
+			idArray.add("734E6233-9DD6-2D8A-E040-BB89AD432F65"); //DE
+			idArray.add("4DDED645-1079-3E3F-E044-0003BA3F9857"); //DE
+			idArray.add("734E624A-700F-BD86-E040-BB89AD432F98"); //DE
+			idArray.add("4DDED6F2-B8C9-3EBE-E044-0003BA3F9857"); //DE
+			idArray.add("456C680D-EB83-26AE-E044-0003BA3F9857"); //DE
+			idArray.add("4DDECCFE-CD58-3991-E044-0003BA3F9857"); //DE
+			idArray.add("456C67D4-4D72-2676-E044-0003BA3F9857"); //DE
+			idArray.add("4DDED5E6-8173-3E07-E044-0003BA3F9857"); //DE
+			idArray.add("41AA5850-1A69-093C-E044-0003BA3F9857"); //DE
+			idArray.add("40A28A5B-980E-62FF-E044-0003BA3F9857"); //DE
+			idArray.add("41AA5828-AA14-0912-E044-0003BA3F9857"); //DE
+			idArray.add("22B2AB13-3E1E-3355-E044-0003BA3F9857"); //DE
+			idArray.add("1D32722A-67F0-2745-E044-0003BA3F9857"); //DE
+			idArray.add("73290717-6E03-2250-E040-BB89AD436013"); //DE
+			idArray.add("40A36178-50E7-354B-E044-0003BA3F9857"); //DE
+			idArray.add("40A28A90-8515-6335-E044-0003BA3F9857"); //DE
+			idArray.add("1D32727E-B36B-2783-E044-0003BA3F9857"); //DE
+			idArray.add("22B2AB30-7369-336F-E044-0003BA3F9857"); //DE
+			idArray.add("8AF5727F-F415-2950-E040-BB89AD43350B"); //DE
+			idArray.add("8AF57241-5A22-9F75-E040-BB89AD43323D"); //DE
+			idArray.add("41AA5877-C450-096A-E044-0003BA3F9857"); //DE
+			idArray.add("41AA1DF0-B598-3F6C-E044-0003BA3F9857"); //DE
+			idArray.add("41AA1E2A-E6DD-3F94-E044-0003BA3F9857"); //DE
+			idArray.add("41AA1E6E-8F19-3FC8-E044-0003BA3F9857"); //DE
+			idArray.add("41AA1ED5-74BF-3FFB-E044-0003BA3F9857"); //DE
+			idArray.add("5BA63A14-C608-3A32-E044-0003BA3F9857"); //DE
+			idArray.add("6234215F-78CE-2652-E040-BB89AD4335A0"); //DE
+			idArray.add("456C68BF-B90E-2779-E044-0003BA3F9857"); //DE
+			idArray.add("E1D08DB8-91EE-016F-E040-BB89AD4308FD"); //DE
+			idArray.add("E1D08DB8-91C7-016F-E040-BB89AD4308FD"); //DE
+			idArray.add("E1D08DB8-92B4-016F-E040-BB89AD4308FD"); //DE
+			idArray.add("E1D08DB8-9266-016F-E040-BB89AD4308FD"); //DE
+			idArray.add("E1D08DB8-928D-016F-E040-BB89AD4308FD"); //DE
+			idArray.add("05DE414B-7E59-5544-E044-0003BA3F9857"); //DE
+			idArray.add("05DE3FC3-0C25-54D6-E044-0003BA3F9857"); //DE
+			idArray.add("05DE42DD-403D-55A8-E044-0003BA3F9857"); //DE
+			idArray.add("2135C484-A84F-0993-E044-0003BA3F9857"); //DE
+			idArray.add("2135C45E-2670-097B-E044-0003BA3F9857"); //DE
+			idArray.add("FA0F4933-B923-02F8-E034-0003BA3F9857"); //DE
+			idArray.add("E1D08DB8-9350-016F-E040-BB89AD4308FD"); //DE
+			idArray.add("FA0F5908-71D9-0873-E034-0003BA3F9857"); //DE
+			idArray.add("E1D08DB8-9302-016F-E040-BB89AD4308FD"); //DE
+			idArray.add("E1D08DB8-9377-016F-E040-BB89AD4308FD"); //DE
+			idArray.add("FA0F5852-BB49-0853-E034-0003BA3F9857"); //DE
+			idArray.add("E1D08DB8-9218-016F-E040-BB89AD4308FD"); //DE
+			idArray.add("FA0F579A-F43F-0829-E034-0003BA3F9857"); //DE
+			idArray.add("E1D08DB8-923F-016F-E040-BB89AD4308FD"); //DE
+			idArray.add("FA0F49E2-E5B7-0373-E034-0003BA3F9857"); //DE
+			idArray.add("40A34BFB-C1FA-1D94-E044-0003BA3F9857"); //DE
+			idArray.add("F63DD416-6BAB-444F-E034-0003BA3F9857"); //DE
+			idArray.add("22B2AB4D-2F1F-338B-E044-0003BA3F9857"); //DE
+			idArray.add("DB0D101B-4E2E-EC86-E040-BB89AD43138C"); //DE
+			idArray.add("FA0F5CD6-23A0-091F-E034-0003BA3F9857"); //DE
+			idArray.add("FA0F5B46-E8B9-08E4-E034-0003BA3F9857"); //DE
+			idArray.add("FA0F5C14-A089-0902-E034-0003BA3F9857"); //DE
+			idArray.add("FA0EAAB3-ED66-1772-E034-0003BA3F9857"); //DE
+			idArray.add("E1D08DB8-92DB-016F-E040-BB89AD4308FD"); //DE
+			idArray.add("FA0EAC14-0751-179C-E034-0003BA3F9857"); //DE
+			idArray.add("21BFD94A-1298-612C-E044-0003BA3F9857"); //DE
+			idArray.add("FA0F59D7-14DB-0898-E034-0003BA3F9857"); //DE
+			idArray.add("FA0F5F23-0B73-0993-E034-0003BA3F9857"); //DE
+			idArray.add("FA0F5D7F-8751-093F-E034-0003BA3F9857"); //DE
+			idArray.add("E57AE095-B7B8-FF62-E040-BB89AD4318C2"); //DE
+			idArray.add("FA0F5FD5-91B7-09B5-E034-0003BA3F9857"); //DE
+			idArray.add("E570C70D-FDED-3304-E040-BB89AD432034"); //DE
+			idArray.add("FA0F564C-882E-07DB-E034-0003BA3F9857"); //DE
+			idArray.add("E57AE095-B78B-FF62-E040-BB89AD4318C2"); //DE
+			idArray.add("E570C70D-FDC0-3304-E040-BB89AD432034"); //DE
+			idArray.add("4DDEC486-E115-33FA-E044-0003BA3F9857"); //DE
+			idArray.add("40A34F0F-C551-20C6-E044-0003BA3F9857"); //DE
+			idArray.add("4DDEC427-C460-33C8-E044-0003BA3F9857"); //DE
+			idArray.add("F63E473D-5491-29B7-E034-0003BA3F9857"); //DE
+			idArray.add("4DDED9DB-741D-40A8-E044-0003BA3F9857"); //DE
+			idArray.add("F63E465B-E0F0-2989-E034-0003BA3F9857"); //DE
+			idArray.add("39688A4B-9A82-5BC1-E044-0003BA3F9857"); //DE
+			idArray.add("F63DD5D7-5CAB-449D-E034-0003BA3F9857"); //DE
+			idArray.add("4DDED89A-8799-3FB4-E044-0003BA3F9857"); //DE
+			idArray.add("FA0F60DD-AE9A-09ED-E034-0003BA3F9857"); //DE
+			idArray.add("F63DD4F7-FBBB-4479-E034-0003BA3F9857"); //DE
+			idArray.add("4DDED7FB-9E7F-3F4A-E044-0003BA3F9857"); //DE
+			idArray.add("A6F38F0A-BF31-DCF2-E040-BB89AD4344BE"); //DE
+			idArray.add("4DDED7B2-351D-3F17-E044-0003BA3F9857"); //DE
+			idArray.add("2BA5E7F0-780E-41E7-E044-0003BA3F9857"); //DE
+			idArray.add("4DDEC591-F65B-350E-E044-0003BA3F9857"); //DE
+			idArray.add("2BA70A6E-F515-5F49-E044-0003BA3F9857"); //DE
+			idArray.add("53F725FF-922C-6969-E044-0003BA3F9857"); //DE
+			idArray.add("4DDEC95E-47B0-379D-E044-0003BA3F9857"); //DE
+			idArray.add("53F72636-DBD4-69A2-E044-0003BA3F9857"); //DE
+			idArray.add("4DDEDA16-69B4-40D0-E044-0003BA3F9857"); //DE
+			idArray.add("53F7266D-EC3D-69D9-E044-0003BA3F9857"); //DE
+			idArray.add("4DDECCAB-078D-395C-E044-0003BA3F9857"); //DE
+			idArray.add("62C0318D-EFB6-0673-E040-BB89AD43784F"); //DE
+			idArray.add("456C3E29-03E6-6CF2-E044-0003BA3F9857"); //DE
+			idArray.add("4ED822EB-1579-6486-E044-0003BA3F9857"); //DE
+			idArray.add("6BD950BE-7679-5077-E040-BB89AD4376CC"); //DE
+			idArray.add("4ED822B5-03AD-6446-E044-0003BA3F9857"); //DE
+			idArray.add("3968A10E-515D-01BF-E044-0003BA3F9857"); //DE
+			idArray.add("456B884C-A17E-4CC3-E044-0003BA3F9857"); //DE
+			idArray.add("4EC985EA-AD26-3DE6-E044-0003BA3F9857"); //DE
+			idArray.add("6BD950D6-CF00-3CBD-E040-BB89AD4376EF"); //DE
+			idArray.add("4EC986EA-9093-3F21-E044-0003BA3F9857"); //DE
+			idArray.add("E1D08DB8-939E-016F-E040-BB89AD4308FD"); //DE
+			idArray.add("557412EC-107B-2D54-E044-0003BA3F9857"); //DE
+			idArray.add("E1D08DB8-9329-016F-E040-BB89AD4308FD"); //DE
+			idArray.add("5574143F-6818-2EB9-E044-0003BA3F9857"); //DE
+			idArray.add("456B8967-B55C-4E58-E044-0003BA3F9857"); //DE
+			idArray.add("569374F8-C377-562F-E044-0003BA3F9857"); //DE
+			idArray.add("6117C335-B99D-B46F-E040-BB89AD435E6D"); //DE
+			idArray.add("5693753A-4A4E-5673-E044-0003BA3F9857"); //DE
+			idArray.add("6BD950EF-2EB1-5E0B-E040-BB89AD437723"); //DE
+			idArray.add("56937592-B527-56D8-E044-0003BA3F9857"); //DE
+			idArray.add("F63D9544-006A-3839-E034-0003BA3F9857"); //DE
+			idArray.add("456B8925-332C-4E15-E044-0003BA3F9857"); //DE
+			idArray.add("56937566-B8D3-56A5-E044-0003BA3F9857"); //DE
+			idArray.add("62C032F4-66EB-87C4-E040-BB89AD437A5A"); //DE
+			idArray.add("66836561-E628-B096-E040-BB89AD436549"); //DE
+			idArray.add("4DDEC739-42EC-3644-E044-0003BA3F9857"); //DE
+			idArray.add("668362D6-7C90-4228-E040-BB89AD435CB3"); //DE
+			idArray.add("4DDEC61A-15C7-3576-E044-0003BA3F9857"); //DE
+			idArray.add("6117C318-A53D-272F-E040-BB89AD435D0F"); //DE
+			idArray.add("4DDED936-84ED-4035-E044-0003BA3F9857"); //DE
+			idArray.add("6117C2F5-B94C-0310-E040-BB89AD435CE5"); //DE
+			idArray.add("4DDED8F8-8208-4006-E044-0003BA3F9857"); //DE
+			idArray.add("4ED82DC0-FA26-7295-E044-0003BA3F9857"); //DE
+			idArray.add("2E556BE3-95CF-2719-E044-0003BA3F9857"); //DE
+			idArray.add("668362F2-0C16-4CA3-E040-BB89AD435F40"); //DE
+			idArray.add("4ED82E0A-4702-72F5-E044-0003BA3F9857"); //DE
+			idArray.add("4ED82DE4-EB22-72BD-E044-0003BA3F9857"); //DE
+			idArray.add("70870924-E01C-1737-E040-BB89AD433283"); //DE
+			idArray.add("70873746-223E-5692-E040-BB89AD430381"); //DE
+			idArray.add("24FBC44C-2C06-673A-E044-0003BA3F9857"); //DE
+			idArray.add("24FBC3C6-DE41-66C4-E044-0003BA3F9857"); //DE
+			idArray.add("24FBC46E-F116-6754-E044-0003BA3F9857"); //DE
+			idArray.add("062D3EE9-427F-0480-E044-0003BA3F9857"); //DE
+			idArray.add("2F05F8C5-323A-3B33-E044-0003BA3F9857"); //DE
+			idArray.add("2F05F8A3-7668-3B19-E044-0003BA3F9857"); //DE
+			idArray.add("70873759-7573-39B8-E040-BB89AD4303A2"); //DE
+			idArray.add("204085A4-5DC4-2852-E044-0003BA3F9857"); //DE
+			idArray.add("1BC48588-5112-2917-E044-0003BA3F9857"); //DE
+			idArray.add("309948C2-558A-4FA9-E044-0003BA3F9857"); //DE
+			idArray.add("30994436-8EAA-4C8D-E044-0003BA3F9857"); //DE
+			idArray.add("30994462-799F-4CA7-E044-0003BA3F9857"); //DE
+			idArray.add("24FBC5B0-8C63-6834-E044-0003BA3F9857"); //DE
+			idArray.add("062D3E4D-31B5-0453-E044-0003BA3F9857"); //DE
+			idArray.add("24FBC58D-2F43-6820-E044-0003BA3F9857"); //DE
+			idArray.add("FD5ED897-7827-25D7-E034-0003BA3F9857"); //DE
+			idArray.add("062D3700-53E7-028C-E044-0003BA3F9857"); //DE
+			idArray.add("F9FA7953-80EE-043D-E034-0003BA3F9857"); //DE
+			idArray.add("207D5FE3-F485-5C07-E044-0003BA3F9857"); //DE
+			idArray.add("1A348B70-8828-49FB-E044-0003BA3F9857"); //DE
+			idArray.add("062D37FF-C2BE-02BA-E044-0003BA3F9857"); //DE
+			idArray.add("20408583-92F0-2838-E044-0003BA3F9857"); //DE
+			idArray.add("FD5ED5AE-2328-254F-E034-0003BA3F9857"); //DE
+			idArray.add("207D5FC0-A28A-5BDF-E044-0003BA3F9857"); //DE
+			idArray.add("FD5EDA01-710C-261F-E034-0003BA3F9857"); //DE
+			idArray.add("FD5ED73C-C829-2591-E034-0003BA3F9857"); //DE
+			idArray.add("FD5EDB5E-9B85-2667-E034-0003BA3F9857"); //DE
+			idArray.add("24FBC41F-65E4-6706-E044-0003BA3F9857"); //DE
+			idArray.add("20408442-194D-26E4-E044-0003BA3F9857"); //DE
+			idArray.add("204083EB-F345-2696-E044-0003BA3F9857"); //DE
+			idArray.add("204083CE-A6C1-267A-E044-0003BA3F9857"); //DE
+			idArray.add("24FBC33A-780B-6664-E044-0003BA3F9857"); //DE
+			idArray.add("24FBC364-B56D-668A-E044-0003BA3F9857"); //DE
+			idArray.add("24FBC396-B45F-66AA-E044-0003BA3F9857"); //DE
+			idArray.add("24FBC3F6-A6D7-66EC-E044-0003BA3F9857"); //DE
+			idArray.add("309948A4-E286-4F95-E044-0003BA3F9857"); //DE
+			idArray.add("24FBB934-8EC2-5F15-E044-0003BA3F9857"); //DE
+			idArray.add("062D25D8-A7EF-750B-E044-0003BA3F9857"); //DE
+			idArray.add("062D2542-06FB-74EB-E044-0003BA3F9857"); //DE
+			idArray.add("1B8C7B83-2AE6-04A1-E044-0003BA3F9857"); //DE
+			idArray.add("20408424-DC99-26CA-E044-0003BA3F9857"); //DE
+			idArray.add("F9FD4EEB-171F-0B27-E034-0003BA3F9857"); //DE
+			idArray.add("20408408-75EE-26B0-E044-0003BA3F9857"); //DE
+			idArray.add("062D24AD-6462-74C5-E044-0003BA3F9857"); //DE
+			idArray.add("062D2336-E6CE-7488-E044-0003BA3F9857"); //DE
+			idArray.add("062D20D1-6914-73F0-E044-0003BA3F9857"); //DE
+			idArray.add("062D229C-FB02-745A-E044-0003BA3F9857"); //DE
+			idArray.add("07FAAAD0-6814-2058-E044-0003BA3F9857"); //DE
+			idArray.add("1B8C7DAC-64F4-066E-E044-0003BA3F9857"); //DE
+			idArray.add("1B8C7EA4-0E94-075C-E044-0003BA3F9857"); //DE
+			idArray.add("062D216B-B95B-7412-E044-0003BA3F9857"); //DE
+			idArray.add("062D2202-782E-7434-E044-0003BA3F9857"); //DE
+			idArray.add("A6645A73-4656-49C2-E034-0003BA0B1A09"); //DE
+			idArray.add("148DC592-1636-4176-E044-0003BA3F9857"); //DE
+			idArray.add("148DBCA7-41DC-4043-E044-0003BA3F9857"); //DE
+			idArray.add("70CA206C-EFA6-44F9-E040-BB89AD4303A8"); //DE
+			idArray.add("1B8C7E24-3687-06D0-E044-0003BA3F9857"); //DE
+			idArray.add("1B8C7DCA-21B6-0688-E044-0003BA3F9857"); //DE
+			idArray.add("1E7918FD-294F-6F01-E044-0003BA3F9857"); //DE
+			idArray.add("1E791A1A-FE43-700B-E044-0003BA3F9857"); //DE
+			idArray.add("204085C1-644B-286E-E044-0003BA3F9857"); //DE
+			idArray.add("1E7918B5-07E5-6EB7-E044-0003BA3F9857"); //DE
+			idArray.add("1E79196A-61C1-6F65-E044-0003BA3F9857"); //DE
+			idArray.add("1E7919F8-7371-6FEB-E044-0003BA3F9857"); //DE
+			idArray.add("1E7919D5-57B2-6FCB-E044-0003BA3F9857"); //DE
+			idArray.add("2040845E-FED9-26FE-E044-0003BA3F9857"); //DE
+			idArray.add("20408480-0B5E-272C-E044-0003BA3F9857"); //DE
+			idArray.add("2040849E-23D5-2755-E044-0003BA3F9857"); //DE
+			idArray.add("204084F9-B5BF-27AA-E044-0003BA3F9857"); //DE
+			idArray.add("207D5623-51ED-5347-E044-0003BA3F9857"); //DE
+			idArray.add("F63E4888-F1A0-2A1D-E034-0003BA3F9857"); //DE
+			idArray.add("20408516-88F6-27C4-E044-0003BA3F9857"); //DE
+			idArray.add("1AAADA0B-3028-2459-E044-0003BA3F9857"); //DE
+			idArray.add("204084BB-8D28-2773-E044-0003BA3F9857"); //DE
+			idArray.add("F63DD6E2-A6B3-44CF-E034-0003BA3F9857"); //DE
+			idArray.add("1E791AAB-22C7-70A3-E044-0003BA3F9857"); //DE
+			idArray.add("1E7918D9-4572-6EE1-E044-0003BA3F9857"); //DE
+			idArray.add("1E791947-21B8-6F45-E044-0003BA3F9857"); //DE
+			idArray.add("1B8C7EC4-24DC-0776-E044-0003BA3F9857"); //DE
+			idArray.add("204084DC-A232-2790-E044-0003BA3F9857"); //DE
+			idArray.add("1E791B5F-6AA1-7155-E044-0003BA3F9857"); //DE
+			idArray.add("1E791BCB-418C-71D7-E044-0003BA3F9857"); //DE
+			idArray.add("1E791BA7-FF18-71B7-E044-0003BA3F9857"); //DE
+			idArray.add("1E791B85-687B-7197-E044-0003BA3F9857"); //DE
+			idArray.add("1E791B39-6B9E-712B-E044-0003BA3F9857"); //DE
+			idArray.add("20408CA3-E5ED-2F1E-E044-0003BA3F9857"); //DE
+			idArray.add("20408C4B-B67F-2EC0-E044-0003BA3F9857"); //DE
+			idArray.add("20409A12-C7FF-3BB6-E044-0003BA3F9857"); //DE
+			idArray.add("1BC48588-50B8-2917-E044-0003BA3F9857"); //DE
+			idArray.add("F63EE36B-BAE8-0B30-E034-0003BA3F9857"); //DE
+			idArray.add("F63EE267-76D9-0B06-E034-0003BA3F9857"); //DE
+			idArray.add("07FAAA49-7AB1-2038-E044-0003BA3F9857"); //DE
+			idArray.add("1BC48588-50ED-2917-E044-0003BA3F9857"); //DE
+			idArray.add("1E791ACE-0CEA-70C4-E044-0003BA3F9857"); //DE
+			idArray.add("1E791B15-58E1-710B-E044-0003BA3F9857"); //DE
+			idArray.add("1E791A61-F443-704B-E044-0003BA3F9857"); //DE
+			idArray.add("1E791A86-AE1A-706D-E044-0003BA3F9857"); //DE
+			idArray.add("1E791A3E-650E-702B-E044-0003BA3F9857"); //DE
+			idArray.add("20408C68-79E4-2EDE-E044-0003BA3F9857"); //DE
+			idArray.add("204099FB-A322-3BA2-E044-0003BA3F9857"); //DE
+			idArray.add("20408C86-102D-2EFB-E044-0003BA3F9857"); //DE
+			idArray.add("20408D3C-DDEC-2FAD-E044-0003BA3F9857"); //DE
+			idArray.add("20408D1F-C855-2F8A-E044-0003BA3F9857"); //DE
+			idArray.add("20408D78-45B4-2FF3-E044-0003BA3F9857"); //DE
+			idArray.add("20408D59-F04E-2FCF-E044-0003BA3F9857"); //DE
+			idArray.add("20408DD9-227F-304C-E044-0003BA3F9857"); //DE
+			idArray.add("20408DB8-A9B9-3030-E044-0003BA3F9857"); //DE
+			idArray.add("20408D98-1DE7-300F-E044-0003BA3F9857"); //DE
+			idArray.add("1A0ABAD2-9CFA-6EAA-E044-0003BA3F9857"); //DE
+			idArray.add("204083B2-045C-2660-E044-0003BA3F9857"); //DE
+			idArray.add("20408391-C5FE-2634-E044-0003BA3F9857"); //DE
+			idArray.add("20408373-48F2-2616-E044-0003BA3F9857"); //DE
+			idArray.add("1AC082B6-F9EC-6487-E044-0003BA3F9857"); //DE
+			idArray.add("1A31F930-71CC-6D2F-E044-0003BA3F9857"); //DE
+			idArray.add("1E8B5AAF-E747-1F5C-E044-0003BA3F9857"); //DE
+			idArray.add("1EEBAE6A-E84E-5157-E044-0003BA3F9857"); //DE
+			idArray.add("1E8B5AAF-E76E-1F5C-E044-0003BA3F9857"); //DE
+			idArray.add("1BC68AA6-B07F-1865-E044-0003BA3F9857"); //DE
+			idArray.add("D38FEF19-C0E1-6BA4-E034-0003BA12F5E7"); //DE
+			idArray.add("D38FEF19-BE79-6BA4-E034-0003BA12F5E7"); //DE
+			idArray.add("734E5C05-D239-3A73-E040-BB89AD431D59"); //DE
+			idArray.add("734E5BD9-62EF-94AC-E040-BB89AD431B08"); //DE
+			idArray.add("734E5BAC-1591-EFE3-E040-BB89AD4319A0"); //DE
+			idArray.add("734E5BC2-4601-FE29-E040-BB89AD431A20"); //DE
+			idArray.add("734E5C1B-7EA9-8541-E040-BB89AD431D9A"); //DE
+			idArray.add("734E5B7C-5EB9-1F30-E040-BB89AD431964"); //DE
+			idArray.add("734E5BEF-4D9B-3A2C-E040-BB89AD431D16"); //DE
+			idArray.add("734E5B96-0050-3CC5-E040-BB89AD431982"); //DE
+			idArray.add("0470765A-7D08-66D7-E044-0003BA3F9857"); //DE
+			idArray.add("04707787-EE27-6733-E044-0003BA3F9857"); //DE
+			idArray.add("0470756A-6058-666B-E044-0003BA3F9857"); //DE
+			idArray.add("04707B32-BED8-682F-E044-0003BA3F9857"); //DE
+			idArray.add("047079EF-470B-67DB-E044-0003BA3F9857"); //DE
+			idArray.add("047070EF-8CB4-6513-E044-0003BA3F9857"); //DE
+			idArray.add("04707D8D-3297-6913-E044-0003BA3F9857"); //DE
+			idArray.add("04707357-A5DE-65C5-E044-0003BA3F9857"); //DE
+			idArray.add("04707EA0-EEE4-696D-E044-0003BA3F9857"); //DE
+			idArray.add("04707C67-F274-6897-E044-0003BA3F9857"); //DE
+			idArray.add("047078CA-6854-677D-E044-0003BA3F9857"); //DE
+			idArray.add("0470744D-350B-6617-E044-0003BA3F9857"); //DE
+			idArray.add("DBCE1CC4-61D6-2394-E034-0003BA12F5E7"); //DE
+			idArray.add("DBCE1CC4-4B27-2394-E034-0003BA12F5E7"); //DE
+			idArray.add("04707008-D77C-64D9-E044-0003BA3F9857"); //DE
+			idArray.add("DBCE1CC4-7C2F-2394-E034-0003BA12F5E7"); //DE
+			idArray.add("DBCE1CC4-2993-2394-E034-0003BA12F5E7"); //DE
+			idArray.add("DBCE1CC4-4713-2394-E034-0003BA12F5E7"); //DE
+			idArray.add("DBCE1CC4-7D7E-2394-E034-0003BA12F5E7"); //DE
+			idArray.add("DBCE1CC4-7E5D-2394-E034-0003BA12F5E7"); //DE
+			idArray.add("DBCE1CC4-47F5-2394-E034-0003BA12F5E7"); //DE
+			idArray.add("DBCE1CC4-7D0E-2394-E034-0003BA12F5E7"); //DE
+			idArray.add("DBCE1CC4-4899-2394-E034-0003BA12F5E7"); //DE
+			idArray.add("DBCE1CC4-2A76-2394-E034-0003BA12F5E7"); //DE
+			idArray.add("DBCE1CC4-367D-2394-E034-0003BA12F5E7"); //DE
+			idArray.add("CFB2A0CB-60A0-5935-E034-0003BA12F5E7"); //DE
+			idArray.add("DBCE1CC4-7C9F-2394-E034-0003BA12F5E7"); //DE
+			idArray.add("DBCE1CC4-2BF2-2394-E034-0003BA12F5E7"); //DE
+			idArray.add("DBCE1CC4-48CB-2394-E034-0003BA12F5E7"); //DE
+			idArray.add("DBCE1CC4-2AEA-2394-E034-0003BA12F5E7"); //DE
+			Workbook wb = download.generateSpreadsheet(type, fillIn, colString, idArray);
+			Sheet sh = wb.getSheetAt(0);
+			Iterator it = sh.rowIterator();
+			Row row = null;
+			int checkSum = 29, currentCount = 0;
+			java.util.List<String> checkList = Arrays.asList("Data Element RAI", "Object Class RAI", "Property RAI", "Value Domain RAI", "Representation RAI");
+			int count = 0;
+			int BEGINING_INDEX = 106;
+//			for (; it.hasNext() ; ++count ) {
+//				row = (Row) it.next();
+//				System.out.println("Cell value = [" + row.getCell(BEGINING_INDEX) + "]");
+//				if(checkList.contains(row.getCell(BEGINING_INDEX)) || row.getCell(BEGINING_INDEX).toString().equals(Constants.NCI_REGISTRY_VALUE)) {
+//					currentCount++;
+//				}
+//			}
+//			System.out.println("currentCount was " + currentCount + ", expecting " + checkSum);
+			try {
+			File file = new File("c:/testDownload-JR625.xls");
+			OutputStream out = new FileOutputStream(file);	//m_classRes.getOutputStream();
+			wb.write(out);
+			out.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+//		assertTrue("Test truncation", currentCount == checkSum);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+}
