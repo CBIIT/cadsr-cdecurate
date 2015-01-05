@@ -460,7 +460,7 @@ AS
                           WHERE     vp.vd_idseq = vd.vd_idseq
                                 AND vp.pv_idseq = pv.pv_idseq
                                 AND pv.vm_idseq = vm.vm_idseq
---                                AND vm.vm_idseq = defs.ac_idseq(+) --GF32647  JR1047
+                                AND vm.vm_idseq = defs.ac_idseq(+) --GF32647  JR1047
                 ) AS valid_value_list_t
           )
              valid_values,
@@ -801,7 +801,7 @@ AS
                           WHERE     vp.vd_idseq = vd.vd_idseq
                                 AND vp.pv_idseq = pv.pv_idseq
                                 AND pv.vm_idseq = vm.vm_idseq
---                                AND vm.vm_idseq = defs.ac_idseq(+) --GF32647 JR1047
+                                AND vm.vm_idseq = defs.ac_idseq(+) --GF32647 JR1047
                   ) AS valid_value_list_t
           )
              valid_values,
@@ -923,7 +923,7 @@ GRANT DELETE, INSERT, REFERENCES, SELECT, UPDATE, ON COMMIT REFRESH, QUERY REWRI
             WHERE vp.vd_idseq = vd.vd_idseq
             AND   vp.pv_idseq = pv.pv_idseq
             AND   pv.vm_idseq = vm.vm_idseq
---            AND   vm.vm_idseq = defs.ac_idseq(+) --GF32647 JR1047
+            AND   vm.vm_idseq = defs.ac_idseq(+) --GF32647 JR1047
                ) AS valid_value_list_t) valid_values
                ,CAST(MULTISET(
                                SELECT rd.name
@@ -1238,7 +1238,7 @@ from     sbr.data_elements de
                          WHERE vp.vd_idseq = vd.vd_idseq
                         AND   vp.pv_idseq = pv.pv_idseq
                         AND   pv.vm_idseq = vm.vm_idseq
---                        AND   vm.vm_idseq = defs.ac_idseq(+) --GF32647 JR1047
+                        AND   vm.vm_idseq = defs.ac_idseq(+) --GF32647 JR1047
                            ) AS valid_value_list_t)
                                              ,CAST(MULTISET(
                                         SELECT con.preferred_name
