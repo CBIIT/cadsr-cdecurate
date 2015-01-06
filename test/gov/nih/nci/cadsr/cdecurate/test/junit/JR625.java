@@ -680,12 +680,12 @@ public class JR625 {
 			Iterator it = sh.rowIterator();
 
 			Row row = null;
-			int checkSum = 29, currentCount = 0;
+			int checkSum = 2128 /* the magic number */, currentCount = 0;
 			java.util.List<String> checkList = Arrays.asList("Data Element RAI", "Object Class RAI", "Property RAI", "Value Domain RAI", "Representation RAI");
 			int count = 0;
 			int BEGINING_INDEX = 106;
-			for (; it.hasNext() ; ++count ) {
-//				row = (Row) it.next();
+			while(it.hasNext()) {
+				row = (Row) it.next();
 //				System.out.println("Cell value = [" + row.getCell(BEGINING_INDEX) + "]");
 //				if(checkList.contains(row.getCell(BEGINING_INDEX)) || row.getCell(BEGINING_INDEX).toString().equals(Constants.NCI_REGISTRY_VALUE)) {
 					currentCount++;
@@ -693,16 +693,16 @@ public class JR625 {
 			}
 			System.out.println("totalCount was " + currentCount);
 //			System.out.println("currentCount was " + currentCount + ", expecting " + checkSum);
-			try {
-			File file = new File("c:/testDownload-JR625.xls");
-			OutputStream out = new FileOutputStream(file);	//m_classRes.getOutputStream();
-			wb.write(out);
-			out.close();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+//			try {
+//			File file = new File("c:/testDownload-JR625.xls");
+//			OutputStream out = new FileOutputStream(file);	//m_classRes.getOutputStream();
+//			wb.write(out);
+//			out.close();
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
 
-//		assertTrue("Test truncation", currentCount == checkSum);
+		assertTrue("Test total rows", currentCount == checkSum);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
