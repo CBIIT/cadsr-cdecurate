@@ -6,16 +6,12 @@
 	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.web.container"/>
 	<classpathentry kind="con" path="org.eclipse.jst.j2ee.internal.module.container"/>
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/acegi-security-1.0.4.jar"/>
-	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/antlr-2.7.6.jar"/>
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/aopalliance-1.0.jar"/>
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/aspectjrt-1.6.8.jar"/>
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/aspectjweaver-1.6.8.jar"/>
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/axis.jar"/>
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/cadsrsentinelapi.jar"/>
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/caGrid-CQL-cql.1.0-1.2.jar"/>
-	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/castor-1.0.2.jar"/>
-	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/castor-1.2-xml.jar"/>
-	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/castor-1.2.jar"/>
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/castor-bean-serializer.jar"/>
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/castor-codegen-1.3.1.jar"/>
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/castor-codegen-anttask-1.1.jar"/>
@@ -27,14 +23,9 @@
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/commons-chain-1.1.jar"/>
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/commons-cli-1.0.jar"/>
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/commons-codec-1.3.jar"/>
-	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/commons-collections-3.2.jar"/>
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/commons-dbcp-1.3.jar"/>
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/commons-digester-1.8.jar"/>
-	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/commons-discovery-0.2.jar"/>
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/commons-fileupload-1.1.1.jar"/>
-	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/commons-lang-2.2.jar"/>
-	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/commons-logging-1.1.jar"/>
-	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/commons-pool-1.3.jar"/>
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/commons-validator-1.3.0.jar"/>
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/compass-2.2.0.jar"/>
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/ddlUtils-1.0-PATCHED.jar"/>
@@ -45,7 +36,6 @@
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/lexbig.jar"/>
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/lexevs-client-framework.jar"/>
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/lexevs-core.jar"/>
-	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/lexevsapi60-beans.jar"/>
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/LexEVSSecurity.jar"/>
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/lucene-analyzers-2.4.1.jar"/>
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/lucene-queries-2.4.1.jar"/>
@@ -59,12 +49,8 @@
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/sdk-grid-remoting.jar"/>
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/sdk-security.jar"/>
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/spring-2.5.6.jar"/>
-	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/spring-aop-2.5.6.jar"/>
-	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/spring-aspects-2.5.6.jar"/>
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/spring-batch-core-2.1.0.RELEASE.jar"/>
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/spring-batch-infrastructure-2.1.0.RELEASE.jar"/>
-	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/spring-oxm-1.5.7.jar"/>
-	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/spring-test-2.5.6.jar"/>
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/spring-web-2.5.6.jar"/>
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/spring-webmvc-2.5.6.jar"/>
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/umlslicense.jar"/>
@@ -78,6 +64,18 @@
 	<classpathentry kind="lib" path="testlib/easymock/objenesis-2.1.jar"/>
 	<classpathentry kind="lib" path="testlib/excel2objects/excel2objects-1.0.jar"/>
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/joda-time-1.6.2.jar"/>
+	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/antlr-2.7.7.jar"/>
+	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/castor-1.3.1-core.jar"/>
+	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/castor-1.3.1.jar"/>
+	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/commons-collections-3.2.1.jar"/>
+	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/commons-discovery-0.4.jar"/>
+	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/commons-lang-2.4.jar"/>
+	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/commons-lang3-3.1.jar"/>
+	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/commons-logging-1.1.1.jar"/>
+	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/commons-pool-1.4.jar"/>
+	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/lexevsapi61-beans.jar"/>
+	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/lexevsapi61-framework.jar"/>
+	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/log4j-1.2.14.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry kind="lib" path="lib/servlet.jar"/>
 	<classpathentry kind="lib" path="testlib/log4jdbc4-1.2.jar"/>
@@ -87,7 +85,6 @@
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/lucene-core-2.4.1.jar"/>
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/lucene-regex-2.4.1.jar"/>
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/lucene-snowball-2.4.1.jar"/>
-	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/spring-xml-1.5.7.jar"/>
 	<classpathentry kind="lib" path="testlib/aspectj/aspectj-1.8.1.jar">
 		<attributes>
 			<attribute name="org.eclipse.ajdt.aspectpath" value="org.eclipse.ajdt.aspectpath"/>
