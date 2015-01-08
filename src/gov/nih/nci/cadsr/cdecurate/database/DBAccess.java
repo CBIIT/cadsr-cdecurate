@@ -551,7 +551,7 @@ public class DBAccess
             pstmt_.setString(SQLSelectAlts._ARGDESACIDSEQ, idseq_);
             pstmt_.setInt(SQLSelectAlts._ARGDEFINST, Alternates._INSTANCEDEF);
             pstmt_.setString(SQLSelectAlts._ARGDEFACIDSEQ, idseq_);
-            rs = pstmt_.executeQuery();
+            rs = pstmt_.executeQuery();		//JR1016 more rows than it should be!
         }
         catch (SQLException ex)
         {

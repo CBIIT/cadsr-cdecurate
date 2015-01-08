@@ -1284,7 +1284,7 @@ public class AltNamesDefsSession implements Serializable
     {
         int flag = -1;
         String attr = "";
-        for (Alternates temp : _alts)
+        for (Alternates temp : _alts)	//JR1016 _alts should not have duplicates!!! It seems like at this point, it already have duplicates...
         {
             if (flag != temp.getInstance())
             {

@@ -186,7 +186,7 @@ public class AltNamesDefsServlet
 
             // Get the Alternate Names and Definitions for the AC but first determine the desired sort
             // order.
-            form_._sess.loadAlternates(db_, form_._sort);
+            form_._sess.loadAlternates(db_, form_._sort);	//JR1016
 
             // Get the Alternates in HTML format
             form_._attrs = form_._sess.getAltHTML();

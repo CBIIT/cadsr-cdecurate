@@ -39,8 +39,6 @@
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/LexEVSSecurity.jar"/>
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/lucene-analyzers-2.4.1.jar"/>
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/lucene-queries-2.4.1.jar"/>
-	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/org.eclipse.emf.ecore_2.2.1.v200609210005.jar"/>
-	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/org.eclipse.emf.ecore.xmi_2.2.1.v200609210005.jar"/>
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/persistence-api-1.0.jar"/>
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/poi-3.7-20101029.jar"/>
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/poi-ooxml-3.7-20101029.jar"/>
@@ -73,9 +71,10 @@
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/commons-lang3-3.1.jar"/>
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/commons-logging-1.1.1.jar"/>
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/commons-pool-1.4.jar"/>
-	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/lexevsapi61-beans.jar"/>
-	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/lexevsapi61-framework.jar"/>
 	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/log4j-1.2.14.jar"/>
+	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/lexevsapi62-beans.jar"/>
+	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/lexevsapi62-framework.jar"/>
+	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/spring-test-3.1.0.RELEASE.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry kind="lib" path="lib/servlet.jar"/>
 	<classpathentry kind="lib" path="testlib/log4jdbc4-1.2.jar"/>
