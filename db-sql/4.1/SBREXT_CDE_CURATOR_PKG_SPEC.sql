@@ -544,6 +544,9 @@
        AND      pv.short_meaning = vm.short_meaning; -- 08-Apr-2004, W. Ver Hoef added
     */
     TYPE type_pv_search IS REF CURSOR;   -- RETURN pv_search_result%ROWTYPE;
+    
+    FUNCTION get_workflow_status (t_vd_vp_idseq IN VARCHAR2)
+    RETURN VARCHAR2;
 
     PROCEDURE search_pv( p_vd_idseq IN VARCHAR2, p_pv_search_res OUT type_pv_search );
 

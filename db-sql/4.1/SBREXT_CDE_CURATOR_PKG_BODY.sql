@@ -3474,6 +3474,26 @@ AND   vd.vd_idseq   = vc.vd_idseq    (+) ';   -- 31-Mar-2003, W. Ver Hoef added 
         WHEN OTHERS THEN
             RETURN NULL;
     END;
+    FUNCTION get_workflow_status (t_vd_vp_idseq IN VARCHAR2)
+       RETURN VARCHAR2
+    IS
+       t_ret_val   VARCHAR2 (15);
+    BEGIN
+       BEGIN
+          SELECT DISTINCT WORKFLOW
+            INTO t_ret_val
+            FROM quest_contents_view_ext qc, fb_forms_view crf
+           WHERE     qc.dn_crf_idseq = crf.qc_idseq
+                 AND qc.vp_idseq = t_vd_vp_idseq
+                 AND workflow = 'RELEASED';
+       EXCEPTION
+          WHEN NO_DATA_FOUND
+          THEN
+             t_ret_val := 'NOT ACTIVE';
+       END;
+
+       RETURN t_ret_val;
+    END;
     PROCEDURE search_pv( p_vd_idseq IN VARCHAR2, p_pv_search_res OUT type_pv_search ) IS
     -- Date:  01-Jul-2003
     -- Modified By:  W. Ver Hoef
@@ -3487,7 +3507,7 @@ AND   vd.vd_idseq   = vc.vd_idseq    (+) ';   -- 31-Mar-2003, W. Ver Hoef added 
     -- Modified By:  W. Ver Hoef
     -- Reason:  replaced pv_meaning_description with vm_description per mod to SPRF_2.1_09a
     --
-    -- Date: 16-Dec-2014
+    -- Date: 9-Jan-2015
     -- Modified By:  Jeff Lavezzo
     -- Reason:  Combined with a sub query to fetch Workflow value for speed reasons.
     --
@@ -3497,41 +3517,36 @@ AND   vd.vd_idseq   = vc.vd_idseq    (+) ';   -- 31-Mar-2003, W. Ver Hoef added 
         END IF;
 
         OPEN p_pv_search_res FOR
-            SELECT   pv.pv_idseq
-                    , pv.VALUE
-                    , vm.long_name short_meaning
-                    , vp.vp_idseq
-                    , vp.origin
-                    , vm.description vm_description   -- 08-Apr-2004, W. Ver Hoef added to replace pv desc
-                    , vp.begin_date
-                    , vp.end_date
-                    , vp.con_idseq
-                    , vm.VM_IDSEQ
-                    , vm.LONG_NAME
-                    , vm.PREFERRED_DEFINITION
-                    , vm.VERSION
-                    , vm.condr_idseq
-                    , vm.vm_id
-                    , vm.conte_idseq
-                    , vm.asl_name
-                    , vm.change_note
-                    , vm.comments
-                    , vm.latest_version_ind
-                    , crf.workflow
-
-                FROM value_domains_view vd
-                  , permissible_values_view pv
-                  , value_meanings_view vm   -- 08-Apr-2004, W. Ver Hoef added
-                  , vd_pvs vp
-                  LEFT OUTER JOIN quest_contents_view_ext qc
-                  ON vp.vp_idseq = qc.vp_idseq
-                  LEFT OUTER JOIN fb_forms_view crf
-                  ON qc.dn_crf_idseq = crf.qc_idseq
-            WHERE    vd.vd_idseq = vp.vd_idseq
-                 AND vp.pv_idseq = pv.pv_idseq
-                 AND pv.vm_idseq = vm.vm_idseq   -- 08-Apr-2004, W. Ver Hoef added
-                 AND vd.vd_idseq = NVL( p_vd_idseq, vd.vd_idseq )
-            ORDER BY UPPER( pv.VALUE );
+          SELECT pv.pv_idseq,
+            pv.VALUE,
+            vm.long_name short_meaning,
+            vp.vp_idseq,
+            vp.origin,
+            vm.description vm_description,
+            vp.begin_date,
+            vp.end_date,
+            vp.con_idseq,
+            vm.VM_IDSEQ,
+            vm.LONG_NAME,
+            vm.PREFERRED_DEFINITION,
+            vm.VERSION,
+            vm.condr_idseq,
+            vm.vm_id,
+            vm.conte_idseq,
+            vm.asl_name,
+            vm.change_note,
+            vm.comments,
+            vm.latest_version_ind,
+            get_workflow_status(vp.vp_idseq) workflow
+          FROM value_domains_view vd,
+            vd_pvs vp,
+            permissible_values_view pv,
+            value_meanings_view vm
+          WHERE     vd.vd_idseq = vp.vd_idseq
+            AND vp.pv_idseq = pv.pv_idseq
+            AND pv.vm_idseq = vm.vm_idseq
+            AND vd.vd_idseq = NVL( p_vd_idseq, vd.vd_idseq )
+          ORDER BY UPPER( pv.VALUE );
     END;
     PROCEDURE search_csi(
         p_search_string   IN       class_scheme_items_view.csi_name%TYPE
