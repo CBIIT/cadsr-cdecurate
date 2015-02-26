@@ -6,12 +6,12 @@ SET DEFINE OFF;
 --insert into sbrext.tool_options_view_ext (tool_name, property, value)
 --values('CURATION', 'CUSTOM.COLUMN.EXCLUDED', 'CDE_IDSEQ,DEC_IDSEQ,VD_IDSEQ,Conceptual Domain Public ID,Conceptual Domain Short Name,Conceptual Domain Version,Conceptual Domain Context Name,Classification Scheme Public ID,DDE Methods,Representation Concept Origin,Value Domain Concept Origin,Property Concept Origin,Object Class Concept Origin,Derivation Type Description,DDE Preferred Name,DDE Preferred Definition,Document Organization,VD Workflow Status,DEC Workflow Status,Property Workflow Status,OC Workflow Status,DEC Registration Status,VD Registration Status');
 --GF32667--Added six new attributes in excluded columns.
-update tool_options_ext set value= 'CDE_IDSEQ,DEC_IDSEQ,VD_IDSEQ,Conceptual Domain Public ID,Conceptual Domain Short Name,Conceptual Domain Version,Conceptual Domain Context Name,Classification Scheme Public ID,DDE Methods,Representation Concept Origin,Value Domain Concept Origin,Property Concept Origin,Object Class Concept Origin,Derivation Type Description,DDE Preferred Name,DDE Preferred Definition,Document Organization,Value Domain Workflow Status,Data Element Concept Workflow Status,Property Workflow Status,Object Class Workflow Status,Data Element Concept Registration Status,Value Domain Registration Status' where property ='CUSTOM.COLUMN.EXCLUDED';
+update tool_options_ext set value= 'CDE_IDSEQ, DEC_IDSEQ, VD_IDSEQ, Conceptual Domain Public ID, Conceptual Domain Short Name, Conceptual Domain Version, Conceptual Domain Context Name, Classification Scheme Public ID, DDE Methods, Representation Concept Origin, Value Domain Concept Origin, Property Concept Origin, Object Class Concept Origin, Derivation Type Description, DDE Preferred Name, DDE Preferred Definition, Document Organization, Value Domain Workflow Status, Data Element Concept Workflow Status, Property Workflow Status, Object Class Workflow Status, Data Element Concept Registration Status, Value Domain Registration Status' where property ='CUSTOM.COLUMN.EXCLUDED';
 
-insert into sbrext.tool_options_view_ext (tool_name, property, Value) 
-values('CURATION', 'CUSTOM_DOWNLOAD_LIMIT', '5000');
+--insert into sbrext.tool_options_view_ext (tool_name, property, Value) 
+--values('CURATION', 'CUSTOM_DOWNLOAD_LIMIT', '5000');
 
-select 'CHECK:CUSTOM_DOWNLOAD_LIMIT COUNT CHECK, SHOULD BE 5000 = '||value value from sbrext.tool_options_view_ext where tool_name = 'CURATION' and property = 'CUSTOM_DOWNLOAD_LIMIT';
+--select 'CHECK:CUSTOM_DOWNLOAD_LIMIT COUNT CHECK, SHOULD BE 5000 = '||value value from sbrext.tool_options_view_ext where tool_name = 'CURATION' and property = 'CUSTOM_DOWNLOAD_LIMIT';
 
 --GF32647
 --------------------------------------------------------

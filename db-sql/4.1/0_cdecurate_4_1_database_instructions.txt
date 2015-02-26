@@ -5,31 +5,76 @@ Please STOP proceeding to the next script if any errors show up with the current
 Please execute as in the following order with the suggested account as written in the parentheses:
 
 . customDownload.sql (SBREXT)
+		-first update command changes nothing
+		-second insert would have erred but has been commented out
+		-update of VALID_VALUE_T is needed
+		-table CUSTOM_DOWNLOAD_TYPES exists but grants do not
+		-not clear if inserts into CUSTOM_DOWNLOAD_TYPES are actually needed.
+		-Declaration of DEC_EXCEL_GENERATOR_VIEW, CDE_EXCEL_GENERATOR_VIEW, VD_EXCEL_GENERATOR_VIEW & DE_EXCEL_GENERATOR_VIEW obnoxious but not necessarily problematic in light of CDE Browser 4.0.5's DE_CDE_EXCEL_GENERATOR_VIEW
+		-likewise DE_XML_GENERATOR_VIEW is not the same as CDE Browser 4.0.5's DE_CDE1_XML_GENERATOR_VIEW
+
 . gf30681_alter_grant_dec_table.sql (SBREXT)
+		-alter table needed.  grants not necessarily.
+
+. gf30681_update_SBR_data_element_concepts_view.sql (SBREXT)
+		-updates view to include CDR_NAME column added by gf30681_alter_grant_dec_table.sql
+
 . gf30681_update_SBR_INS_UPD_SPEC.sql (SBR)
 . gf30681_update_SBR_INS_UPD_BODY.sql (SBR)
+		-unable to determine how up to date this package is. It does exist already, though.
+
 . gf30681_update_existing_DEC_CDR_no_oc.sql (SBR)
+		-creates table that already exists (DATA_ELEMENT_CONCEPTS_BACKUP)  problem?
+		-updates table.  this should not cause oracle errors.
+
 . gf30681_update_existing_DEC_CDR_no_prop.sql (SBR)
+		-ALSO creates table that already exists (DATA_ELEMENT_CONCEPTS_BACKUP)  problem? -shouldn't need this since last script already backed us up.
+		-updates table.  this should not cause oracle errors.
+
 . gf30681_update_SBREXT_Set_Row_SET_DEC_SPEC.sql (SBREXT)
 . gf30681_update_SBREXT_Set_Row_SET_DEC_BODY.sql (SBREXT)
+		-as far as I can tell this package doesn't exist on QA or Prod
+
 . gf30681_update_ac_exists.sql (SBREXT)
+		-contrary to file name, seems to add a new function
+
 . gf30681_update_existing_DEC_CDR.sql (SBR)
-. gf30681_update_SBR_data_element_concepts_view.sql (SBREXT)
+		-cleans up old backup tables (DATA_ELEMENT_CONCEPTS_BACKUP & DEC_VIEW_BACKUP) (we just made this a couple scripts ago!!)
+		-recreates those backup tables (even though one is just a backup of exactly all of the columns of the other!)
+
 . SBREXT_CDE_CURATOR_PKG_SPEC.sql (SBREXT)
 . SBREXT_CDE_CURATOR_PKG_BODY.sql (SBREXT)
+		-lots of updates to this package.
+
 . gf32649_SBREXT_SET_ROW_SPEC.sql (SBREXT)
 . gf32649_SBREXT_SET_ROW_BODY.sql (SBREXT)
+		-no obvious problems
+
 . gf32649_SBREXT_GET_ROW_SPEC.sql (SBREXT)
 . gf32649_SBREXT_GET_ROW_BODY.sql (SBREXT)
+		-no obvious problems
+
 . gf32649_CADSR_XLS_LOADER_PKG_WORK3_BODY.sql (SBREXT)
 . gf32649_CADSR_XLS_LOADER_PKG_WORK3_SPEC.sql (SBREXT)
+		-no obvious problems
+
 . gf32649_MAINTAIN_CONCEPTS_BODY.sql (SBREXT)
 . gf32649_MAINTAIN_CONCEPTS_SPEC.sql (SBREXT)
-. gf32649_MAINTAIN_CONCEPTS_SPEC.sql (SBREXT)
+		-no obvious problems
+
 . update_evs_url.sql (SBREXT)
+		-This does nothing.  Doesn't hurt, though.
+
 . GF32724_update_Concept_begin_date_SBREXT.CON_BIU_ROW_ASSIGN.sql (SBREXT)
+		-Adds automatically setting begin date to trigger
+
 . GF32723_insert_alt_name_lov.sql (SBREXT)
+		-inserts new values.  the data is not on prod
+
 . GF32723_update_vocabnames.sql (SBREXT)
+		-fixes lexevs values. throws a bunch of stupid errors.  Ignore them.  You're done now!
+
 . check_invalid_objects.sql (SYSTEM)
+		-use this to see if there are invalid objects to be fixed.
 
 End of instructions.
