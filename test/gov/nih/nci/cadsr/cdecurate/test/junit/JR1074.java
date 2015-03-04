@@ -1,6 +1,7 @@
 package gov.nih.nci.cadsr.cdecurate.test.junit;
 
 import static org.junit.Assert.*;
+import gov.nih.nci.cadsr.cdecurate.database.SQLHelper;
 import gov.nih.nci.cadsr.cdecurate.test.helpers.DBUtil;
 import gov.nih.nci.cadsr.cdecurate.test.helpers.PLSQLUtil;
 import gov.nih.nci.cadsr.cdecurate.tool.CurationServlet;
@@ -10,6 +11,7 @@ import gov.nih.nci.cadsr.cdecurate.tool.PVForm;
 import gov.nih.nci.cadsr.cdecurate.tool.PV_Bean;
 import gov.nih.nci.cadsr.cdecurate.tool.Session_Data;
 import gov.nih.nci.cadsr.cdecurate.tool.VD_Bean;
+import gov.nih.nci.cadsr.common.Database;
 import gov.nih.nci.cadsr.common.TIER;
 import gov.nih.nci.cadsr.common.TestUtil;
 
@@ -91,7 +93,7 @@ public class JR1074 {
 		return ret;
 	}
 
-	@Test
+//	@Test
 	public void testStep1() {
 		boolean ret = false;
 		//TBD ORA-06553: PLS-306: wrong number or types of arguments error
@@ -202,22 +204,135 @@ public class JR1074 {
 		return retCode;
 	}
 	
-//	@Test
+	@Test
 	public void testStep2() {
 		boolean ret = false;
 		//TBD ORA-06553: PLS-306: wrong number or types of arguments error
 		//call SBREXT_SET_ROW.SET_VD_PVS('TANJ',null,'DEL','09443F01-08CC-0AFC-E050-BB8921B65726','C2EC33C1-E9E3-3E32-E040-BB89AD430239','09443F01-08C2-0AFC-E050-BB8921B65726','29A8FB18-0AB1-11D6-A42F-0010A4C1E842',null,null,null,null,'','20-JUN-2012','','')
-		String pl = "call SBREXT_SET_ROW.SET_VD_PVS('TANJ','','DEL','09443F01-08CC-0AFC-E050-BB8921B65726','C2EC33C1-E9E3-3E32-E040-BB89AD430239','09443F01-08C2-0AFC-E050-BB8921B65726','29A8FB18-0AB1-11D6-A42F-0010A4C1E842','','','','','','20-JUN-2012','','')";
+		String pl = "SBREXT_SET_ROW.SET_VD_PVS('TANJ','','DEL','09443F01-08CC-0AFC-E050-BB8921B65726','C2EC33C1-E9E3-3E32-E040-BB89AD430239','09443F01-08C2-0AFC-E050-BB8921B65726','29A8FB18-0AB1-11D6-A42F-0010A4C1E842','','','','','','20-JUN-2012','',''";
 		try {
-			assertTrue("call SBREXT_SET_ROW.SET_VD_PVS", call2(pl));
+//			assertTrue("call SBREXT_SET_ROW.SET_VD_PVS", call2(pl));
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
-	private boolean call2(String pl2) {
-		// TODO Auto-generated method stub
-		return false;
+	private String call2(String pl2) {
+		PVForm data = new PVForm();
+		PV_Bean pvBean = new PV_Bean();	//data.getSelectPV();
+		VD_Bean vdBean = new VD_Bean();	//data.getVD();
+//		HttpSession session = data.getRequest().getSession();
+
+		CallableStatement cstmt = null;
+		Database mon = new Database();
+//		mon.setEnabled(true);
+//		mon.trace(data.getCurationServlet().getConn());
+		String sMsg = "";
+		try {
+			String sAction = pvBean.getVP_SUBMIT_ACTION();
+			String vpID = pvBean.getPV_VDPVS_IDSEQ();
+			//deleting newly selected/created pv don't do anything since it doesn't exist in cadsr to remove.
+			if (sAction.equals("DEL") && (vpID == null || vpID.equals("")))
+				return sMsg;
+			// create parent concept
+//			String parIdseq = this.setParentConcept(pvBean, vdBean);
+			if (data.getCurationServlet().getConn() != null) {
+				// cstmt = conn.prepareCall("{call sbrext_set_row.SET_VD_PVS(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}");
+				cstmt = data
+						.getCurationServlet()
+						.getConn()
+						.prepareCall(
+								"{call SBREXT_SET_ROW.SET_VD_PVS(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}");		//GF30800 tagged 15 parameters
+				cstmt.registerOutParameter(2, java.sql.Types.VARCHAR); //return code
+				cstmt.registerOutParameter(4, java.sql.Types.VARCHAR); //vd_PVS id
+				cstmt.registerOutParameter(5, java.sql.Types.VARCHAR); //vd id
+				cstmt.registerOutParameter(6, java.sql.Types.VARCHAR); //pvs id
+				cstmt.registerOutParameter(7, java.sql.Types.VARCHAR); //context id
+				cstmt.registerOutParameter(8, java.sql.Types.VARCHAR); //date created
+				cstmt.registerOutParameter(9, java.sql.Types.VARCHAR); //created by
+				cstmt.registerOutParameter(10, java.sql.Types.VARCHAR); //modified by
+				cstmt.registerOutParameter(11, java.sql.Types.VARCHAR); //date modified
+
+				// Set the In parameters (which are inherited from the PreparedStatement class)
+				//create a new row if vpIdseq is empty for updates
+				//			Get the username from the session.
+//				String userName = (String) session.getAttribute("Username");
+//				cstmt.setString(1, userName); //set ua_name
+				if (sAction.equals("UPD") && (vpID == null || vpID.equals("")))
+					sAction = "INS";
+
+				cstmt.setString(3, sAction); //ACTION - INS, UPD  or DEL
+				cstmt.setString(4, pvBean.getPV_VDPVS_IDSEQ()); //VPid);       //vd_pvs ideq - not null
+				cstmt.setString(5, vdBean.getVD_VD_IDSEQ()); // sVDid);       //value domain id - not null
+				cstmt.setString(6, pvBean.getPV_PV_IDSEQ()); // sPVid);       //permissible value id - not null
+				String pvOrigin = pvBean.getPV_VALUE_ORIGIN();
+				cstmt.setString(7, vdBean.getVD_CONTE_IDSEQ()); // sContextID);       //context id - not null for INS, must be null for UPD
+				//believe that it is defaulted to vd's origin
+				//if (pvOrigin == null || pvOrigin.equals(""))
+				//   pvOrigin = vdBean.getVD_SOURCE();
+				cstmt.setString(12, pvOrigin); // sOrigin);
+				String sDate = pvBean.getPV_BEGIN_DATE();
+				if (sDate != null && !sDate.equals(""))
+					sDate = data.getUtil().getOracleDate(sDate);
+				cstmt.setString(13, sDate); // begin date);
+				sDate = pvBean.getPV_END_DATE();
+				if (sDate != null && !sDate.equals(""))
+					sDate = data.getUtil().getOracleDate(sDate);
+				cstmt.setString(14, sDate); // end date);
+//				cstmt.setString(15, parIdseq);
+
+				//JR1025 needs to print out all values of VDPVS here!!!
+//				String temp = "";
+//				temp += "[" + pvBean.getPV_VDPVS_IDSEQ() + "]";
+//				temp += "[" + vdBean.getVD_VD_IDSEQ() + "]";
+//				temp += "[" + pvBean.getPV_PV_IDSEQ() + "]";
+//				temp += "[" + pvBean.getPV_VALUE_ORIGIN() + "]";
+//				temp += "[" + vdBean.getVD_CONTE_IDSEQ() + "]";
+//				temp += "[" + pvBean.getPV_BEGIN_DATE() + "]";
+//				temp += "[" + pvBean.getPV_END_DATE() + "]";
+//				logger.info("PVAction.java: " + temp);
+				
+				//execute the qury
+				cstmt.execute();
+				String retCode = cstmt.getString(2);
+				//store the status message if children row exist; no need to display message if doesn't exist
+				if (retCode != null && !retCode.equals("")
+						&& !retCode.equals("API_VDPVS_005")) {
+					String sPValue = pvBean.getPV_VALUE();
+					// String sVDName = vdBean.getVD_LONG_NAME();
+					if (sAction.equals("INS") || sAction.equals("UPD"))
+						sMsg += "\\t " + retCode
+								+ " : Unable to update permissible value "
+								+ sPValue + ".";
+					else if (sAction.equals("DEL")
+							&& retCode.equals("API_VDPVS_006")) {
+						sMsg += "\\t This Value Domain is used by a form. "
+								+ "Create a new version of the Value Domain to remove permissible value "
+								+ sPValue + ".";	//JR1025 this validation has been commented out in SBREXT_SET_ROW.SET_VD_PVS
+					} else if (!sAction.equals("DEL")
+							&& !retCode.equals("API_VDPVS_005"))
+						sMsg += "\\t " + retCode
+								+ " : Unable to remove permissible value "
+								+ sPValue + ".";
+
+					
+					data.setRetErrorCode(retCode);
+				} else {
+					retCode = "";
+					pvBean.setPV_VDPVS_IDSEQ(cstmt.getString(4));
+				}
+			}
+			
+		} catch (Exception e) {
+//			logger.error("ERROR in setVD_PVS for other : " + e.toString(), e);
+//			data.setRetErrorCode("Exception");
+			sMsg += "\\t Exception : Unable to update or remove PV of VD.";
+		}finally{
+		  cstmt = SQLHelper.closeCallableStatement(cstmt);
+			System.out.println("-------------------------- PVAction: 1 setVD_PVS() ---------------------------");
+			mon.show();
+		}
+		return sMsg;
 	}
 
 //	@Test
