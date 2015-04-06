@@ -5,6 +5,37 @@ Please STOP proceeding to the next script if any errors show up with the current
 Please execute as in the following order with the suggested account as written in the parentheses:
 
 . customDownload.sql (SBREXT)
+. gf30681_alter_grant_dec_table.sql (SBREXT)
+. gf30681_update_SBR_INS_UPD_SPEC.sql (SBR)
+. gf30681_update_SBR_INS_UPD_BODY.sql (SBR)
+. gf30681_update_existing_DEC_CDR_no_oc.sql (SBR)
+. gf30681_update_existing_DEC_CDR_no_prop.sql (SBR)
+. gf30681_update_SBREXT_Set_Row_SET_DEC_SPEC.sql (SBREXT)
+. gf30681_update_SBREXT_Set_Row_SET_DEC_BODY.sql (SBREXT)
+. gf30681_update_ac_exists.sql (SBREXT)
+. gf30681_update_existing_DEC_CDR.sql (SBR)
+. gf30681_update_SBR_data_element_concepts_view.sql (SBREXT)
+. SBREXT_CDE_CURATOR_PKG_SPEC.sql (SBREXT)
+. SBREXT_CDE_CURATOR_PKG_BODY.sql (SBREXT)
+. gf32649_SBREXT_SET_ROW_SPEC.sql (SBREXT)
+. gf32649_SBREXT_SET_ROW_BODY.sql (SBREXT)
+. gf32649_SBREXT_GET_ROW_SPEC.sql (SBREXT)
+. gf32649_SBREXT_GET_ROW_BODY.sql (SBREXT)
+. gf32649_CADSR_XLS_LOADER_PKG_WORK3_BODY.sql (SBREXT)
+. gf32649_CADSR_XLS_LOADER_PKG_WORK3_SPEC.sql (SBREXT)
+. gf32649_MAINTAIN_CONCEPTS_BODY.sql (SBREXT)
+. gf32649_MAINTAIN_CONCEPTS_SPEC.sql (SBREXT)
+. gf32649_MAINTAIN_CONCEPTS_SPEC.sql (SBREXT)
+. update_evs_url.sql (SBREXT)
+. GF32724_update_Concept_begin_date_SBREXT.CON_BIU_ROW_ASSIGN.sql (SBREXT)
+. GF32723_insert_alt_name_lov.sql (SBREXT)
+. GF32723_update_vocabnames.sql (SBREXT)
+. check_invalid_objects.sql (SYSTEM)
+
+
+Descriptions related to each scripts:
+
+. customDownload.sql (SBREXT)
 		-first update command changes nothing
 		-second insert would have erred but has been commented out
 		-update of VALID_VALUE_T is needed
