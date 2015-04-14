@@ -50,7 +50,7 @@ public class JR1016 {
 		altSession.purgeAlternateList();
 	}
 
-	@Test
+//	@Test
 	public void testEmpty() {
 		boolean ret = false;
 		try {
@@ -74,7 +74,7 @@ public class JR1016 {
 		}
 	}
 
-	@Test
+//	@Test
 	public void testNull() {
 		boolean ret = false;
 		try {
@@ -98,7 +98,7 @@ public class JR1016 {
 		}
 	}
 
-	@Test
+//	@Test
 	public void testShort() {
 		boolean ret = false;
 		try {
@@ -122,7 +122,7 @@ public class JR1016 {
 		}
 	}
 
-	@Test
+//	@Test
 	public void testLong() {
 		try {
 	        String def = "Blood circulating throughout the body.";
@@ -171,7 +171,7 @@ public class JR1016 {
 		}
 	}
 
-	@Test
+//	@Test
 	public void handleUserSelectedAlternateDefinition() throws Exception {
 		Alternates[] _alts = new Alternates[3];
 		String def1 = "A liquid tissue with the primary function of transporting oxygen and carbon dioxide. It supplies the tissues with nutrients, removes waste products, and contains various components of the immune system defending the body against infection.";
