@@ -928,28 +928,39 @@ public class PVAction implements Serializable {
 				//			Get the username from the session.
 				String userName = (String) session.getAttribute("Username");
 				cstmt.setString(1, userName); //set ua_name
+				System.out.println("1 [" + userName + "]");
 				if (sAction.equals("UPD") && (vpID == null || vpID.equals("")))
 					sAction = "INS";
 
 				cstmt.setString(3, sAction); //ACTION - INS, UPD  or DEL
+				System.out.println("3 [" + sAction + "]");
 				cstmt.setString(4, pvBean.getPV_VDPVS_IDSEQ()); //VPid);       //vd_pvs ideq - not null
+				System.out.println("4 [" + pvBean.getPV_VDPVS_IDSEQ() + "]");
 				cstmt.setString(5, vdBean.getVD_VD_IDSEQ()); // sVDid);       //value domain id - not null
+				System.out.println("5 [" + vdBean.getVD_VD_IDSEQ() + "]");
 				cstmt.setString(6, pvBean.getPV_PV_IDSEQ()); // sPVid);       //permissible value id - not null
+				System.out.println("6 [" + pvBean.getPV_PV_IDSEQ() + "]");
 				String pvOrigin = pvBean.getPV_VALUE_ORIGIN();
 				cstmt.setString(7, vdBean.getVD_CONTE_IDSEQ()); // sContextID);       //context id - not null for INS, must be null for UPD
+				System.out.println("7 [" + vdBean.getVD_CONTE_IDSEQ() + "]");
 				//believe that it is defaulted to vd's origin
 				//if (pvOrigin == null || pvOrigin.equals(""))
 				//   pvOrigin = vdBean.getVD_SOURCE();
 				cstmt.setString(12, pvOrigin); // sOrigin);
+				System.out.println("12 [" + pvOrigin + "]");
 				String sDate = pvBean.getPV_BEGIN_DATE();
 				if (sDate != null && !sDate.equals(""))
 					sDate = data.getUtil().getOracleDate(sDate);
 				cstmt.setString(13, sDate); // begin date);
+				System.out.println("13 [" + sDate + "]");
 				sDate = pvBean.getPV_END_DATE();
 				if (sDate != null && !sDate.equals(""))
 					sDate = data.getUtil().getOracleDate(sDate);
 				cstmt.setString(14, sDate); // end date);
+				System.out.println("14 [" + sDate + "]");
 				cstmt.setString(15, parIdseq);
+				System.out.println("15 [" + parIdseq + "]");
+				System.out.println("2 4 5 6 7 8 9 10 11 are (also) an OUT parameter!)");
 
 				//JR1025 needs to print out all values of VDPVS here!!!
 				String temp = "";
@@ -1002,6 +1013,7 @@ public class PVAction implements Serializable {
 			System.out.println("-------------------------- PVAction: 1 setVD_PVS() ---------------------------");
 			mon.show();
 		}
+		System.out.println(sMsg);
 		return sMsg;
 	} //END setVD_PVS
 
@@ -1167,14 +1179,14 @@ public class PVAction implements Serializable {
 		Vector<PV_Bean> vdpvs = vd.getVD_PV_List();
 		vdpvs.removeElementAt(pvInd);
 		//  if (iSetVDPV == 0)
-		vd.setVD_PV_List(vdpvs);
+		vd.setVD_PV_List(vdpvs);	//size should be less 1 now compared to the original list size
 		//add the removed pv to the removed pv list
 		if (selPV != null) {
-			selPV.setVP_SUBMIT_ACTION(PVForm.CADSR_ACTION_DEL);
-			Vector<PV_Bean> rmList = vd.getRemoved_VDPVList(); // data.getRemovedPVList();
-			rmList.addElement(selPV);
+			selPV.setVP_SUBMIT_ACTION(PVForm.CADSR_ACTION_DEL);		//JR1074 DEL: should come here and VM concept list should be the same as the one selected via UI/by the user!
+			Vector<PV_Bean> rmList = vd.getRemoved_VDPVList(); // data.getRemovedPVList();	//JR1074 should be empty
+			rmList.addElement(selPV);	//JR1074 should be only 1 pv (the one selecte by the user)
 			//session.setAttribute("RemovedPVList", rmList);
-			vd.setRemoved_VDPVList(rmList);
+			vd.setRemoved_VDPVList(rmList);		//JR1074 PV_Bean's VM_CONCEPT is null for "Used by Forms" case????
 		}
 	}
 

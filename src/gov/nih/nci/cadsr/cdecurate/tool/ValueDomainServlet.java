@@ -345,7 +345,7 @@ public class ValueDomainServlet extends CurationServlet {
 		else if (sAction.equals("vdpvstab"))
 		{
 			DataManager.setAttribute(session, "TabFocus", "PV");
-			doValidateVD();
+			doValidateVD();		//JR1074 during edit VD
 			ForwardJSP(m_classReq, m_classRes, "/PermissibleValue.jsp");
 		}
 		else if (sAction.equals("vddetailstab"))

@@ -113,7 +113,7 @@ public class PVServlet implements Serializable
          else if (sAction.equals("validate"))
          {
            //System.out.println("validate PVs and submit VD edits if all valid");
-           return addPVValidates(null);
+           return addPVValidates(null);		//JR1074 should come here after validate is hit
          }
          else if (sAction.equals("clearBoxes"))
          {
@@ -166,7 +166,7 @@ public class PVServlet implements Serializable
          else if (sAction.equals("remove"))
          {
            //System.out.println("mark the pv as deleted and refresh the page");
-           return doRemovePV();
+           return doRemovePV();		//JR1074 has to come here!
          }
          else if (sAction.equals("removeAll"))
          {
@@ -790,14 +790,100 @@ public class PVServlet implements Serializable
   {
      HttpSession session = data.getRequest().getSession();
      if (vd ==null)
-       vd = (VD_Bean)session.getAttribute(PVForm.SESSION_SELECT_VD);
-     data.setVD(vd);
+       vd = (VD_Bean)session.getAttribute(PVForm.SESSION_SELECT_VD);	//JR1074 come here, for some reason, with "Used by Forms" PV, the size remains the same after validate, submitted and edit!!!
+     data.setVD(vd);	//JR1074 size should be less 1 for remove pageaction
      String sOriginAction = (String)session.getAttribute("originAction");
-     data.setOriginAction(sOriginAction);
+     data.setOriginAction(sOriginAction);	//JR1074 should be "EditVD"
      //add values to validate bean
      Vector<String> vValString = pvAction.addValidateVDPVS(data);
      //add the vectors to the session
-     data.getRequest().setAttribute("vValidate", vValString);
+     data.getRequest().setAttribute("vValidate", vValString);	//JR1074 e.g. 
+     /*[Context, NHLBI, Valid, Type, Enumerated, Valid, Rep Term, Laboratory Test Result Outcome, Valid, Long Name, Laboratory Finding Result, Valid, Short Name, LAB_RSLT, Valid, Short Name Type, Existing Name, Valid, Definition, The outcome of a laboratory test._Outcome; a phenomenon that follows and is caused by some previous phenomenon., Valid, Alternate Definition, , Warning: Your chosen definitions are being replaced by standard definitions.  Your chosen definition is being added as an alternate definition if it does not exist already., Conceptual Domain, Lab Results - CTEP, Valid, Workflow Status, RELEASED, Valid, Version, 1.0, Valid, Registration Status, , Valid, Data Type, CHARACTER, Valid, Parent Concept, , Valid, Values, Absent,
+     Borderline,
+     Carrier of the trait,
+     Decreased,
+     Elevated,
+     High,
+     Improved,
+     Inconclusive,
+     Increased,
+     Indeterminate,
+     Indeterminate/equivocal,
+     Indeterminate/equivocal,
+     Invalid neutralization,
+     Involved,
+     Known,
+     Low,
+     Mild,
+     Moderate,
+     Negative,
+     Neutralized,
+     Never below,
+     No,
+     Non-reactive,
+     Normal,
+     Not applicable,
+     Not done,
+     Not Done,
+     Not evaluable,
+     Not neutralizable,
+     Not performed; HIV NAT testing performed,
+     Not reported,
+     Positive,
+     Present,
+     Previously reported,
+     Previously reported reactive, not tested,
+     Reactive,
+     Reduced; decreased,
+     Resolved,
+     Severe,
+     Unchanged,
+     Unknown,
+     Worse,
+     Yes, Valid, Value Meanings, Absent,
+     Borderline,
+     Genetic Carrier Trait,
+     Reduced,
+     Elevated,
+     High,
+     Better,
+     Uncertain,
+     Increase,
+     Indeterminate,
+     Indeterminate Or Equivocal,
+     Indeterminate,
+     Unacceptable Neutralization,
+     Involvement,
+     Laboratory Finding Received,
+     Low,
+     Mild,
+     Moderate,
+     Negative Finding,
+     Neutralization,
+     Never Less Than,
+     No ,
+     Not Reaction,
+     Normal histology,
+     Not Applicable,
+     Not Done,
+     Not Done: C49484,
+     Unevaluable,
+     Negation Neutralization,
+     Human Immunodeficiency Virus Nucleic Acid Amplification Test Performed,
+     Not Report,
+     Positive Finding,
+     Present,
+     Previous Report,
+     Previous Report Reaction,
+     Reaction,
+     Reduced,
+     Resolved,
+     Severe,
+     About The Same,
+     Unknown,
+     Worse,
+     Yes: C49488, Valid, Effective Begin Date, 08/31/2007, Valid, Effective End Date, , Valid, Unit Of Measure, , Valid, Display Format, , Valid, Minimum Length, , Valid, Maximum Length, 41, Valid, Low Value, , Valid, High Value, , Valid, Decimal Place, , Valid, Classification Scheme, NMDP: CDEs to review - NHLBI - 2695319v1, NMDP: CDEs to review - NHLBI - 2695319v1, NMDP: CDEs to review - NHLBI - 2695319v1, NMDP: CDEs to review - NHLBI - 2695319v1, NMDP: CDEs to review - NHLBI - 2695319v1, Valid, Classification Scheme Items, 2451:Chimerism Studies  (3160396 v 1), 2400r1: Pre-TED  (2964924 v 1), 2004r1: Infectious Disease Markers  (2964896 v 1), 2100r1: 100 Days Post-HSCT Data  (2964902 v 1), 2026r1: Neuroblastoma Pre-HSCT Data  (2964894 v 1), Valid, Contacts, National Marrow Donor Program , Valid, Value Domain Origin, NMDP:National Marrow Donor Program, Valid, Change Note, Definition was changed to reflect that the concept code C38470 was retired and replaced with C36292. AK 05/15/09.10/9/09: added PV "Indeterminate" form F2118. wz  12/18/09-Added PV of absent-CJL  02/12/10-Added PV of Borderline-CJL  Added alt def.  AK 05/26/10  Added PV for reduced - 9/9/10 SLS. 3/16/11: added three PVs .wz. 3/29/11mn-added PV of Present for chimerism nonquant. questions on forms 2451, 2100, 2200 etc. Added PVs "decreased" and "increased" for form 2014. AK 6/29/12 Added 3 PVs "Mild,Moderate,Severe" for form 2014. AK 7/2/12 Added PV "High". AK 1/8/13 Added PV "Carrier of the trait" for 2006. AK 9/3/13 Corrected cap in Not done. AK 9/4/13 Added PV for another context.  AK 9/27/13 Added PV for  2118. AK 12/17/13  Added 4 PVs for 2114r3  3/17/14 SLS. Added PV "Involved" per Janet's approval for Team ECOG-ACRIN. AK 3/24/14. 3/31/14mn-added end date to dup pv "reduced; decreased" - had been replaced with 'decreased' back in 2012. Added PV "Abnormal" for 2039. AK 4/8/14, Valid]
+     */
      vd = data.getVD();
      data.getRequest().setAttribute(PVForm.SESSION_SELECT_VD, vd);        
      return "/ValidateVDPage.jsp";
@@ -1175,8 +1261,8 @@ public class PVServlet implements Serializable
        pvAction.doRemovePV(vd, pvInd, selPV, 0);
        //make the one before to be in view
         if (pvInd > 0)
-          pvInd = (pvInd - 1);           
-        DataManager.setAttribute(session, PVForm.SESSION_SELECT_VD, vd);
+          pvInd = (pvInd - 1);      //JR1074 skipped!??     
+        DataManager.setAttribute(session, PVForm.SESSION_SELECT_VD, vd);	//JR1074 should be less 1 in term of the original size
      }
      data.getRequest().setAttribute(PVForm.REQUEST_FOCUS_ELEMENT, "pv" + pvInd);  //"pv" + pvInd + "View");
      return "/PermissibleValue.jsp";
