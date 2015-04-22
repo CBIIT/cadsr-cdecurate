@@ -30,10 +30,14 @@ Please execute as in the following order with the suggested account as written i
 . GF32724_update_Concept_begin_date_SBREXT.CON_BIU_ROW_ASSIGN.sql (SBREXT)
 . GF32723_insert_alt_name_lov.sql (SBREXT)
 . GF32723_update_vocabnames.sql (SBREXT)
+. JR1074_CG_VD_PVS_VIEW.sql (SBR)
+. JR1074_SBREXT_SET_ROW.sql (SBR)
 . check_invalid_objects.sql (SYSTEM)
 
 
 Descriptions related to each scripts:
+
+. JR1074_CG_VD_PVS_VIEW.sql (SBR) contains the real fix for JIRA ticket JR1074_SBREXT_SET_ROW.sql is just the calling package and it has to be updated for Oracle to pick up the new procedure updated by JR1074_CG_VD_PVS_VIEW.sql (SBR). JR1074.sql (SBR) is not used and for debugging purpose only.
 
 . customDownload.sql (SBREXT)
 		-first update command changes nothing
