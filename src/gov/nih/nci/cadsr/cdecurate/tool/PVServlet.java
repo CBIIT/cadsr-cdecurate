@@ -1051,7 +1051,7 @@ public class PVServlet implements Serializable
              //update pv to vd 
              data.setSelectPV(pvBean);
              data.setVD(vd);
-             err = pvAction.setVD_PVS(data);
+//             err = pvAction.setVD_PVS(data);	//JR1074 uncomment this after test (to avoid PV-VM from being deleted!)
              //capture the message if any
              if (err != null && !err.equals(""))
              {
@@ -1068,6 +1068,20 @@ public class PVServlet implements Serializable
                 insac.UpdateCRFValue(pvBean);
              }
              //update teh collection
+
+             //JR1074 begin - just for FB to display the new PV-VM pair
+             if(pvBean.getPV_IN_FORM()) {
+            	 System.out.println("PV is used in form(s).");
+            	 //create a new question
+            	 
+            	 //create a new relationship
+            	 
+            	 //create a new VV
+            	 
+             } else {
+            	 System.out.println("PV not used in any form.");
+             }
+             //JR1074 end
          }
        }  //end loop
        vd.setVD_PV_List(vVDPVS);	//JR1025 vVDPVS is the total pvvm of the vd
