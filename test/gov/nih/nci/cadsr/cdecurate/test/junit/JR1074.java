@@ -9,8 +9,11 @@ import gov.nih.nci.cadsr.cdecurate.tool.EVS_UserBean;
 import gov.nih.nci.cadsr.cdecurate.tool.GetACSearch;
 import gov.nih.nci.cadsr.cdecurate.tool.PVForm;
 import gov.nih.nci.cadsr.cdecurate.tool.PV_Bean;
+import gov.nih.nci.cadsr.cdecurate.tool.Quest_Bean;
 import gov.nih.nci.cadsr.cdecurate.tool.Session_Data;
 import gov.nih.nci.cadsr.cdecurate.tool.VD_Bean;
+import gov.nih.nci.cadsr.cdecurate.util.AdministeredItemUtil;
+import gov.nih.nci.cadsr.cdecurate.util.FormBuilderUtil;
 import gov.nih.nci.cadsr.common.Database;
 import gov.nih.nci.cadsr.common.TIER;
 import gov.nih.nci.cadsr.common.TestUtil;
@@ -42,7 +45,8 @@ public class JR1074 {
 	private static String password;
 	private static Connection conn;
 	private static PLSQLUtil pl;
-
+	private static FormBuilderUtil fb;
+	
 	@BeforeClass
 	public static void initDB() {
 		userId = System.getProperty("u");
@@ -71,6 +75,8 @@ public class JR1074 {
 		//=== mocking SearchServlet.java#menuAction.equals("searchForCreate")
 //        boolean initialSearch = false;
         pl = new PLSQLUtil(conn);
+		fb = new FormBuilderUtil();
+		//fb.setAutoCleanup(false);
 	}
 
 	@After
@@ -87,14 +93,14 @@ public class JR1074 {
 				System.out.println(i+ "= [" + a[i].replaceAll("'", "") + "]");
 				a[i] = a[i].replaceAll("'", "");	//replaceAll is just a hack, should have been taken care of during the split above!
 			}
-			ret = callSBREXT_SET_ROW_SET_VD(a);
+			ret = callSBREXT_SET_ROW_SET_VD_PVS(a);
 		}
 
 		return ret;
 	}
 
 //	@Test
-	public void testStep1() {
+	public void testCurationStep1() {
 		boolean ret = false;
 		//TBD ORA-06553: PLS-306: wrong number or types of arguments error
 		//call SBREXT_SET_ROW.SET_VD('TANJ',null,'','UPD','C2EC33C1-E9E3-3E32-E040-BB89AD430239','3484910v1.0','29A8FB18-0AB1-11D6-A42F-0010A4C1E842',1.0,'Having been present before a specific date or event._A state of being, such as a state of health._Text; the words of something written.','0741B16D-87D9-26CD-E044-0003BA3F9857','RETIRED WITHDRAWN',null,'ISO21090CDv1.0',null,'Patient Precondition Value Set','',null,null,'',null,null,'','',null,null,null,'20-JUN-2012','25-FEB-2014','Requirements changed.','E',null,null,null,null,null,null,'C2EC33C1-E9D2-3E32-E040-BB89AD430239','','')
@@ -106,7 +112,7 @@ public class JR1074 {
 		}
 	}
 
-	private String callSBREXT_SET_ROW_SET_VD(String [] d) throws Exception {
+	private String callSBREXT_SET_ROW_SET_VD_PVS(String [] d) throws Exception {
 		String retCode = "";
 		PVForm data = new PVForm();
 		PV_Bean pvBean = new PV_Bean();	//data.getSelectPV();
@@ -204,8 +210,8 @@ public class JR1074 {
 		return retCode;
 	}
 	
-	@Test
-	public void testStep2() {
+//	@Test
+	public void testCurationStep2() {
 		boolean ret = false;
 		//TBD ORA-06553: PLS-306: wrong number or types of arguments error
 		//call SBREXT_SET_ROW.SET_VD_PVS('TANJ',null,'DEL','09443F01-08CC-0AFC-E050-BB8921B65726','C2EC33C1-E9E3-3E32-E040-BB89AD430239','09443F01-08C2-0AFC-E050-BB8921B65726','29A8FB18-0AB1-11D6-A42F-0010A4C1E842',null,null,null,null,'','20-JUN-2012','','')
@@ -335,39 +341,82 @@ public class JR1074 {
 		return sMsg;
 	}
 
-//	@Test
-	public void testStep3() {
+	@Test
+	public void testFormStep3() {
 		boolean ret = false;
-		//TBD ORA-06553: PLS-306: wrong number or types of arguments error
-		//call SBREXT_SET_ROW.SET_VD('TANJ',null,'INS',null,'Requires assistive device test by james','Assistance Device','20-JUN-2012','The act of contributing to the fulfillment of a need or furtherance of an effort.: An object contrived for a specific purpose.',null,null,'','C2EC33C1-E9FA-3E32-E040-BB89AD430239',null,null,null,null)
-		String pl = "call SBREXT_SET_ROW.SET_VD('TANJ','','INS','','Requires assistive device test by james','Assistance Device','20-JUN-2012','The act of contributing to the fulfillment of a need or furtherance of an effort.: An object contrived for a specific purpose.','','','','C2EC33C1-E9FA-3E32-E040-BB89AD430239','','','','')";
+		
+		AdministeredItemUtil ac = new AdministeredItemUtil();
+		String QC_IDSEQ = null;
 		try {
-			assertTrue("call SBREXT_SET_ROW.SET_VD", call3(pl));
+			QC_IDSEQ = ac.getNewAC_IDSEQ(conn);
+			Quest_Bean questBean = new Quest_Bean();
+			questBean.setCONTE_IDSEQ("99BA9DC8-2095-4E69-E034-080020C9C0E0");
+			questBean.setVD_PREF_NAME("No 1 from JR1074 junit test");
+			questBean.setVD_DEFINITION("No");
+			questBean.setQUEST_NAME("No 2 from JR1074 junit test");
+			questBean.setSTATUS_INDICATOR("No");	//No = do not delete?
+			questBean.setCRF_IDSEQ("99CD59C5-A94F-3FA4-E034-080020C9C0E0");
+			questBean.setVD_IDSEQ("D4A6A07C-5582-25A1-E034-0003BA12F5E7");	//form id 3328985 v1 cde 3198806	1.0 vd Yes No Character Indicator
+			questBean.setQC_ID("3198806");
+			System.out.println("testFormStep3 create QC_IDSEQ = " + QC_IDSEQ);
+			fb.createQuestion(conn, 1, questBean, QC_IDSEQ);
 		} catch (Exception e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
+		} finally {
+			formCleanup1(QC_IDSEQ);
 		}
 	}
-
-	private boolean call3(String pl2) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-//	@Test
-	public void testStep4() {
+	
+	private boolean formCleanup1(String QC_IDSEQ) {
+		String sql = "delete from sbr.QUEST_CONTENTS_EXT q";
+		sql += " where ";
+		sql += "QC_IDSEQ = '"+ QC_IDSEQ +"'";
+		
 		boolean ret = false;
-		//TBD ORA-06553: PLS-306: wrong number or types of arguments error
-		//call SBREXT_SET_ROW.SET_VD('TANJ',null,'INS','','C2EC33C1-E9E3-3E32-E040-BB89AD430239','10524120-0574-428B-E050-BB89A7B436CD','29A8FB18-0AB1-11D6-A42F-0010A4C1E842',null,null,null,null,'','20-JUN-2012','','')
-		String pl = "call SBREXT_SET_ROW.SET_VD('TANJ','','INS','','C2EC33C1-E9E3-3E32-E040-BB89AD430239','10524120-0574-428B-E050-BB89A7B436CD','29A8FB18-0AB1-11D6-A42F-0010A4C1E842','','','','','','20-JUN-2012','','')";
 		try {
-			assertTrue("call SBREXT_SET_ROW.SET_VD", call4(pl));
+			System.out.println("formCleanup1 delete SQL = " + sql);
+			if(fb.executeUpdate(conn, sql) == 1) 
+				ret = true;
 		} catch (Exception e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+			
+		return ret;
 	}
 
-	private boolean call4(String pl2) {
-		// TODO Auto-generated method stub
-		return false;
+	private boolean formCleanup2(String QR_IDSEQ) {
+		String sql = "delete from SBREXT.QC_RECS_EXT";
+		sql += "where ";
+		sql += "QR_IDSEQ = '"+ QR_IDSEQ +"'";
+		
+		boolean ret = false;
+		try {
+			if(fb.executeUpdate(conn, sql) == 1) 
+				ret = true;
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+			
+		return ret;
+	}
+
+	private boolean formCleanup3(String QC_IDSEQ) {
+		String sql = "delete from VALID_VALUES_ATT_EXT ";
+		sql += "where ";
+		sql += "QC_IDSEQ = '"+ QC_IDSEQ +"'";
+		
+		boolean ret = false;
+		try {
+			if(fb.executeUpdate(conn, sql) == 1) 
+				ret = true;
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+			
+		return ret;
 	}
 }
