@@ -14,9 +14,11 @@ package gov.nih.nci.cadsr.cdecurate.tool;
 
 import gov.nih.nci.cadsr.cdecurate.database.Alternates;
 import gov.nih.nci.cadsr.cdecurate.ui.AltNamesDefsServlet;
+import gov.nih.nci.cadsr.cdecurate.util.AdministeredItemUtil;
 import gov.nih.nci.cadsr.cdecurate.util.DataManager;
 //import gov.nih.nci.cadsr.cdecurate.util.PVHelper;
 
+import gov.nih.nci.cadsr.cdecurate.util.FormBuilderUtil;
 import gov.nih.nci.cadsr.cdecurate.util.PVHelper;
 import gov.nih.nci.cadsr.common.StringUtil;
 import gov.nih.nci.cadsr.common.TestUtil;
@@ -1072,12 +1074,36 @@ public class PVServlet implements Serializable
              //JR1074 begin - just for FB to display the new PV-VM pair
              if(pvBean.getPV_IN_FORM()) {
             	 System.out.println("PV is used in form(s).");
+            	 FormBuilderUtil fb = new FormBuilderUtil();
+            	 if(data.getCurationServlet().getConn() == null) {
+            		 System.err.println("Database connection is null or empty.");
+            	 }
+                 HttpSession session = data.getRequest().getSession();
+                 Quest_Bean questBean = (Quest_Bean) session.getAttribute("m_Quest");
             	 //create a new question
+         		 AdministeredItemUtil ac = new AdministeredItemUtil();
+    			 int version = 1;
+    			 int displayOrder = 1;
+    			 String QC_IDSEQ = null;
+     			 try {
+//     				 QC_IDSEQ = ac.getNewAC_IDSEQ(data.getCurationServlet().getConn());
+//     				 fb.createQuestion(data.getCurationServlet().getConn(), displayOrder, questBean, QC_IDSEQ, version);
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
+     			 //QR_IDSEQ = "14F6E5D0-72F1-46CA-E050-BB89A7B43891";	//ac.getNewAC_IDSEQ(conn);
+    			 //PV_Bean pvBean = new PV_Bean();
+    			 System.out.println("PVServlet.java#submitPV QR_IDSEQ = " + QC_IDSEQ);
             	 
             	 //create a new relationship
+    			 //pvBean.setQUESTION_VALUE_IDSEQ("B387CBBD-A53C-50E5-E040-BB89AD4350CE");
+    			 //questBean.setQC_IDSEQ("14B849C8-9711-24F5-E050-BB89A7B41326");	//existing question id! TODO: will it work with a new question?
+//    			 fb.createQuestionRelationWithPV(data.getCurationServlet().getConn(), displayOrder, questBean, pvBean );
             	 
             	 //create a new VV
-            	 
+//    			 fb.createPVValidValue(data.getCurationServlet().getConn(), questBean, pvBean);
              } else {
             	 System.out.println("PV not used in any form.");
              }
