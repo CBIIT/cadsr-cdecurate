@@ -391,7 +391,7 @@ public class JR1074 {
 		}
 	}
 	
-	private boolean formCleanup1_0(String QC_IDSEQ) {
+	public static boolean formCleanup1_0(String QC_IDSEQ) {
 		String sql = "delete from sbr.QUEST_CONTENTS_EXT q";
 		sql += " where ";
 		sql += "QC_IDSEQ = '"+ QC_IDSEQ +"'";
@@ -409,7 +409,7 @@ public class JR1074 {
 		return ret;
 	}
 
-	private boolean formCleanup1_1(String QC_IDSEQ) {
+	public static boolean formCleanup1_1(String QC_IDSEQ) {
 		String sql = "delete from ADMIN_COMPONENTS_VIEW ";
 		sql += "where ";
 		sql += "AC_IDSEQ = '"+ QC_IDSEQ +"'";
@@ -427,7 +427,7 @@ public class JR1074 {
 		return ret;
 	}
 
-	private boolean formCleanup2(String QR_IDSEQ) {
+	public static boolean formCleanup2(String QR_IDSEQ) {
 		String sql = "delete from SBREXT.QC_RECS_EXT";
 		sql += " where ";
 		sql += "QR_IDSEQ = '"+ QR_IDSEQ +"'";
@@ -445,7 +445,7 @@ public class JR1074 {
 		return ret;
 	}
 
-	private boolean formCleanup3(Quest_Bean questBean) {
+	public static boolean formCleanup3(Quest_Bean questBean) {
 		String sql = "delete from VALID_VALUES_ATT_EXT ";
 		sql += "where ";
 		sql += "QC_IDSEQ = '"+ questBean.getQC_IDSEQ() +"'";

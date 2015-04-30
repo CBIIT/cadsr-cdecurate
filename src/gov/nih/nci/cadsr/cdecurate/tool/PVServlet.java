@@ -1083,11 +1083,14 @@ public class PVServlet implements Serializable
             	 //create a new question
          		 AdministeredItemUtil ac = new AdministeredItemUtil();
     			 int version = 1;
-    			 int displayOrder = 1;
+    			 int displayOrder = j;
     			 String QC_IDSEQ = null;
      			 try {
-//     				 QC_IDSEQ = ac.getNewAC_IDSEQ(data.getCurationServlet().getConn());
-//     				 fb.createQuestion(data.getCurationServlet().getConn(), displayOrder, questBean, QC_IDSEQ, version);
+     				QC_IDSEQ = ac.getNewAC_IDSEQ(data.getCurationServlet().getConn());
+     				fb.createQuestion(data.getCurationServlet().getConn(), displayOrder, questBean, QC_IDSEQ, version);
+     				//JR1074 comment out the following two lines in production!!!
+					gov.nih.nci.cadsr.cdecurate.test.junit.JR1074.formCleanup1_0(QC_IDSEQ);
+					gov.nih.nci.cadsr.cdecurate.test.junit.JR1074.formCleanup1_1(QC_IDSEQ);
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
