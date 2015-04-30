@@ -344,16 +344,17 @@ public class JR1074 {
 	@Test
 	public void testFormStep3() {
 		boolean ret = false;
-		
+
+		/*
 		Database mon = new Database();
 		mon.setEnabled(true);
 		mon.trace(conn);
-	           
+	    */
 		AdministeredItemUtil ac = new AdministeredItemUtil();
-		String QC_IDSEQ = null;
+		String QC_IDSEQ = null; String QR_IDSEQ = null;
+		Quest_Bean questBean = new Quest_Bean();
 		try {
 			QC_IDSEQ = "14E25662-A184-8170-E050-BB89A7B438EA";	//ac.getNewAC_IDSEQ(conn);
-			Quest_Bean questBean = new Quest_Bean();
 //			String contextIdSeq = "99BA9DC8-2095-4E69-E034-080020C9C0E0";	//can not used this it was throwing trigger SBREXT.QC_AIU_ROW error: ORA-20999: TAPI-1006:Duplicate value for Version, Name, and Context, re-enter
 			String contextIdSeq = "A932C6E7-82EE-67C2-E034-0003BA12F5E7";
 			questBean.setCONTE_IDSEQ(contextIdSeq);
@@ -367,14 +368,26 @@ public class JR1074 {
 			System.out.println("testFormStep3 create QC_IDSEQ = " + QC_IDSEQ);
 			int version = 1;
 			System.out.println("VERSION [" + version + "] NAME [" + questBean.getQUEST_NAME() + "] CONTEXT [" + contextIdSeq + "]");
-			fb.createQuestion(conn, 1, questBean, QC_IDSEQ, version);
+			int displayOrder = 1;
+			fb.createQuestion(conn, displayOrder, questBean, QC_IDSEQ, version);
+
+			QR_IDSEQ = "14F6E5D0-72F1-46CA-E050-BB89A7B43891";	//ac.getNewAC_IDSEQ(conn);
+			PV_Bean pvBean = new PV_Bean();
+			System.out.println("testFormStep3 create QR_IDSEQ = " + QC_IDSEQ);
+			pvBean.setQUESTION_VALUE_IDSEQ("B387CBBD-A53C-50E5-E040-BB89AD4350CE");
+			questBean.setQC_IDSEQ("14B849C8-9711-24F5-E050-BB89A7B41326");	//existing question id! TODO: will it work with a new question?
+			fb.createQuestionRelationWithPV(conn, displayOrder, questBean, pvBean );
+
+			fb.createPVValidValue(conn, questBean, pvBean);
 		} catch (Exception e) {
-			mon.show();
+			//mon.show();
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} finally {
 			formCleanup1_0(QC_IDSEQ);
 			formCleanup1_1(QC_IDSEQ);
+			formCleanup2(QR_IDSEQ);
+			formCleanup3(questBean);
 		}
 	}
 	
@@ -385,7 +398,7 @@ public class JR1074 {
 		
 		boolean ret = false;
 		try {
-			System.out.println("formCleanup1 delete SQL = " + sql);
+			System.out.println("formCleanup1_0 delete SQL = " + sql);
 			if(fb.executeUpdate(conn, sql) == 1) 
 				ret = true;
 		} catch (Exception e) {
@@ -403,6 +416,7 @@ public class JR1074 {
 		
 		boolean ret = false;
 		try {
+			System.out.println("formCleanup1_1 delete SQL = " + sql);
 			if(fb.executeUpdate(conn, sql) == 1) 
 				ret = true;
 		} catch (Exception e) {
@@ -415,11 +429,12 @@ public class JR1074 {
 
 	private boolean formCleanup2(String QR_IDSEQ) {
 		String sql = "delete from SBREXT.QC_RECS_EXT";
-		sql += "where ";
+		sql += " where ";
 		sql += "QR_IDSEQ = '"+ QR_IDSEQ +"'";
 		
 		boolean ret = false;
 		try {
+			System.out.println("formCleanup2 delete SQL = " + sql);
 			if(fb.executeUpdate(conn, sql) == 1) 
 				ret = true;
 		} catch (Exception e) {
@@ -430,13 +445,14 @@ public class JR1074 {
 		return ret;
 	}
 
-	private boolean formCleanup3(String QC_IDSEQ) {
+	private boolean formCleanup3(Quest_Bean questBean) {
 		String sql = "delete from VALID_VALUES_ATT_EXT ";
 		sql += "where ";
-		sql += "QC_IDSEQ = '"+ QC_IDSEQ +"'";
+		sql += "QC_IDSEQ = '"+ questBean.getQC_IDSEQ() +"'";
 		
 		boolean ret = false;
 		try {
+			System.out.println("formCleanup3 delete SQL = " + sql);
 			if(fb.executeUpdate(conn, sql) == 1) 
 				ret = true;
 		} catch (Exception e) {

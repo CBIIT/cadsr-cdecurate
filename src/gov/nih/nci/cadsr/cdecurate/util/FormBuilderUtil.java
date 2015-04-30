@@ -53,9 +53,10 @@ public class FormBuilderUtil {
 
 		String newVVSQL = "Insert into VALID_VALUES_ATT_EXT (QC_IDSEQ,MEANING_TEXT,DATE_CREATED,CREATED_BY,DATE_MODIFIED,MODIFIED_BY,DESCRIPTION_TEXT) ";
 		newVVSQL += "values (" + "'" + questBean.getQC_IDSEQ() + "',";	//e.g. 14B849C8-9711-24F5-E050-BB89A7B41326
-		newVVSQL += "'" + pvBean.getPV_VALUE() + "',to_date('07-DEC-11','DD-MON-RR'),'MEDIDATA_LEEW',null,null,'"+ pvBean.getPV_MEANING_DESCRIPTION() + "');";
+		newVVSQL += "'" + pvBean.getPV_VALUE() + "',to_date('07-DEC-11','DD-MON-RR'),'MEDIDATA_LEEW',null,null,'"+ pvBean.getPV_MEANING_DESCRIPTION() + "')";
 
 		boolean ret = false;
+		System.out.println("FormBuilderUtil.java#createPVValidValue SQL = " + newVVSQL);
 		if(executeUpdate(conn, newVVSQL) == 1) ret = true;
 
         return ret;
@@ -72,14 +73,15 @@ public class FormBuilderUtil {
 		newRelationSQL += "(QR_IDSEQ,P_QC_IDSEQ,C_QC_IDSEQ,";
 		newRelationSQL += "DISPLAY_ORDER,RL_NAME,";
 		newRelationSQL += "DATE_CREATED,CREATED_BY,DATE_MODIFIED,MODIFIED_BY)";
-		newRelationSQL += "values ('"+ uniqueId + "',";
+		newRelationSQL += " values ('"+ uniqueId + "',";
 		newRelationSQL += "'" + pvBean.getQUESTION_VALUE_IDSEQ() + "',";	//P_QC_IDSEQ e.g. B387CBBD-A53C-50E5-E040-BB89AD4350CE ***** TODO NOT SURE ABOUT THIS!!!! ****
 		newRelationSQL += "'" + questBean.getQC_IDSEQ() + "',";	//QC_IDSEQ e.g. 14B849C8-9711-24F5-E050-BB89A7B41326
 		newRelationSQL += "" + displayOrder + ",";		//nth row in the question e.g. 1 ***** TODO NOT SURE ABOUT THIS!!!! ****
-		newRelationSQL += "ELEMENT_VALUE',";
-		newRelationSQL += "to_date('07-DEC-11','DD-MON-RR'),'MEDIDATA_LEEW',null,null);";
+		newRelationSQL += "'ELEMENT_VALUE',";
+		newRelationSQL += "to_date('07-DEC-11','DD-MON-RR'),'MEDIDATA_LEEW',null,null)";
 		
 		boolean ret = false;
+		System.out.println("FormBuilderUtil.java#createQuestionRelationWithPV SQL = " + newRelationSQL);
 		if(executeUpdate(conn, newRelationSQL) == 1) ret = true;
 
         return ret;
