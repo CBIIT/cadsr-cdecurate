@@ -345,12 +345,18 @@ public class JR1074 {
 	public void testFormStep3() {
 		boolean ret = false;
 		
+		Database mon = new Database();
+		mon.setEnabled(true);
+		mon.trace(conn);
+	           
 		AdministeredItemUtil ac = new AdministeredItemUtil();
 		String QC_IDSEQ = null;
 		try {
-			QC_IDSEQ = ac.getNewAC_IDSEQ(conn);
+			QC_IDSEQ = "14E25662-A184-8170-E050-BB89A7B438EA";	//ac.getNewAC_IDSEQ(conn);
 			Quest_Bean questBean = new Quest_Bean();
-			questBean.setCONTE_IDSEQ("99BA9DC8-2095-4E69-E034-080020C9C0E0");
+//			String contextIdSeq = "99BA9DC8-2095-4E69-E034-080020C9C0E0";	//can not used this it was throwing trigger SBREXT.QC_AIU_ROW error: ORA-20999: TAPI-1006:Duplicate value for Version, Name, and Context, re-enter
+			String contextIdSeq = "A932C6E7-82EE-67C2-E034-0003BA12F5E7";
+			questBean.setCONTE_IDSEQ(contextIdSeq);
 			questBean.setVD_PREF_NAME("No 1 from JR1074 junit test");
 			questBean.setVD_DEFINITION("No");
 			questBean.setQUEST_NAME("No 2 from JR1074 junit test");
@@ -359,16 +365,20 @@ public class JR1074 {
 			questBean.setVD_IDSEQ("D4A6A07C-5582-25A1-E034-0003BA12F5E7");	//form id 3328985 v1 cde 3198806	1.0 vd Yes No Character Indicator
 			questBean.setQC_ID("3198806");
 			System.out.println("testFormStep3 create QC_IDSEQ = " + QC_IDSEQ);
-			fb.createQuestion(conn, 1, questBean, QC_IDSEQ);
+			int version = 1;
+			System.out.println("VERSION [" + version + "] NAME [" + questBean.getQUEST_NAME() + "] CONTEXT [" + contextIdSeq + "]");
+			fb.createQuestion(conn, 1, questBean, QC_IDSEQ, version);
 		} catch (Exception e) {
+			mon.show();
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} finally {
-			formCleanup1(QC_IDSEQ);
+			formCleanup1_0(QC_IDSEQ);
+			formCleanup1_1(QC_IDSEQ);
 		}
 	}
 	
-	private boolean formCleanup1(String QC_IDSEQ) {
+	private boolean formCleanup1_0(String QC_IDSEQ) {
 		String sql = "delete from sbr.QUEST_CONTENTS_EXT q";
 		sql += " where ";
 		sql += "QC_IDSEQ = '"+ QC_IDSEQ +"'";
@@ -376,6 +386,23 @@ public class JR1074 {
 		boolean ret = false;
 		try {
 			System.out.println("formCleanup1 delete SQL = " + sql);
+			if(fb.executeUpdate(conn, sql) == 1) 
+				ret = true;
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+			
+		return ret;
+	}
+
+	private boolean formCleanup1_1(String QC_IDSEQ) {
+		String sql = "delete from ADMIN_COMPONENTS_VIEW ";
+		sql += "where ";
+		sql += "AC_IDSEQ = '"+ QC_IDSEQ +"'";
+		
+		boolean ret = false;
+		try {
 			if(fb.executeUpdate(conn, sql) == 1) 
 				ret = true;
 		} catch (Exception e) {
@@ -419,4 +446,8 @@ public class JR1074 {
 			
 		return ret;
 	}
+	
+
+
+	
 }
