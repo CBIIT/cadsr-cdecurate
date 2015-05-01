@@ -25,6 +25,7 @@ import gov.nih.nci.cadsr.common.TestUtil;
 
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
+import java.util.List;
 import java.util.Vector;
 
 import javax.servlet.RequestDispatcher;
@@ -1053,7 +1054,7 @@ public class PVServlet implements Serializable
              //update pv to vd 
              data.setSelectPV(pvBean);
              data.setVD(vd);
-//             err = pvAction.setVD_PVS(data);	//JR1074 uncomment this after test (to avoid PV-VM from being deleted!)
+             err = pvAction.setVD_PVS(data);
              //capture the message if any
              if (err != null && !err.equals(""))
              {
@@ -1071,6 +1072,7 @@ public class PVServlet implements Serializable
              }
              //update teh collection
 
+             System.out.println("PVServlet.java#submitPV pvBean in form [" + pvBean.getPV_IN_FORM() + "] pvBean [" + pvBean.toString() + "]");
              //JR1074 begin - just for FB to display the new PV-VM pair
              if(pvBean.getPV_IN_FORM()) {
             	 System.out.println("PV is used in form(s).");
@@ -1078,19 +1080,22 @@ public class PVServlet implements Serializable
             	 if(data.getCurationServlet().getConn() == null) {
             		 System.err.println("Database connection is null or empty.");
             	 }
-                 HttpSession session = data.getRequest().getSession();
-                 Quest_Bean questBean = (Quest_Bean) session.getAttribute("m_Quest");
             	 //create a new question
          		 AdministeredItemUtil ac = new AdministeredItemUtil();
     			 int version = 1;
     			 int displayOrder = j;
     			 String QC_IDSEQ = null;
      			 try {
-     				QC_IDSEQ = ac.getNewAC_IDSEQ(data.getCurationServlet().getConn());
-     				fb.createQuestion(data.getCurationServlet().getConn(), displayOrder, questBean, QC_IDSEQ, version);
-     				//JR1074 comment out the following two lines in production!!!
-					gov.nih.nci.cadsr.cdecurate.test.junit.JR1074.formCleanup1_0(QC_IDSEQ);
-					gov.nih.nci.cadsr.cdecurate.test.junit.JR1074.formCleanup1_1(QC_IDSEQ);
+                     HttpSession session = data.getRequest().getSession();
+                     GetACSearch getACSearch = new GetACSearch(data.getRequest(), data.getResponse(), data.getCurationServlet());
+                     getACSearch.getACQuestion();
+                     Vector vSelRows = (Vector) session.getAttribute("vSelRows");
+                     Quest_Bean questBean = getSelectedFormQuestion(vSelRows, j, pvBean);	//(Quest_Bean) session.getAttribute("m_Quest");	//alwasy empty! :(
+//     				QC_IDSEQ = ac.getNewAC_IDSEQ(data.getCurationServlet().getConn());
+//     				fb.createQuestion(data.getCurationServlet().getConn(), displayOrder, questBean, QC_IDSEQ, version);
+//     				//JR1074 comment out the following two lines in production!!!
+//					gov.nih.nci.cadsr.cdecurate.test.junit.JR1074.formCleanup1_0(QC_IDSEQ);
+//					gov.nih.nci.cadsr.cdecurate.test.junit.JR1074.formCleanup1_1(QC_IDSEQ);
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -1122,6 +1127,16 @@ public class PVServlet implements Serializable
        return errMsg; //data.getStatusMsg();	//JR1025 should not have any error message in order to be saved successfully into the database
    }
   
+   private Quest_Bean getSelectedFormQuestion(Vector vSelRows, int displayOrder, PV_Bean pvBean) {
+       String VDPVS_IDSEQ = pvBean.getPV_VDPVS_IDSEQ();
+	   System.out.println("PVServlet.java#getSelectedFormQuestion displayOrder [" + displayOrder + "] VDPVS_IDSEQ [" + VDPVS_IDSEQ + "]");
+	   Quest_Bean questBean = null;
+	   if(vSelRows != null && vSelRows.size() > 0) {
+		   questBean = (Quest_Bean) vSelRows.get(0);
+	   }
+	   return questBean;
+   }
+
    /**To delete the removed VD PV from the database
    * @param vd VDBean object
    * @return String status message
