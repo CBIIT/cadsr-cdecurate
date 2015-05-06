@@ -24,6 +24,7 @@ import gov.nih.nci.cadsr.common.StringUtil;
 import gov.nih.nci.cadsr.common.TestUtil;
 
 import java.io.Serializable;
+import java.sql.Connection;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Vector;
@@ -1086,11 +1087,7 @@ public class PVServlet implements Serializable
     			 int displayOrder = j;
     			 String QC_IDSEQ = null;
      			 try {
-                     HttpSession session = data.getRequest().getSession();
-                     GetACSearch getACSearch = new GetACSearch(data.getRequest(), data.getResponse(), data.getCurationServlet());
-                     getACSearch.getACQuestion();
-                     Vector vSelRows = (Vector) session.getAttribute("vSelRows");
-                     Quest_Bean questBean = getSelectedFormQuestion(vSelRows, j, pvBean);	//(Quest_Bean) session.getAttribute("m_Quest");	//alwasy empty! :(
+     				Quest_Bean questBean = getSelectedFormQuestion(vd, data.getCurationServlet().getConn(), fb, j, pvBean);	//(Quest_Bean) session.getAttribute("m_Quest");	//alwasy empty! :(
 //     				QC_IDSEQ = ac.getNewAC_IDSEQ(data.getCurationServlet().getConn());
 //     				fb.createQuestion(data.getCurationServlet().getConn(), displayOrder, questBean, QC_IDSEQ, version);
 //     				//JR1074 comment out the following two lines in production!!!
@@ -1127,14 +1124,21 @@ public class PVServlet implements Serializable
        return errMsg; //data.getStatusMsg();	//JR1025 should not have any error message in order to be saved successfully into the database
    }
   
-   private Quest_Bean getSelectedFormQuestion(Vector vSelRows, int displayOrder, PV_Bean pvBean) {
-       String VDPVS_IDSEQ = pvBean.getPV_VDPVS_IDSEQ();
-	   System.out.println("PVServlet.java#getSelectedFormQuestion displayOrder [" + displayOrder + "] VDPVS_IDSEQ [" + VDPVS_IDSEQ + "]");
-	   Quest_Bean questBean = null;
-	   if(vSelRows != null && vSelRows.size() > 0) {
-		   questBean = (Quest_Bean) vSelRows.get(0);
-	   }
-	   return questBean;
+   private Quest_Bean getSelectedFormQuestion(VD_Bean vd, Connection conn, FormBuilderUtil fb, int displayOrder, PV_Bean pvBean) throws Exception {
+		if(conn == null) throw new Exception("Database connection is null or empty!");
+		if(vd == null) throw new Exception("Value Domain is null or empty!");
+		String VD_IDSEQ = vd.getIDSEQ();
+		if(VD_IDSEQ == null) throw new Exception("Value Domain VD_IDSEQ is null or empty!");
+		String VP_IDSEQ = pvBean.getPV_VDPVS_IDSEQ();
+		if(VP_IDSEQ == null) throw new Exception("Value Domain VP_IDSEQ is null or empty!");
+		Quest_Bean oldQuestBean = fb.getFormQuestion(conn, VD_IDSEQ, VP_IDSEQ);
+		   
+		System.out.println("PVServlet.java#getSelectedFormQuestion displayOrder [" + displayOrder + "] VP_IDSEQ (VDPVS_IDSEQ) [" + VP_IDSEQ + "]");
+		Quest_Bean selectedQuestBean = null;
+//		if(vSelRows != null && vSelRows.size() > 0) {
+//			selectedQuestBean = (Quest_Bean) vSelRows.get(0);
+//		}
+		return selectedQuestBean;
    }
 
    /**To delete the removed VD PV from the database

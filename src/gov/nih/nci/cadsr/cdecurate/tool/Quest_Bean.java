@@ -674,5 +674,25 @@ public class Quest_Bean implements Serializable
     QC_VERSION = qc_version;
   }
 
+	@Override
+	public String toString() {
+		return "Quest_Bean [PROTO_IDSEQ=" + PROTO_IDSEQ + ", PROTOCOL_ID="
+				+ PROTOCOL_ID + ", PROTOCOL_NAME=" + PROTOCOL_NAME + ", CRF_IDSEQ="
+				+ CRF_IDSEQ + ", CRF_NAME=" + CRF_NAME + ", QC_IDSEQ=" + QC_IDSEQ
+				+ ", QUEST_NAME=" + QUEST_NAME + ", QUEST_DEFINITION="
+				+ QUEST_DEFINITION + ", SUBMITTED_LONG_NAME=" + SUBMITTED_LONG_NAME
+				+ ", CONTE_IDSEQ=" + CONTE_IDSEQ + ", CONTEXT_NAME=" + CONTEXT_NAME
+				+ ", ASL_NAME=" + ASL_NAME + ", DE_IDSEQ=" + DE_IDSEQ
+				+ ", DE_LONG_NAME=" + DE_LONG_NAME + ", DE_VD_IDSEQ=" + DE_VD_IDSEQ
+				+ ", VD_IDSEQ=" + VD_IDSEQ + ", VD_LONG_NAME=" + VD_LONG_NAME
+				+ ", VD_PREF_NAME=" + VD_PREF_NAME + ", VD_DEFINITION="
+				+ VD_DEFINITION + ", VDid=" + VDid + ", VDversion=" + VDversion
+				+ ", CDE_ID=" + CDE_ID + ", HIGH_LIGHT_INDICATOR="
+				+ HIGH_LIGHT_INDICATOR + ", STATUS_INDICATOR=" + STATUS_INDICATOR
+				+ ", QUEST_ORIGIN=" + QUEST_ORIGIN + ", QC_ID=" + QC_ID
+				+ ", QUEST_CHECKED=" + QUEST_CHECKED + ", QCDL_NAME=" + QCDL_NAME
+				+ ", QTL_NAME=" + QTL_NAME + ", QC_VERSION=" + QC_VERSION + "]";
+	}
+
 
 }  //end of class

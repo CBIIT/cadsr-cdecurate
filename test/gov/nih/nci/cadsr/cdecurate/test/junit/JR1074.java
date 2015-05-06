@@ -76,7 +76,7 @@ public class JR1074 {
 //        boolean initialSearch = false;
         pl = new PLSQLUtil(conn);
 		fb = new FormBuilderUtil();
-		//fb.setAutoCleanup(false);
+		fb.setAutoCleanup(false);
 	}
 
 	@After
@@ -341,7 +341,7 @@ public class JR1074 {
 		return sMsg;
 	}
 
-	@Test
+//	@Test
 	public void testFormStep3() {
 		boolean ret = false;
 
@@ -352,6 +352,7 @@ public class JR1074 {
 	    */
 		AdministeredItemUtil ac = new AdministeredItemUtil();
 		String QC_IDSEQ = null; String QR_IDSEQ = null;
+		String VD_IDSEQ = null;
 		Quest_Bean questBean = new Quest_Bean();
 		try {
 			QC_IDSEQ = "14E25662-A184-8170-E050-BB89A7B438EA";	//ac.getNewAC_IDSEQ(conn);
@@ -363,7 +364,8 @@ public class JR1074 {
 			questBean.setQUEST_NAME("No 2 from JR1074 junit test");
 			questBean.setSTATUS_INDICATOR("No");	//No = do not delete?
 			questBean.setCRF_IDSEQ("99CD59C5-A94F-3FA4-E034-080020C9C0E0");
-			questBean.setVD_IDSEQ("D4A6A07C-5582-25A1-E034-0003BA12F5E7");	//form id 3328985 v1 cde 3198806	1.0 vd Yes No Character Indicator
+			VD_IDSEQ = "D4A6A07C-5582-25A1-E034-0003BA12F5E7";	//this must already exist!
+			questBean.setVD_IDSEQ(VD_IDSEQ);	//form id 3328985 v1 cde 3198806	1.0 vd Yes No Character Indicator
 			questBean.setQC_ID("3198806");
 			System.out.println("testFormStep3 create QC_IDSEQ = " + QC_IDSEQ);
 			int version = 1;
@@ -379,6 +381,7 @@ public class JR1074 {
 			fb.createQuestionRelationWithPV(conn, displayOrder, questBean, pvBean );
 
 			fb.createPVValidValue(conn, questBean, pvBean);
+			
 		} catch (Exception e) {
 			//mon.show();
 			// TODO Auto-generated catch block
@@ -463,7 +466,40 @@ public class JR1074 {
 		return ret;
 	}
 	
+	@Test
+	public void testGetFormQuestionForPVUsedByForm() {
+		boolean ret = false;
+		String VD_IDSEQ = "D4A6A07C-5582-25A1-E034-0003BA12F5E7";	//this must already exist!
+		//=== only existing PV with a "Used by Form" has a valid VP_IDSEQ e.g. 146B8D5C-7802-2F45-E050-BB89A7B451EE
+		String VP_IDSEQ = "DD7550B5-55CC-3CC4-E034-0003BA12F5E7";
+		try {
+			System.out.println("\nTesting used by form PV");
+			Quest_Bean questBean2 = fb.getFormQuestion(conn, VD_IDSEQ, VP_IDSEQ);
+			System.out.println(questBean2.toString());
+			assertTrue("testGetFormQuestionForPVUsedByForm QC_IDSEQ should be valid", questBean2.getQC_IDSEQ() != null);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	
+	}
 
-
+	@Test
+	public void testGetFormQuestionForPVNotUsedByForm() {
+		boolean ret = false;
+		String VD_IDSEQ = "D4A6A07C-5582-25A1-E034-0003BA12F5E7";	//this must already exist!
+		//=== only existing PV with a "Used by Form" has a valid VP_IDSEQ e.g. 146B8D5C-7802-2F45-E050-BB89A7B451EE
+		String VP_IDSEQ = "146B8D5C-7802-2F45-E050-BB89A7B451EE";	//for the deleted PV-VM
+		try {
+			System.out.println("\nTesting normal PV (not used by form)");
+			Quest_Bean questBean2 = fb.getFormQuestion(conn, VD_IDSEQ, VP_IDSEQ);
+			System.out.println(questBean2.toString());
+			assertTrue("testGetFormQuestionForPVUsedByForm QC_IDSEQ should be empty or null", questBean2.getQC_IDSEQ() == null);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	
+	}
 	
 }

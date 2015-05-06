@@ -147,4 +147,87 @@ public class FormBuilderUtil {
 
         return ret;
 	}
+	
+	public Quest_Bean getFormQuestion(Connection conn, String VD_IDSEQ, String VP_IDSEQ) throws Exception {
+		if(conn == null) throw new Exception("Database connection is null or empty!");
+		if(VD_IDSEQ == null) throw new Exception("VD_IDSEQ is null or empty!");
+		if(VP_IDSEQ == null) throw new Exception("VP_IDSEQ is null or empty!");
+
+		System.out.println("VD_IDSEQ [" + VD_IDSEQ + "] VP_IDSEQ [" + VP_IDSEQ + "]");
+		String sql = "SELECT ";
+		sql += "D.QC_IDSEQ,";
+		sql += "d.*, c.* ";
+		sql += "FROM ";
+		sql += "SBREXT.QUEST_CONTENTS_EXT D";
+		sql += ", SBR.VALUE_DOMAINS B";
+		sql += ", SBR.VD_PVS C";
+		sql += " WHERE ";
+		sql += "(C.VD_IDSEQ = B.VD_IDSEQ) ";
+		sql += "AND (D.VP_IDSEQ = ?) ";	//C.VP_IDSEQ test DD7550B5-55CC-3CC4-E034-0003BA12F5E7";
+		sql += "AND (C.VD_IDSEQ = ?) ";	//P_VDPVS_VD_IDSEQ aka C.VD_IDSEQ";
+		sql += "AND ROWNUM = 1";
+		sql += " UNION ";
+		sql += "SELECT ";
+		sql += "D.QC_IDSEQ,";
+		sql += "d.*, c.* ";
+		sql += "FROM ";
+		sql += "SBREXT.QUEST_CONTENTS_EXT D";
+		sql += ", SBR.VD_PVS C ";
+		sql += "WHERE ";
+		sql += "(D.VP_IDSEQ = C.VP_IDSEQ) ";
+		sql += "AND (C.VP_IDSEQ = ?) ";	//C.VP_IDSEQ test DD7550B5-55CC-3CC4-E034-0003BA12F5E7";
+		sql += "AND ROWNUM = 1";
+
+    	PreparedStatement pstmt = null;
+		System.out.println("FormBuilderUtil.java#getFormQuestion SQL = " + sql);
+        ResultSet rs = null;
+        Quest_Bean ret = new Quest_Bean();
+        try {
+            pstmt = conn.prepareStatement( sql );
+            pstmt.setString(1, VP_IDSEQ);
+            pstmt.setString(2, VD_IDSEQ);
+            pstmt.setString(3, VP_IDSEQ);
+			rs = pstmt.executeQuery();
+			int count = 0;
+			if(rs.next()) {
+				if(count == 0) {
+				ret.setQC_IDSEQ(rs.getString(1));			//QC_IDSEQ
+				//ret.setQC_IDSEQ(rs.getString(2));			//QC_IDSEQ	- redundant
+				ret.setQC_VERSION(rs.getString(3));			//VERSION
+				ret.setQTL_NAME(rs.getString(4));			//QTL_NAME
+				ret.setCONTE_IDSEQ(rs.getString(5));		//CONTE_IDSEQ
+				ret.setASL_NAME(rs.getString(6));			//ASL_NAME
+				ret.setQUEST_NAME(rs.getString(7));	//???	//PREFERRED_NAME
+				ret.setQUEST_DEFINITION(rs.getString(8));	//PREFERRED_DEFINITION
+				//PROTO_IDSEQ
+				ret.setDE_IDSEQ(rs.getString(10));			//DE_IDSEQ
+				ret.setCRF_IDSEQ(rs.getString(11)); //???	//VP_IDSEQ
+				//QC_MATCH_IDSEQ
+				//QC_IDENTIFIER
+				//QCDL_NAME
+				ret.setSUBMITTED_LONG_NAME(rs.getString(15));//LONG_NAME
+				ret.setSTATUS_INDICATOR(rs.getString(16));	//???		//LATEST_VERSION_IND
+				//???	//DELETED_IND
+				//BEGIN_DATE
+				//END_DATE
+				//MATCH_IND
+				//NEW_QC_IND
+				//HIGHLIGHT_IND
+				//REVIEWER_FEEDBACK_ACTION
+				}
+				count++;
+			}
+        }
+        catch (Exception e) {
+            throw e;
+        }
+        finally {
+        	if(autoCleanup) {
+	            if (rs != null) { try { rs.close(); } catch (SQLException e) { System.err.println(e.getMessage()); } }
+	            if (pstmt != null) {  try { pstmt.close(); } catch (SQLException e) { System.err.println(e.getMessage()); } }
+	        	if (conn != null) { try { conn.close(); conn = null; } catch (SQLException e) { System.err.println(e.getMessage()); } }
+        	}
+        }
+        return ret;
+	}
 }
