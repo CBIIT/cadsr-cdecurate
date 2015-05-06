@@ -85,7 +85,7 @@ public class JR1035 {
 	 * @throws SQLException
 	 */
 	private Vector callGetStatusList(String plsql, String setString1) throws SQLException {
-		Vector vList1 = new Vector<>();
+		Vector vList1 = new Vector<String>();
 		String sql = plsql;
 		CallableStatement cstmt = null;
 		
