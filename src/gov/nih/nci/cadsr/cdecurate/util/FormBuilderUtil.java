@@ -158,9 +158,9 @@ public class FormBuilderUtil {
 		sql += "D.QC_IDSEQ,";
 		sql += "d.*, c.* ";
 		sql += "FROM ";
-		sql += "SBREXT.QUEST_CONTENTS_EXT D";
-		sql += ", SBR.VALUE_DOMAINS B";
-		sql += ", SBR.VD_PVS C";
+		sql += "SBREXT.QUEST_CONTENTS_VIEW_EXT D";
+		sql += ", SBR.VALUE_DOMAINS_VIEW B";
+		sql += ", SBR.VD_PVS_VIEW C";
 		sql += " WHERE ";
 		sql += "(C.VD_IDSEQ = B.VD_IDSEQ) ";
 		sql += "AND (D.VP_IDSEQ = ?) ";	//C.VP_IDSEQ test DD7550B5-55CC-3CC4-E034-0003BA12F5E7";
@@ -171,8 +171,8 @@ public class FormBuilderUtil {
 		sql += "D.QC_IDSEQ,";
 		sql += "d.*, c.* ";
 		sql += "FROM ";
-		sql += "SBREXT.QUEST_CONTENTS_EXT D";
-		sql += ", SBR.VD_PVS C ";
+		sql += "SBREXT.QUEST_CONTENTS_VIEW_EXT D";
+		sql += ", SBR.VD_PVS_VIEW C ";
 		sql += "WHERE ";
 		sql += "(D.VP_IDSEQ = C.VP_IDSEQ) ";
 		sql += "AND (C.VP_IDSEQ = ?) ";	//C.VP_IDSEQ test DD7550B5-55CC-3CC4-E034-0003BA12F5E7";
