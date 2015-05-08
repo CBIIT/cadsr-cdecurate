@@ -49,6 +49,9 @@ public class PVAction implements Serializable {
 	private static final Logger logger = Logger.getLogger(PVAction.class
 			.getName());
 
+	public static final String NEW_USING = "NewUsing";
+	public static final String SEARCH = "Search";
+
 	/**
 	 *
 	 */
@@ -474,7 +477,7 @@ public class PVAction implements Serializable {
 						pvBean.setPV_VALUE(rs.getString("value"));
 						pvBean.setPV_SHORT_MEANING(rs.getString("short_meaning"));
 												 
-						if (sAction.equals("NewUsing")) {
+						if (sAction.equals(NEW_USING)) {
                             pvBean.setPV_VDPVS_IDSEQ("");
                         } else {
                             pvBean.setPV_VDPVS_IDSEQ(rs.getString("vp_idseq"));
@@ -494,7 +497,7 @@ public class PVAction implements Serializable {
                             sDate = data.getUtil().getCurationDate(sDate);
                         }
 						pvBean.setPV_END_DATE(sDate);
-						if (sAction.equals("NewUsing")) {
+						if (sAction.equals(NEW_USING)) {
                             pvBean.setVP_SUBMIT_ACTION("INS");
                         } else {
                             pvBean.setVP_SUBMIT_ACTION("NONE");
@@ -900,7 +903,7 @@ public class PVAction implements Serializable {
 		String sMsg = "";
 		try {
 			String sAction = pvBean.getVP_SUBMIT_ACTION();
-			String vpID = pvBean.getPV_VDPVS_IDSEQ();
+			String vpID = pvBean.getPV_VDPVS_IDSEQ();	//JR1074 not sure why is this here anyway, it is empty!
 			//deleting newly selected/created pv don't do anything since it doesn't exist in cadsr to remove.
 			if (sAction.equals("DEL") && (vpID == null || vpID.equals("")))
 				return sMsg;

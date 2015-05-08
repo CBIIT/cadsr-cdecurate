@@ -26,6 +26,8 @@ import gov.nih.nci.cadsr.common.TestUtil;
 import java.io.Serializable;
 import java.sql.Connection;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
 
@@ -33,6 +35,8 @@ import javax.servlet.RequestDispatcher;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+
+import oracle.net.aso.e;
 
 import org.apache.log4j.Logger;
 
@@ -1051,30 +1055,10 @@ public class PVServlet implements Serializable
 	             }
              }
              //end JR1025
-
-             //update pv to vd 
-             data.setSelectPV(pvBean);
-             data.setVD(vd);
-             err = pvAction.setVD_PVS(data);
-             //capture the message if any
-             if (err != null && !err.equals(""))
-             {
-               errMsg += "\\n" + err;
-               continue;
-             }
-
-             //create crf value pv relationship in QC table.
-             pvBean = data.getSelectPV();
-             String vpID = pvBean.getPV_VDPVS_IDSEQ();
-             if (pvBean.getVP_SUBMIT_ACTION().equals(PVForm.CADSR_ACTION_INS) && (vpID != null  || !vpID.equals("")))
-             {
-                InsACService insac = new InsACService(data.getRequest(), data.getResponse(), data.getCurationServlet());
-                insac.UpdateCRFValue(pvBean);
-             }
-             //update teh collection
-
-             System.out.println("PVServlet.java#submitPV pvBean in form [" + pvBean.getPV_IN_FORM() + "] pvBean [" + pvBean.toString() + "]");
+             
              //JR1074 begin - just for FB to display the new PV-VM pair
+//             pvBean = data.getSelectPV();
+             System.out.println("PVServlet.java#submitPV pvBean in form [" + pvBean.getPV_IN_FORM() + "] pvBean [" + pvBean.toString() + "]");
              if(pvBean.getPV_IN_FORM()) {
             	 System.out.println("PV is used in form(s).");
             	 FormBuilderUtil fb = new FormBuilderUtil();
@@ -1087,7 +1071,7 @@ public class PVServlet implements Serializable
     			 int displayOrder = j;
     			 String QC_IDSEQ = null;
      			 try {
-     				Quest_Bean questBean = getSelectedFormQuestion(vd, data.getCurationServlet().getConn(), fb, j, pvBean);	//(Quest_Bean) session.getAttribute("m_Quest");	//alwasy empty! :(
+//     				Quest_Bean questBean = getSelectedFormQuestion(vd, data, fb, j, pvBean);	//(Quest_Bean) session.getAttribute("m_Quest");	//alwasy empty! :(
 //     				QC_IDSEQ = ac.getNewAC_IDSEQ(data.getCurationServlet().getConn());
 //     				fb.createQuestion(data.getCurationServlet().getConn(), displayOrder, questBean, QC_IDSEQ, version);
 //     				//JR1074 comment out the following two lines in production!!!
@@ -1100,7 +1084,7 @@ public class PVServlet implements Serializable
 
      			 //QR_IDSEQ = "14F6E5D0-72F1-46CA-E050-BB89A7B43891";	//ac.getNewAC_IDSEQ(conn);
     			 //PV_Bean pvBean = new PV_Bean();
-    			 System.out.println("PVServlet.java#submitPV QR_IDSEQ = " + QC_IDSEQ);
+//    			 System.out.println("PVServlet.java#submitPV QR_IDSEQ = " + QC_IDSEQ);
             	 
             	 //create a new relationship
     			 //pvBean.setQUESTION_VALUE_IDSEQ("B387CBBD-A53C-50E5-E040-BB89AD4350CE");
@@ -1109,8 +1093,45 @@ public class PVServlet implements Serializable
             	 
             	 //create a new VV
 //    			 fb.createPVValidValue(data.getCurationServlet().getConn(), questBean, pvBean);
+    			 
+    			 //UNCOMMENT THIS IN PRODUCTION!!!!
+//    			 return "";
+
+            	 System.out.println("PV is used in any form.");
+     			 pvBean.setPV_IN_FORM(false);
+                 //update pv to vd 
+                 data.setSelectPV(pvBean);
+                 data.setVD(vd);
+
+                 err = pvAction.setVD_PVS(data);	//JR1074 yes, this call includes removing the relationship between the PV-VM as well as the form (question, VV)
+	             //capture the message if any
+	             if (err != null && !err.equals(""))
+	             {
+	               errMsg += "\\n" + err;
+	               continue;
+	             }
              } else {
-            	 System.out.println("PV not used in any form.");
+            	 System.out.println("PV is not used in any form.");
+                 //update pv to vd 
+                 data.setSelectPV(pvBean);
+                 data.setVD(vd);
+            	 err = pvAction.setVD_PVS(data);	//JR1074 yes, this call includes removing the relationship between the PV-VM as well as the form (question, VV)
+                 //capture the message if any
+                 if (err != null && !err.equals(""))
+                 {
+                   errMsg += "\\n" + err;
+                   continue;
+                 }
+
+                 //create crf value pv relationship in QC table.
+                 pvBean = data.getSelectPV();		//JR1074 moved to above
+                 String vpID = pvBean.getPV_VDPVS_IDSEQ();
+                 if (pvBean.getVP_SUBMIT_ACTION().equals(PVForm.CADSR_ACTION_INS) && (vpID != null  || !vpID.equals("")))
+                 {
+                    InsACService insac = new InsACService(data.getRequest(), data.getResponse(), data.getCurationServlet());
+                    insac.UpdateCRFValue(pvBean);
+                 }
+                 //update teh collection
              }
              //JR1074 end
          }
@@ -1124,20 +1145,49 @@ public class PVServlet implements Serializable
        return errMsg; //data.getStatusMsg();	//JR1025 should not have any error message in order to be saved successfully into the database
    }
   
-   private Quest_Bean getSelectedFormQuestion(VD_Bean vd, Connection conn, FormBuilderUtil fb, int displayOrder, PV_Bean pvBean) throws Exception {
-		if(conn == null) throw new Exception("Database connection is null or empty!");
+   private PV_Bean populatePVFormQuestion(PV_Bean pv, PVForm data) {
+	   PV_Bean ret = null;
+	   List<PV_Bean> l = pvAction.doPVACSearch(pv.getPV_PV_IDSEQ(), PVAction.SEARCH, data);
+	   List<PV_Bean> n = new ArrayList();
+	   
+	   if(l.size() > 0) {
+		   Iterator it = l.iterator();
+		   PV_Bean temp = null;
+		   while(it.hasNext()) {
+			   temp = (PV_Bean) it.next();
+			   System.out.println("populatePVFormQuestion temp " + temp.getPV_PV_IDSEQ() + " " + temp.getPV_VDPVS_IDSEQ());
+			   if(pv.getPV_VALUE() != null && pv.getPV_VALUE().equals(temp.getPV_VALUE())) {
+				   n.add(l.get(0));
+			   }
+		   }
+		   
+		   ret = l.get(0);
+	   }
+
+	   return ret;
+   }
+
+   private Quest_Bean getSelectedFormQuestion(VD_Bean vd, PVForm data, FormBuilderUtil fb, int displayOrder, PV_Bean pvBean) throws Exception {
+	   	Connection conn = data.getCurationServlet().getConn();
+	   	if(conn == null) throw new Exception("Database connection is null or empty!");
 		if(vd == null) throw new Exception("Value Domain is null or empty!");
 		String VD_IDSEQ = vd.getIDSEQ();
 		if(VD_IDSEQ == null) throw new Exception("Value Domain VD_IDSEQ is null or empty!");
-		String VP_IDSEQ = pvBean.getPV_VDPVS_IDSEQ();
-		if(VP_IDSEQ == null) throw new Exception("Value Domain VP_IDSEQ is null or empty!");
-		Quest_Bean oldQuestBean = fb.getFormQuestion(conn, VD_IDSEQ, VP_IDSEQ);
-		   
-		System.out.println("PVServlet.java#getSelectedFormQuestion displayOrder [" + displayOrder + "] VP_IDSEQ (VDPVS_IDSEQ) [" + VP_IDSEQ + "]");
+		PV_Bean oldPV = populatePVFormQuestion(pvBean, data);
 		Quest_Bean selectedQuestBean = null;
-//		if(vSelRows != null && vSelRows.size() > 0) {
-//			selectedQuestBean = (Quest_Bean) vSelRows.get(0);
-//		}
+		if(oldPV != null) {
+			String VP_IDSEQ = oldPV.getPV_PV_IDSEQ();	//SHOULD NOT be empty! e.g. PV_VDPVS_IDSEQ = 38FDD1BD-2EED-64CE-E044-0003BA3F9857
+			if(VP_IDSEQ == null) throw new Exception("Value Domain VP_IDSEQ is null or empty!");
+			Quest_Bean oldQuestBean = fb.getFormQuestion(conn, VD_IDSEQ, VP_IDSEQ);
+			System.out.println("vd [" + vd.toString() + "]");
+			System.out.println("pv [" + pvBean.toString() + "]");
+			System.out.println("PVServlet.java#getSelectedFormQuestion displayOrder [" + displayOrder + "] VP_IDSEQ (VDPVS_IDSEQ) [" + VP_IDSEQ + "]");
+	//		if(vSelRows != null && vSelRows.size() > 0) {
+	//			selectedQuestBean = (Quest_Bean) vSelRows.get(0);
+	//		}
+		} else {
+			System.out.println("oldQuestBean is null or empty!");	//this should never happen!
+		}
 		return selectedQuestBean;
    }
 
