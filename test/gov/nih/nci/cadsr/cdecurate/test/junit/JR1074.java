@@ -7,13 +7,16 @@ import gov.nih.nci.cadsr.cdecurate.test.helpers.PLSQLUtil;
 import gov.nih.nci.cadsr.cdecurate.tool.CurationServlet;
 import gov.nih.nci.cadsr.cdecurate.tool.EVS_UserBean;
 import gov.nih.nci.cadsr.cdecurate.tool.GetACSearch;
+import gov.nih.nci.cadsr.cdecurate.tool.PVAction;
 import gov.nih.nci.cadsr.cdecurate.tool.PVForm;
 import gov.nih.nci.cadsr.cdecurate.tool.PV_Bean;
 import gov.nih.nci.cadsr.cdecurate.tool.Quest_Bean;
 import gov.nih.nci.cadsr.cdecurate.tool.Session_Data;
+import gov.nih.nci.cadsr.cdecurate.tool.UtilService;
 import gov.nih.nci.cadsr.cdecurate.tool.VD_Bean;
 import gov.nih.nci.cadsr.cdecurate.util.AdministeredItemUtil;
 import gov.nih.nci.cadsr.cdecurate.util.FormBuilderUtil;
+import gov.nih.nci.cadsr.cdecurate.util.FormCleaner;
 import gov.nih.nci.cadsr.common.Database;
 import gov.nih.nci.cadsr.common.TIER;
 import gov.nih.nci.cadsr.common.TestUtil;
@@ -387,86 +390,14 @@ public class JR1074 {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} finally {
-			formCleanup1_0(QC_IDSEQ);
-			formCleanup1_1(QC_IDSEQ);
-			formCleanup2(QR_IDSEQ);
-			formCleanup3(questBean);
+			FormCleaner.formCleanup1_0(conn, fb, QC_IDSEQ);
+			FormCleaner.formCleanup1_1(conn, fb, QC_IDSEQ);
+			FormCleaner.formCleanup2(conn, fb, QR_IDSEQ);
+			FormCleaner.formCleanup3(conn, fb, questBean);
 		}
 	}
 	
-	public static boolean formCleanup1_0(String QC_IDSEQ) {
-		String sql = "delete from sbr.QUEST_CONTENTS_EXT q";
-		sql += " where ";
-		sql += "QC_IDSEQ = '"+ QC_IDSEQ +"'";
-		
-		boolean ret = false;
-		try {
-			System.out.println("formCleanup1_0 delete SQL = " + sql);
-			if(fb.executeUpdate(conn, sql) == 1) 
-				ret = true;
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-			
-		return ret;
-	}
-
-	public static boolean formCleanup1_1(String QC_IDSEQ) {
-		String sql = "delete from ADMIN_COMPONENTS_VIEW ";
-		sql += "where ";
-		sql += "AC_IDSEQ = '"+ QC_IDSEQ +"'";
-		
-		boolean ret = false;
-		try {
-			System.out.println("formCleanup1_1 delete SQL = " + sql);
-			if(fb.executeUpdate(conn, sql) == 1) 
-				ret = true;
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-			
-		return ret;
-	}
-
-	public static boolean formCleanup2(String QR_IDSEQ) {
-		String sql = "delete from SBREXT.QC_RECS_EXT";
-		sql += " where ";
-		sql += "QR_IDSEQ = '"+ QR_IDSEQ +"'";
-		
-		boolean ret = false;
-		try {
-			System.out.println("formCleanup2 delete SQL = " + sql);
-			if(fb.executeUpdate(conn, sql) == 1) 
-				ret = true;
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-			
-		return ret;
-	}
-
-	public static boolean formCleanup3(Quest_Bean questBean) {
-		String sql = "delete from VALID_VALUES_ATT_EXT ";
-		sql += "where ";
-		sql += "QC_IDSEQ = '"+ questBean.getQC_IDSEQ() +"'";
-		
-		boolean ret = false;
-		try {
-			System.out.println("formCleanup3 delete SQL = " + sql);
-			if(fb.executeUpdate(conn, sql) == 1) 
-				ret = true;
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-			
-		return ret;
-	}
-	
-	@Test
+//	@Test
 	public void testGetFormQuestionForPVUsedByForm() {
 		boolean ret = false;
 		String VD_IDSEQ = "D4A6A07C-5582-25A1-E034-0003BA12F5E7";	//this must already exist!
@@ -484,7 +415,7 @@ public class JR1074 {
 	
 	}
 
-	@Test
+//	@Test
 	public void testGetFormQuestionForPVNotUsedByForm() {
 		boolean ret = false;
 		String VD_IDSEQ = "D4A6A07C-5582-25A1-E034-0003BA12F5E7";	//this must already exist!
@@ -500,6 +431,31 @@ public class JR1074 {
 			e.printStackTrace();
 		}
 	
+	}
+	
+	@Test
+	public void testPopulatePVFormQuestion() {
+		int displayOrder = 0;
+		PVAction pvAction = new PVAction();
+		VDHelper vdHelper = new VDHelper();
+		VD_Bean vd = vdHelper.initVD();
+		PV_Bean pvBean = new PV_Bean();
+//		pvBean.setPV_PV_IDSEQ("99BA9DC8-53EB-4E69-E034-080020C9C0E0");	//no question returned, reason unknown
+//		pvBean.setPV_PV_IDSEQ("1584294A-4F5F-7BCE-E050-BB89A7B42D4B");	//1 question returned
+		pvBean.setPV_PV_IDSEQ("15D47077-D745-076E-E050-BB89A7B40E84");	//none returned, from jboss
+		PVForm data = new PVForm();
+	    UtilService util = new UtilService();
+	    data.setUtil(util);
+		CurationServlet curationServlet = new CurationServlet();
+		curationServlet.setConn(conn);
+		data.setCurationServlet(curationServlet);
+		try {
+			Quest_Bean oldQuestion = fb.getSelectedFormQuestion(pvAction, vd, data, fb, displayOrder, pvBean);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
 	}
 	
 }

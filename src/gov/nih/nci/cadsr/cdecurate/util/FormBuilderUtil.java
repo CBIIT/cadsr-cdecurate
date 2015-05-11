@@ -4,9 +4,19 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Vector;
 
+import gov.nih.nci.cadsr.cdecurate.tool.PVAction;
+import gov.nih.nci.cadsr.cdecurate.tool.PVForm;
 import gov.nih.nci.cadsr.cdecurate.tool.PV_Bean;
 import gov.nih.nci.cadsr.cdecurate.tool.Quest_Bean;
+import gov.nih.nci.cadsr.cdecurate.tool.UtilService;
+import gov.nih.nci.cadsr.cdecurate.tool.VD_Bean;
+import gov.nih.nci.cadsr.cdecurate.tool.VMAction;
+import gov.nih.nci.cadsr.common.Constants;
 
 /**
  * Anything that is affecting the form builder is implemented in this class.
@@ -230,4 +240,173 @@ public class FormBuilderUtil {
         }
         return ret;
 	}
+	
+   private PV_Bean getOldPVForFormQuestion(PVAction pvAction, PV_Bean pv, PVForm data) throws Exception {
+	   Connection conn = data.getCurationServlet().getConn();
+	   PV_Bean ret = doPVWithoutVDSearch(conn, pv.getPV_PV_IDSEQ());
+//	   List<PV_Bean> l = doPVWithoutVDSearch(conn, pv.getPV_PV_IDSEQ());
+//	   List<PV_Bean> n = new ArrayList();
+//	   
+//	   if(l.size() > 0) {
+//		   Iterator it = l.iterator();
+//		   PV_Bean temp = null;
+//		   while(it.hasNext()) {
+//			   temp = (PV_Bean) it.next();
+//			   System.out.println("populatePVFormQuestion temp " + temp.getPV_PV_IDSEQ() + " " + temp.getPV_VDPVS_IDSEQ());
+//			   if(pv.getPV_VALUE() != null && pv.getPV_VALUE().equals(temp.getPV_VALUE())) {
+//				   n.add(l.get(0));
+//			   }
+//		   }
+//		   
+//		   ret = l.get(0);
+//	   }
+
+	   return ret;
+   }
+   
+   public Quest_Bean getSelectedFormQuestion(PVAction pvAction, VD_Bean vd, PVForm data, FormBuilderUtil fb, int displayOrder, PV_Bean pvBean) throws Exception {
+	   	Connection conn = data.getCurationServlet().getConn();
+	   	if(conn == null) throw new Exception("Database connection is null or empty!");
+		if(vd == null) throw new Exception("Value Domain is null or empty!");
+		String VD_IDSEQ = vd.getIDSEQ();
+		if(VD_IDSEQ == null) throw new Exception("Value Domain VD_IDSEQ is null or empty!");
+		PV_Bean oldPV = fb.getOldPVForFormQuestion(pvAction, pvBean, data);
+		Quest_Bean selectedQuestBean = null;
+		if(oldPV != null) {
+			String VP_IDSEQ = oldPV.getPV_PV_IDSEQ();	//SHOULD NOT be empty! e.g. PV_VDPVS_IDSEQ = 38FDD1BD-2EED-64CE-E044-0003BA3F9857
+			if(VP_IDSEQ == null) throw new Exception("Value Domain VP_IDSEQ is null or empty!");
+			Quest_Bean oldQuestBean = fb.getFormQuestion(conn, VD_IDSEQ, VP_IDSEQ);
+			System.out.println("vd [" + vd.toString() + "]");
+			System.out.println("pv [" + pvBean.toString() + "]");
+			System.out.println("PVServlet.java#getSelectedFormQuestion displayOrder [" + displayOrder + "] VP_IDSEQ (VDPVS_IDSEQ) [" + VP_IDSEQ + "]");
+	//		if(vSelRows != null && vSelRows.size() > 0) {
+	//			selectedQuestBean = (Quest_Bean) vSelRows.get(0);
+	//		}
+		} else {
+			System.out.println("oldQuestBean is null or empty!");	//this should never happen!
+		}
+		return selectedQuestBean;
+  }
+
+   /*
+    * This function emulate the PL/SQL function equivalence invoked by PVAction.java#doPVACSearch(String acIdseq, String sAction,
+			PVForm data)
+    */
+	public PV_Bean doPVWithoutVDSearch(Connection conn, String pvIdseq) throws Exception {
+		String sql = "SELECT pv.pv_idseq,";
+		sql += "  pv.VALUE,";
+		sql += "  vm.long_name short_meaning,";
+		sql += "  vp.vp_idseq,";
+		sql += "  vp.origin,";
+		sql += "  vm.description vm_description,";
+		sql += "  vp.begin_date,";
+		sql += "  vp.end_date,";
+		sql += "  vp.con_idseq,";
+		sql += "  vm.VM_IDSEQ,";
+		sql += "  vm.LONG_NAME,";
+		sql += "  vm.PREFERRED_DEFINITION,";
+		sql += "  vm.VERSION,";
+		sql += "  vm.condr_idseq,";
+		sql += "  vm.vm_id,";
+		sql += "  vm.conte_idseq,";
+		sql += "  vm.asl_name,";
+		sql += "  vm.change_note,";
+		sql += "  vm.comments,";
+		sql += "  vm.latest_version_ind";
+		sql += " FROM sbr.value_domains_view vd,";
+		sql += "  sbr.vd_pvs_view vp,";
+		sql += "  sbr.permissible_values_view pv,";
+		sql += "  sbr.value_meanings_view vm";
+		sql += " WHERE     vd.vd_idseq = vp.vd_idseq";
+		sql += "  AND vp.pv_idseq = pv.pv_idseq";
+		sql += "  AND pv.vm_idseq = vm.vm_idseq";
+		sql += " and pv.pv_idseq = ?";
+		sql += " ORDER BY UPPER( pv.VALUE )";
+
+    	PreparedStatement pstmt = null;
+		System.out.println("FormBuilderUtil.java#doPVWithoutVDSearch SQL = " + sql);
+		UtilService util = new UtilService();
+        ResultSet rs = null;
+        PV_Bean ret = new PV_Bean();
+        try {
+            pstmt = conn.prepareStatement( sql );
+            pstmt.setString(1, pvIdseq);
+			rs = pstmt.executeQuery();
+//			int count = 0;
+			if (rs != null) {
+				//loop through the resultSet and add them to the bean
+				while (rs.next()) {
+					PV_Bean pvBean = new PV_Bean();
+					pvBean.setPV_PV_IDSEQ(rs.getString("pv_idseq"));
+					pvBean.setPV_VALUE(rs.getString("value"));
+					pvBean.setPV_SHORT_MEANING(rs.getString("short_meaning"));
+											 
+//					if (sAction.equals(NEW_USING)) {
+//                        pvBean.setPV_VDPVS_IDSEQ("");
+//                    } else {
+                        pvBean.setPV_VDPVS_IDSEQ(rs.getString("vp_idseq"));		//CAN NOT be null or empty in this case!!!
+//                    }
+/*
+					pvBean.setPV_MEANING_DESCRIPTION(rs
+							.getString("vm_description"));*/
+					pvBean.setPV_MEANING_DESCRIPTION(rs.getString("PREFERRED_DEFINITION"));
+					pvBean.setPV_VALUE_ORIGIN(rs.getString("origin"));
+					String sDate = rs.getString("begin_date");
+					if (sDate != null && !sDate.equals("")) {
+                        sDate = util.getCurationDate(sDate);
+                    }
+					pvBean.setPV_BEGIN_DATE(sDate);
+					sDate = rs.getString("end_date");
+					if (sDate != null && !sDate.equals("")) {
+                        sDate = util.getCurationDate(sDate);
+                    }
+					pvBean.setPV_END_DATE(sDate);
+//					if (sAction.equals(NEW_USING)) {
+//                        pvBean.setVP_SUBMIT_ACTION("INS");
+//                    } else {
+                        pvBean.setVP_SUBMIT_ACTION("NONE");
+//                    }
+					//get valid value attributes
+					pvBean.setQUESTION_VALUE("");
+					pvBean.setQUESTION_VALUE_IDSEQ("");
+					//get vm concept attributes
+					// String sCondr = rs.getString("vm_condr_idseq");
+					VMAction vmact = new VMAction();
+					pvBean.setPV_VM(vmact.doSetVMAttributes(rs, conn));
+					//get parent concept attributes
+					String sCon = rs.getString("con_idseq");
+//					this.doSetParentAttributes(sCon, pvBean, data);		//TODO what does this do?
+                    //String formWorkflow = getCRFWorkflowStatus(data, rs.getString("vp_idseq"));
+
+//					String formWorkflow = getCRFWorkflowStatus(data, rs.getString("vp_idseq"));	//rs.getString("WORKFLOW");  CURATNTOOL-1064
+
+//                    String formWorkflow = rs.getString("workflow");
+//                    String formWorkflowStatus = Constants.WORKFLOW_STATUS_NOT_RELEASED;
+//                    if(formWorkflow != null && formWorkflow.trim().equalsIgnoreCase(Constants.WORKFLOW_STATUS_RELEASED)) {
+//                        formWorkflowStatus = Constants.WORKFLOW_STATUS_RELEASED;
+//                    }
+//                    pvBean.setCRF_WORKFLOW(formWorkflowStatus);	//TODO is this ok, without setting any value?
+
+					pvBean.setPV_VIEW_TYPE("expand");
+					//add pv idseq in the pv id vector
+//					vList.addElement(pvBean); //add the bean to a vector
+//					count++;
+					ret = pvBean;
+					break;	//supposed to have only 1 results!
+				} //END WHILE
+			} //END IF
+        }
+        catch (Exception e) {
+            throw e;
+        }
+        finally {
+        	if(autoCleanup) {
+	            if (rs != null) { try { rs.close(); } catch (SQLException e) { System.err.println(e.getMessage()); } }
+	            if (pstmt != null) {  try { pstmt.close(); } catch (SQLException e) { System.err.println(e.getMessage()); } }
+	        	if (conn != null) { try { conn.close(); conn = null; } catch (SQLException e) { System.err.println(e.getMessage()); } }
+        	}
+        }
+        return ret;
+	}
+
 }
