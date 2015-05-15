@@ -344,7 +344,7 @@ public class JR1074 {
 		return sMsg;
 	}
 
-//	@Test
+	@Test
 	public void testFormStep3() {
 		boolean ret = false;
 
@@ -379,9 +379,10 @@ public class JR1074 {
 			QR_IDSEQ = "14F6E5D0-72F1-46CA-E050-BB89A7B43891";	//ac.getNewAC_IDSEQ(conn);
 			PV_Bean pvBean = new PV_Bean();
 			System.out.println("testFormStep3 create QR_IDSEQ = " + QC_IDSEQ);
-			pvBean.setQUESTION_VALUE_IDSEQ("B387CBBD-A53C-50E5-E040-BB89AD4350CE");
+//			pvBean.setQUESTION_VALUE_IDSEQ("B387CBBD-A53C-50E5-E040-BB89AD4350CE");
+			pvBean.setPV_PV_IDSEQ("B387CBBD-A53C-50E5-E040-BB89AD4350CE");
 			questBean.setQC_IDSEQ("14B849C8-9711-24F5-E050-BB89A7B41326");	//existing question id! TODO: will it work with a new question?
-			fb.createQuestionRelationWithPV(conn, displayOrder, questBean, pvBean );
+			fb.createQuestionRelationWithPV(conn, displayOrder, questBean, pvBean);
 
 			fb.createPVValidValue(conn, questBean, pvBean);
 			
@@ -397,7 +398,7 @@ public class JR1074 {
 		}
 	}
 	
-//	@Test
+	@Test
 	public void testGetFormQuestionForPVUsedByForm() {
 		boolean ret = false;
 		String VD_IDSEQ = "D4A6A07C-5582-25A1-E034-0003BA12F5E7";	//this must already exist!
@@ -415,7 +416,7 @@ public class JR1074 {
 	
 	}
 
-//	@Test
+	@Test
 	public void testGetFormQuestionForPVNotUsedByForm() {
 		boolean ret = false;
 		String VD_IDSEQ = "D4A6A07C-5582-25A1-E034-0003BA12F5E7";	//this must already exist!

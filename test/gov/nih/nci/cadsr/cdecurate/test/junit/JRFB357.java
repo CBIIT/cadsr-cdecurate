@@ -111,8 +111,6 @@ public class JRFB357 {
 		boolean ret = false;
 
 		//there are 16 parameters, 4 of them are of OUT type
-		
-		Vector vList1 = new Vector<>();
 		CallableStatement cstmt = null;
 		
 		cstmt = conn.prepareCall(plsql);

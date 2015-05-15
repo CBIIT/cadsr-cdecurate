@@ -1074,40 +1074,60 @@ public class PVServlet implements Serializable
      			 try {
      				Quest_Bean questBean = fb.getSelectedFormQuestion(pvAction, vd, data, fb, j, pvBean);	//(Quest_Bean) session.getAttribute("m_Quest");	//alwasy empty! :(
      				QC_IDSEQ = ac.getNewAC_IDSEQ(data.getCurationServlet().getConn());
-     				fb.createQuestion(data.getCurationServlet().getConn(), displayOrder, questBean, QC_IDSEQ, version);
-     				//JR1074 comment out the following two lines in production!!!
-					FormCleaner.formCleanup1_0(data.getCurationServlet().getConn(), fb, QC_IDSEQ);
-					FormCleaner.formCleanup1_1(data.getCurationServlet().getConn(), fb, QC_IDSEQ);
-				} catch (Exception e) {
+     				
+     				try {
+						fb.createQuestion(data.getCurationServlet().getConn(), displayOrder, questBean, QC_IDSEQ, version);
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+
+	     			 //QR_IDSEQ = "14F6E5D0-72F1-46CA-E050-BB89A7B43891";	//ac.getNewAC_IDSEQ(conn);
+//	    			 PV_Bean pvBean = new PV_Bean();
+	    			 System.out.println("PVServlet.java#submitPV QR_IDSEQ = " + QC_IDSEQ);
+
+	    			String QR_IDSEQ = null;
+					try {
+		            	 //create a new relationship
+//		    			 pvBean.setQUESTION_VALUE_IDSEQ("B387CBBD-A53C-50E5-E040-BB89AD4350CE");
+//		    			 questBean.setQC_IDSEQ("14B849C8-9711-24F5-E050-BB89A7B41326");	//existing question id! TODO: will it work with a new question?
+		    			 System.out.println("pvBean QUESTION_VALUE_IDSEQ [" + pvBean.getQUESTION_VALUE_IDSEQ() + "] questBean QC_IDSEQ [" + questBean.getQC_IDSEQ() + "]");	//both can not be empty or null
+		    			 QR_IDSEQ = fb.createQuestionRelationWithPV(data.getCurationServlet().getConn(), displayOrder, questBean, pvBean);
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+
+					try {
+						 //create a new VV
+						 fb.createPVValidValue(data.getCurationServlet().getConn(), questBean, pvBean);
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+
+	     				//JR1074 comment out the following two lines in production!!!
+//						FormCleaner.formCleanup1_0(data.getCurationServlet().getConn(), fb, QC_IDSEQ);
+//						FormCleaner.formCleanup1_1(data.getCurationServlet().getConn(), fb, QC_IDSEQ);
+//						FormCleaner.formCleanup2(data.getCurationServlet().getConn(), fb, QR_IDSEQ);
+//						FormCleaner.formCleanup3(data.getCurationServlet().getConn(), fb, questBean);
+
+	            	 System.out.println("PV is used in form(s).");
+	     			 pvBean.setPV_IN_FORM(false);
+	                 //update pv to vd 
+	                 data.setSelectPV(pvBean);
+	                 data.setVD(vd);
+
+	                 err = pvAction.setVD_PVS(data);	//JR1074 should this be call?
+		             //capture the message if any
+		             if (err != null && !err.equals(""))
+		             {
+		               errMsg += "\\n" + err;
+		               continue;	//TODO JR1074 it came here :(
+		             }
+     			 } catch (Exception e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 
-     			 //QR_IDSEQ = "14F6E5D0-72F1-46CA-E050-BB89A7B43891";	//ac.getNewAC_IDSEQ(conn);
-    			 //PV_Bean pvBean = new PV_Bean();
-//    			 System.out.println("PVServlet.java#submitPV QR_IDSEQ = " + QC_IDSEQ);
-            	 
-            	 //create a new relationship
-    			 //pvBean.setQUESTION_VALUE_IDSEQ("B387CBBD-A53C-50E5-E040-BB89AD4350CE");
-    			 //questBean.setQC_IDSEQ("14B849C8-9711-24F5-E050-BB89A7B41326");	//existing question id! TODO: will it work with a new question?
-//    			 fb.createQuestionRelationWithPV(data.getCurationServlet().getConn(), displayOrder, questBean, pvBean );
-            	 
-            	 //create a new VV
-//    			 fb.createPVValidValue(data.getCurationServlet().getConn(), questBean, pvBean);
-    			 
-            	 System.out.println("PV is used in form(s).");
-     			 pvBean.setPV_IN_FORM(false);
-                 //update pv to vd 
-                 data.setSelectPV(pvBean);
-                 data.setVD(vd);
 
-                 err = pvAction.setVD_PVS(data);	//JR1074 should this be call?
-	             //capture the message if any
-	             if (err != null && !err.equals(""))
-	             {
-	               errMsg += "\\n" + err;
-	               continue;
-	             }
              } else {
             	 System.out.println("PV is not used in any form.");
                  //update pv to vd 

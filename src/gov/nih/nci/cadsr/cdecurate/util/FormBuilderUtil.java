@@ -22,7 +22,7 @@ import gov.nih.nci.cadsr.common.Constants;
  * Anything that is affecting the form builder is implemented in this class.
  */
 public class FormBuilderUtil {
-	private  boolean autoCleanup = true;
+	private  boolean autoCleanup = false;
 
 	public boolean isAutoCleanup() {
 		return autoCleanup;
@@ -73,26 +73,29 @@ public class FormBuilderUtil {
 	}
 
 	//2 of 3 create a new question to an existing PV
-	public  final boolean createQuestionRelationWithPV(Connection conn, int displayOrder, Quest_Bean questBean, PV_Bean pvBean) throws Exception {
+	public  final String createQuestionRelationWithPV(Connection conn, int displayOrder, Quest_Bean questBean, PV_Bean pvBean) throws Exception {
 		if(conn == null) throw new Exception("Database connection is null or empty!");
 
 		AdministeredItemUtil ac = new AdministeredItemUtil();
 		String uniqueId = ac.getNewAC_IDSEQ(conn);
 
-		String newRelationSQL = "Insert into SBREXT.QC_RECS_EXT";
+		String newRelationSQL = "Insert into SBREXT.QC_RECS_VIEW_EXT";
 		newRelationSQL += "(QR_IDSEQ,P_QC_IDSEQ,C_QC_IDSEQ,";
 		newRelationSQL += "DISPLAY_ORDER,RL_NAME,";
 		newRelationSQL += "DATE_CREATED,CREATED_BY,DATE_MODIFIED,MODIFIED_BY)";
 		newRelationSQL += " values ('"+ uniqueId + "',";
-		newRelationSQL += "'" + pvBean.getQUESTION_VALUE_IDSEQ() + "',";	//P_QC_IDSEQ e.g. B387CBBD-A53C-50E5-E040-BB89AD4350CE ***** TODO NOT SURE ABOUT THIS!!!! ****
+//		newRelationSQL += "'" + pvBean.getQUESTION_VALUE_IDSEQ() + "',";	//P_QC_IDSEQ e.g. B387CBBD-A53C-50E5-E040-BB89AD4350CE ***** TODO NOT SURE ABOUT THIS!!!! ****
+		newRelationSQL += "'" + pvBean.getPV_PV_IDSEQ() + "',";	//***** TODO NOT SURE ABOUT THIS!!!! ****
 		newRelationSQL += "'" + questBean.getQC_IDSEQ() + "',";	//QC_IDSEQ e.g. 14B849C8-9711-24F5-E050-BB89A7B41326
 		newRelationSQL += "" + displayOrder + ",";		//nth row in the question e.g. 1 ***** TODO NOT SURE ABOUT THIS!!!! ****
 		newRelationSQL += "'ELEMENT_VALUE',";
 		newRelationSQL += "to_date('07-DEC-11','DD-MON-RR'),'MEDIDATA_LEEW',null,null)";
 		
-		boolean ret = false;
+		String ret = null;
 		System.out.println("FormBuilderUtil.java#createQuestionRelationWithPV SQL = " + newRelationSQL);
-		if(executeUpdate(conn, newRelationSQL) == 1) ret = true;
+		if(executeUpdate(conn, newRelationSQL) == 1) {
+			ret = uniqueId;
+		}
 
         return ret;
 	}
@@ -148,7 +151,7 @@ public class FormBuilderUtil {
 		newQuestionSQL += "'"+ questBean.getCRF_IDSEQ() + "',"; //DN_CRF_IDSEQ e.g. 99CD59C5-A94F-3FA4-E034-080020C9C0E0	*** TODO NOT SURE ***
 		newQuestionSQL += "'"+ questBean.getVD_IDSEQ() +"',";	//DN_VD_IDSEQ aka VD_IDSEQ e.g. D4A6A07C-5582-25A1-E034-0003BA12F5E7 
 		newQuestionSQL += "null,null,null,null,null,";
-		newQuestionSQL += "" + displayOrder + ",null,'" + questBean.getQC_ID() /* *** TODO NOT SURE *** */ + "',";	//DISPLAY_ORDER e.g. 1,ORIGIN default is null,QC_ID aka CDE id e.g. 3198806
+		newQuestionSQL += "" + displayOrder + ",null," + questBean.getQC_ID() /* *** TODO NOT SURE *** */ + ",";	//DISPLAY_ORDER e.g. 1,ORIGIN default is null,QC_ID aka CDE id e.g. 3198806
 		newQuestionSQL += "null,null)";
 
 		boolean ret = false;
@@ -173,7 +176,7 @@ public class FormBuilderUtil {
 		sql += ", SBR.VD_PVS_VIEW C";
 		sql += " WHERE ";
 		sql += "(C.VD_IDSEQ = B.VD_IDSEQ) ";
-		sql += "AND (D.VP_IDSEQ = ?) ";	//C.VP_IDSEQ test DD7550B5-55CC-3CC4-E034-0003BA12F5E7";
+//		sql += "AND (D.VP_IDSEQ = ?) ";	//C.VP_IDSEQ test DD7550B5-55CC-3CC4-E034-0003BA12F5E7";	//no more relationship, it was detached!
 		sql += "AND (C.VD_IDSEQ = ?) ";	//P_VDPVS_VD_IDSEQ aka C.VD_IDSEQ";
 		sql += "AND ROWNUM = 1";
 		sql += " UNION ";
@@ -193,10 +196,12 @@ public class FormBuilderUtil {
         ResultSet rs = null;
         Quest_Bean ret = new Quest_Bean();
         try {
-            pstmt = conn.prepareStatement( sql );
-            pstmt.setString(1, VP_IDSEQ);
-            pstmt.setString(2, VD_IDSEQ);
-            pstmt.setString(3, VP_IDSEQ);
+            pstmt = conn.prepareStatement( sql );	//TODO why is it not coming here???
+//            pstmt.setString(1, VP_IDSEQ);
+//            pstmt.setString(2, VD_IDSEQ);
+//            pstmt.setString(3, VP_IDSEQ);
+            pstmt.setString(1, VD_IDSEQ);
+            pstmt.setString(2, VP_IDSEQ);
 			rs = pstmt.executeQuery();
 			int count = 0;
 			if(rs.next()) {
@@ -275,13 +280,14 @@ public class FormBuilderUtil {
 		if(oldPV != null) {
 			String VP_IDSEQ = oldPV.getPV_PV_IDSEQ();	//SHOULD NOT be empty! e.g. PV_VDPVS_IDSEQ = 38FDD1BD-2EED-64CE-E044-0003BA3F9857
 			if(VP_IDSEQ == null) throw new Exception("Value Domain VP_IDSEQ is null or empty!");
-			Quest_Bean oldQuestBean = fb.getFormQuestion(conn, VD_IDSEQ, VP_IDSEQ);
+			Quest_Bean oldQuestBean = fb.getFormQuestion(conn, VD_IDSEQ, VP_IDSEQ);		//TODO stop here!!!
 			System.out.println("vd [" + vd.toString() + "]");
 			System.out.println("pv [" + pvBean.toString() + "]");
 			System.out.println("PVServlet.java#getSelectedFormQuestion displayOrder [" + displayOrder + "] VP_IDSEQ (VDPVS_IDSEQ) [" + VP_IDSEQ + "]");
 	//		if(vSelRows != null && vSelRows.size() > 0) {
 	//			selectedQuestBean = (Quest_Bean) vSelRows.get(0);
 	//		}
+			selectedQuestBean = oldQuestBean;
 		} else {
 			System.out.println("oldQuestBean is null or empty!");	//this should never happen!
 		}
@@ -318,7 +324,7 @@ public class FormBuilderUtil {
 		sql += "  sbr.permissible_values_view pv,";
 		sql += "  sbr.value_meanings_view vm";
 		sql += " WHERE     vd.vd_idseq = vp.vd_idseq";
-		sql += "  AND vp.pv_idseq = pv.pv_idseq";
+//		sql += "  AND vp.pv_idseq = pv.pv_idseq";	//no relationship anymore - detached from VD!!!
 		sql += "  AND pv.vm_idseq = vm.vm_idseq";
 		sql += " and pv.pv_idseq = ?";
 		sql += " ORDER BY UPPER( pv.VALUE )";

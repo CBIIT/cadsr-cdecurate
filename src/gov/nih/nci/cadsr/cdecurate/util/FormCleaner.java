@@ -44,7 +44,7 @@ public class FormCleaner {
 	}
 
 	public static boolean formCleanup2(Connection conn, FormBuilderUtil fb, String QR_IDSEQ) {
-		String sql = "delete from SBREXT.QC_RECS_EXT";
+		String sql = "delete from SBREXT.QC_RECS_VIEW_EXT";
 		sql += " where ";
 		sql += "QR_IDSEQ = '"+ QR_IDSEQ +"'";
 		
