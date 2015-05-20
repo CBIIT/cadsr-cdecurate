@@ -780,7 +780,15 @@ BEGIN
            slct(cg$rec);
            validate_foreign_keys_del(cg$rec);
            domain_cascade_delete(cg$rec);
---dbms_output.put_line('JR1074 jt103d6');
+dbms_output.put_line('JR1074 jt103d7e');
+dbms_output.put_line('JR1074 before delete 0');
+delete
+from TRIGGERED_ACTIONS_EXT where S_QC_IDSEQ in (
+select q.QC_IDSEQ from sbr.QUEST_CONTENTS_EXT q
+where q.VP_IDSEQ = cg$pk.VP_IDSEQ
+); 
+--and T_QTL_NAME = 'QUESTION' and S_QTL_NAME = 'VALID_VALUE';
+commit;
 --dbms_output.put_line('JR1074 before delete 1');
 delete from SBREXT.VALID_VALUES_ATT_EXT v where QC_IDSEQ in (
 select v.QC_IDSEQ from SBREXT.VALID_VALUES_ATT_EXT v, sbr.QUEST_CONTENTS_EXT q

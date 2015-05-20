@@ -1097,7 +1097,6 @@ public class PVServlet implements Serializable
 						 fb.createPVValidValue(data.getCurationServlet().getConn(), questBean, pvBean);
 					} catch (Exception e) {
 						e.printStackTrace();	//TODO ORA-00001: unique constraint (SBREXT.VVT_PK) violated 00001. 00000 -  "unique constraint (%s.%s) violated"
-			            continue;
 					}
 
 	     				//JR1074 comment out the following two lines in production!!!
@@ -1112,7 +1111,7 @@ public class PVServlet implements Serializable
 	                 data.setSelectPV(pvBean);
 	                 data.setVD(vd);
 
-	                 err = pvAction.setVD_PVS(data);	//JR1074 should this be call?
+	                 err = pvAction.setVD_PVS(data);	//JR1074 should this be call!
 		             //capture the message if any
 		             if (err != null && !err.equals(""))
 		             {
