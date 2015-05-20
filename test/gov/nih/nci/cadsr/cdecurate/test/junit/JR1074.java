@@ -384,8 +384,8 @@ public class JR1074 {
 			questBean.setQC_IDSEQ("14B849C8-9711-24F5-E050-BB89A7B41326");	//existing question id! TODO: will it work with a new question?
 			fb.createQuestionRelationWithPV(conn, displayOrder, questBean, pvBean);
 
-			fb.createPVValidValue(conn, questBean, pvBean);
-			
+//			fb.createPVValidValue(conn, questBean, pvBean);
+			fb.updatePVValidValue(conn, questBean, pvBean);
 		} catch (Exception e) {
 			//mon.show();
 			// TODO Auto-generated catch block

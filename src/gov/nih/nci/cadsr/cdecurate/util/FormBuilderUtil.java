@@ -72,6 +72,20 @@ public class FormBuilderUtil {
         return ret;
 	}
 
+	public  final boolean updatePVValidValue(Connection conn, Quest_Bean questBean, PV_Bean pvBean) throws Exception {
+		if(conn == null) throw new Exception("Database connection is null or empty!");
+
+		String newVVSQL = "update VALID_VALUES_ATT_EXT set MEANING_TEXT = '" + pvBean.getPV_VALUE() + "', DESCRIPTION_TEXT = '"+ pvBean.getPV_MEANING_DESCRIPTION() + "' ";
+		newVVSQL += " where ";
+		newVVSQL += " QC_IDSEQ = '"+ questBean.getQC_IDSEQ() + "'";
+
+		boolean ret = false;
+		System.out.println("FormBuilderUtil.java#updatePVValidValue SQL = " + newVVSQL);
+		if(executeUpdate(conn, newVVSQL) == 1) ret = true;
+
+        return ret;
+	}
+	
 	//2 of 3 create a new question to an existing PV
 	public  final String createQuestionRelationWithPV(Connection conn, int displayOrder, Quest_Bean questBean, PV_Bean pvBean) throws Exception {
 		if(conn == null) throw new Exception("Database connection is null or empty!");

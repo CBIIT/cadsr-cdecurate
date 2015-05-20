@@ -1094,7 +1094,7 @@ public class PVServlet implements Serializable
 
 					try {
 						 //create a new VV
-						 fb.createPVValidValue(data.getCurationServlet().getConn(), questBean, pvBean);
+						 fb.updatePVValidValue(data.getCurationServlet().getConn(), questBean, pvBean);	//TODO need to handle create too?
 					} catch (Exception e) {
 						e.printStackTrace();	//TODO ORA-00001: unique constraint (SBREXT.VVT_PK) violated 00001. 00000 -  "unique constraint (%s.%s) violated"
 					}
