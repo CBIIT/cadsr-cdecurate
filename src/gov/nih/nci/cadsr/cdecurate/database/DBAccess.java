@@ -1238,7 +1238,7 @@ public class DBAccess
         {
             // Add the Designation.
             cstmt = _conn.prepareCall(insert);
-            cstmt.setString(1, alt_.getAcIdseq());
+            cstmt.setString(1, alt_.getAcIdseq());	//JR1099 _altIdseq is $-1 ???
             cstmt.setString(2, alt_.getConteIdseq());
             cstmt.setString(3, alt_.getConteName());
             cstmt.setString(4, _addDesigType);
@@ -1250,7 +1250,7 @@ public class DBAccess
         }
         catch (SQLException ex)
         {
-        	cstmt = SQLHelper.closeCallableStatement(cstmt);
+        	cstmt = SQLHelper.closeCallableStatement(cstmt);	//JR1099 caused: java.sql.SQLIntegrityConstraintViolationException: ORA-00001: unique constraint (SBR.DESIG_UK) violated ORA-06512: at line 1
             // If the record already exists then great, just ignore the duplicate, otherwise
             // it's not good.
             if (ex.getErrorCode() != 1)

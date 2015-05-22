@@ -852,8 +852,8 @@ public class AltNamesDefsSession implements Serializable
             // Data Elements may need an automatic USED_BY type
             ACTypes acType = (_beans != null && _beans.length > 0) ? _beans[0].getType() : ACTypes.UNKNOWN;
             if (acType == ACTypes.DataElement && alt.getConteIdseq().equals(conteIdseq_) == false)
-                db.saveUsedBy(alt);
-            if (db.save(alt) == false)
+                db.saveUsedBy(alt);	//JR1099 error inside here
+            if (db.save(alt) == false)	//JR1099
             {
                 _alts[i] = null;
                 --total;

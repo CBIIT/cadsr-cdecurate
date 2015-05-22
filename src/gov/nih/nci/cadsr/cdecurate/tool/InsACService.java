@@ -2767,7 +2767,7 @@ public class InsACService implements Serializable {
 						this.doAltVersionUpdate(sDE_ID, oldDEID);
 
 					// ********************************
-					de.save(session, m_servlet.getConn(), sDE_ID, sContextID);
+					de.save(session, m_servlet.getConn(), sDE_ID, sContextID);	//JR1099 entry point
 					session.removeAttribute("AllAltNameList");
 					// ********************************
 					/*

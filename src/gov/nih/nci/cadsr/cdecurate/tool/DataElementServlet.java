@@ -698,7 +698,7 @@ public class DataElementServlet extends CurationServlet{
         storeStatusMsg("Data Element Name : " + DEBean.getDE_LONG_NAME());
         storeStatusMsg("Public ID : " + DEBean.getDE_MIN_CDE_ID());
         // call stored procedure to update attributes
-        String ret = insAC.setDE("UPD", DEBean, "Edit", oldDEBean);
+        String ret = insAC.setDE("UPD", DEBean, "Edit", oldDEBean);	//JR1099 bad
         // forwards to search page if successful
         if ((ret == null) || ret.equals(""))
         {
@@ -796,7 +796,7 @@ public class DataElementServlet extends CurationServlet{
             else
             {
                 if (sDEAction.equals("EditDE") && !sOriginAction.equals("BlockEditDE"))
-                    doUpdateDEAction();
+                    doUpdateDEAction();	//JR1099 bad
                 // update the data for block editing
                 else if (sDEEditAction.equals("DEBlockEdit"))
                     doUpdateDEActionBE();
