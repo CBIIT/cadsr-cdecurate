@@ -780,7 +780,9 @@ BEGIN
            slct(cg$rec);
            validate_foreign_keys_del(cg$rec);
            domain_cascade_delete(cg$rec);
+--dbms_output.put_line('JR1074 jt103d6');
 dbms_output.put_line('JR1074 jt103d7e');
+
 dbms_output.put_line('JR1074 before delete 0');
 delete
 from TRIGGERED_ACTIONS_EXT where S_QC_IDSEQ in (

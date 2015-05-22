@@ -116,7 +116,7 @@ public class AdministeredItemUtil {
 		return retVal;
 	}
 
-	public static boolean isAlternateDesignationExists(String type, String name,
+	public static boolean isAlternateDesignationExists(String contextName, String type, String name,
 			AltNamesDefsSession altSession) throws Exception {
 		boolean retVal = false;
 
@@ -129,22 +129,34 @@ public class AdministeredItemUtil {
 					"Alternate designation name and/or type can not be NULL or empty.");
 		}
 		Alternates[] _alts = altSession.getAlternates();
+		boolean contextMatched = false;
 		boolean typeMatched = false;
 		boolean nameMatched = false;
 		
 		if (_alts != null) {
+			String temp1, temp2, temp3;
 			for (Alternates alt : _alts) {
-				String temp1 = alt.getType();
+				temp3 = alt.getConteName();
+				temp3 = ContextHelper.handleDefaultName(temp3);
+				contextName = ContextHelper.handleDefaultName(contextName);
+				if(temp3 == null) temp3 = "";
+				if(contextName == null) contextName = "";
+				if (contextName.trim().equals(temp3.trim())) {
+					contextMatched = true;
+				}
+				temp1 = alt.getType();
 				if (type.trim().equals(temp1.trim())) {
 					typeMatched = true;
 				}
-				String temp2 = alt.getName();
+				temp2 = alt.getName();
 				if (name.trim().equals(temp2.trim())) {
 					nameMatched = true;
 				}
-				if(typeMatched && nameMatched) {
+				if(contextMatched && typeMatched && nameMatched) {
 					retVal = true;
+					break;
 				}
+				contextMatched = typeMatched = nameMatched = false;
 			}
 		}
 
