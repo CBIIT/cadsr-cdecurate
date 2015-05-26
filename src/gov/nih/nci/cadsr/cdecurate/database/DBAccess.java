@@ -1240,11 +1240,21 @@ public class DBAccess
             cstmt = _conn.prepareCall(insert);
             cstmt.setString(1, alt_.getAcIdseq());	//JR1099 _altIdseq is $-1 ???
             cstmt.setString(2, alt_.getConteIdseq());
-            cstmt.setString(3, alt_.getConteName());
-            cstmt.setString(4, _addDesigType);
+	        cstmt.setString(3, alt_.getName());		//JR1099 the fix!
+            //cstmt.setString(4, _addDesigType);	//JR1099 "USED_BY" ? Not even sure what type is this!!!
+	        cstmt.setString(4, alt_.getType());
             cstmt.setString(5, alt_.getLanguage());
             cstmt.registerOutParameter(6, java.sql.Types.VARCHAR);
             cstmt.executeUpdate();
+            
+            cstmt.setString(1, alt_.getAcIdseq());
+            cstmt.setString(2, alt_.getConteIdseq());
+            cstmt.setString(3, alt_.getName());
+            cstmt.setString(4, alt_.getType());
+            cstmt.setString(5, alt_.getLanguage());
+            cstmt.registerOutParameter(6, java.sql.Types.VARCHAR);
+
+            
             // At this time we don't really care about the generated desig_idseq
             // but we may in the future.
         }

@@ -1385,7 +1385,10 @@ public class AltNamesDefsSession implements Serializable
     {
         for (Alternates temp : _alts)
         {
-            if (temp.equals(alt_))
+        	System.out.println(temp.getConteName() + " " + alt_.getConteName());
+        	System.out.println(temp.getType() + " " + alt_.getType());
+        	System.out.println(temp.getName() + " " + alt_.getName());
+            if (temp.getConteName().equals(alt_.getConteName()) && temp.getType().equals(alt_.getType()) && temp.getName().equals(alt_.getName()))	//JR1099 if (temp.equals(alt_))
                 return "This Alternate Name is not unique. Please change one or more of the Name, Context or Type.";
             if (!temp.isName()
                             && temp.getType().equals(DBAccess._manuallyCuratedDef)
