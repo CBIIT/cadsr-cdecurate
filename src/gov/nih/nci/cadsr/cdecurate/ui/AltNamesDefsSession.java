@@ -81,6 +81,10 @@ public class AltNamesDefsSession implements Serializable
 
     public static final String _newPrefix = "$";
 
+	private static final String EXISTS_MSG = "This Alternate Name is not unique. Please change one or more of the Name, Context or Type.";
+
+	private static final String DB_ERR_MSG = "Not able to check the database to determine if Alternate Name is not unique or not based on the Name, Context or Type.";
+
     public String _jsp;
 
     public String _viewJsp;
@@ -1389,7 +1393,7 @@ public class AltNamesDefsSession implements Serializable
         	System.out.println(temp.getType() + " " + alt_.getType());
         	System.out.println(temp.getName() + " " + alt_.getName());
             if (temp.getConteName().equals(alt_.getConteName()) && temp.getType().equals(alt_.getType()) && temp.getName().equals(alt_.getName()))	//JR1099 if (temp.equals(alt_))
-                return "This Alternate Name is not unique. Please change one or more of the Name, Context or Type.";
+                return EXISTS_MSG;
             if (!temp.isName()
                             && temp.getType().equals(DBAccess._manuallyCuratedDef)
                             && temp.getType().equals(alt_.getType())
@@ -1401,6 +1405,26 @@ public class AltNamesDefsSession implements Serializable
         return null;
     }
 
+    //JR1099
+    public String checkDB(Connection conn, Alternates alt_)
+    {
+    	String ret = null;
+    	System.out.println("alt_.getConteName() " + alt_.getConteName());
+    	System.out.println("alt_.getType() " + alt_.getType());
+    	System.out.println("alt_.getName() " + alt_.getName());
+
+    	try {
+			if(AltNamesDefsDB.exists(conn, alt_.getConteName(), alt_.getType(), alt_.getName()))
+			    ret = EXISTS_MSG;
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			//set to true so as to prevent insertion if not able to check with the database!
+			ret = DB_ERR_MSG;
+		}
+        return ret;
+    }
+    
     /**
      * Get the default context id
      * 
