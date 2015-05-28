@@ -386,7 +386,7 @@ public class AltNamesDefsServlet
         form_.save();
         
         // Validate the AC/Name/Context/Type combination.
-        Alternates alt = form_._sess.getEdit();
+        Alternates alt = form_._sess.getEdit();	//JR1099 at this point, the changed alt name should be reflected correctly here
         String msg = form_._sess.check(alt);
         //begin JR1099
         if(msg == null) {
@@ -498,7 +498,7 @@ public class AltNamesDefsServlet
                 else if (form._action.equals(_actionClassify))
                     jsp = doClassify(form, db);
                 else if (form._action.equals(_actionSaveAlt))
-                    jsp = doSave(form, db);
+                    jsp = doSave(form, db);		//JR1099 entry point for saving alt name in the session (not in the database)
                 else if (form._action.equals(_actionRemoveAssoc))
                     jsp = doRemoveAssoc(form, db);
                 else if (form._action.equals(_actionRestoreAssoc))

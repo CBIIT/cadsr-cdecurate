@@ -1018,7 +1018,8 @@ public class DBAccess
             pstmt.setString(1, alt_.getName());
             pstmt.setString(2, alt_.getType());
             pstmt.setString(3, alt_.getLanguage());
-            pstmt.setString(4, alt_.getAltIdseq());
+            pstmt.setString(4, alt_.getConteIdseq());	//JR1099 added and offset the subsequent index by one
+            pstmt.setString(5, alt_.getAltIdseq());
             pstmt.executeUpdate();
             
         }
@@ -1040,7 +1041,7 @@ public class DBAccess
      */
     private void updateAltName(Alternates alt_) throws SQLException
     {
-        String update = "update sbr.designations_view set name = ?, detl_name = ?, lae_name = ? where desig_idseq = ?";
+        String update = "update sbr.designations_view set name = ?, detl_name = ?, lae_name = ?, conte_idseq = ? where desig_idseq = ?";	//JR1099 added conte_idseq
 
         updateAlt(alt_, update);
     }
@@ -1287,8 +1288,11 @@ public class DBAccess
         }
 
         // If it's new or changed it doesn't matter if it's a Name or Definition.
-        if (alt_.isNew() || alt_.isChanged())
+        if (alt_.isNew() /*|| alt_.isChanged() JR1099 - avoid duplicate!*/) {
             insertUsedBy(alt_);
+    	} else {	//JR1099
+        	update(alt_);
+        }
     }
 
     /**
