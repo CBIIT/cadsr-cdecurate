@@ -4785,7 +4785,7 @@ public class InsACService implements Serializable {
 			// create usedby only if not in the same context as the ac is
 			if (!deCont.equals(useCont)) {
 				String sRet = this.setDES("INS", CompID, useCont, useContName,
-						"USED_BY", useContName, sLang, "");
+						"USED_BY", useContName, sLang, "");		//JR1099 Designate|Update Used By Attributes from action context menu
 				if (sRet == null || sRet.equals("API_DES_300"))
 					refreshAct = "INS";
 			} else {
