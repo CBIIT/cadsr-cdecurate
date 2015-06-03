@@ -16,24 +16,10 @@ dbms_output.put_line('JR1074 jt100 caller proc');
            slct(cg$rec);
            validate_foreign_keys_del(cg$rec);
            domain_cascade_delete(cg$rec);
-dbms_output.put_line('JR1074 jt103d6');
-dbms_output.put_line('JR1074 before delete 1');
-delete from SBREXT.VALID_VALUES_ATT_EXT v where QC_IDSEQ in (
-select v.QC_IDSEQ from SBREXT.VALID_VALUES_ATT_EXT v, sbr.QUEST_CONTENTS_EXT q
-where v.QC_IDSEQ = q.QC_IDSEQ
-and
-q.VP_IDSEQ = cg$pk.VP_IDSEQ
-);
+dbms_output.put_line('JR1074 103d8');
+update sbrext.quest_contents_ext set vp_idseq = '' where vp_idseq = cg$pk.VP_IDSEQ;
 commit;
-dbms_output.put_line('JR1074 before delete 2');
-delete from sbr.QUEST_CONTENTS_EXT where VP_IDSEQ in (
-select q.VP_IDSEQ from sbr.QUEST_CONTENTS_EXT q, sbr.VD_PVS_VIEW vd
-where q.VP_IDSEQ = vd.VP_IDSEQ
-and
-q.VP_IDSEQ = cg$pk.VP_IDSEQ
-);
-commit;                
-dbms_output.put_line('JR1074 before delete 3');
+dbms_output.put_line('JR1074 before VD_PVS delete');
            IF cg$pk.the_rowid is null THEN
               dbms_output.put_line('JR1074 310 cg$pk.the_rowid is null (cg$pk.VP_IDSEQ is not null)!');
               dbms_output.put_line(cg$pk.VP_IDSEQ);
