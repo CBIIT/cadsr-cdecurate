@@ -316,7 +316,7 @@ private void setVersionValues(VMForm vmData,HttpServletRequest req, HttpSession 
    * @param pv PVBean object
    * @param pvInd int selected PV indicator
    */
-  public void readDataForCreate(PV_Bean pv, int pvInd)
+  public void readDataForCreateOrEdit(PV_Bean pv, int pvInd)
   {
     HttpServletRequest req = httpRequest;
     HttpSession session = req.getSession();
@@ -396,16 +396,16 @@ private void setVersionValues(VMForm vmData,HttpServletRequest req, HttpSession 
         }
     }
     vmData.setRequest(httpRequest);
-    vmAction.setDataForCreate(pv, vd, vmData); 
+    vmAction.setDataForCreateOrEdit(pv, vd, vmData);	//JR1025 TODO validation or not is set here! avoid it for begin and end date changes
     // - handle status message and other session attributes as needed    
     Vector<VM_Bean> vErrMsg = vmData.getErrorMsgList();
     if (vErrMsg != null && vErrMsg.size()>0)
     {
       DataManager.setAttribute(session, "VMEditMsg", vErrMsg);
-      httpRequest.setAttribute("ErrMsgAC", vmData.getStatusMsg());
+      httpRequest.setAttribute("ErrMsgAC", vmData.getStatusMsg());	//JR1025 if this is not set/empty statusMsg, updateVDPV() would not be called!
       httpRequest.setAttribute("editPVInd", pvInd);
-      vmData.setVMBean(vm);
-      Vector<VM_Bean> vmList = vmData.getExistVMList();
+      vmData.setVMBean(vm);	//JR1025 TODO do we need to avoid this to avoid validation?
+      Vector<VM_Bean> vmList = vmData.getExistVMList();	//JR1025 this list is populated in VMAction.java#validateVMData()
       if (vmList.size() > 0)
           httpRequest.setAttribute("vmNameMatch", "true");  	//JR1024 this is false positive to the UI, due to the defect
     }

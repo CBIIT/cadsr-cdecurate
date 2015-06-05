@@ -10,6 +10,8 @@ import java.util.Vector;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang.StringUtils;
+
 public class PVHelper {
 
 	/*
@@ -88,5 +90,24 @@ public class PVHelper {
 		}
 		return index;
 	}
+	
+	/** detect if the change only date change(s) and nothing else is changed
+	 * @throws Exception 
+	 * @ref PVServlet.java#addPVOtherAttributes
+	 * */
+	public static boolean isOnlyDateChanged(HttpServletRequest req) throws Exception {
+		boolean ret = false;
+		
+		if(req == null) throw new Exception("Request can not be NULL or empty.");
+		String chgBD = (String)req.getParameter("currentBD");  //edited begin date
+		String chgED = (String)req.getParameter("currentED");  //edited end date
+	    String chgOrg = (String)req.getParameter("currentOrg");  //edited origin
+	    String sVVid = (String)req.getParameter("selValidValue");  //valid value
 
+	    if((!StringUtils.isEmpty(chgBD) || !StringUtils.isEmpty(chgED)) && StringUtils.isEmpty(chgOrg) && StringUtils.isEmpty(sVVid)) {
+	    	ret = true;
+	    }
+
+	    return ret;
+	}
 }

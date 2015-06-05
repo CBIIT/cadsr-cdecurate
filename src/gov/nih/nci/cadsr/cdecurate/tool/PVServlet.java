@@ -332,7 +332,7 @@ public class PVServlet implements Serializable
 	      String editVM = (String)data.getRequest().getParameter ("currentVM");
 	      if (editVM != null && !editVM.equals(""))
 	      {
-	        vmser.readDataForCreate(selectPV, pvInd);
+	        vmser.readDataForCreateOrEdit(selectPV, pvInd);
 	        newVM = vmser.vmData.getVMBean();
 	        data.setStatusMsg(data.getStatusMsg() +  vmser.vmData.getStatusMsg());
 	      }
@@ -421,7 +421,7 @@ public class PVServlet implements Serializable
         else
         {
           VMServlet vmser = new VMServlet(data.getRequest(), data.getResponse(), data.getCurationServlet());
-          vmser.readDataForCreate(pv, -1);
+          vmser.readDataForCreateOrEdit(pv, -1);
           vm = vmser.vmData.getVMBean();
           data.setStatusMsg(data.getStatusMsg() + vmser.vmData.getStatusMsg());	//TODO JR1024 seems like there is an error here
         }
@@ -459,6 +459,7 @@ public class PVServlet implements Serializable
         String chgName = (String)data.getRequest().getParameter("txtpv" + pvInd + "Value");  //pvName  
         chgName = chgName.trim();
         //handle pv changes
+//JR1025 begin potential if block - just if the change is not begin or end date???        
         VM_Bean useVM = this.getDuplicateVMUse();	//this should be more appropriately named, getExistingVM(), that's it!
         if (useVM == null)
         {
@@ -468,7 +469,7 @@ public class PVServlet implements Serializable
           String editVM = (String)data.getRequest().getParameter("currentVM");
           if (editVM != null && !editVM.equals(""))
           {
-            vmser.readDataForCreate(selectPV, pvInd);
+            vmser.readDataForCreateOrEdit(selectPV, pvInd);	//JR1025 everything come to this entry
             newVM = vmser.vmData.getVMBean();
             data.setStatusMsg(data.getStatusMsg() + vmser.vmData.getStatusMsg());
           }
@@ -479,10 +480,14 @@ public class PVServlet implements Serializable
         }
         else
             selectPV.setPV_VM(useVM);
+/*        
+*/        
+//JR1025 TODO end potential end block!!!???
+        
         
         String erVM = (String)data.getRequest().getAttribute("ErrMsgAC");
         if (erVM == null || erVM.equals(""))
-            updateVDPV(selectPV, pvInd);	//JR1024 this is what should happened! aka just update with the dates changed
+            updateVDPV(selectPV, pvInd);	//JR1024/JR1025 this is what should happened! aka just update with the dates changed
         else
         {
             //store it in the session
@@ -620,7 +625,7 @@ public class PVServlet implements Serializable
        if (vVDPVList == null) vVDPVList = new Vector<PV_Bean>();
        selectPV = (PV_Bean)vVDPVList.elementAt(pvInd);
        if (selectPV != null && selectPV.getPV_VALUE() != null && !selectPV.getPV_VALUE().equals("")) {
-    	   data.setSelectPV(selectPV);
+    	   data.setSelectPV(selectPV);	//JR1025 VM concept list is empty!!! :(
 		} else {
 			System.out.println("PVServlet: delete PV, nothing is done as PV value is empty or null!");		//GF30800 added message to ease 
 		}
@@ -692,10 +697,7 @@ public class PVServlet implements Serializable
   private void addPVOtherAttributes(PV_Bean pv, String changeType, String pvID)
    {
 	  //JR1024 TODO need to save PV value, vm long name, desc and somehow concept list here!!!
-	  TestUtil.dumpAllHttpRequests("PVServlet.java: addPVOtherAttributes()<<<", data.getRequest());
-	  
-	  
-	  
+	  //TestUtil.dumpAllHttpRequests("PVServlet.java: addPVOtherAttributes()<<<", data.getRequest());
 	  
      if (pv == null)
        pv = data.getSelectPV();
@@ -716,7 +718,7 @@ public class PVServlet implements Serializable
        pv.setPV_VALUE_ORIGIN(chgOrg);
      }
      
-     String chgBD = (String)data.getRequest().getParameter("currentBD");  //edited begom date
+     String chgBD = (String)data.getRequest().getParameter("currentBD");  //edited begin date
      if (chgBD != null && !chgBD.equals(""))
      {
        //begin JR1024
@@ -1627,6 +1629,7 @@ public class PVServlet implements Serializable
    } // end
    
    /** returns the selected VM to use when existing VMs are found while saving
+    * === Have no clue what this function actually does - for whoever that read this - put a comment here if you get it! :) ===
    * @return VM_Bean object
    */
   @SuppressWarnings("unchecked")
@@ -1638,7 +1641,7 @@ public class PVServlet implements Serializable
        Vector<VM_Bean> errVMs = (Vector<VM_Bean>)session.getAttribute("VMEditMsg");
        if (errVMs != null && errVMs.size() > 0)
        {
-         String vmUse = data.getRequest().getParameter("rUse");
+         String vmUse = data.getRequest().getParameter("rUse");	//JR1025 it is null!
          int vmInd = -1;
          if (vmUse != null && !vmUse.equals(""))
          {

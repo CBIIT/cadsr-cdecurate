@@ -20,6 +20,7 @@ import gov.nih.nci.cadsr.cdecurate.database.SQLHelper;
 import gov.nih.nci.cadsr.cdecurate.util.AdministeredItemUtil;
 import gov.nih.nci.cadsr.cdecurate.util.DataManager;
 import gov.nih.nci.cadsr.cdecurate.util.ModelHelper;
+import gov.nih.nci.cadsr.cdecurate.util.PVHelper;
 import gov.nih.nci.cadsr.cdecurate.util.ToolException;
 import gov.nih.nci.cadsr.common.TestUtil;
 import gov.nih.nci.cadsr.domain.PermissibleValues;
@@ -35,6 +36,8 @@ import java.util.StringTokenizer;
 import java.util.Vector;
 
 import javax.servlet.http.HttpServletRequest;
+
+
 
 
 
@@ -697,7 +700,7 @@ public class VMAction implements Serializable
 	 * @param data
 	 *            VMForm object
 	 */
-	public void setDataForCreate(PV_Bean pv, VD_Bean vd, VMForm data)
+	public void setDataForCreateOrEdit(PV_Bean pv, VD_Bean vd, VMForm data)
 	{
 
 		VM_Bean vm = data.getVMBean();
@@ -721,9 +724,15 @@ public class VMAction implements Serializable
 //				userSelectedPV.getShortMeaning() != null && !userSelectedPV.getShortMeaning().equals(originalPV.getShortMeaning())
 //				//userSelectedPV.getBeginDate().equals(originalPV.getBeginDate()) && userSelectedPV.getEndDate().equals(originalPV.getEndDate())
 //				) {
-			VM_Bean exVM = validateVMData(data);
-			if (exVM == null)
-			{
+			VM_Bean exVM = null;
+			try {
+				if(!PVHelper.isOnlyDateChanged(data.getRequest())) {
+					exVM = validateVMData(data);	//JR1025 TODO need to avoid this for the fix!
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			if (exVM == null) {	//JR1025 not sure about this block
 				vm.setVM_IDSEQ("");
 				vm.setVM_SUBMIT_ACTION(data.CADSR_ACTION_INS);
 			}
@@ -1399,7 +1408,7 @@ public class VMAction implements Serializable
 				VM_Bean existVM = checkExactMatch(nameList.elementAt(k), vmBean);
 				if (existVM != null)
 				{
-					data.setVMBean(existVM);
+					data.setVMBean(existVM);	//JR1025 need to find the VM, so that the same Public Id & Version is used
 					return existVM; // return the exact match name- definition-
 									// concept
 				}
@@ -1411,8 +1420,7 @@ public class VMAction implements Serializable
 		if (nameList.size() > 0)
 			getFlaggedMessageVM(data, 'E');		//JR1024 get the message for UI
 		else
-			data.setExistVMList(new Vector<VM_Bean>()); // make it empty because
-														// found the existing
+			data.setExistVMList(new Vector<VM_Bean>()); // make it empty because found the existing; JR1025 this is how the UI get the list of VM to prompt the user!
 
 		// String VMDef = vmBean.getVM_DESCRIPTION();
 		String VMDef = vmBean.getVM_PREFERRED_DEFINITION();
