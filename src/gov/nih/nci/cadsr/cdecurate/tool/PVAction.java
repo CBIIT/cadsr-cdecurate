@@ -14,6 +14,7 @@ package gov.nih.nci.cadsr.cdecurate.tool;
 
 import gov.nih.nci.cadsr.cdecurate.database.SQLHelper;
 import gov.nih.nci.cadsr.cdecurate.util.DataManager;
+import gov.nih.nci.cadsr.cdecurate.util.VMHelper;
 import gov.nih.nci.cadsr.common.Constants;
 import gov.nih.nci.cadsr.common.Database;
 
@@ -30,6 +31,7 @@ import java.util.Hashtable;
 import java.util.Vector;
 
 import javax.servlet.http.HttpSession;
+
 
 
 
@@ -507,8 +509,9 @@ public class PVAction implements Serializable {
 						pvBean.setQUESTION_VALUE_IDSEQ("");
 						//get vm concept attributes
 						// String sCondr = rs.getString("vm_condr_idseq");
-						VMAction vmact = new VMAction();
-						pvBean.setPV_VM(vmact.doSetVMAttributes(rs, data.getCurationServlet().getConn()));
+						//VMAction vmact = new VMAction();
+						//pvBean.setPV_VM(vmact.doSetVMAttributes(rs, data.getCurationServlet().getConn()));
+						pvBean.setPV_VM(VMHelper.doSetVMAttributes(rs, data.getCurationServlet().getConn()));
 						//get parent concept attributes
 						String sCon = rs.getString("con_idseq");
 						this.doSetParentAttributes(sCon, pvBean, data);
@@ -695,9 +698,9 @@ public class PVAction implements Serializable {
 						PVBean.setPV_CONCEPTUAL_DOMAIN(rs.getString("cd_name"));
 
 						//get vm concept attributes
-						VMAction vmact = new VMAction();
-						PVBean.setPV_VM(vmact.doSetVMAttributes(rs, data
-								.getCurationServlet().getConn()));
+						//VMAction vmact = new VMAction();
+						//PVBean.setPV_VM(vmact.doSetVMAttributes(rs, data.getCurationServlet().getConn()));
+						PVBean.setPV_VM(VMHelper.doSetVMAttributes(rs, data.getCurationServlet().getConn()));
 						//get database attribute
 						PVBean.setPV_EVS_DATABASE("caDSR");
 						vList.addElement(PVBean); //add the bean to a vector
@@ -1439,8 +1442,8 @@ public class PVAction implements Serializable {
 			int i = Integer.parseInt(vmHash.get(multiName));
 			PV_Bean pv = vdpv.elementAt(i);
 			//get the exact match
-			VMAction vmact = new VMAction();
-			if (vmact.checkExactMatch(vdpv.elementAt(i).getPV_VM(), vm) != null)
+			//VMAction vmact = new VMAction();
+			if (VMHelper.checkExactMatch(vdpv.elementAt(i).getPV_VM(), vm) != null)
 				isExact = true;
 			//reset the pv
 			pv.setPV_VM(vm);

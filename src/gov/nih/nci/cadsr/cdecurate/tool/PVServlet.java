@@ -470,10 +470,10 @@ public class PVServlet implements Serializable
           if (editVM != null && !editVM.equals(""))
           {
             vmser.readDataForCreateOrEdit(selectPV, pvInd);	//JR1025 everything come to this entry
-            newVM = vmser.vmData.getVMBean();
+            newVM = vmser.vmData.getVMBean();	//JR1025 this should return the existing VM (not a new VM) if only PV dates are changed
             data.setStatusMsg(data.getStatusMsg() + vmser.vmData.getStatusMsg());
           }
-          if (newVM.getVM_SUBMIT_ACTION().equals(VMForm.CADSR_ACTION_INS))
+          if (newVM.getVM_SUBMIT_ACTION().equals(VMForm.CADSR_ACTION_INS))	//JR1025 submit action should be NONE if PV dates are edited
             newVM._alts = null;
           data.setNewVM(newVM);
           selectPV = pvAction.changePVAttributes(chgName, pvInd, data);		//JR1024 no matter what, PV's begin and end dates should look good at this point
@@ -487,7 +487,7 @@ public class PVServlet implements Serializable
         
         String erVM = (String)data.getRequest().getAttribute("ErrMsgAC");
         if (erVM == null || erVM.equals(""))
-            updateVDPV(selectPV, pvInd);	//JR1024/JR1025 this is what should happened! aka just update with the dates changed
+            updateVDPV(selectPV, pvInd);	//JR1024 this is what should happened! aka just update with the dates changed JR1025 the selectPV's PV_VM should be existing VM_Bean if only dates are changed
         else
         {
             //store it in the session

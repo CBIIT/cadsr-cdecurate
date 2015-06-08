@@ -391,8 +391,8 @@ public class FormBuilderUtil {
 					pvBean.setQUESTION_VALUE_IDSEQ("");
 					//get vm concept attributes
 					// String sCondr = rs.getString("vm_condr_idseq");
-					VMAction vmact = new VMAction();
-					pvBean.setPV_VM(vmact.doSetVMAttributes(rs, conn));
+					//VMAction vmact = new VMAction();
+					pvBean.setPV_VM(VMHelper.doSetVMAttributes(rs, conn));
 					//get parent concept attributes
 					String sCon = rs.getString("con_idseq");
 //					this.doSetParentAttributes(sCon, pvBean, data);		//TODO what does this do?

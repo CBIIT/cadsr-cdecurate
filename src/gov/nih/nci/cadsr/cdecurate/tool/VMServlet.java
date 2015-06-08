@@ -9,7 +9,9 @@ import gov.nih.nci.cadsr.cdecurate.database.DBAccess;
 import gov.nih.nci.cadsr.cdecurate.ui.AltNamesDefsServlet;
 import gov.nih.nci.cadsr.cdecurate.util.AdministeredItemUtil;
 import gov.nih.nci.cadsr.cdecurate.util.DataManager;
+import gov.nih.nci.cadsr.cdecurate.util.PVHelper;
 import gov.nih.nci.cadsr.cdecurate.util.ToolURL;
+import gov.nih.nci.cadsr.cdecurate.util.VMHelper;
 import gov.nih.nci.cadsr.common.StringUtil;
 import gov.nih.nci.cadsr.persist.exception.DBException;
 import gov.nih.nci.cadsr.persist.vm.Value_Meanings_Mgr;
@@ -227,7 +229,8 @@ public class VMServlet extends GenericServlet
     //set the version indicator
      setVersionValues(vmData,req,session);
     //call the action to do the search
-    vmAction.searchVMValues(vmData, sRecordsDisplayed);
+    //vmAction.searchVMValues(vmData, sRecordsDisplayed);
+    VMHelper.searchVMValues(vmData, sRecordsDisplayed);
 
     //put the results back in the session
     Vector<VM_Bean> vAC = vmData.getVMList();
@@ -332,10 +335,9 @@ private void setVersionValues(VMForm vmData,HttpServletRequest req, HttpSession 
     if (vmCon != null && vmCon.size() > 0)
       handTypedVM = false;
     //read vm name and desc if no concept
-    if (handTypedVM)
-    {
-      String sVM = "";
-      String sVMD = "";
+    String sVM = "";
+    String sVMD = "";
+    if (handTypedVM) {
       if (pvInd == -1)
       {
         sVM = StringUtil.cleanJavascriptAndHtml((String)req.getParameter("pvNewVM"));  //vm name
@@ -374,6 +376,24 @@ private void setVersionValues(VMForm vmData,HttpServletRequest req, HttpSession 
         //vm.setVM_SUBMIT_ACTION(VMForm.CADSR_ACTION_INS);
       }
     }
+    
+    //JR1025 begin - used by form case
+    try {
+		if(PVHelper.isOnlyDateChanged(req)) {
+		    sVM = (String)req.getParameter("txtpv" + pvInd + "Mean");  //vm name
+		    sVMD = (String)req.getParameter("txtpv" + pvInd + "Def");  //vm desc        
+		    vm.setVM_PREFERRED_DEFINITION(sVMD);
+//            vmData.setSelectVM(vm);
+		    System.out.println("VM id [" + vm.getVM_ID() + "] VM version [" + vm.getVM_VERSION() + "]");	//JR1025 they should not be empty! Should be the existing publicId and version of a VM
+		    //do not make it new if defintion is different
+		    vm.setVM_IDSEQ("");
+		    vm.setVM_SUBMIT_ACTION(VMForm.CADSR_ACTION_UPD);
+		}
+	} catch (Exception e) {
+		e.printStackTrace();
+	}
+    //JR1025 end - used by form case
+    
     //call the action change VM to validate the vm
     VD_Bean vd = (VD_Bean)session.getAttribute(PVForm.SESSION_SELECT_VD);  //vm cd
     vmData.setVMBean(vm);	//JR1024 probably if vm's long name is null, just set this to null to avoid API_VM_105 error during insert?
