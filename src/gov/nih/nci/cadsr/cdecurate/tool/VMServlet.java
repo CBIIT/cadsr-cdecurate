@@ -12,6 +12,7 @@ import gov.nih.nci.cadsr.cdecurate.util.DataManager;
 import gov.nih.nci.cadsr.cdecurate.util.PVHelper;
 import gov.nih.nci.cadsr.cdecurate.util.ToolURL;
 import gov.nih.nci.cadsr.cdecurate.util.VMHelper;
+import gov.nih.nci.cadsr.common.Constants;
 import gov.nih.nci.cadsr.common.StringUtil;
 import gov.nih.nci.cadsr.persist.exception.DBException;
 import gov.nih.nci.cadsr.persist.vm.Value_Meanings_Mgr;
@@ -375,7 +376,7 @@ private void setVersionValues(VMForm vmData,HttpServletRequest req, HttpSession 
         vm.setVM_IDSEQ("");
         //vm.setVM_SUBMIT_ACTION(VMForm.CADSR_ACTION_INS);
       }
-    }
+    } //end of if (handTypedVM) block
     
     //JR1025 begin - used by form case
     try {
@@ -400,7 +401,7 @@ private void setVersionValues(VMForm vmData,HttpServletRequest req, HttpSession 
     
     VD_Bean oldvd = (VD_Bean)session.getAttribute("oldVDBean");
     Vector<PV_Bean> vdpvs = oldvd.getVD_PV_List();	//JR1024
-    if (pvInd > -1 && vdpvs.size() > 0)  // (selvm != null)	//JR1024 this should be true for a new new PV?
+    if (pvInd > -1 && vdpvs.size() > 0)  // (selvm != null)
     {
         for (int i=0; i<vdpvs.size(); i++)
         {
@@ -414,7 +415,18 @@ private void setVersionValues(VMForm vmData,HttpServletRequest req, HttpSession 
             break;
           }
         }
+    } 
+      else if (pvInd == Constants.NEW_PV_INDEX) {	//JR1024
+//    	//Note: Even though there are two methods (readDataForCreateOrEdit and setDataForCreateOrEdit) that we can set the user entered info like begin/end dates etc, we just set everything here
+//		String chgED = (String)req.getParameter("currentED");  //edited end date
+//		String chgDesc = (String)req.getParameter("pvNewVMD");  //edited description
+//		pv.setPV_END_DATE(chgED);
+//		pv.setPV_VALUE_DESCRIPTION(chgDesc);
+//    	vdpvs.add(pv);	//this pv is still old not the one the user newly edited!!!
+//    	oldvd.setVD_PV_List(vdpvs);
+//        session.setAttribute(PVForm.SESSION_SELECT_VD, oldvd);
     }
+    	//JR1024 handle a new new PV (via Create a Permissible Value [click here])
     vmData.setRequest(httpRequest);
     vmAction.setDataForCreateOrEdit(pv, vd, vmData);	//JR1025 TODO validation or not is set here! avoid it for begin and end date changes
     // - handle status message and other session attributes as needed    

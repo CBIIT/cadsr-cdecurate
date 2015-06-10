@@ -4,6 +4,7 @@ import gov.nih.nci.cadsr.cdecurate.tool.EVS_Bean;
 import gov.nih.nci.cadsr.cdecurate.tool.PV_Bean;
 import gov.nih.nci.cadsr.cdecurate.tool.VD_Bean;
 import gov.nih.nci.cadsr.cdecurate.tool.VM_Bean;
+import gov.nih.nci.cadsr.common.Constants;
 import gov.nih.nci.cadsr.common.TestUtil;
 
 import java.util.Vector;
@@ -82,7 +83,8 @@ public class PVHelper {
 		TestUtil.dumpAllHttpRequests("PVHelper.java: <<<", req);
 		int index = -1;
 		Object value = req.getParameter(reqName);
-		if(value != null) {
+		if(value != null && value.equals(Constants.NEW_PV)) index = Constants.NEW_PV_INDEX;	//JR1024 support new pv (via "Create a Permissible Value [click here] ")
+		else if(value != null) {
 			String pvIndex = value.toString();
 			if(pvIndex != null && pvIndex.length() > 2) {
 				index = Integer.valueOf(pvIndex.substring(2, pvIndex.length()));

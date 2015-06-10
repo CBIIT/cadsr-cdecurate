@@ -21,6 +21,7 @@ import gov.nih.nci.cadsr.cdecurate.util.DataManager;
 import gov.nih.nci.cadsr.cdecurate.util.FormBuilderUtil;
 import gov.nih.nci.cadsr.cdecurate.util.FormCleaner;
 import gov.nih.nci.cadsr.cdecurate.util.PVHelper;
+import gov.nih.nci.cadsr.common.Constants;
 import gov.nih.nci.cadsr.common.StringUtil;
 import gov.nih.nci.cadsr.common.TestUtil;
 
@@ -144,7 +145,7 @@ public class PVServlet implements Serializable
          else if (sAction.equals("openCreateNew") || sAction.equals("addNewPV"))
          {
            //System.out.println("refresh the page");
-           retData = readNewPVAttributes(sAction);
+           retData = readNewPVAttributes(sAction);	//JR1024 entry point of the end date (currentED) + description (pvNewVMD) were blank issue
          }
          else if (sAction.equals("addSelectedCon"))
          {
@@ -410,10 +411,15 @@ public class PVServlet implements Serializable
         String sPV = (String)data.getRequest().getParameter("pvNewValue");  //value
         if (sPV == null) sPV = "";
         sPV = sPV.trim();
-        pv.setPV_VALUE(sPV);
+        pv.setPV_VALUE(sPV);	//JR1024 TODO should we handle end date + desc here???
+//		String chgED = (String)data.getRequest().getParameter("currentED");  //edited end date
+//		String chgDesc = (String)data.getRequest().getParameter("pvNewVMD");  //edited description
+//		pv.setPV_END_DATE(chgED);
+//		pv.setPV_VALUE_DESCRIPTION(chgDesc);
+
         readValidValueData(pv, "pvNew");
         //add pv other attribtutes 
-        addPVOtherAttributes(pv, "changeOne", "pvNew");
+        addPVOtherAttributes(pv, "changeOne", "pvNew");		//JR1024 errored out inside here
         //if no concepts, read the user entered vm /desc
         VM_Bean vm = new VM_Bean();
         if (this.getDuplicateVMUse() != null)
@@ -459,7 +465,6 @@ public class PVServlet implements Serializable
         String chgName = (String)data.getRequest().getParameter("txtpv" + pvInd + "Value");  //pvName  
         chgName = chgName.trim();
         //handle pv changes
-//JR1025 begin potential if block - just if the change is not begin or end date???        
         VM_Bean useVM = this.getDuplicateVMUse();	//this should be more appropriately named, getExistingVM(), that's it!
         if (useVM == null)
         {
@@ -479,11 +484,7 @@ public class PVServlet implements Serializable
           selectPV = pvAction.changePVAttributes(chgName, pvInd, data);		//JR1024 no matter what, PV's begin and end dates should look good at this point
         }
         else
-            selectPV.setPV_VM(useVM);
-/*        
-*/        
-//JR1025 TODO end potential end block!!!???
-        
+            selectPV.setPV_VM(useVM);        
         
         String erVM = (String)data.getRequest().getAttribute("ErrMsgAC");
         if (erVM == null || erVM.equals(""))
@@ -751,9 +752,14 @@ public class PVServlet implements Serializable
      }
      
      String chgED = (String)data.getRequest().getParameter("currentED");  //edited end date
+	 String chgDesc = (String)data.getRequest().getParameter("pvNewVMD");  //edited description
      if (chgED != null && !chgED.equals(""))
      {
          //begin JR1024
+    	 pv.setPV_END_DATE(chgED);	//JR1024 handle end date if a new pv
+    	 if(pvID != null && pvID.equals(Constants.NEW_PV)) {
+    		 pv.setPV_VALUE_DESCRIPTION(chgDesc);	//JR1024 handle desc if a new pv
+    	 }
          if (changeType.equals("changeOne")) {
              logger.debug("change only one PV's end date");
       	   	 HttpSession session = data.getRequest().getSession();
@@ -778,9 +784,9 @@ public class PVServlet implements Serializable
 	         pvAction.doBlockEditPV(data, "enddate", chgED);
 	         DataManager.setAttribute(session, PVForm.SESSION_SELECT_VD, data.getVD());
 	         return;
-       }
+         }
        //else
-       pv.setPV_END_DATE(chgED);
+       //pv.setPV_END_DATE(chgED);	//JR1024 moved up
      }
      //valid values
      if (pv != null)
@@ -1096,9 +1102,9 @@ public class PVServlet implements Serializable
 
 					try {
 						 //create a new VV
-						 fb.updatePVValidValue(data.getCurationServlet().getConn(), questBean, pvBean);	//TODO need to handle create too?
+						 fb.updatePVValidValue(data.getCurationServlet().getConn(), questBean, pvBean);
 					} catch (Exception e) {
-						e.printStackTrace();	//TODO ORA-00001: unique constraint (SBREXT.VVT_PK) violated 00001. 00000 -  "unique constraint (%s.%s) violated"
+						e.printStackTrace();
 					}
 
 	     				//JR1074 comment out the following two lines in production!!!
@@ -1118,7 +1124,7 @@ public class PVServlet implements Serializable
 		             if (err != null && !err.equals(""))
 		             {
 		               errMsg += "\\n" + err;
-		               continue;	//TODO JR1074 it came here :(
+		               continue;
 		             }
      			 } catch (Exception e) {
 					e.printStackTrace();

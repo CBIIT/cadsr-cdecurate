@@ -1044,6 +1044,17 @@ public class PVAction implements Serializable {
 			}
 			vd.setVD_PV_List(vdpv);
 			data.setVD(vd);
+		} if(changedPVIndex == Constants.NEW_PV_INDEX) {
+			//JR1024 support new PV
+			PV_Bean pv = new PV_Bean();
+			if (changeField.equals("origin"))
+				pv.setPV_VALUE_ORIGIN(changeData);
+			else if (changeField.equals("begindate"))
+				pv.setPV_BEGIN_DATE(changeData);
+			else if (changeField.equals("enddate"))
+				pv.setPV_END_DATE(changeData);
+			//change the submit action
+			pv.setVP_SUBMIT_ACTION(PVForm.CADSR_ACTION_INS);
 		} else {
 			throw new Exception("Can not update PV, as index is unknown!");
 		}
