@@ -1126,11 +1126,11 @@ L--%>
 						            Boolean vdUsedInForm = (Boolean)session.getAttribute(Constants.VD_USED_IN_FORM);  //GF7680
 									String workflowStatus = (String)session.getAttribute("selStatus");
 									String crfWorkflowStatus = pvBean.getCRF_WORKFLOW();    //GF7680
-						            /*
-									if(workflowStatus != null && workflowStatus.equals(Constants.WORKFLOW_STATUS_RELEASED) || inForm) {
+									//JR691 begin
+									if(workflowStatus != null && workflowStatus.equals(Constants.WORKFLOW_STATUS_RELEASED) && inForm) {
 										dispStyle = "none";
 									}
-									*/
+									//JR691 end
 						            %>
 															<tr id="<%=pvCount%>">
 																<td align="center" valign="top">
