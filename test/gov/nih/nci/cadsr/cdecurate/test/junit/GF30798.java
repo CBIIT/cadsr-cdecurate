@@ -97,13 +97,13 @@ public class GF30798 {
 	}
 
 	//@Test
-	public void checkGoogleSearch() {
-		driver.get("http://www.google.com");
-		WebElement searchBox = driver.findElement(By.name("q"));
-		searchBox.sendKeys("webdriver");
-		searchBox.clear();
-		assertEquals("Google", driver.getTitle());
-	}
+//	public void checkGoogleSearch() {
+//		driver.get("http://www.google.com");
+//		WebElement searchBox = driver.findElement(By.name("q"));
+//		searchBox.sendKeys("webdriver");
+//		searchBox.clear();
+//		assertEquals("Google", driver.getTitle());
+//	}
 
 	  public void LogoutLogin() {
 	    driver.get(baseUrl + "/cdecurate");

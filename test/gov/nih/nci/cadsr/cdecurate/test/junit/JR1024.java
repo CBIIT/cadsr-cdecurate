@@ -490,6 +490,7 @@ public class JR1024 {
 		}
 	}
 	
+	/*
 //	@Test
 	public void testDefinitionSimilarToEVS() {
 		boolean ret = false;
@@ -526,5 +527,6 @@ public class JR1024 {
 			e.printStackTrace();
 		}
 	}
+	*/
 
 }

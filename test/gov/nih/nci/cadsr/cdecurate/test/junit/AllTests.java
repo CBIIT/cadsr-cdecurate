@@ -10,7 +10,7 @@ import org.junit.runners.Suite;
  * 
  * 1. Enter userId and password in the VM argument (NOT program argument!!!) in the following format:
  * 
- * -Du=SBREXT -Dp=[replace with the password]
+ * -Du=cdecurate -Dp=[password_here]
  * 
  * 2. Run the app locally at localhost:8080/cdecurate
  * 

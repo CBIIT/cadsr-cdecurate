@@ -126,7 +126,7 @@ public class JR1062 {
 		}
 	}
 
-//	@Test
+	@Test
 	public void testEmpty() {
 		boolean ret = false;
 		int count = 0;
@@ -155,7 +155,7 @@ public class JR1062 {
 		}
 	}
 
-//	@Test
+	@Test
 	public void testDDE() {
 		boolean ret = false;
 		
@@ -221,7 +221,7 @@ public class JR1062 {
 		}
 	}
 
-//	@Test
+	@Test
 	public void testIgnoredColumnTagForUI() {
 		boolean ret = false;
 		
@@ -234,7 +234,7 @@ public class JR1062 {
 		assertTrue("Test for existence of ignored tag after removal: ", !uiArray.contains(DownloadHelper.IGNORE_COLUMN));
 	}
 
-//	@Test
+	@Test
 	public void testCDEIgnoreColumns() {
 		boolean ret = false;
 		
@@ -313,7 +313,7 @@ public class JR1062 {
 		}
 	}
 
-//	@Test
+	@Test
 	public void testPositive() {
 		boolean ret = false;
 		
