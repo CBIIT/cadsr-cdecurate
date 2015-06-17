@@ -22,6 +22,7 @@ import java.util.Enumeration;
 import java.util.InvalidPropertiesFormatException;
 import java.util.Properties;
 import java.util.Vector;
+
 import org.w3c.dom.DOMException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -29,8 +30,10 @@ import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
+
 //import com.sun.org.apache.xerces.internal.impl.xs.dom.DOMParser;
 import com.sun.org.apache.xerces.internal.parsers.DOMParser;
+
 import gov.nih.nci.cadsr.cdecurate.tool.ConceptAction;
 import gov.nih.nci.cadsr.cdecurate.tool.ConceptForm;
 import gov.nih.nci.cadsr.cdecurate.tool.CurationServlet;
@@ -554,7 +557,12 @@ public class TestVM
     {
       //do the search;
       VMAction vmact = new VMAction();
-      vmact.validateVMData(vmdata);  //doChangeVM(vmdata);
+      try {
+		vmact.validateVMData(vmdata);
+	} catch (Exception e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}  //doChangeVM(vmdata);
     }
     if (readMore)
     {

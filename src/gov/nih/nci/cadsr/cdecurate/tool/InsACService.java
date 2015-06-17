@@ -2955,7 +2955,7 @@ public class InsACService implements Serializable {
 
 				// Set the out parameters (which are inherited from the
 				// PreparedStatement class)
-				cstmt.registerOutParameter(3, java.sql.Types.VARCHAR); // NEW
+				cstmt.registerOutParameter(3, java.sql.Types.VARCHAR); // NEW	//JR1099 inf what happened if none of the above condition are met?
 				// ID
 				cstmt.registerOutParameter(4, java.sql.Types.VARCHAR); // RETURN
 				// CODE
@@ -3040,7 +3040,7 @@ public class InsACService implements Serializable {
 
 				// Set the out parameters (which are inherited from the
 				// PreparedStatement class)
-				cstmt.registerOutParameter(2, java.sql.Types.VARCHAR); // NEW
+				cstmt.registerOutParameter(2, java.sql.Types.VARCHAR); // NEW	//JR1099 inf what happened if none of the above condition are met?
 				// ID
 				cstmt.registerOutParameter(3, java.sql.Types.VARCHAR); // RETURN
 				// CODE
@@ -6528,9 +6528,9 @@ public class InsACService implements Serializable {
 		ArrayList<ResultVO>  resultList = new ArrayList();
 		Evs_Mgr mgr = null;
 		if (type.equals("Object Class")){
-			mgr = new Object_Classes_Ext_Mgr();
+			mgr = new Object_Classes_Ext_Mgr();	//JR1099 called when edit
 		} else if (type.equals("Property")){
-			mgr = new Properties_Ext_Mgr();
+			mgr = new Properties_Ext_Mgr();		//JR1099 called when edit
 		} else if (type.equals("Representation Term")){
 			mgr = new Representations_Ext_Mgr();
 		}
@@ -6553,7 +6553,7 @@ public class InsACService implements Serializable {
         if (statusBean.isAllConceptsExists()) {
 			ArrayList<ConBean> conBeanList = this.getConBeanList(evsBeanList, statusBean.isAllConceptsExists());
 			try {
-				 resultList = mgr.isCondrExists(conBeanList, m_servlet.getConn());
+				 resultList = mgr.isCondrExists(conBeanList, m_servlet.getConn());	//JR1099 inf what happened if none of the above condition are met?
 			} catch (DBException e) {
 				logger.error("ERROR in InsACService-evsBeanCheck : "+ e.toString(), e);
 				throw new Exception(e);
@@ -6709,7 +6709,7 @@ public class InsACService implements Serializable {
 			vo.setCondr_IDSEQ(condrIdseq);
 			vo.setConte_IDSEQ(defaultContextIdseq);
 			vo.setCreated_by(userName);
-			idseq = mgr.insert(vo, m_servlet.getConn());
+			idseq = mgr.insert(vo, m_servlet.getConn());	//JR1099 inf what happened if none of the above condition are met?
 		}catch (DBException e){
 			logger.error("ERROR in InsACService-createEvsBean: "+ e.toString(), e);
 			m_classReq.setAttribute("retcode", "Exception");
