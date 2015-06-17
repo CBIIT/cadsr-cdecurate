@@ -57,6 +57,7 @@ import javax.servlet.http.HttpSession;
 
 
 
+
 //import oracle.jdbc.driver.OracleTypes;
 import oracle.jdbc.OracleTypes;		//GF30779
 
@@ -2951,11 +2952,13 @@ public class InsACService implements Serializable {
 							"{call META_CONFIG_MGMT.VD_VERSION(?,?,?,?,?)}");
 					ACID = vd.getVD_VD_IDSEQ();
 					sVersion = vd.getVD_VERSION();
+				} else {
+					throw new Exception("Unknown ACName");		//JR1099 inf what happened if none of the above condition are met?
 				}
 
 				// Set the out parameters (which are inherited from the
 				// PreparedStatement class)
-				cstmt.registerOutParameter(3, java.sql.Types.VARCHAR); // NEW	//JR1099 inf what happened if none of the above condition are met?
+				cstmt.registerOutParameter(3, java.sql.Types.VARCHAR); // NEW
 				// ID
 				cstmt.registerOutParameter(4, java.sql.Types.VARCHAR); // RETURN
 				// CODE
@@ -3037,10 +3040,11 @@ public class InsACService implements Serializable {
 				else if (ACType.equals("RepTerm"))
 					cstmt = m_servlet.getConn().prepareCall(
 							"{call META_CONFIG_MGMT.REP_VERSION(?,?,?)}");
+				else throw new Exception("Unknown ACType");		//JR1099 inf what happened if none of the above condition are met?
 
 				// Set the out parameters (which are inherited from the
 				// PreparedStatement class)
-				cstmt.registerOutParameter(2, java.sql.Types.VARCHAR); // NEW	//JR1099 inf what happened if none of the above condition are met?
+				cstmt.registerOutParameter(2, java.sql.Types.VARCHAR); // NEW
 				// ID
 				cstmt.registerOutParameter(3, java.sql.Types.VARCHAR); // RETURN
 				// CODE
@@ -6533,6 +6537,8 @@ public class InsACService implements Serializable {
 			mgr = new Properties_Ext_Mgr();		//JR1099 called when edit
 		} else if (type.equals("Representation Term")){
 			mgr = new Representations_Ext_Mgr();
+		} else {
+			throw new Exception("Unknown type");		//JR1099 inf what happened if none of the above condition are met?
 		}
 		
 		statusBean.setAllConceptsExists(true);
@@ -6553,7 +6559,7 @@ public class InsACService implements Serializable {
         if (statusBean.isAllConceptsExists()) {
 			ArrayList<ConBean> conBeanList = this.getConBeanList(evsBeanList, statusBean.isAllConceptsExists());
 			try {
-				 resultList = mgr.isCondrExists(conBeanList, m_servlet.getConn());	//JR1099 inf what happened if none of the above condition are met?
+				 resultList = mgr.isCondrExists(conBeanList, m_servlet.getConn());
 			} catch (DBException e) {
 				logger.error("ERROR in InsACService-evsBeanCheck : "+ e.toString(), e);
 				throw new Exception(e);
@@ -6693,23 +6699,26 @@ public class InsACService implements Serializable {
 	 * @param defaultContextIdseq
 	 * @param type
 	 * @return
+	 * @throws Exception 
 	 */
-	public String createEvsBean(String userName, String condrIdseq, String defaultContextIdseq, String type){
+	public String createEvsBean(String userName, String condrIdseq, String defaultContextIdseq, String type) throws Exception{
 		String idseq= "";
 		Evs_Mgr mgr = null;
 		try{
 			if (type.equals("Object Class")){
 				  mgr = new Object_Classes_Ext_Mgr();
-			  }else if (type.equals("Property")){
+			} else if (type.equals("Property")){
 				  mgr = new Properties_Ext_Mgr();
-			  }else if (type.equals("Representation Term")){
-			      mgr = new Representations_Ext_Mgr();
-			  }
+			} else if (type.equals("Representation Term")){
+			  mgr = new Representations_Ext_Mgr();
+			} else {
+				throw new Exception("Unknown type");		//JR1099 inf what happened if none of the above condition are met?
+			}
 			EvsVO vo = new EvsVO();
 			vo.setCondr_IDSEQ(condrIdseq);
 			vo.setConte_IDSEQ(defaultContextIdseq);
 			vo.setCreated_by(userName);
-			idseq = mgr.insert(vo, m_servlet.getConn());	//JR1099 inf what happened if none of the above condition are met?
+			idseq = mgr.insert(vo, m_servlet.getConn());
 		}catch (DBException e){
 			logger.error("ERROR in InsACService-createEvsBean: "+ e.toString(), e);
 			m_classReq.setAttribute("retcode", "Exception");
