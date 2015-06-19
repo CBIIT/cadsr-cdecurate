@@ -744,7 +744,7 @@ public class SetACService implements Serializable
 				}
 				
 				//end GF32723
-				m_DEC.setAlternates(altSession);	//JR1016 tagged
+				m_DEC.setAlternates(altSession);	//JR1016 $-1 of 0062807 was noticed to be $-1
 
 				logger.info("At line 693 of SetACService.java");				
 			

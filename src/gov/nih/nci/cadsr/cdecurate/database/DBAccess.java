@@ -1261,6 +1261,7 @@ public class DBAccess
         }
         catch (SQLException ex)
         {
+        	ex.printStackTrace();
         	cstmt = SQLHelper.closeCallableStatement(cstmt);	//JR1099 caused: java.sql.SQLIntegrityConstraintViolationException: ORA-00001: unique constraint (SBR.DESIG_UK) violated ORA-06512: at line 1
             // If the record already exists then great, just ignore the duplicate, otherwise
             // it's not good.

@@ -467,6 +467,7 @@ private void setVersionValues(VMForm vmData,HttpServletRequest req, HttpSession 
     }
     catch (Exception e)
     {
+      e.printStackTrace();
       logger.error("ERROR - submitting vm ", e);
     }
     finally

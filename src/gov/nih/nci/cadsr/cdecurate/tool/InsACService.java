@@ -2769,7 +2769,7 @@ public class InsACService implements Serializable {
 
 					// ********************************
 					de.save(session, m_servlet.getConn(), sDE_ID, sContextID);	//JR1099 entry point
-					session.removeAttribute("AllAltNameList");
+					session.removeAttribute("AllAltNameList");	//JR1099 need to remove this only if the previous save works!!!
 					// ********************************
 					/*
 					 * Vector<ALT_NAME_Bean> tBean =

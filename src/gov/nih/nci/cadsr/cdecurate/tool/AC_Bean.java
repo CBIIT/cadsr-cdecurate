@@ -80,7 +80,7 @@ public abstract class AC_Bean implements Serializable
     public void save(HttpSession session_, Connection conn_, String idseq_, String conteIdseq_) throws SQLException
     {
         // Only call the instance if it's present
-        if (_alts != null)
+        if (_alts != null)	//JR1099 sometimes it is null, thus the alt name is not saved!!!
         {
             _alts.save(conn_, idseq_, conteIdseq_);
             _alts = null;

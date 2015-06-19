@@ -1287,7 +1287,7 @@ public class CurationServlet
             if (sAC.equals("DataElement"))
             {
                 DE_Bean de = (DE_Bean) session.getAttribute("m_DE");
-                vAltName = (Vector) de.getAC_ALT_NAMES();
+                vAltName = (Vector) de.getAC_ALT_NAMES();	//JR1099 should have 0062807/CTEP/HISTORICAL_CDE_ID
                 vRefDoc = (Vector) de.getAC_REF_DOCS();
             }
             if (sAC.equals("DataElementConcept"))
@@ -1312,7 +1312,7 @@ public class CurationServlet
                 thisAlt = thisAlt.copyAltNames((ALT_NAME_Bean) vAltName.elementAt(i));
                 vAllAltName.addElement(thisAlt);
             }
-            DataManager.setAttribute(session, "AllAltNameList", vAllAltName);
+            DataManager.setAttribute(session, "AllAltNameList", vAllAltName);	//JR1099 vAllAltName should already have added alt name
             if (vRefDoc == null)
                 vRefDoc = new Vector();
             Vector<REF_DOC_Bean> vAllRefDoc = new Vector<REF_DOC_Bean>();
