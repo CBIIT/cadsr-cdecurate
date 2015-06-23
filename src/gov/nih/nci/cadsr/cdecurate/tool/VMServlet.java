@@ -13,6 +13,7 @@ import gov.nih.nci.cadsr.cdecurate.util.PVHelper;
 import gov.nih.nci.cadsr.cdecurate.util.ToolURL;
 import gov.nih.nci.cadsr.cdecurate.util.VMHelper;
 import gov.nih.nci.cadsr.common.Constants;
+import gov.nih.nci.cadsr.common.GsonUtil;
 import gov.nih.nci.cadsr.common.StringUtil;
 import gov.nih.nci.cadsr.persist.exception.DBException;
 import gov.nih.nci.cadsr.persist.vm.Value_Meanings_Mgr;
@@ -451,6 +452,8 @@ private void setVersionValues(VMForm vmData,HttpServletRequest req, HttpSession 
   public String submitVM(VM_Bean vm)
   {
     String vmError = "";
+    //JR1099 saved for junit test!
+    System.out.println("vm json[" + GsonUtil.toString(vm) + "]");
     try
     {
       vmData.setVMBean(vm);
@@ -948,8 +951,9 @@ private String goBackToSearch()
    * submits the vm changes to database 
    * forwards to pv page
    * @return String jsp to go back
+ * @throws Exception 
    */
-  private String sortUsedAC(VM_Bean selVM, String action, String id)
+  private String sortUsedAC(VM_Bean selVM, String action, String id) throws Exception
   {
     String sJsp = VMForm.JSP_VM_USED;
     HttpSession session = httpRequest.getSession();
@@ -965,6 +969,7 @@ private String goBackToSearch()
       dbac = new DataElementAction();
     else if (acType.equals(VMForm.ELM_VD_NAME))
       dbac = new ValueDomainAction();
+	else throw new Exception("Unknown acType");		//JR1099 inf what happened if none of the above condition are met?
     
     //sort the results
     //VM_Bean selVM = (VM_Bean)session.getAttribute(VMForm.SESSION_SELECT_VM);
@@ -1194,7 +1199,13 @@ public void doViewVMActions(){
 		  writeUsedJsp(vm); 
 		  httpRequest.setAttribute("IncludeViewPage", VMForm.JSP_VM_USED) ;
       }else if (action.equals("sort")){
-    	  String page = sortUsedAC(vm, "view", id);
+    	  String page = null;	//JR1099
+			try {
+				page = sortUsedAC(vm, "view", id);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
     	  writeUsedJsp(vm);
     	  httpRequest.setAttribute("IncludeViewPage", page) ;
       }else if (action.equals("show")){

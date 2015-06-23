@@ -26,7 +26,7 @@ import javax.servlet.http.HttpSession;
  * @author Larry Hebel Nov 18, 2005
  */
 
-public abstract class AC_Bean implements Serializable
+public abstract class AC_Bean
 {
 
     protected ACTypes _type;
