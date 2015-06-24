@@ -969,8 +969,8 @@ private String goBackToSearch()
       dbac = new DataElementAction();
     else if (acType.equals(VMForm.ELM_VD_NAME))
       dbac = new ValueDomainAction();
-	else throw new Exception("Unknown acType");		//JR1099 inf what happened if none of the above condition are met?
-    
+//	else throw new Exception("Unknown acType");		//JR1099 inf what happened if none of the above condition are met?
+
     //sort the results
     //VM_Bean selVM = (VM_Bean)session.getAttribute(VMForm.SESSION_SELECT_VM);
     dbac.sortACs(selVM, fieldType);
