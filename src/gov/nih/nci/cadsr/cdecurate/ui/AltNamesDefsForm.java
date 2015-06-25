@@ -50,7 +50,7 @@ public class AltNamesDefsForm
         _targetIdseq = _req.getParameter(AltNamesDefsServlet._parmIdseq);
         
         _nameDef = _req.getParameter(AltNamesDefsServlet._parmNameDef);
-        Alternates alt = _sess.getEdit();	//JR1099 NPE at times after saving, searched and edited ???
+        Alternates alt = _sess.getEdit();
         if (_nameDef == null || _nameDef.length() == 0)
             _nameDef = alt.getName();
         else if (_nameDef.length() > DBAccess._MAXDEFLEN)

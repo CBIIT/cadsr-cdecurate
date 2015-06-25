@@ -344,7 +344,7 @@ public class JR1074 {
 		return sMsg;
 	}
 
-//	@Test
+	@Test
 	public void testFormStep3() {
 		boolean ret = false;
 
@@ -398,7 +398,7 @@ public class JR1074 {
 		}
 	}
 	
-//	@Test
+	@Test
 	public void testGetFormQuestionForPVUsedByForm() {
 		boolean ret = false;
 		String VD_IDSEQ = "D4A6A07C-5582-25A1-E034-0003BA12F5E7";	//this must already exist!
@@ -416,7 +416,7 @@ public class JR1074 {
 	
 	}
 
-//	@Test
+	@Test
 	public void testGetFormQuestionForPVNotUsedByForm() {
 		boolean ret = false;
 		String VD_IDSEQ = "D4A6A07C-5582-25A1-E034-0003BA12F5E7";	//this must already exist!
@@ -434,7 +434,7 @@ public class JR1074 {
 	
 	}
 	
-//	@Test
+	@Test
 	public void testPopulatePVFormQuestion() {
 		int displayOrder = 0;
 		PVAction pvAction = new PVAction();

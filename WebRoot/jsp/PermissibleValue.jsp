@@ -21,9 +21,6 @@ L--%>
 		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 		<link href="css/FullDesignArial.css" rel="stylesheet" type="text/css">
 		<%@ page import="gov.nih.nci.cadsr.cdecurate.tool.*"%>
-		<style>
-			/*.jr1025 { display:none; }*/
-		</style>
         <!-- GF7680 load Dojo -->
         <%--<script src="//ajax.googleapis.com/ajax/libs/dojo/1.8.5/dojo/dojo.js" data-dojo-config="async: true"></script>--%>
         <script src="js/dojo/dojo/dojo.js" data-dojo-config="async: true"></script>
@@ -1126,11 +1123,11 @@ L--%>
 						            Boolean vdUsedInForm = (Boolean)session.getAttribute(Constants.VD_USED_IN_FORM);  //GF7680
 									String workflowStatus = (String)session.getAttribute("selStatus");
 									String crfWorkflowStatus = pvBean.getCRF_WORKFLOW();    //GF7680
-									//JR691 begin
-									if(workflowStatus != null && workflowStatus.equals(Constants.WORKFLOW_STATUS_RELEASED) && inForm) {
+						            /*
+									if(workflowStatus != null && workflowStatus.equals(Constants.WORKFLOW_STATUS_RELEASED) || inForm) {
 										dispStyle = "none";
 									}
-									//JR691 end
+									*/
 						            %>
 															<tr id="<%=pvCount%>">
 																<td align="center" valign="top">
@@ -1404,11 +1401,9 @@ L--%>
 																			</tr>
 																		</table>
 																	</div>
-																	<%
-																		//JR1025 validate and suggest only if the PV is used in the form + VD workflow is RELEASED + the changed is not begin/end date
-																		if (vEMsg.size() > 0 && sEditPV.equals(pvCount)) { %>
-																	<hr class="jr1025">
-																	<table class="jr1025" width="100%" cellpadding="0.05in,0.05in,0.05in,0.05in" border="1">
+																	<% if (vEMsg.size() > 0 && sEditPV.equals(pvCount)) { %>
+																	<hr>
+																	<table width="100%" cellpadding="0.05in,0.05in,0.05in,0.05in" border="1">
 																		<col /></col>
 																		<tr>
 																			<td colspan=2 valign="top">
@@ -1443,17 +1438,17 @@ L--%>
 The Value Meaning matches the name of an existing Value Meaning. You may either select one of the existing Value Meanings from the list below and click Use Selection OR click Cancel to change the Value Meaning.
 																				<% } else { %>
 																					The Value Meaning you are creating matches the definition or concepts of an existing Value Meaning.
-																					You may select an existing Value Meaning and click 'Use Selection',
+																					You may select an existing Value Meaning and click 'Use Selection', 
 																					'Cancel' to edit the Value Meaning, or 'Continue' to create a new Value Meaning with the same definition or concepts.
 																				<% } %>
 																				<br>
 																			</td>
 																		</tr></table>
-																	<div class="jr1025" style="height:350px;width:100%;overflow:auto">
+																	<div style="height:350px;width:100%;overflow:auto">
 																	<table width="100%" cellpadding="0.05in,0.05in,0.05in,0.05in" border="0">
-																	<%
+																	<% 
 															for (int k=0; k<vEMsg.size(); k++)
-															{
+															{ 
 																	VM_Bean vB = (VM_Bean)vEMsg.elementAt(k);
 																	String vmIdandVer ="";
 																	if(vB.getVM_ID()==null || vB.getVM_VERSION()==null)
@@ -1476,16 +1471,16 @@ The Value Meaning matches the name of an existing Value Meaning. You may either 
 																					<dt>
 																						Public Id & Version:
 																					<dd>
-
+																					
 																					<%=vmIdandVer%>
-
+																					
 																				   <dt>
 																						VM Description:
 																					<dd>
 																						<%=vB.getVM_PREFERRED_DEFINITION()%>
 																					<dt>
 																						VM Concepts:
-																						<% if (vBCon.size() > 0) {
+																						<% if (vBCon.size() > 0) { 
 																				for (int p =0; p<vBCon.size(); p++) {
 																				EVS_Bean eB = (EVS_Bean)vBCon.elementAt(p);
 																	  %>
@@ -1508,7 +1503,7 @@ The Value Meaning matches the name of an existing Value Meaning. You may either 
 																		<% } %>
 																	</table></div>
 																	<%} %>
-																</td>	<!-- JR1025 if end block -->
+																</td>
 																<%if (vdCONs > 0){%>
 																<td id="<%=pvCount%>Par" valign="top">
 																	<%=sParId%>
@@ -1528,7 +1523,7 @@ The Value Meaning matches the name of an existing Value Meaning. You may either 
 															<!--  end for -->
 															<%	} %>
 															<!-- end if -->
-														</table>	<!-- JR1025 table end block -->
+														</table>
 													</div>
 												</td>
 											</tr>

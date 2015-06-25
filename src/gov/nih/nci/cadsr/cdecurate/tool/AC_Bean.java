@@ -26,7 +26,7 @@ import javax.servlet.http.HttpSession;
  * @author Larry Hebel Nov 18, 2005
  */
 
-public abstract class AC_Bean
+public abstract class AC_Bean implements Serializable
 {
 
     protected ACTypes _type;
@@ -80,7 +80,7 @@ public abstract class AC_Bean
     public void save(HttpSession session_, Connection conn_, String idseq_, String conteIdseq_) throws SQLException
     {
         // Only call the instance if it's present
-        if (_alts != null)	//JR1099 sometimes it is null, thus the alt name is not saved!!!
+        if (_alts != null)
         {
             _alts.save(conn_, idseq_, conteIdseq_);
             _alts = null;

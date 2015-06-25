@@ -42,9 +42,4 @@ public class Constants {
 
 	//JR1053
 	public static final String NCI_REGISTRY_VALUE = "2.16.840.1.113883.3.26.2";
-	
-	//JR1024
-	public static final String NEW_PV = "pvNew";
-	public static final int NEW_PV_INDEX = -1;
-
 }

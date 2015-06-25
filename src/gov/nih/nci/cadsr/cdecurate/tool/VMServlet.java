@@ -9,11 +9,7 @@ import gov.nih.nci.cadsr.cdecurate.database.DBAccess;
 import gov.nih.nci.cadsr.cdecurate.ui.AltNamesDefsServlet;
 import gov.nih.nci.cadsr.cdecurate.util.AdministeredItemUtil;
 import gov.nih.nci.cadsr.cdecurate.util.DataManager;
-import gov.nih.nci.cadsr.cdecurate.util.PVHelper;
 import gov.nih.nci.cadsr.cdecurate.util.ToolURL;
-import gov.nih.nci.cadsr.cdecurate.util.VMHelper;
-import gov.nih.nci.cadsr.common.Constants;
-import gov.nih.nci.cadsr.common.GsonUtil;
 import gov.nih.nci.cadsr.common.StringUtil;
 import gov.nih.nci.cadsr.persist.exception.DBException;
 import gov.nih.nci.cadsr.persist.vm.Value_Meanings_Mgr;
@@ -231,8 +227,7 @@ public class VMServlet extends GenericServlet
     //set the version indicator
      setVersionValues(vmData,req,session);
     //call the action to do the search
-    //vmAction.searchVMValues(vmData, sRecordsDisplayed);
-    VMHelper.searchVMValues(vmData, sRecordsDisplayed);
+    vmAction.searchVMValues(vmData, sRecordsDisplayed);
 
     //put the results back in the session
     Vector<VM_Bean> vAC = vmData.getVMList();
@@ -321,7 +316,7 @@ private void setVersionValues(VMForm vmData,HttpServletRequest req, HttpSession 
    * @param pv PVBean object
    * @param pvInd int selected PV indicator
    */
-  public void readDataForCreateOrEdit(PV_Bean pv, int pvInd)
+  public void readDataForCreate(PV_Bean pv, int pvInd)
   {
     HttpServletRequest req = httpRequest;
     HttpSession session = req.getSession();
@@ -337,9 +332,10 @@ private void setVersionValues(VMForm vmData,HttpServletRequest req, HttpSession 
     if (vmCon != null && vmCon.size() > 0)
       handTypedVM = false;
     //read vm name and desc if no concept
-    String sVM = "";
-    String sVMD = "";
-    if (handTypedVM) {
+    if (handTypedVM)
+    {
+      String sVM = "";
+      String sVMD = "";
       if (pvInd == -1)
       {
         sVM = StringUtil.cleanJavascriptAndHtml((String)req.getParameter("pvNewVM"));  //vm name
@@ -377,32 +373,14 @@ private void setVersionValues(VMForm vmData,HttpServletRequest req, HttpSession 
         vm.setVM_IDSEQ("");
         //vm.setVM_SUBMIT_ACTION(VMForm.CADSR_ACTION_INS);
       }
-    } //end of if (handTypedVM) block
-    
-    //JR1025 begin - used by form case
-    try {
-		if(PVHelper.isOnlyDateChanged(req)) {
-		    sVM = (String)req.getParameter("txtpv" + pvInd + "Mean");  //vm name
-		    sVMD = (String)req.getParameter("txtpv" + pvInd + "Def");  //vm desc        
-		    vm.setVM_PREFERRED_DEFINITION(sVMD);
-//            vmData.setSelectVM(vm);
-		    System.out.println("VM id [" + vm.getVM_ID() + "] VM version [" + vm.getVM_VERSION() + "]");	//JR1025 they should not be empty! Should be the existing publicId and version of a VM
-		    //do not make it new if defintion is different
-		    vm.setVM_IDSEQ("");
-		    vm.setVM_SUBMIT_ACTION(VMForm.CADSR_ACTION_UPD);
-		}
-	} catch (Exception e) {
-		e.printStackTrace();
-	}
-    //JR1025 end - used by form case
-    
+    }
     //call the action change VM to validate the vm
     VD_Bean vd = (VD_Bean)session.getAttribute(PVForm.SESSION_SELECT_VD);  //vm cd
     vmData.setVMBean(vm);	//JR1024 probably if vm's long name is null, just set this to null to avoid API_VM_105 error during insert?
     
     VD_Bean oldvd = (VD_Bean)session.getAttribute("oldVDBean");
     Vector<PV_Bean> vdpvs = oldvd.getVD_PV_List();	//JR1024
-    if (pvInd > -1 && vdpvs.size() > 0)  // (selvm != null)
+    if (pvInd > -1 && vdpvs.size() > 0)  // (selvm != null)	//JR1024 this should be true for a new new PV?
     {
         for (int i=0; i<vdpvs.size(); i++)
         {
@@ -416,29 +394,18 @@ private void setVersionValues(VMForm vmData,HttpServletRequest req, HttpSession 
             break;
           }
         }
-    } 
-      else if (pvInd == Constants.NEW_PV_INDEX) {	//JR1024
-//    	//Note: Even though there are two methods (readDataForCreateOrEdit and setDataForCreateOrEdit) that we can set the user entered info like begin/end dates etc, we just set everything here
-//		String chgED = (String)req.getParameter("currentED");  //edited end date
-//		String chgDesc = (String)req.getParameter("pvNewVMD");  //edited description
-//		pv.setPV_END_DATE(chgED);
-//		pv.setPV_VALUE_DESCRIPTION(chgDesc);
-//    	vdpvs.add(pv);	//this pv is still old not the one the user newly edited!!!
-//    	oldvd.setVD_PV_List(vdpvs);
-//        session.setAttribute(PVForm.SESSION_SELECT_VD, oldvd);
     }
-    	//JR1024 handle a new new PV (via Create a Permissible Value [click here])
     vmData.setRequest(httpRequest);
-    vmAction.setDataForCreateOrEdit(pv, vd, vmData);	//JR1025 TODO validation or not is set here! avoid it for begin and end date changes
+    vmAction.setDataForCreate(pv, vd, vmData); 
     // - handle status message and other session attributes as needed    
     Vector<VM_Bean> vErrMsg = vmData.getErrorMsgList();
     if (vErrMsg != null && vErrMsg.size()>0)
     {
       DataManager.setAttribute(session, "VMEditMsg", vErrMsg);
-      httpRequest.setAttribute("ErrMsgAC", vmData.getStatusMsg());	//JR1025 if this is not set/empty statusMsg, updateVDPV() would not be called!
+      httpRequest.setAttribute("ErrMsgAC", vmData.getStatusMsg());
       httpRequest.setAttribute("editPVInd", pvInd);
-      vmData.setVMBean(vm);	//JR1025 TODO do we need to avoid this to avoid validation?
-      Vector<VM_Bean> vmList = vmData.getExistVMList();	//JR1025 this list is populated in VMAction.java#validateVMData()
+      vmData.setVMBean(vm);
+      Vector<VM_Bean> vmList = vmData.getExistVMList();
       if (vmList.size() > 0)
           httpRequest.setAttribute("vmNameMatch", "true");  	//JR1024 this is false positive to the UI, due to the defect
     }
@@ -452,8 +419,6 @@ private void setVersionValues(VMForm vmData,HttpServletRequest req, HttpSession 
   public String submitVM(VM_Bean vm)
   {
     String vmError = "";
-    //JR1099 saved for junit test!
-    System.out.println("vm json[" + GsonUtil.toString(vm) + "]");
     try
     {
       vmData.setVMBean(vm);
@@ -470,7 +435,6 @@ private void setVersionValues(VMForm vmData,HttpServletRequest req, HttpSession 
     }
     catch (Exception e)
     {
-      e.printStackTrace();
       logger.error("ERROR - submitting vm ", e);
     }
     finally
@@ -951,9 +915,8 @@ private String goBackToSearch()
    * submits the vm changes to database 
    * forwards to pv page
    * @return String jsp to go back
- * @throws Exception 
    */
-  private String sortUsedAC(VM_Bean selVM, String action, String id) throws Exception
+  private String sortUsedAC(VM_Bean selVM, String action, String id)
   {
     String sJsp = VMForm.JSP_VM_USED;
     HttpSession session = httpRequest.getSession();
@@ -969,8 +932,7 @@ private String goBackToSearch()
       dbac = new DataElementAction();
     else if (acType.equals(VMForm.ELM_VD_NAME))
       dbac = new ValueDomainAction();
-//	else throw new Exception("Unknown acType");		//JR1099 inf what happened if none of the above condition are met?
-
+    
     //sort the results
     //VM_Bean selVM = (VM_Bean)session.getAttribute(VMForm.SESSION_SELECT_VM);
     dbac.sortACs(selVM, fieldType);
@@ -1199,13 +1161,7 @@ public void doViewVMActions(){
 		  writeUsedJsp(vm); 
 		  httpRequest.setAttribute("IncludeViewPage", VMForm.JSP_VM_USED) ;
       }else if (action.equals("sort")){
-    	  String page = null;	//JR1099
-			try {
-				page = sortUsedAC(vm, "view", id);
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+    	  String page = sortUsedAC(vm, "view", id);
     	  writeUsedJsp(vm);
     	  httpRequest.setAttribute("IncludeViewPage", page) ;
       }else if (action.equals("show")){

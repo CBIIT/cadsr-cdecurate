@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- c.f. http://audao.spoledge.com/audao - use nci.cadsr.persist as target java package -->
 <database xmlns="http://www.spoledge.com/audao" version="1.0">
 	<config>
 		<factory>

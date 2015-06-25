@@ -160,17 +160,6 @@ public class AdministeredItemUtil {
 			}
 		}
 
-		//last condition check - allow it if it is not in the session
-//		Alternates alt = new Alternates();
-//		alt.setConteName(contextName);
-//		alt.setType(type);
-//		alt.setName(name);
-//        String msg = altSession.check(alt);
-//        if(msg == null) {
-//        	//it is not in the current AC/session, so add it
-//        	retVal = false;	//it would not be considered a duplicate in the current AC
-//        }
-		
 		return retVal;
 	}
 	

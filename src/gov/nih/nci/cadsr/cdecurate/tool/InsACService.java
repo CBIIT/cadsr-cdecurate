@@ -57,7 +57,6 @@ import javax.servlet.http.HttpSession;
 
 
 
-
 //import oracle.jdbc.driver.OracleTypes;
 import oracle.jdbc.OracleTypes;		//GF30779
 
@@ -2769,7 +2768,7 @@ public class InsACService implements Serializable {
 
 					// ********************************
 					de.save(session, m_servlet.getConn(), sDE_ID, sContextID);	//JR1099 entry point
-					session.removeAttribute("AllAltNameList");	//JR1099 need to remove this only if the previous save works!!!
+					session.removeAttribute("AllAltNameList");
 					// ********************************
 					/*
 					 * Vector<ALT_NAME_Bean> tBean =
@@ -2952,10 +2951,7 @@ public class InsACService implements Serializable {
 							"{call META_CONFIG_MGMT.VD_VERSION(?,?,?,?,?)}");
 					ACID = vd.getVD_VD_IDSEQ();
 					sVersion = vd.getVD_VERSION();
-				} 
-//				else {
-//					throw new Exception("Unknown ACName");		//JR1099 inf what happened if none of the above condition are met?
-//				}
+				}
 
 				// Set the out parameters (which are inherited from the
 				// PreparedStatement class)
@@ -3041,7 +3037,6 @@ public class InsACService implements Serializable {
 				else if (ACType.equals("RepTerm"))
 					cstmt = m_servlet.getConn().prepareCall(
 							"{call META_CONFIG_MGMT.REP_VERSION(?,?,?)}");
-//				else throw new Exception("Unknown ACType");		//JR1099 inf what happened if none of the above condition are met?
 
 				// Set the out parameters (which are inherited from the
 				// PreparedStatement class)
@@ -6533,15 +6528,12 @@ public class InsACService implements Serializable {
 		ArrayList<ResultVO>  resultList = new ArrayList();
 		Evs_Mgr mgr = null;
 		if (type.equals("Object Class")){
-			mgr = new Object_Classes_Ext_Mgr();	//JR1099 called when edit
+			mgr = new Object_Classes_Ext_Mgr();
 		} else if (type.equals("Property")){
-			mgr = new Properties_Ext_Mgr();		//JR1099 called when edit
+			mgr = new Properties_Ext_Mgr();
 		} else if (type.equals("Representation Term")){
 			mgr = new Representations_Ext_Mgr();
-		} 
-//		else {
-//			throw new Exception("Unknown type");		//JR1099 inf what happened if none of the above condition are met?
-//		}
+		}
 		
 		statusBean.setAllConceptsExists(true);
 
@@ -6701,22 +6693,18 @@ public class InsACService implements Serializable {
 	 * @param defaultContextIdseq
 	 * @param type
 	 * @return
-	 * @throws Exception 
 	 */
-	public String createEvsBean(String userName, String condrIdseq, String defaultContextIdseq, String type) throws Exception{
+	public String createEvsBean(String userName, String condrIdseq, String defaultContextIdseq, String type){
 		String idseq= "";
 		Evs_Mgr mgr = null;
 		try{
 			if (type.equals("Object Class")){
 				  mgr = new Object_Classes_Ext_Mgr();
-			} else if (type.equals("Property")){
+			  }else if (type.equals("Property")){
 				  mgr = new Properties_Ext_Mgr();
-			} else if (type.equals("Representation Term")){
-			  mgr = new Representations_Ext_Mgr();
-			}
-//			else {
-//				throw new Exception("Unknown type");		//JR1099 inf what happened if none of the above condition are met?
-//			}
+			  }else if (type.equals("Representation Term")){
+			      mgr = new Representations_Ext_Mgr();
+			  }
 			EvsVO vo = new EvsVO();
 			vo.setCondr_IDSEQ(condrIdseq);
 			vo.setConte_IDSEQ(defaultContextIdseq);

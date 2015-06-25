@@ -219,62 +219,62 @@
 		//	return false;	//do not submit
 		//}
 
-        var alertMsg = "";
-        var txtVM = "";
-        //first if user entered
-        var vmDiv = document.getElementById("pvNewVMEdit");
-        if (vmDiv !== null && vmDiv.style.display == "block")
-        {
-            txtVM = document.PVForm.pvNewVM.value;
+    	var alertMsg = "";
+    	var txtVM = "";
+    	//first if user entered
+    	var vmDiv = document.getElementById("pvNewVMEdit");
+    	if (vmDiv !== null && vmDiv.style.display == "block")
+    	{
+	    	txtVM = document.PVForm.pvNewVM.value;
+    	}
+    	//may be using concepts
+    	if (txtVM === null || txtVM === "")
+    	{
+    		vmDiv = document.getElementById("pvNewVMView");
+    		if (vmDiv !== null) {
+    			txtVM = (vmDiv.innerText) ? vmDiv.innerText : vmDiv.textContent;
+    	    }
+    	}
+    	/*if (txtVM === null || txtVM === "") {
+	    	alertMsg += "Please enter the text for Value Meaning. \n";
+        }*/
+    	//check user entered description
+    	var vmdDiv = document.getElementById("pvNewVMDEdit");
+    	if (vmdDiv !== null && vmdDiv.style.display == "block")
+    	{
+	    	var txtVMD = document.PVForm.pvNewVMD.value;
+	    	/*if (txtVMD === null || txtVMD === "") {
+	    		alertMsg += "Please enter the text for Value Meaning Description. \n";
+            }*/
+    	}
+    	//get vm pv if not exists
+    	var txtPV = document.PVForm.pvNewValue.value;
+    	if ((txtPV === null || txtPV === "") && alertMsg === "")
+    	{
+ 			if (txtVM !== "")
+			{
+				txtVM = txtVM.replace(/(\r\n)|(\n)/g, "");
+				document.PVForm.pvNewValue.value = txtVM;
+				txtPV = txtVM;
+			}
+    	}
+    	if (txtPV === null || txtPV === "") {
+    		alertMsg += "Please enter the text for Permissible Value. \n";
         }
-        //may be using concepts
-        if (txtVM === null || txtVM === "")
-        {
-            vmDiv = document.getElementById("pvNewVMView");
-            if (vmDiv !== null) {
-                txtVM = (vmDiv.innerText) ? vmDiv.innerText : vmDiv.textContent;
-            }
+    	if (alertMsg !== "") {
+    		alert(alertMsg);
         }
-        if (txtVM === null || txtVM === "") {
-            alertMsg += "Please enter the text for Value Meaning. \n";
-        }
-        //check user entered description
-        var vmdDiv = document.getElementById("pvNewVMDEdit");
-        if (vmdDiv !== null && vmdDiv.style.display == "block")
-        {
-            var txtVMD = document.PVForm.pvNewVMD.value;
-            if (txtVMD === null || txtVMD === "") {
-                alertMsg += "Please enter the text for Value Meaning Description. \n";
-            }
-        }
-        //get vm pv if not exists
-        var txtPV = document.PVForm.pvNewValue.value;
-        if ((txtPV === null || txtPV === "") && alertMsg === "")
-        {
-            if (txtVM !== "")
-            {
-                txtVM = txtVM.replace(/(\r\n)|(\n)/g, "");
-                document.PVForm.pvNewValue.value = txtVM;
-                txtPV = txtVM;
-            }
-        }
-        if (txtPV === null || txtPV === "") {
-            alertMsg += "Please enter the text for Permissible Value. \n";
-        }
-        if (alertMsg !== "") {
-            alert(alertMsg);
-        }
-        else
-        {
-            if (checkPVVMCombDuplicate(txtPV, txtVM, "newPV"))
-            {
-                var bSave = document.PVForm.btnCreateNew.value;
-                if (bSave !== null && !bSave.disabled) {
-                    bSave.disabled = true;
+    	else
+    	{
+    		if (checkPVVMCombDuplicate(txtPV, txtVM, "newPV"))
+    		{
+    			var bSave = document.PVForm.btnCreateNew.value;
+    			if (bSave !== null && !bSave.disabled) {
+    				bSave.disabled = true;
                 }
-                SubmitValidate("addNewPV");
-            }
-        }
+    			SubmitValidate("addNewPV");
+    		}
+    	}
     }
     
     function EditPVCheck()

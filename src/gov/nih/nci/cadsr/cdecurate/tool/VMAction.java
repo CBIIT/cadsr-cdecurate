@@ -20,9 +20,7 @@ import gov.nih.nci.cadsr.cdecurate.database.SQLHelper;
 import gov.nih.nci.cadsr.cdecurate.util.AdministeredItemUtil;
 import gov.nih.nci.cadsr.cdecurate.util.DataManager;
 import gov.nih.nci.cadsr.cdecurate.util.ModelHelper;
-import gov.nih.nci.cadsr.cdecurate.util.PVHelper;
 import gov.nih.nci.cadsr.cdecurate.util.ToolException;
-import gov.nih.nci.cadsr.cdecurate.util.VMHelper;
 import gov.nih.nci.cadsr.common.TestUtil;
 import gov.nih.nci.cadsr.domain.PermissibleValues;
 
@@ -37,10 +35,6 @@ import java.util.StringTokenizer;
 import java.util.Vector;
 
 import javax.servlet.http.HttpServletRequest;
-
-
-
-
 
 
 
@@ -68,6 +62,114 @@ public class VMAction implements Serializable
 	{
 
 	}
+
+	// other public methods
+	/**
+	 * searching for Value Meaning in caDSR calls oracle stored procedure "{call
+	 * SBREXT_CDE_CURATOR_PKG.SEARCH_VM(InString, OracleTypes.CURSOR)}" loop
+	 * through the ResultSet and add them to bean which is added to the vector
+	 * to return
+	 * 
+	 * @param data
+	 *            VMForm object
+	 */
+	public void searchVMValues(VMForm data, String sRecordsDisplayed)
+	{
+
+		ResultSet rs = null;
+		CallableStatement cstmt = null;	//CADSRMETA-501
+		try
+		{
+			if ((data.getSearchFilterID() != null) && !data.getSearchFilterID().equals("")){
+            	int id = Integer.parseInt(data.getSearchFilterID());
+             }
+			// do not continue search if no search filter
+			/*
+			 * if (data.getSearchFilterConName().equals("") &&
+			 * data.getSearchFilterID().equals("") &&
+			 * data.getSearchFilterCD().equals("") &&
+			 * data.getSearchFilterCondr().equals("") &&
+			 * data.getSearchFilterDef().equals("")) return;
+			 */
+			
+		
+			Vector<VM_Bean> vmList = data.getVMList();
+			if (vmList == null)
+				vmList = new Vector<VM_Bean>();
+			if (data.getCurationServlet().getConn() != null)
+			{
+				// parse the string.
+				String sDef = util.parsedStringSingleQuoteOracle(data.getSearchFilterDef());
+				String sTerm = util.parsedStringSingleQuoteOracle(data.getSearchTerm());
+				String sCon = util.parsedStringSingleQuoteOracle(data.getSearchFilterConName());	//JR1024 when the PV saved is clicked
+
+				// cstmt =
+				// data.getCurationServlet().getConn().prepareCall("{call
+				// SBREXT.SBREXT_CDE_CURATOR_PKG.SEARCH_VM(?,?,?,?,?,?,?)}");
+				cstmt =
+						data
+								.getCurationServlet()
+								.getConn()
+								.prepareCall(
+										"{call SBREXT.SBREXT_CDE_CURATOR_PKG.SEARCH_VM(?,?,?,?,?,?,?,?,?,?)}");
+				// Now tie the placeholders for out parameters.
+				cstmt.registerOutParameter(5, OracleTypes.CURSOR);
+				// Now tie the placeholders for In parameters.
+				cstmt.setString(1, sTerm); // name
+				cstmt.setString(2, data.getSearchFilterCD());
+				cstmt.setString(3, sDef);
+				cstmt.setString(4, data.getSearchFilterCondr());
+				cstmt.setString(6, sCon);
+				cstmt.setString(7, data.getSearchFilterCondr());
+				cstmt.setString(8, data.getSearchFilterID());
+				cstmt.setString(9, data.getVersionInd());
+				cstmt.setDouble(10, data.getVersionNumber());
+				// Now we are ready to call the stored procedure
+				cstmt.execute();
+				// store the output in the resultset
+				rs = (ResultSet) cstmt.getObject(5);
+
+				if (rs != null)
+				{
+					int g = 0;
+					int recordsDisplayed = GetACSearch.getInt(sRecordsDisplayed);
+					// loop through the resultSet and add them to the bean
+					while (rs.next() && g < recordsDisplayed)
+					{
+						g++;
+						VM_Bean vmBean = doSetVMAttributes(rs, data.getCurationServlet().getConn());
+						vmBean.setVM_BEGIN_DATE(rs.getString("begin_date"));
+						vmBean.setVM_END_DATE(rs.getString("end_date"));
+						vmBean.setVM_CD_NAME(rs.getString("cd_name"));
+						vmList.addElement(vmBean); // add the bean to a vector
+					} // END WHILE
+					if (g == recordsDisplayed){
+                    	int totalRecords = getResultSetSize(rs);
+                    	DataManager.setAttribute(data.getRequest().getSession(), "totalRecords", Integer.toString(totalRecords));
+                    } else {
+                    	//TBD - NPE
+                    	if(data.getRequest() != null && data.getRequest().getSession() != null) {
+                    		DataManager.setAttribute(data.getRequest().getSession(), "totalRecords", Integer.toString(g));
+                    	}
+                    }
+				} // END IF
+			}
+			data.setVMList(vmList);
+		}
+		catch (NumberFormatException e){}
+		catch (Exception e)
+		{
+			logger.error("ERROR - VMAction-searchVM for other : " + e.toString(), e);
+			data.setStatusMsg(data.getStatusMsg() + "\\tError : Unable to search VM."
+					+ e.toString());
+			data.setActionStatus(VMForm.ACTION_STATUS_FAIL);
+		}
+		finally
+		{
+			rs = SQLHelper.closeResultSet(rs);
+			cstmt = SQLHelper.closeCallableStatement(cstmt);
+		}
+	} // endVM search
 
 	/**
 	 * To get final result vector of selected attributes/rows to display for
@@ -595,7 +697,7 @@ public class VMAction implements Serializable
 	 * @param data
 	 *            VMForm object
 	 */
-	public void setDataForCreateOrEdit(PV_Bean pv, VD_Bean vd, VMForm data)
+	public void setDataForCreate(PV_Bean pv, VD_Bean vd, VMForm data)
 	{
 
 		VM_Bean vm = data.getVMBean();
@@ -607,7 +709,7 @@ public class VMAction implements Serializable
 		vm.setVM_BEGIN_DATE(pv.getPV_BEGIN_DATE()); // vm begin date
 		vm.setVM_END_DATE(pv.getPV_END_DATE()); // vm end date
 		// call the action change VM to validate the vm
-		data.setVMBean(vm);	//JR1025 for used by form, preferred definitions seems to differ e.g. The cessation of life. vs Death
+		data.setVMBean(vm);
 		// if (vm.getVM_IDSEQ() == null || vm.getVM_IDSEQ().equals(""))
 		// this.doChangeVM(data);
 		//TestUtil.dumpAllHttpRequests("VMAction.java: JR1024 pv Save is clicked in pv row doEditVDActions()<<<", data.getRequest());
@@ -619,18 +721,9 @@ public class VMAction implements Serializable
 //				userSelectedPV.getShortMeaning() != null && !userSelectedPV.getShortMeaning().equals(originalPV.getShortMeaning())
 //				//userSelectedPV.getBeginDate().equals(originalPV.getBeginDate()) && userSelectedPV.getEndDate().equals(originalPV.getEndDate())
 //				) {
-			VM_Bean exVM = null;
-			try {
-				if(!PVHelper.isOnlyDateChanged(data.getRequest())) { //JR1025 need to avoid validation
-					exVM = validateVMData(data);	//pick the existing VM for UI to use
-				} else {
-					//if only date(s) change
-					exVM = VMHelper.getExistingVMFromSession(data);
-				}
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-			if (exVM == null) {	//JR1025 if no existing VM without or with the concept(s) are found, it is a new VM
+			VM_Bean exVM = validateVMData(data);
+			if (exVM == null)
+			{
 				vm.setVM_IDSEQ("");
 				vm.setVM_SUBMIT_ACTION(data.CADSR_ACTION_INS);
 			}
@@ -1066,8 +1159,7 @@ public class VMAction implements Serializable
 		vmForm.setCurationServlet(data.getCurationServlet());
 		vmForm.setVMBean(selVM);
 		vmForm.setSearchTerm(selVM.getVM_LONG_NAME());
-		//this.searchVMValues(vmForm, "0");
-		VMHelper.searchVMValues(vmForm, "0");
+		this.searchVMValues(vmForm, "0");
 		if (vmForm.getVMList().size() > 0)
 		{
 			for (int i = 0; i < vmForm.getVMList().size(); i++)
@@ -1214,6 +1306,73 @@ public class VMAction implements Serializable
 	}
 
 	/**
+	 * store vm attributes from the database in pv bean
+	 * 
+	 * @param rs
+	 *            ResultSet from the query
+	 * @param conn
+	 *            Connection object
+	 * @return VM_Bean
+	 */
+	public VM_Bean doSetVMAttributes(ResultSet rs, Connection conn)
+	{
+
+		VM_Bean vm = new VM_Bean();
+		try
+		{
+			// vm.setVM_SHORT_MEANING(rs.getString("short_meaning"));
+			// String vmD = rs.getString("vm_description");
+			/*
+			 * String vmD = rs.getString("vm_definition_source"); if (vmD ==
+			 * null || vmD.equals(""))
+			 */
+			String vmD = rs.getString("PREFERRED_DEFINITION");
+			// vm.setVM_DESCRIPTION(vmD);
+			vm.setVM_PREFERRED_DEFINITION(vmD);
+			vm.setVM_SUBMIT_ACTION(VMForm.CADSR_ACTION_NONE);
+            logger.debug("VM_LONG_NAME at Line 1303 of VMAction.java"+rs.getString("LONG_NAME"));
+			vm.setVM_LONG_NAME(AdministeredItemUtil.handleLongName(rs.getString("LONG_NAME"))); //GF32004
+			logger.debug("VM_LONG_NAME at Line 1305 of VMAction.java"+vm.getVM_LONG_NAME());
+//			vm.setVM_LONG_NAME(rs.getString("LONG_NAME"));
+			vm.setVM_IDSEQ(rs.getString("VM_IDSEQ"));
+			vm.setVM_ID(rs.getString("VM_ID"));
+			vm.setVM_CONTE_IDSEQ(rs.getString("conte_idseq"));
+			// String sChg = rs.getString("comments");
+			// if (sChg == null || sChg.equals(""))
+			String sChg = rs.getString("change_note");
+			vm.setVM_CHANGE_NOTE(sChg);
+			vm.setASL_NAME(rs.getString("asl_name"));
+			// vm.setVM_DEFINITION_SOURCE(rs.getString("vm_definition_source"));
+			this.getVMVersion(rs, vm);
+			String sCondr = rs.getString("condr_idseq");
+			vm.setVM_CONDR_IDSEQ(sCondr);
+			// get vm concepts
+			if (sCondr != null && !sCondr.equals(""))
+			{
+				ConceptForm cdata = new ConceptForm();
+				cdata.setDBConnection(conn);
+				ConceptAction cact = new ConceptAction();
+				Vector<EVS_Bean> conList = cact.getAC_Concepts(sCondr, cdata);
+				vm.setVM_CONCEPT_LIST(conList);
+				DBAccess db = new DBAccess(conn);
+				String idSeq = rs.getString("VM_IDSEQ");
+				Alternates[] altList = db.getAlternates(new String[]
+				{ idSeq }, true, true);
+				vm.setVM_ALT_LIST(altList);
+			}
+		}
+		catch (SQLException e)
+		{
+			logger.error("ERROR - -doSetVMAttributes for close : " + e.toString(), e);
+		}
+		catch (ToolException e1)
+		{
+			logger.error("ERROR - -doSetVMAttributes for close : " + e1.toString(), e1);
+		}
+		return vm;
+	}
+
+	/**
 	 * to validate the vm changes on pv page records if multiple value meanings
 	 * match against name, defintion or concept exist in cadsr already sends
 	 * back the exact match vm (against name, def and concept) if exists
@@ -1221,43 +1380,39 @@ public class VMAction implements Serializable
 	 * @param data
 	 *            VMForm object
 	 * @return VM_Bean object if exact match otherwise null
-	 * @throws Exception 
 	 */
-	public VM_Bean validateVMData(VMForm data) throws Exception
+	public VM_Bean validateVMData(VMForm data)
 	{
 		VM_Bean vmBean = data.getVMBean();
-//		// String VMName = vmBean.getVM_SHORT_MEANING();
-//		String VMName = vmBean.getVM_LONG_NAME();
-//		// check for vm name match
-//		//getExistingVM(VMName, "", "", data); // check if vm exists
-//		VMHelper.getExistingVM(VMName, "", "", data); // check if vm exists
+		// String VMName = vmBean.getVM_SHORT_MEANING();
+		String VMName = vmBean.getVM_LONG_NAME();
+		// check for vm name match
+		getExistingVM(VMName, "", "", data); // check if vm exists
 		Vector<VM_Bean> nameList = data.getExistVMList();
-//		// if the returned one has the same idseq as as the one in hand; ignore
-//		// it
-//		// boolean editexisting = false; if (nameList.size() == 1)
-//		if (nameList.size() > 0)
-//		{
-//			for (int k = 0; k < nameList.size(); k++)
-//			{
-//				//VM_Bean existVM = checkExactMatch(nameList.elementAt(k), vmBean);
-//				VM_Bean existVM = VMHelper.checkExactMatch(nameList.elementAt(k), vmBean);
-//				if (existVM != null)
-//				{
-//					data.setVMBean(existVM);	//JR1025 need to find the VM, so that the same Public Id & Version is used
-//					return existVM; // return the exact match name- definition-
-//									// concept
-//				}
-//			}
-//		}
-		VM_Bean existVM = VMHelper.getExistingVMFromSession(data);
-		if(existVM != null) return existVM;
+		// if the returned one has the same idseq as as the one in hand; ignore
+		// it
+		// boolean editexisting = false; if (nameList.size() == 1)
+		if (nameList.size() > 0)
+		{
+			for (int k = 0; k < nameList.size(); k++)
+			{
+				VM_Bean existVM = checkExactMatch(nameList.elementAt(k), vmBean);
+				if (existVM != null)
+				{
+					data.setVMBean(existVM);
+					return existVM; // return the exact match name- definition-
+									// concept
+				}
+			}
+		}
 
 		// add the name matched one to the vector of nameMatchVMs; mark this one
 		// as (name) match
 		if (nameList.size() > 0)
 			getFlaggedMessageVM(data, 'E');		//JR1024 get the message for UI
 		else
-			data.setExistVMList(new Vector<VM_Bean>()); // make it empty because found the existing; JR1025 this is how the UI get the list of VM to prompt the user!
+			data.setExistVMList(new Vector<VM_Bean>()); // make it empty because
+														// found the existing
 
 		// String VMDef = vmBean.getVM_DESCRIPTION();
 		String VMDef = vmBean.getVM_PREFERRED_DEFINITION();
@@ -1267,8 +1422,7 @@ public class VMAction implements Serializable
 		if (!checkDefaultDefinition(VMDef, vCon))
 		{
 			// check for vm defn match
-			//this.getExistingVM("", "", VMDef, data);	//JR1024 JT this should not happend as it is supposed to be found already?
-			VMHelper.getExistingVM("", "", VMDef, data);	//JR1024 JT this should not happend as it is supposed to be found already?
+			this.getExistingVM("", "", VMDef, data);	//JR1024 JT this should not happend as it is supposed to be found already?
 			Vector<VM_Bean> defList = data.getDefnVMList();
 			// add the list of definitionMatchVMs to existing list if not
 			// existed already
@@ -1282,8 +1436,7 @@ public class VMAction implements Serializable
 			String sCondr = this.getConceptCondr(vCon, data);
 			if (!sCondr.equals(""))
 			{
-				//getExistingVM("", sCondr, "", data);
-				VMHelper.getExistingVM("", sCondr, "", data);
+				getExistingVM("", sCondr, "", data);
 				Vector<VM_Bean> conList = data.getConceptVMList();
 				// add the list of conceptMatchVMs to existing list if not
 				// existed already
@@ -1292,6 +1445,63 @@ public class VMAction implements Serializable
 			}
 		}
 		return null; // no exact match found
+	}
+
+	/**
+	 * gets the exact match vm
+	 * 
+	 * @param existVM
+	 *            existing vm
+	 * @param newVM
+	 *            new vm
+	 * @return VM_Bean object if matched, null otherwise
+	 */
+	public VM_Bean checkExactMatch(VM_Bean existVM, VM_Bean newVM)
+	{
+
+		boolean match = true;
+
+		/*
+		 * String VMDef = newVM.getVM_DESCRIPTION(); String nameDef =
+		 * existVM.getVM_DESCRIPTION();
+		 */
+		String VMDef = newVM.getVM_PREFERRED_DEFINITION();
+		String nameDef = existVM.getVM_PREFERRED_DEFINITION();
+		// match the name
+		if (!newVM.getVM_LONG_NAME().equals(existVM.getVM_LONG_NAME()))
+			match = false;
+		// check for exact match by defintion
+		else if (VMDef.equals(nameDef))
+		{
+			// check for exact match for the concepts
+			Vector<EVS_Bean> vCon = newVM.getVM_CONCEPT_LIST();
+			Vector<EVS_Bean> nameCon = existVM.getVM_CONCEPT_LIST();
+			if (nameCon.size() == vCon.size())
+			{
+				for (int i = 0; i < nameCon.size(); i++)
+				{
+					EVS_Bean nBean = nameCon.elementAt(i);
+					EVS_Bean cBean = vCon.elementAt(i);
+					// if concepts don't match break the loop
+					if (!nBean.getCONCEPT_IDENTIFIER().equals(cBean.getCONCEPT_IDENTIFIER()))
+					{
+						match = false; // concept data don't match
+						break;
+					}
+				}
+			}
+			else
+				// concept size don't match
+				match = false;
+		}
+		else
+			// defintion don't match
+			match = false;
+		// return the exact match vm
+		if (match)
+			return existVM;
+		// if reached here send back null
+		return null;
 	}
 
 	/**
@@ -1832,6 +2042,67 @@ public class VMAction implements Serializable
 	}
 
 	/**
+	 * to get the vms filtered by vmname, condridseq, or definition
+	 * 
+	 * @param vmName
+	 *            String vm name to filter
+	 * @param sCondr
+	 *            String condr idseq to filter
+	 * @param sDef
+	 *            String defintion to filter
+	 * @param data
+	 *            VMForm object to filter
+	 */
+	private void getExistingVM(String vmName, String sCondr, String sDef, VMForm data)
+	{
+
+		// set data filters
+		data.setSearchTerm(vmName); // search by name
+		data.setSearchFilterCondr(sCondr); // search by condr
+		data.setSearchFilterDef(sDef); // search by defintion
+		// call method
+		data.setVMList(new Vector<VM_Bean>());
+		searchVMValues(data, "0");
+		// set teh flag
+		Vector<VM_Bean> vmList = data.getVMList();
+		if (vmList != null && vmList.size() > 0)
+		{
+			if (!vmName.equals(""))
+				data.setExistVMList(vmList);	//JR1024 this is populated
+			else if (!sCondr.equals(""))
+				data.setConceptVMList(vmList);
+			else if (!sDef.equals(""))
+				data.setDefnVMList(vmList);
+		}
+	}
+
+	/**
+	 * puts the .0 to the version number if to make it decimal
+	 * 
+	 * @param rs
+	 *            ResultSet object
+	 * @param vm
+	 *            VM_Bean object
+	 */
+	private void getVMVersion(ResultSet rs, VM_Bean vm)
+	{
+
+		try
+		{
+			String rsV = rs.getString("version");
+			if (rsV == null)
+				rsV = "";
+			if (!rsV.equals("") && rsV.indexOf('.') < 0)
+				rsV += ".0";
+			vm.setVM_VERSION(rsV);
+		}
+		catch (SQLException e)
+		{
+			logger.error("ERROR - getVMVersion ", e);
+		}
+	}
+
+	/**
 	 * no need to match the default definition in cadsr. this method to get
 	 * check editing vm has the default definition
 	 * 
@@ -1946,7 +2217,7 @@ public class VMAction implements Serializable
 			// get attributes from the recorset
 			while (rs.next())
 			{
-				VM_Bean vm = VMHelper.doSetVMAttributes(rs, conn);
+				VM_Bean vm = doSetVMAttributes(rs, conn);
 				// add the element
 				vVMs.addElement(vm);
 			}
@@ -2163,5 +2434,14 @@ public class VMAction implements Serializable
 		}
 		return vList;
 	}
+	
+    private int getResultSetSize(ResultSet rs) throws SQLException {
+    	int size = 0;
+    	size = rs.getRow();
+    	while(rs.next())
+    		size++;
+    	
+    	return size;
+    }
 
 }// end of the class

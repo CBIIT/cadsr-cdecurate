@@ -93,7 +93,7 @@ public class JR1019 {
 		}
 	}
 
-	@Test
+//	@Test
 	public void testDefinitionDifferentFromEVS() {
 		boolean ret = false;
 		String cadsrDef = "";
@@ -105,7 +105,7 @@ public class JR1019 {
 		}
 	}
 
-	@Test
+//	@Test
 	public void testDefinitionFromNCIt() {
 		boolean ret = false;
 		String def = "abc";

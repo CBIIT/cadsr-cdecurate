@@ -66,18 +66,18 @@ public class GF30798_OCQ_OC_PropQ_Prop_Selected {
 	  }
 	  
 //	  @Test
-//	  public void testGoogleSearch() {
-//	    driver.get("http://www.google.com");
-//	    WebElement searchBox = driver.findElement(By.name("q"));
-//	    searchBox.sendKeys("webdriver");
-//	    searchBox.clear();
-//	    assertEquals("Google", driver.getTitle());
-//	  }
+	  public void testGoogleSearch() {
+	    driver.get("http://www.google.com");
+	    WebElement searchBox = driver.findElement(By.name("q"));
+	    searchBox.sendKeys("webdriver");
+	    searchBox.clear();
+	    assertEquals("Google", driver.getTitle());
+	  }
 //end jt	  
 
 
 
-  @Test
+//  @Test
   public void testGF30798OCQOCPropQPropSelected() throws Exception {
     driver.get(baseUrl + "/cdecurate/NCICurationServlet?reqType=login");
     driver.findElement(By.xpath("//td[@onclick=\"menuShow(this, event, 'no');\"]")).click();
