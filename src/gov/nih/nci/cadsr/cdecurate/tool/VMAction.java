@@ -20,6 +20,7 @@ import gov.nih.nci.cadsr.cdecurate.database.SQLHelper;
 import gov.nih.nci.cadsr.cdecurate.util.AdministeredItemUtil;
 import gov.nih.nci.cadsr.cdecurate.util.DataManager;
 import gov.nih.nci.cadsr.cdecurate.util.ModelHelper;
+import gov.nih.nci.cadsr.cdecurate.util.PVHelper;
 import gov.nih.nci.cadsr.cdecurate.util.ToolException;
 import gov.nih.nci.cadsr.common.TestUtil;
 import gov.nih.nci.cadsr.domain.PermissibleValues;
@@ -35,6 +36,7 @@ import java.util.StringTokenizer;
 import java.util.Vector;
 
 import javax.servlet.http.HttpServletRequest;
+
 
 
 
@@ -721,9 +723,15 @@ public class VMAction implements Serializable
 //				userSelectedPV.getShortMeaning() != null && !userSelectedPV.getShortMeaning().equals(originalPV.getShortMeaning())
 //				//userSelectedPV.getBeginDate().equals(originalPV.getBeginDate()) && userSelectedPV.getEndDate().equals(originalPV.getEndDate())
 //				) {
-			VM_Bean exVM = validateVMData(data);
-			if (exVM == null)
-			{
+			VM_Bean exVM = null;
+			try {
+				if(!PVHelper.isOnlyDateChanged(data.getRequest())) {
+					exVM = validateVMData(data);	//JR1025 TODO need to avoid this for the fix!
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			if (exVM == null) {	//JR1025 not sure about this block
 				vm.setVM_IDSEQ("");
 				vm.setVM_SUBMIT_ACTION(data.CADSR_ACTION_INS);
 			}
