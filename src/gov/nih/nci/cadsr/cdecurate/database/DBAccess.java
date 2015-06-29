@@ -1313,9 +1313,9 @@ public class DBAccess
 
         //GF32723 check to make sure it does not exist in the database by name + type
         try {
-			if(DesignationHelper.isAlternateNameExists(alt_, _conn)) {
-			    update(alt_);
-			} else
+//			if(DesignationHelper.isAlternateNameExists(alt_, _conn)) {	//JR1099 no need to check against database anymore based on the last requirement communicated via QA
+//			    update(alt_);
+//			} else
 			// If it's new or changed be sure to record CSI changes also.
 			if (alt_.isNew())
 			    insert(alt_);

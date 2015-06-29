@@ -388,10 +388,10 @@ public class AltNamesDefsServlet
         // Validate the AC/Name/Context/Type combination.
         Alternates alt = form_._sess.getEdit();	//JR1099 at this point, the changed alt name should be reflected correctly here
         String msg = form_._sess.check(alt);
-        //begin JR1099
-        if(msg == null) {
-        	msg = form_._sess.checkDB(_servlet.getConn(), alt);
-        }
+        //begin JR1099 this is not needed due to the last requirement communicated from QA
+//        if(msg == null) {
+//        	msg = form_._sess.checkDB(_servlet.getConn(), alt);
+//        }
         //end JR1099
         if (msg != null)
         {
