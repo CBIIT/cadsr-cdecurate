@@ -22,6 +22,7 @@ import gov.nih.nci.cadsr.cdecurate.util.DataManager;
 import gov.nih.nci.cadsr.cdecurate.util.ModelHelper;
 import gov.nih.nci.cadsr.cdecurate.util.PVHelper;
 import gov.nih.nci.cadsr.cdecurate.util.ToolException;
+import gov.nih.nci.cadsr.cdecurate.util.VMHelper;
 import gov.nih.nci.cadsr.common.TestUtil;
 import gov.nih.nci.cadsr.domain.PermissibleValues;
 
@@ -36,6 +37,8 @@ import java.util.StringTokenizer;
 import java.util.Vector;
 
 import javax.servlet.http.HttpServletRequest;
+
+
 
 
 
@@ -725,11 +728,14 @@ public class VMAction implements Serializable
 //				) {
 			VM_Bean exVM = null;
 			try {
-				if(!PVHelper.isOnlyDateChanged(data.getRequest())) {
-					exVM = validateVMData(data);	//JR1025 TODO need to avoid this for the fix!
-				}
+				if(!PVHelper.isOnlyDateChanged(data.getRequest())) { //JR1025 need to avoid validation
+					exVM = validateVMData(data);	//pick the existing VM for UI to use
+				} else {
+					//if only date(s) change
+					exVM = VMHelper.getExistingVMFromSession(data);	//JR1025 restore 2
+				} 
 			} catch (Exception e) {
-				e.printStackTrace();
+					e.printStackTrace();
 			}
 			if (exVM == null) {	//JR1025 not sure about this block
 				vm.setVM_IDSEQ("");
@@ -1413,6 +1419,16 @@ public class VMAction implements Serializable
 				}
 			}
 		}
+		//JR1025 restore 2
+		VM_Bean existVM = null;
+		try {
+			existVM = VMHelper.getExistingVMFromSession(data);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		if(existVM != null) return existVM;
+		//JR1025 restore 2
 
 		// add the name matched one to the vector of nameMatchVMs; mark this one
 		// as (name) match
