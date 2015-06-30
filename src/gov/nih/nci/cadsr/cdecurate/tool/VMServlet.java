@@ -380,7 +380,7 @@ private void setVersionValues(VMForm vmData,HttpServletRequest req, HttpSession 
     
     VD_Bean oldvd = (VD_Bean)session.getAttribute("oldVDBean");
     Vector<PV_Bean> vdpvs = oldvd.getVD_PV_List();	//JR1024
-    if (pvInd > -1 && vdpvs.size() > 0)  // (selvm != null)	//JR1024 this should be true for a new new PV?
+    if (pvInd > -1 && vdpvs.size() > 0)  // (selvm != null)	//JR1024 this should be true for a new new PV
     {
         for (int i=0; i<vdpvs.size(); i++)
         {

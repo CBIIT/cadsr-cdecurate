@@ -21,6 +21,7 @@ import gov.nih.nci.cadsr.cdecurate.util.DataManager;
 import gov.nih.nci.cadsr.cdecurate.util.FormBuilderUtil;
 import gov.nih.nci.cadsr.cdecurate.util.FormCleaner;
 import gov.nih.nci.cadsr.cdecurate.util.PVHelper;
+import gov.nih.nci.cadsr.common.Constants;
 import gov.nih.nci.cadsr.common.StringUtil;
 import gov.nih.nci.cadsr.common.TestUtil;
 
@@ -749,8 +750,16 @@ public class PVServlet implements Serializable
      }
      
      String chgED = (String)data.getRequest().getParameter("currentED");  //edited end date
+     String chgDesc = (String)data.getRequest().getParameter("pvNewVMD");  //edited description //JR1025 restore 4
      if (chgED != null && !chgED.equals(""))
      {
+         //begin JR1025 restore 4
+    	 pv.setPV_END_DATE(chgED);	//JR1024 handle end date if a new pv
+    	 if(pvID != null && pvID.equals(Constants.NEW_PV)) {
+    		 pv.setPV_VALUE_DESCRIPTION(chgDesc);	//JR1024 handle desc if a new pv
+    	 }
+         //end JR1025 restore 4
+
          //begin JR1024
          if (changeType.equals("changeOne")) {
              logger.debug("change only one PV's end date");
@@ -778,7 +787,7 @@ public class PVServlet implements Serializable
 	         return;
        }
        //else
-       pv.setPV_END_DATE(chgED);
+       //pv.setPV_END_DATE(chgED);	//moved up in the block of JR1025 restore 4
      }
      //valid values
      if (pv != null)
@@ -1658,7 +1667,8 @@ public class PVServlet implements Serializable
     }
     catch (Exception e)
     {
-      logger.error("ERROR - getDuplicateVMUse", e);
+    	e.printStackTrace();
+    	logger.error("ERROR - getDuplicateVMUse", e);
     }
      return null;
    }
