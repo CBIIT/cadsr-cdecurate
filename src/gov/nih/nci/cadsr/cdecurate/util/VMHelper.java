@@ -11,6 +11,7 @@ import gov.nih.nci.cadsr.cdecurate.tool.UtilService;
 import gov.nih.nci.cadsr.cdecurate.tool.VMAction;
 import gov.nih.nci.cadsr.cdecurate.tool.VMForm;
 import gov.nih.nci.cadsr.cdecurate.tool.VM_Bean;
+import gov.nih.nci.cadsr.common.Constants;
 
 import java.sql.CallableStatement;
 import java.sql.Connection;
@@ -35,7 +36,7 @@ public class VMHelper {
 		// String VMName = vmBean.getVM_SHORT_MEANING();
 		String VMName = vmBean.getVM_LONG_NAME();
 		// check for vm name match
-		getExistingVM(VMName, "", "", data); // check if vm exists
+		getExistingVM(VMName, "", "", data); // check if vm exists //JR1024 unfortunately data existVM or/and vmList is null, thus can't avoid db lookup again
 		Vector<VM_Bean> nameList = data.getExistVMList();
 		// if the returned one has the same idseq as as the one in hand; ignore
 		// it
@@ -50,6 +51,7 @@ public class VMHelper {
 					data.setVMBean(existVM);	//JR1025 need to find the VM, so that the same Public Id & Version is used
 					ret = existVM; // return the exact match name- definition-
 									// concept
+					//JR1024 this should have been just a break, but it is not, thus it is always picking up the last match found
 				}
 			}
 		}
@@ -79,6 +81,11 @@ public class VMHelper {
 		// call method
 		data.setVMList(new Vector<VM_Bean>());
 		searchVMValues(data, "0");
+		//JR1024 begin - pick only the original VM if it is only date changes!
+		System.out.println("user selected VM = [" + data.getRequest().getAttribute(Constants.USER_SELECTED_VM) + "]");
+
+		//JR1024 end
+
 		// set teh flag
 		Vector<VM_Bean> vmList = data.getVMList();
 		if (vmList != null && vmList.size() > 0)
@@ -161,7 +168,7 @@ public class VMHelper {
 				if (rs != null)
 				{
 					int g = 0;
-					int recordsDisplayed = GetACSearch.getInt(sRecordsDisplayed);
+					int recordsDisplayed = GetACSearch.getInt(sRecordsDisplayed);	//JR1024 bad design - should not have been set anything based on any limit
 					// loop through the resultSet and add them to the bean
 					while (rs.next() && g < recordsDisplayed)
 					{
@@ -359,4 +366,6 @@ public class VMHelper {
 			logger.error("ERROR - getVMVersion ", e);
 		}
 	}
+	
+	
 }

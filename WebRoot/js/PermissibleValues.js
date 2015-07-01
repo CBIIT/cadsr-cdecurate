@@ -635,7 +635,11 @@
         }
         //=== end of GF7680
 
-    }
+		//JR1024 new codes
+		//document.PVForm.currentPVInd.value = pvNo;
+		//alert(pvNo + "=" + document.PVForm.currentPVInd.value);
+
+	}
 	function changeDepDivDisplay(pvNo, action)
 	{
 		var editDisp = "none";
@@ -673,11 +677,21 @@
     		count++;
     	}
 		//origin data toggle (add hyperlink if editing)
-		changeElementText(pvNo, pvNo + "Org", false, "", action);
+		//JR1024 new codes added try catch blockes
+		try {
+			changeElementText(pvNo, pvNo + "Org", false, "", action);
+		} catch (e) {
+		}
 		//begin date data data toggle (add hyperlink if editing)
-		changeElementText(pvNo, pvNo + "BD", false, "", action);
+		try {
+			changeElementText(pvNo, pvNo + "BD", false, "", action);
+		} catch (e) {
+		}
 		//end date data toggle (add hyperlink if editing)
-		changeElementText(pvNo, pvNo + "ED", false, "", action);
+		try {
+			changeElementText(pvNo, pvNo + "ED", false, "", action);
+		} catch (e) {
+		}
 	}
 
     function changeElementText(curPV, elmObjName, isBold, nodeText, action)
@@ -770,8 +784,13 @@
                         }
                     };
                     dojo.connect(linkImg, "onclick", imgObject.onClick);    //JR1024 cross-browser approach!
-                    console.log("JR1024 PermissibleValues.js 1");
+                    console.log("JR1024 PermissibleValues.js 1b");
                     parentNode.appendChild(linkImg);
+					//=== JR1024 begin new codes
+					//if (action == "edit") {
+					updatePVVMString(curPV);
+					//}
+					//=== JR1024 end new codes
                 }
 		    	else {
 		    		var linkNode = document.createElement("a");		    	
@@ -785,7 +804,7 @@
 			    	linkNode.appendChild(textNode);
 	        		parentNode.appendChild(linkNode);
 		    	}
-	    	}
+			}
     		else if (action == "view")
     		{
 	    		parentNode.appendChild(textNode);
@@ -1796,3 +1815,11 @@
     document.PVForm.pageAction.value  = "goBack";
     document.PVForm.submit();
    }
+
+//JR1024 new codes
+function updatePVVMString(curPV) {
+	var targetEl = /* "currentPVVM" + */ curPV;
+	var vmIdVer = document.getElementById(targetEl).value;
+	document.PVForm.currentPVVM.value = curPV;
+	console.log("8 pv# [" + curPV + "] targetEL [" + targetEl + "] vmIdVer [" + vmIdVer + "]");
+}

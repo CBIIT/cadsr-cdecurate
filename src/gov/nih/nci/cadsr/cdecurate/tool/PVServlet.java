@@ -693,7 +693,7 @@ public class PVServlet implements Serializable
   private void addPVOtherAttributes(PV_Bean pv, String changeType, String pvID)
    {
 	  //JR1024 TODO need to save PV value, vm long name, desc and somehow concept list here!!!
-	  TestUtil.dumpAllHttpRequests("PVServlet.java: addPVOtherAttributes()<<<", data.getRequest());
+	  //TestUtil.dumpAllHttpRequests("PVServlet.java: addPVOtherAttributes()<<<", data.getRequest());
 	  
 	  
 	  

@@ -15,6 +15,7 @@ import gov.nih.nci.cadsr.cdecurate.util.ErrorHelper;
 import gov.nih.nci.cadsr.cdecurate.util.ToolURL;
 import gov.nih.nci.cadsr.common.Constants;
 import gov.nih.nci.cadsr.common.StringUtil;
+import gov.nih.nci.cadsr.common.TestUtil;
 import gov.nih.nci.cadsr.persist.ac.Admin_Components_Mgr;
 import gov.nih.nci.cadsr.persist.ac.Tool_Options_View_Ext_Mgr;
 import gov.nih.nci.cadsr.persist.evs.Evs_Mgr;
@@ -42,6 +43,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.sql.DataSource;
+
 
 
 //import oracle.jdbc.driver.OracleTypes;
@@ -852,6 +854,10 @@ public class CurationServlet
      */
     private void doEditPVActions(HttpServletRequest req, HttpServletResponse res) throws Exception
     {
+		TestUtil.dumpAllHttpRequests("CurationServlet.java:doEditPVActions() <<<", req);
+		//JR1024 new codes save the index of the edited PV
+		req.setAttribute(Constants.USER_SELECTED_VM, req.getParameter("currentPVVM"));
+
     	ValueDomainServlet vdServ = (ValueDomainServlet) this.getACServlet("ValueDomain");
         PVServlet pvSer = new PVServlet(req, res, vdServ);
         String pageFor = pvSer.doEditPVActions();

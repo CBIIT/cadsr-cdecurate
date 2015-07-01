@@ -80,7 +80,7 @@ public class PVHelper {
 	}
 
 	public static int getPVIndex(HttpServletRequest req, String reqName) { 
-		TestUtil.dumpAllHttpRequests("PVHelper.java: <<<", req);
+		//TestUtil.dumpAllHttpRequests("PVHelper.java: <<<", req);
 		int index = -1;
 		Object value = req.getParameter(reqName);
 		if(value != null && value.equals(Constants.NEW_PV)) index = Constants.NEW_PV_INDEX;	//JR1024/R1025 restore 4 support new pv (via "Create a Permissible Value [click here] ")

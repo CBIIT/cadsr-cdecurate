@@ -1047,7 +1047,7 @@ public class DataElementConceptServlet extends CurationServlet {
 			//session.setAttribute(userSelectedConCodePROP, userSelectedConCodePROP);
 			//end of GF32723
 			System.out.println("*************** In DataElementConceptServlet:doDECUseSelection() *************** ...");
-			TestUtil.dumpAllHttpRequests("doDECUseSelection()<<<", m_classReq); 
+			//TestUtil.dumpAllHttpRequests("doDECUseSelection()<<<", m_classReq); 
 
 			String sSelRow = "";
 			boolean selectedOCQualifiers = false;

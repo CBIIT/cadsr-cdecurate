@@ -1282,7 +1282,8 @@ L--%>
 																				 if (submit != null &&(submit.length()==0 || submit.equals("INS"))) { %>
 																				  [System Assigned after Value Domain Submission]
 																			<% } else { %>
-																					<%= vm.getVM_ID()+"v"+ vm.getVM_VERSION()%>
+																					<!-- JR1024 new codes -->
+																					<span id="currentPVVMpv<%=i%>"><%= vm.getVM_ID()+"v"+ vm.getVM_VERSION()%></span>
 																				
 																			<% } %>
 																				<br><br>
@@ -1472,8 +1473,8 @@ The Value Meaning matches the name of an existing Value Meaning. You may either 
 																					<dt>
 																						Public Id & Version:
 																					<dd>
-																					
-																					<%=vmIdandVer%>
+																					<!-- JR1024 new codes -->
+																					<span id="currentPVVMpv<%=k%>"><%=vmIdandVer%></span>
 																					
 																				   <dt>
 																						VM Description:
@@ -1540,6 +1541,7 @@ The Value Meaning matches the name of an existing Value Meaning. You may either 
 							<input type="hidden" name="pageAction" value="nothing">									
 							<input type="hidden" name="editPVInd" value="<%=sEditPV%>">
 							<!-- keep this if there was error -->
+							<input type="hidden" name="currentPVVM" value=""> <!-- JR1024 new codes -->
 							<input type="hidden" name="currentPVInd" value="">
 							<input type="hidden" name="currentElmID" value="">
 							<input type="hidden" name="currentPVViewType" value="">
