@@ -112,4 +112,20 @@ public class PVHelper {
 
 	    return ret;
 	}
+	
+	/** detect if the change only pv value change and nothing else is changed
+	 * */
+	public static boolean isOnlyValueChanged(HttpServletRequest req) throws Exception {
+		boolean ret = false;
+		TestUtil.dumpAllHttpRequests("VMAction.java:isOnlyDateChanged() JR1105 <<<", req);
+		
+		if(req == null) throw new Exception("Request can not be NULL or empty.");
+	    String chgValue = (String)req.getParameter("currentPVValue");  //edited value
+
+	    if((!StringUtils.isEmpty(chgValue))) {
+	    	ret = true;
+	    }
+
+	    return ret;
+	}
 }

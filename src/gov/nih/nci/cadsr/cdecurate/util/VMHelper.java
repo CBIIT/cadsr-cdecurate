@@ -17,6 +17,7 @@ import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 import java.util.Vector;
 
 import javax.servlet.http.HttpServletRequest;
@@ -82,12 +83,20 @@ public class VMHelper {
 		data.setVMList(new Vector<VM_Bean>());
 		searchVMValues(data, "0");
 		//JR1024 begin - pick only the original VM if it is only date changes!
-		System.out.println("user selected VM = [" + data.getRequest().getAttribute(Constants.USER_SELECTED_VM) + "]");
-
+		String vmPublicIdVersion = (String) data.getRequest().getAttribute(Constants.USER_SELECTED_VM);
+		System.out.println("user selected VM = [" + vmPublicIdVersion + "]");
+		Vector<VM_Bean> vmList = data.getVMList();
+		try {
+			data.setVMList(VMHelper.restoreOriginalVM(vmPublicIdVersion, vmList));
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		//JR1024 end
 
 		// set teh flag
-		Vector<VM_Bean> vmList = data.getVMList();
+//		Vector<VM_Bean> vmList = data.getVMList();
+		vmList = data.getVMList();
 		if (vmList != null && vmList.size() > 0)
 		{
 			if (!vmName.equals(""))
@@ -367,5 +376,24 @@ public class VMHelper {
 		}
 	}
 	
-	
+	/**
+	 * This method is created merely to avoid too much changes to the existing logic (design issue).
+	 */
+	public static Vector<VM_Bean> restoreOriginalVM(String vmPublicIdVersion, Vector<VM_Bean> vmList) throws Exception {
+		Vector<VM_Bean> ret = vmList;
+		if(vmList != null) {
+			VM_Bean vm = null;
+			String matchStr = "";
+			for(int i=0; i<vmList.size(); i++) {
+				vm = vmList.get(i);
+				matchStr = vm.getVM_ID() + "v" + vm.getVM_VERSION();
+				if(matchStr.trim().equals(vmPublicIdVersion)) {
+					ret = new Vector();
+					ret.add(vm);
+					break;
+				}
+			}
+		}
+		return ret;
+	}
 }

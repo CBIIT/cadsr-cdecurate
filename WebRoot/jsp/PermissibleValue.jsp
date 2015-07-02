@@ -1541,6 +1541,7 @@ The Value Meaning matches the name of an existing Value Meaning. You may either 
 							<input type="hidden" name="pageAction" value="nothing">									
 							<input type="hidden" name="editPVInd" value="<%=sEditPV%>">
 							<!-- keep this if there was error -->
+							<input type="hidden" name="currentPVValue" value=""> <!-- JR1105 -->
 							<input type="hidden" name="currentPVVM" value=""> <!-- JR1024 new codes -->
 							<input type="hidden" name="currentPVInd" value="">
 							<input type="hidden" name="currentElmID" value="">

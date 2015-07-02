@@ -485,6 +485,16 @@
                 }
 			}
 		}
+
+		//JR1105 begin
+		try {
+			var el = "txtpvonly" + pvNo;
+			//console.log("pv value target el [" + el + "]");
+			var obj = document.getElementById(el);
+			updatePVValue(obj.value);
+		} catch (e) {
+		}
+		//JR1105 end
 	}
     function view(pvd, imgdhide, imgddisp, action, pvNo, vdwfstatus, vdusedinform, pvusedinform, fmwfstatus) //GF7680 added 4 formal parameters
     {
@@ -1818,8 +1828,14 @@
 
 //JR1024 new codes
 function updatePVVMString(curPV) {
-	var targetEl = /* "currentPVVM" + */ curPV;
-	var vmIdVer = document.getElementById(targetEl).value;
-	document.PVForm.currentPVVM.value = curPV;
-	console.log("8 pv# [" + curPV + "] targetEL [" + targetEl + "] vmIdVer [" + vmIdVer + "]");
+	var targetEl = "currentPVVM" + curPV;
+	var vmIdVer = document.getElementById(targetEl).innerHTML;
+	document.PVForm.currentPVVM.value = vmIdVer;
+	//console.log("8 pv# [" + curPV + "] targetEL [" + targetEl + "] vmIdVer [" + vmIdVer + "]");
+}
+
+//JR1105
+function updatePVValue(curPVValue) {
+	document.PVForm.currentPVValue.value = curPVValue;
+	//console.log("8.1 curPVValue [" + document.PVForm.currentPVValue.value + "]");
 }

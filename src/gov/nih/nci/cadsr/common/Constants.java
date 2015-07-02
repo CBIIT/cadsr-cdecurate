@@ -46,4 +46,6 @@ public class Constants {
 	public static final String NEW_PV = "pvNew";
 	public static final int NEW_PV_INDEX = -1;
 	public static final String USER_SELECTED_VM = "userSelectedVM";
+	//JR1105
+	public static final String USER_EDITED_PV_VALUE = "currentPVValue";
 }

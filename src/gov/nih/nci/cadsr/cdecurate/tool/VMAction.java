@@ -728,7 +728,7 @@ public class VMAction implements Serializable
 //				) {
 			VM_Bean exVM = null;
 			try {
-				if(!PVHelper.isOnlyDateChanged(data.getRequest())) { //JR1025 need to avoid validation
+				if(!PVHelper.isOnlyDateChanged(data.getRequest()) && !PVHelper.isOnlyValueChanged(data.getRequest())) { //JR1025/JR1105 need to avoid validation
 					exVM = validateVMData(data);	//pick the existing VM for UI to use
 				} else {
 					//if only date(s) change
