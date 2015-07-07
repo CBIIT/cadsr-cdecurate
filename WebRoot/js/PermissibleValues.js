@@ -616,11 +616,11 @@
                     }
                 });
             }
-            if ((vdwfstatus === 'RELEASED' && vdusedinform === 'true' && pvusedinform === 'true') /* cond 2 and 3 */ ||
-                (vdwfstatus === 'RELEASED' && vdusedinform === 'true' && pvusedinform === 'false') /* cond 4 */ ||
-                (vdwfstatus !== 'RELEASED' && vdusedinform === 'true' && pvusedinform === 'true' && fmwfstatus === 'RELEASED' /* cond 5 */)
-                ) {
-                //#2 disablement
+            if ((vdwfstatus === 'RELEASED' && vdusedinform === 'true' && pvusedinform === 'true') /* cond 2 and 3 */ //||	//JR691 based on the latest requirement
+                //(vdwfstatus === 'RELEASED' && vdusedinform === 'true' && pvusedinform === 'false') /* cond 4 */ //
+                //(vdwfstatus !== 'RELEASED' && vdusedinform === 'true' && pvusedinform === 'true' && fmwfstatus === 'RELEASED' /* cond 5 */)
+            	) {
+            	//#2 disablement
                 dojo.query('[id^="txtpv"]').forEach(function (node, index, arr) { //GF7680 "txtpvonly" has to be the same as gov.nih.nci.cadsr.common.PV_NAME
                     try {
                         dojo.attr(node, "readonly", true);
