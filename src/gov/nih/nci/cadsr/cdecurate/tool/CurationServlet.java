@@ -46,9 +46,11 @@ import javax.sql.DataSource;
 
 
 
+
 //import oracle.jdbc.driver.OracleTypes;
 import oracle.jdbc.OracleTypes;		//GF30779
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 
 /**
@@ -857,7 +859,7 @@ public class CurationServlet
 		TestUtil.dumpAllHttpRequests("CurationServlet.java:doEditPVActions() <<<", req);
 		//JR1024 new codes save the index of the edited PV
 		req.setAttribute(Constants.USER_SELECTED_VM, req.getParameter("currentPVVM"));
-
+		System.out.println("CurationServlet.java doEditPVActions(): currentPVVM [" + req.getParameter("currentPVVM") + "]");
     	ValueDomainServlet vdServ = (ValueDomainServlet) this.getACServlet("ValueDomain");
         PVServlet pvSer = new PVServlet(req, res, vdServ);
         String pageFor = pvSer.doEditPVActions();

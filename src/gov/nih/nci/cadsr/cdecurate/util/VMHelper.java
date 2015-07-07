@@ -38,22 +38,39 @@ public class VMHelper {
 		String VMName = vmBean.getVM_LONG_NAME();
 		// check for vm name match
 		getExistingVM(VMName, "", "", data); // check if vm exists //JR1024 unfortunately data existVM or/and vmList is null, thus can't avoid db lookup again
+
 		Vector<VM_Bean> nameList = data.getExistVMList();
 		// if the returned one has the same idseq as as the one in hand; ignore
 		// it
 		// boolean editexisting = false; if (nameList.size() == 1)
-		if (nameList.size() > 0)
-		{
-			for (int k = 0; k < nameList.size(); k++)
+		if(!PVHelper.isOnlyDateChanged(data.getRequest()) && !PVHelper.isOnlyValueChanged(data.getRequest())) { //JR1024/JR1105 need to avoid validation
+			if (nameList.size() > 0)
 			{
-				VM_Bean existVM = checkExactMatch(nameList.elementAt(k), vmBean);
-				if (existVM != null)
+				for (int k = 0; k < nameList.size(); k++)
 				{
-					data.setVMBean(existVM);	//JR1025 need to find the VM, so that the same Public Id & Version is used
-					ret = existVM; // return the exact match name- definition-
-									// concept
-					//JR1024 this should have been just a break, but it is not, thus it is always picking up the last match found
+					VM_Bean existVM = checkExactMatch(nameList.elementAt(k), vmBean);
+					if (existVM != null)
+					{
+						data.setVMBean(existVM);	//JR1025 need to find the VM, so that the same Public Id & Version is used
+						ret = existVM; // return the exact match name- definition-
+										// concept
+						//JR1024 this should have been just a break, but it is not, thus it is always picking up the last match found
+					}
 				}
+			}
+		} else {
+
+			if (nameList.size() > 0)
+			{
+//				for (int k = 0; k < nameList.size(); k++)
+//				{
+					VM_Bean existVM = nameList.get(0);
+					if (existVM != null)
+					{
+						data.setVMBean(existVM);
+						ret = existVM;
+					}
+//				}
 			}
 		}
 
