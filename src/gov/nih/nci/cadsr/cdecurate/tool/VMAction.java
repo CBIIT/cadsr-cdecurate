@@ -32,6 +32,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
 import java.util.Vector;
@@ -1370,8 +1371,10 @@ public class VMAction implements Serializable
 				vm.setVM_CONCEPT_LIST(conList);
 				DBAccess db = new DBAccess(conn);
 				String idSeq = rs.getString("VM_IDSEQ");
-				Alternates[] altList = db.getAlternates(new String[]
-				{ idSeq }, true, true);
+				// CURATNTOOL-759 entry point
+				//Alternates[] altList = db.getAlternates(new String[] { idSeq }, true, true); // DBAction line 906
+				ArrayList<Alternates> alternatesArrayList = db.getAlternatesFastCS(idSeq);
+				Alternates[] altList = alternatesArrayList.toArray(new Alternates[alternatesArrayList.size()]);
 				vm.setVM_ALT_LIST(altList);
 			}
 		}

@@ -29,6 +29,9 @@ import java.sql.CallableStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.Vector;
 
 import org.apache.log4j.Logger;
@@ -448,6 +451,264 @@ public class DBAccess
         return list;
     }
 
+    // new method to be called at  VMAction.java line 1360
+
+    public ArrayList<Alternates> getAlternatesFastCS(String vmIdseq) throws ToolException {
+        boolean sortByName_ = true; // replaces parameter that was set to true
+        boolean showMC_ = true; // replaces parameter that was set to true
+
+        HashMap<String, Alternates> vmAlternates = new HashMap<String, Alternates>();
+//        ArrayList<String> altIdseqs = new ArrayList<String>(); // don't need this now that we have a hashmap
+        HashMap<String, ArrayList<CSIData>> csiDataForAlts;
+
+        // the code I'm replacing loops through the alternates 2 or 3 times and
+        // gets the CSI data for each one.  bad.
+        // what we want to do is turn the result set into an Alternates object
+        // and then add the CSI data to it
+        String selectSQL = SQLSelectAlts.getAlternates(sortByName_);
+        PreparedStatement selectDesigsAndDefins = null; //I don't know why this makes my IDE happy, totally redundant as far as I know.
+        ResultSet alternatesRS = null; //I don't know why this makes my IDE happy, totally redundant as far as I know.
+        try {
+            selectDesigsAndDefins = _conn.prepareStatement(selectSQL);
+            alternatesRS = getAlternates(selectDesigsAndDefins, vmIdseq);
+            while (alternatesRS.next()) {
+                Alternates currentAlternates = SQLSelectAlts.copyFromRS(alternatesRS, showMC_);
+//              altIdseqs.add(currentAlternates.getIdseq());
+                vmAlternates.put(currentAlternates.getAltIdseq(), currentAlternates);
+            }
+
+            // Now that we have an ArrayList of the alternates' ids and an array of the Alternates
+            // Get all the CSI data for all the Alternates and put it in a hashmap of ArrayList<CSIData>
+            csiDataForAlts = getCSIDataForAlternatesList(vmAlternates);
+
+            CSIData unclassifiedCSI = new CSIData(new TreeNodeCS("(unclassified)", "(unclassified)", "Unclassified Alternate Names and Definitions.", null, null, false), 0);
+            ArrayList<CSIData> unclassifiedCSIList = new ArrayList<CSIData>();
+            unclassifiedCSIList.add(unclassifiedCSI);
+
+
+            // now loop through altIdseqs.  If there is no entry in output, add the unclassified entry for that altIdseq
+            for (String altIdseq : vmAlternates.keySet()) {
+                if (csiDataForAlts.get(altIdseq) == null) {
+                    csiDataForAlts.put(altIdseq, unclassifiedCSIList);
+                    csiDataForAlts.get(altIdseq).add(new CSIData(new TreeNodeAlt(vmAlternates.get(altIdseq), altIdseq), 1));
+                }
+                // reverse all the ArrayLists of CSIData to be consistent with original code
+                Collections.reverse(csiDataForAlts.get(altIdseq));
+
+                //Turn the ArrayList of CSIData into node and level arrays for use by Tree
+                int csiDataListSize = csiDataForAlts.get(altIdseq).size();
+                TreeNode[] nodes = new TreeNode[csiDataListSize];
+                int[] levels = new int[csiDataListSize];
+                for (int i = 0; i < nodes.length; ++i)
+                {
+                    CSIData csiData = csiDataForAlts.get(altIdseq).get(i);
+                    nodes[i] = csiData._node;
+                    levels[i] = csiData._level;
+                }
+
+                // Create the CSI tree for this Alternate Name/Def
+                vmAlternates.get(altIdseq).addCSI(nodes, levels);
+            }
+
+        }
+        catch (SQLException ex) {
+            _log.error("SQL: " + selectSQL, ex);
+            throw new ToolException(ex);
+        }
+        catch (ToolException ex) {
+            _log.error("SQL: " + selectSQL, ex);
+            throw ex;
+        } finally {
+            if (alternatesRS != null) {
+                SQLHelper.closeResultSet(alternatesRS);
+            }
+            if (selectDesigsAndDefins != null) {
+                SQLHelper.closePreparedStatement(selectDesigsAndDefins);
+            }
+        }
+        return new ArrayList<Alternates>(vmAlternates.values());
+    }
+
+    // I can break this into two steps insetad of three by making one call to get all the alternates with all their data,
+    // then one call to get the att data for all alternates, that's fewer calls to get att data
+
+    /**
+     *
+     * @param vmAlternates a hashmap of format Alternates objects keyed off the Alternates's idseq
+     * @return A hashmap of array's of CSIData, key'd off the idseq of the Alternates object the list of CSIData belongs to
+     * @throws ToolException
+     */
+    public HashMap<String, ArrayList<CSIData>> getCSIDataForAlternatesList(HashMap<String, Alternates> vmAlternates) throws ToolException {
+        HashMap<String, ArrayList<CSIData>> output = new HashMap<String, ArrayList<CSIData>>();
+        // empty CSIData for AltIdseqs with no CSI's
+        CSIData unclassifiedCSI = new CSIData(new TreeNodeCS("(unclassified)", "(unclassified)", "Unclassified Alternate Names and Definitions.", null, null, false), 0);
+        ArrayList<CSIData> unclassifiedCSIList = new ArrayList<CSIData>();
+        unclassifiedCSIList.add(unclassifiedCSI);
+        String attSQL = "SELECT za.att_idseq, za.aca_idseq, za.cs_csi_idseq FROM sbrext.ac_att_cscsi_view_ext za WHERE za.att_idseq in (?)";
+        String csCsiSQL = "SELECT level, cc.cs_idseq, cs.long_name, cc.cs_csi_idseq, csi.long_name, cs.preferred_definition, " +
+                "cs.version, c.name, csi.csitl_name, cs.cs_id, csi.csi_id,  csi.version  " +
+                "FROM sbr.cs_csi_view cc, sbr.cs_items_view csi, sbr.classification_schemes_view cs, sbr.contexts_view c  " +
+                "WHERE csi.csi_idseq = cc.csi_idseq  AND cs.cs_idseq(+) = cc.cs_idseq  AND c.conte_idseq(+) = cs.conte_idseq  " +
+                "CONNECT BY prior cc.p_cs_csi_idseq = cc.cs_csi_idseq  " +
+                "START WITH cc.cs_csi_idseq = ?  AND csi.csi_idseq = cc.csi_idseq  AND csi.csitl_name <> ?";
+        PreparedStatement attStatement = null; //I don't know why this makes my IDE happy, totally redundant as far as I know.
+        PreparedStatement csCsiStatement;
+        ResultSet attRS = null; //I don't know why this makes my IDE happy, totally redundant as far as I know.
+        ResultSet csCsiRS;
+        // ATT result set management fields
+        String currentALtIdseq;
+        String acaIdseq;
+        String csCsiIdseq;
+        int attRsSize;
+        //CSIData management fields
+
+        try {
+            // prep new array list for the CSIData
+            ArrayList<CSIData> alternatesCSIData = new ArrayList<CSIData>();
+            // get the cs_csi_idseq's from sbrext.ac_att_cscsi_view_ext
+            attStatement = _conn.prepareStatement(attSQL);
+            StringBuilder altIdseqs = new StringBuilder();
+            for (String str : vmAlternates.keySet()) {
+                altIdseqs.append(str).append(',');// argh, end up with a comma at the end, remove with substring when used
+            }
+            // set list of alternates idseqs into prepared statement
+            if (altIdseqs.length() > 1) {
+                attStatement.setString(1, altIdseqs.toString().substring(0, altIdseqs.length() - 1));
+            } else {
+                attStatement.setString(1, "");
+            }
+            attRS = attStatement.executeQuery();
+            while (attRS.next()) {
+                currentALtIdseq = attRS.getString(1);
+                acaIdseq = attRS.getString(2);
+                csCsiIdseq = attRS.getString(3);
+                // if the hashmap doesn't have an entry for currentALtIdseq, make it
+                if (output.get(currentALtIdseq) == null) {
+                    output.put(currentALtIdseq, new ArrayList<CSIData>());
+                }
+                // go get the CSIData for this ATT entry
+                csCsiStatement = _conn.prepareStatement(csCsiSQL);
+                csCsiStatement.setString(1, csCsiIdseq);
+                csCsiStatement.setString(2, _packageAlias);
+                csCsiRS = csCsiStatement.executeQuery();
+                boolean firstTimeThrough = true;
+                int level = 0;
+                int prevLevel = 0;
+                TreeNodeCSI prevTnc = null;
+                String prevCSValue = "csIdseq"; //initialize to non-working value for contrast
+                String prevCSName = "";
+                String prevCSDef = "";
+                String prevCSVers = "";
+                String prevCSConte = "";
+                String csValue = "csIdseq"; //initialize to non-working value for contrast
+                CSIData prevTreeNodeCSRecord = null;
+                while (true) {
+                    boolean weHaveARow = csCsiRS.next();
+                    if (weHaveARow) {
+                        level = csCsiRS.getInt(SQLSelectCSI._LEVEL);
+                        csValue = csCsiRS.getString(SQLSelectCSI._CSIDSEQ);
+                        if (vmAlternates.get(currentALtIdseq) != null && level == 1) {
+                            output.get(currentALtIdseq).add(new CSIData(new TreeNodeAlt(vmAlternates.get(currentALtIdseq), currentALtIdseq), level - 1));
+                        }
+                    }
+
+                    if (!firstTimeThrough) { // this conditional could probably be accommodated other ways but it's not worth the trouble at this point
+                        // Whenever the level is 1 it means we are at a new leaf. If we are at a leaf and
+                        // the Classification Scheme has changed, record a new CS record.
+                        // Or if we are out of results,  be sure to write a new CS record for any data
+                        // holding in the stack.
+                        if ((level == 1 && !prevCSValue.equals(csValue)) || !weHaveARow) {
+                            CSIData treeNodeCSRecord = new CSIData(new TreeNodeCS(prevCSName, prevCSValue, prevCSDef, prevCSVers, prevCSConte, false), prevLevel);
+                            output.get(currentALtIdseq).add(treeNodeCSRecord);
+
+                            // To be properly represented as levels in a hierarchy, 0 is the top (the CS record)
+                            // and 'N' is a child. To sequence the numbers we use the max previous level
+                            // and subtract the recorded level.
+                            // this is all very expensive and I don't know that it is
+                            //    A: necessary
+                            //    B: going to work because I'm not adding everything to the start of the list
+                            for (CSIData temp : output.get(currentALtIdseq)) {
+                                // When a level is zero, we can stop because a previous CS group is starting.
+                                if (temp == prevTreeNodeCSRecord)
+                                    break;
+
+                                // This subtract basically "flips" the level around. A variable has to be used as
+                                // there's no way to predetermine how deep a hierarchy may be.
+                                temp._level = prevLevel - temp._level;//todo: confirm this still works with the current insert strategy
+                            }
+                            prevTreeNodeCSRecord = treeNodeCSRecord;
+                        }
+                    }
+
+                    if(!weHaveARow) {
+                        break; // terminate while loop on csCsriRS rows
+                    }
+
+                    // build a new TreeNodeCSI CSIData object
+                    String csiType = csCsiRS.getString(SQLSelectCSI._CSITYPE);
+                    String nodeCsCsiIdseq = csCsiRS.getString(SQLSelectCSI._CSCSIIDSEQ);
+                    String csiId = csCsiRS.getString(SQLSelectCSI._CSIID);
+                    String csiVersion = csCsiRS.getString(SQLSelectCSI._CSIVERSION);
+                    if (acaIdseq == null)
+                        acaIdseq = nodeCsCsiIdseq;
+                    TreeNodeCSI tnc = new TreeNodeCSI(csCsiRS.getString(SQLSelectCSI._CSINAME), acaIdseq, nodeCsCsiIdseq, csiType, null, false,csiVersion,csiId);
+                    // add new TreeNodeCSI CSIData object to the list for this alternate
+                    output.get(currentALtIdseq).add(0, new CSIData(tnc, level));
+                    // collect prev values for next loop's comparisons
+                    prevCSValue = csValue;
+                    prevCSName = csCsiRS.getString(SQLSelectCSI._CSNAME);
+                    prevCSDef = csCsiRS.getString(SQLSelectCSI._CSDEFIN);
+                    prevCSVers = csCsiRS.getString(SQLSelectCSI._CSVERS);
+                    prevCSConte = csCsiRS.getString(SQLSelectCSI._CSCONTE);
+                    prevLevel = level;
+                    // This if/else block is either pointless or ill conceived.  Todo: verify which it is, if time exists
+                    if (csiType.equals(_packageName)) {
+                        prevTnc = tnc;
+                    } else if (prevTnc != null) {
+                        if (csiType.equals(_packageAlias)) {
+                            prevTnc.setPackageAlias(acaIdseq); //?? Why would I want to set this to an IDSEQ???
+                            // and anyway, aren't I just updating the tnc object that's in the list, why wait to do
+                            // this after assigning the object to the prevTnc variable??
+                        }
+                        prevTnc = null;
+                    }
+
+                    // hurray, we finished the first time through
+                    firstTimeThrough = false;
+                }
+                SQLHelper.closeResultSet(csCsiRS);
+                csCsiStatement.clearParameters();
+                SQLHelper.closePreparedStatement(csCsiStatement);
+            }
+
+        } catch (SQLException ex) {
+            _log.error("SQL: " + attSQL, ex);
+            throw new ToolException(ex);
+//        } catch (ToolException ex) {
+//            _log.error("SQL: " + attSQL, ex);
+//            throw ex;
+        } finally {
+            if (attRS != null) {
+                SQLHelper.closeResultSet(attRS);
+            }
+            if (attStatement != null) {
+                SQLHelper.closePreparedStatement(attStatement);
+            }
+        }
+
+        // now loop through altIdseqs.  If there is no entry in output, add the unclassified entry for that altIdseq
+        for (String altIdseq : vmAlternates.keySet()) {
+            if (output.get(altIdseq) == null) {
+                output.put(altIdseq, unclassifiedCSIList);
+                output.get(altIdseq).add(new CSIData(new TreeNodeAlt(vmAlternates.get(altIdseq), altIdseq), 1));
+            }
+            // reverse all the arraylists of CSIData to be consistent with original code
+            Collections.reverse(output.get(altIdseq));
+        }
+
+        return output;
+    }
+
     /**
      * Get the CSI Lineage for the CSI specified
      * 
@@ -811,12 +1072,10 @@ public class DBAccess
      * @param idseq_ the database id.
      * @throws ToolException
      */
-    public void deleteAltDef(String idseq_) throws ToolException
-    {
+    public void deleteAltDef(String idseq_) throws ToolException {
         String select = "delete from sbr.definitions_view where ac_idseq = ?";
         PreparedStatement pstmt = null;
-        try
-        {
+        try {
             pstmt = _conn.prepareStatement(select);
             pstmt.setString(1, idseq_);
             pstmt.executeUpdate();
