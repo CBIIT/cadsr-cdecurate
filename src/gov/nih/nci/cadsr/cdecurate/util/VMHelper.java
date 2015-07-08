@@ -59,19 +59,12 @@ public class VMHelper {
 				}
 			}
 		} else {
-<<<<<<< HEAD
-=======
-			//VMHelper.restoreOriginalVM(data);	//JR1024 begin - pick only the original VM if it is only pv value/date changes!
->>>>>>> a3fa18b4424c15a0e7b66ae45123b307c0871ed7
 			String userVMPublicId = getUserVMPublicId(data);
 			data.setSearchTerm("");
 			data.setSearchFilterID(userVMPublicId);
 			data.setVersionInd("Yes");	//use public id as search not the vm long name
 			VMHelper.searchVMValues(data, "0");
-<<<<<<< HEAD
 			VMHelper.restoreOriginalVM(data);	//JR1024 begin - pick only the original VM if it is only pv value/date changes!
-=======
->>>>>>> a3fa18b4424c15a0e7b66ae45123b307c0871ed7
 			Vector<VM_Bean> nameList2 = data.getExistVMList();
 
 			if (nameList2.size() > 0)
@@ -116,7 +109,6 @@ public class VMHelper {
 		data.setVMList(new Vector<VM_Bean>());
 		searchVMValues(data, "0");
 		VMHelper.restoreOriginalVM(data);	//JR1024 begin - pick only the original VM if it is only pv value/date changes!
-<<<<<<< HEAD
 */
 		//JR1024 search by vm id not by long name!!!
 		String userVMPublicId = getUserVMPublicId(data);
@@ -124,8 +116,6 @@ public class VMHelper {
 		data.setSearchFilterID(userVMPublicId);
 		data.setVersionInd("Yes");	//use public id as search not the vm long name
 		VMHelper.searchVMValues(data, "0");
-=======
->>>>>>> a3fa18b4424c15a0e7b66ae45123b307c0871ed7
 
 		// set teh flag
 		Vector<VM_Bean> vmList = data.getVMList();
