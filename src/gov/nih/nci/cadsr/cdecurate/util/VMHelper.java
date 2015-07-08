@@ -59,18 +59,26 @@ public class VMHelper {
 				}
 			}
 		} else {
+			String userVMPublicId = getUserVMPublicId(data);
+			data.setSearchTerm("");
+			data.setSearchFilterID(userVMPublicId);
+			data.setVersionInd("Yes");	//use public id as search not the vm long name
+			VMHelper.searchVMValues(data, "0");
+			VMHelper.restoreOriginalVM(data);	//JR1024 begin - pick only the original VM if it is only pv value/date changes!
+			Vector<VM_Bean> nameList2 = data.getExistVMList();
 
-			if (nameList.size() > 0)
+			if (nameList2.size() > 0)
 			{
-//				for (int k = 0; k < nameList.size(); k++)
-//				{
-					VM_Bean existVM = nameList.get(0);
-					if (existVM != null)
+				for (int k = 0; k < nameList2.size(); k++)
+				{
+					VM_Bean existVM = nameList2.get(k);
+					System.out.println("VM_ID [" + existVM.getVM_ID() + " description [" + existVM.toString() + "]");
+					if (existVM != null && existVM.getVM_ID() != null && existVM.getVM_ID().equals(userVMPublicId))
 					{
 						data.setVMBean(existVM);
 						ret = existVM;
 					}
-//				}
+				}
 			}
 		}
 
@@ -88,32 +96,29 @@ public class VMHelper {
 	 *            String defintion to filter
 	 * @param data
 	 *            VMForm object to filter
+	 * @throws Exception 
 	 */
-	public static void getExistingVM(String vmName, String sCondr, String sDef, VMForm data)
+	public static void getExistingVM(String vmName, String sCondr, String sDef, VMForm data) throws Exception
 	{
 
 		// set data filters
-		data.setSearchTerm(vmName); // search by name
+/*		data.setSearchTerm(vmName); // search by name
 		data.setSearchFilterCondr(sCondr); // search by condr
 		data.setSearchFilterDef(sDef); // search by defintion
 		// call method
 		data.setVMList(new Vector<VM_Bean>());
 		searchVMValues(data, "0");
-		//JR1024 begin - pick only the original VM if it is only date changes!
-		String vmPublicIdVersion = (String) data.getRequest().getAttribute(Constants.USER_SELECTED_VM);
-		System.out.println("user selected VM = [" + vmPublicIdVersion + "]");
-		Vector<VM_Bean> vmList = data.getVMList();
-		try {
-			data.setVMList(VMHelper.restoreOriginalVM(vmPublicIdVersion, vmList));
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		//JR1024 end
+		VMHelper.restoreOriginalVM(data);	//JR1024 begin - pick only the original VM if it is only pv value/date changes!
+*/
+		//JR1024 search by vm id not by long name!!!
+		String userVMPublicId = getUserVMPublicId(data);
+		data.setSearchTerm("");
+		data.setSearchFilterID(userVMPublicId);
+		data.setVersionInd("Yes");	//use public id as search not the vm long name
+		VMHelper.searchVMValues(data, "0");
 
 		// set teh flag
-//		Vector<VM_Bean> vmList = data.getVMList();
-		vmList = data.getVMList();
+		Vector<VM_Bean> vmList = data.getVMList();
 		if (vmList != null && vmList.size() > 0)
 		{
 			if (!vmName.equals(""))
@@ -396,7 +401,7 @@ public class VMHelper {
 	/**
 	 * This method is created merely to avoid too much changes to the existing logic (design issue).
 	 */
-	public static Vector<VM_Bean> restoreOriginalVM(String vmPublicIdVersion, Vector<VM_Bean> vmList) throws Exception {
+	private static Vector<VM_Bean> restoreVM(String vmPublicIdVersion, Vector<VM_Bean> vmList) throws Exception {
 		Vector<VM_Bean> ret = vmList;
 		if(vmList != null) {
 			VM_Bean vm = null;
@@ -410,6 +415,35 @@ public class VMHelper {
 					break;
 				}
 			}
+		}
+		return ret;
+	}
+	
+	//JR1024 begin - pick only the original VM if it is only date changes!
+	public static void restoreOriginalVM(VMForm data) throws Exception {
+		String vmPublicIdVersion = (String) data.getRequest().getAttribute(Constants.USER_SELECTED_VM);
+		System.out.println("user selected VM = [" + vmPublicIdVersion + "]");
+		Vector<VM_Bean> vmList = data.getVMList();
+		try {
+			data.setVMList(VMHelper.restoreVM(vmPublicIdVersion, vmList));
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		//JR1024 end
+	}
+	
+	//assumpption is the parameter is in the format of publicIdvVersion e.g. 2480835v1.0
+	public static String getUserVMPublicId(VMForm data) throws Exception {
+		if(data == null || data.getRequest().getAttribute(Constants.USER_SELECTED_VM) == null) throw new Exception("data or USER_SELECTED_VM is null or empty!");
+
+		String vmPublicIdVersion = (String) data.getRequest().getAttribute(Constants.USER_SELECTED_VM);
+		
+		String ret = "-1";
+		if(vmPublicIdVersion != null) {
+			char targetSeparator = 'v';
+			int index = vmPublicIdVersion.indexOf(targetSeparator);
+			ret = vmPublicIdVersion.substring(0, index);
 		}
 		return ret;
 	}

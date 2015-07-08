@@ -13,6 +13,7 @@ package gov.nih.nci.cadsr.cdecurate.tool;
 import gov.nih.nci.cadsr.cdecurate.database.ACTypes;
 import gov.nih.nci.cadsr.cdecurate.database.Alternates;
 
+import java.util.Arrays;
 import java.util.Vector;
 
 /**
@@ -904,5 +905,34 @@ public void setVM_ALT_LIST(Alternates[] vm_alt_list) {
 	VM_ALT_LIST = vm_alt_list;
 }
 
+@Override
+public String toString() {
+	return "VM_Bean [RETURN_CODE=" + RETURN_CODE + ", VM_COMMENT_FLAG="
+			+ VM_COMMENT_FLAG + ", VM_BEGIN_DATE=" + VM_BEGIN_DATE
+			+ ", VM_END_DATE=" + VM_END_DATE + ", VM_CREATED_BY="
+			+ VM_CREATED_BY + ", VM_DATE_CREATED=" + VM_DATE_CREATED
+			+ ", VM_MODIFIED_BY=" + VM_MODIFIED_BY + ", VM_DATE_MODIFIED="
+			+ VM_DATE_MODIFIED + ", VM_CD_IDSEQ=" + VM_CD_IDSEQ
+			+ ", VM_CD_NAME=" + VM_CD_NAME + ", VM_CHECKED=" + VM_CHECKED
+			+ ", VM_CONCEPT=" + VM_CONCEPT + ", VM_IDSEQ=" + VM_IDSEQ
+			+ ", VM_CONTE_IDSEQ=" + VM_CONTE_IDSEQ + ", ASL_NAME=" + ASL_NAME
+			+ ", VM_LONG_NAME=" + VM_LONG_NAME + ", VM_PREF_NAME="
+			+ VM_PREF_NAME + ", VM_PREFERRED_DEFINITION="
+			+ VM_PREFERRED_DEFINITION + ", VM_ID=" + VM_ID
+			+ ", VM_ALT_DEFINITION=" + VM_ALT_DEFINITION
+			+ ", VM_DEFINITION_SOURCE=" + VM_DEFINITION_SOURCE
+			+ ", VM_ALT_NAME=" + VM_ALT_NAME + ", VM_ORIGIN=" + VM_ORIGIN
+			+ ", VM_CHANGE_NOTE=" + VM_CHANGE_NOTE + ", VM_VERSION="
+			+ VM_VERSION + ", VM_SUBMIT_ACTION=" + VM_SUBMIT_ACTION
+			+ ", VM_CONDR_IDSEQ=" + VM_CONDR_IDSEQ + ", VM_CONCEPT_LIST="
+			+ VM_CONCEPT_LIST + ", VM_ALT_LIST=" + Arrays.toString(VM_ALT_LIST)
+			+ ", VM_VD_LIST=" + VM_VD_LIST + ", VM_DE_LIST=" + VM_DE_LIST
+			+ ", VM_CRF_LIST=" + VM_CRF_LIST + ", VM_SHOW_RELEASED_VD="
+			+ VM_SHOW_RELEASED_VD + ", VM_SHOW_RELEASED_DE="
+			+ VM_SHOW_RELEASED_DE + ", VM_SHOW_RELEASED_CRF="
+			+ VM_SHOW_RELEASED_CRF + ", VM_SORT_COLUMN_VD=" + VM_SORT_COLUMN_VD
+			+ ", VM_SORT_COLUMN_DE=" + VM_SORT_COLUMN_DE
+			+ ", VM_SORT_COLUMN_CRF=" + VM_SORT_COLUMN_CRF + "]";
+}
 
 }
