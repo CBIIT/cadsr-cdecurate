@@ -1,4 +1,4 @@
-Curation Tool 4.1 related scripts (30 scripts in total, 2 are indirectly used by other calling scripts). 
+Curation Tool 4.1 related scripts (30 scripts in total, 2 are indirectly used by other calling scripts). All other files not mentioned should be ignored and not executed.
 
 Please STOP proceeding to the next script if any errors show up with the current script.
 
