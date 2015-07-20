@@ -146,7 +146,7 @@ public class FormBuilderUtil {
 		newQuestionSQL += ""+ version + ",'VALID_VALUE',";		//VERSION,QTL_NAME
 		newQuestionSQL += "'" + questBean.getCONTE_IDSEQ() + "','UNASSIGNED','"+ questBean.getVD_PREF_NAME() /* *** TODO NOT SURE ***/ + "','" + questBean.getVD_DEFINITION() /* *** TODO NOT SURE ***/ + "',";	//CONTE_IDSEQ e.g. 99BA9DC8-2095-4E69-E034-080020C9C0E0,ASL_NAME,PREFERRED_NAME e.g. No 1,PREFERRED_DEFINITION e.g. No
 		//newQuestionSQL += "--null,null,";
-		newQuestionSQL += "null, ";		//VP_IDSEQ need be blank to disconnect the question from the PV-VM! e.g. DD7550B5-55CC-3CC4-E034-0003BA12F5E7
+		newQuestionSQL += "null, ";		//JR1074 - VP_IDSEQ need be blank to disconnect the question from the PV-VM! e.g. DD7550B5-55CC-3CC4-E034-0003BA12F5E7
 		//newQuestionSQL += "--null,null,null,";
 		newQuestionSQL += "'" + questBean.getQUEST_NAME() /* *** TODO NOT SURE ***/ + "','"+ questBean.getSTATUS_INDICATOR() /* *** TODO NOT SURE ***/ + "','No',";	//LONG_NAME e.g. No 2,LATEST_VERSION_IND e.g. Yes,DELETED_IND e.g. No
 		newQuestionSQL += "null,null,";

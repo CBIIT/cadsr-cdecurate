@@ -1,4 +1,4 @@
-create or replace PACKAGE BODY     "CG$VD_PVS_VIEW" IS
+create or replace PACKAGE BODY                         "CG$VD_PVS_VIEW" IS
 PROCEDURE   validate_mandatory(cg$val_rec IN cg$row_type,
                                loc        IN VARCHAR2 DEFAULT '');
 PROCEDURE   up_autogen_columns(cg$rec    IN OUT cg$row_type,
@@ -442,11 +442,14 @@ BEGIN
 --  Defaulted
 --  Auto-generated and uppercased columns
  --   up_autogen_columns(cg$rec, cg$ind, 'INS', do_ins);
+dbms_output.put_line('JR1074 jt300 CG$VD_PVS_VIEW.ins entered');
+
     called_from_package := TRUE;
     IF (do_ins) THEN
         validate_foreign_keys_ins(cg$rec);
         validate_arc(cg$rec);
         validate_domain(cg$rec);
+dbms_output.put_line('JR1074 jt300 CG$VD_PVS_VIEW.ins before the main insert');
         INSERT INTO VD_PVS_VIEW
             (CON_IDSEQ
             ,VP_IDSEQ
@@ -474,6 +477,7 @@ BEGIN
             ,cg$rec.BEGIN_DATE
             ,cg$rec.END_DATE
 );
+dbms_output.put_line('JR1074 jt300 CG$VD_PVS_VIEW.ins after the main insert');
         doLobs(cg$rec, cg$ind);
         slct(cg$rec);
         upd_oper_denorm2(cg$rec, cg$tmp_rec, cg$ind, 'INS');
@@ -510,25 +514,31 @@ BEGIN
 --  Application logic Post-Insert << End >>
 EXCEPTION
     WHEN cg$errors.cg$error THEN
+dbms_output.put_line('JR1074 err3.0: '||SQLERRM);
         called_from_package := FALSE;
         cg$errors.raise_failure;
     WHEN cg$errors.mandatory_missing THEN
+dbms_output.put_line('JR1074 err3.1: '||SQLERRM);
         validate_mandatory(cg$rec, 'cg$VD_PVS_VIEW.ins.mandatory_missing');
         called_from_package := FALSE;
         cg$errors.raise_failure;
     WHEN cg$errors.check_violation THEN
+dbms_output.put_line('JR1074 err3.2: '||SQLERRM);
         err_msg(SQLERRM, cg$errors.ERR_CHECK_CON, 'cg$VD_PVS_VIEW.ins.check_violation');
         called_from_package := FALSE;
         cg$errors.raise_failure;
     WHEN cg$errors.fk_violation THEN
+dbms_output.put_line('JR1074 err3.3: '||SQLERRM);
         err_msg(SQLERRM, cg$errors.ERR_FOREIGN_KEY, 'cg$VD_PVS_VIEW.ins.fk_violation');
         called_from_package := FALSE;
         cg$errors.raise_failure;
     WHEN cg$errors.uk_violation THEN
+dbms_output.put_line('JR1074 err3.4: '||SQLERRM);
         err_msg(SQLERRM, cg$errors.ERR_UNIQUE_KEY, 'cg$VD_PVS_VIEW.ins.uk_violation');
         called_from_package := FALSE;
         cg$errors.raise_failure;
     WHEN OTHERS THEN
+dbms_output.put_line('JR1074 err3.5: '||SQLERRM);
         cg$errors.push(SQLERRM,
                        'E',
                        'ORA',
@@ -769,7 +779,7 @@ BEGIN
 --  Application_logic Pre-Delete << End >>
 --  Delete the record
     called_from_package := TRUE;
---dbms_output.put_line('JR1074 jt100 caller proc');
+dbms_output.put_line('JR1074 jt100 caller proc');
     IF (do_del) THEN
         DECLARE
            cg$rec cg$row_type;
@@ -780,45 +790,45 @@ BEGIN
            slct(cg$rec);
            validate_foreign_keys_del(cg$rec);
            domain_cascade_delete(cg$rec);
---dbms_output.put_line('JR1074 jt103d6');
-dbms_output.put_line('JR1074 jt103d7e');
+dbms_output.put_line('JR1074 jt103d8');
 
 dbms_output.put_line('JR1074 before delete 0');
-delete
-from TRIGGERED_ACTIONS_EXT where S_QC_IDSEQ in (
-select q.QC_IDSEQ from sbr.QUEST_CONTENTS_EXT q
-where q.VP_IDSEQ = cg$pk.VP_IDSEQ
-); 
---and T_QTL_NAME = 'QUESTION' and S_QTL_NAME = 'VALID_VALUE';
-commit;
+--delete
+--from TRIGGERED_ACTIONS_EXT where S_QC_IDSEQ in (
+--select q.QC_IDSEQ from sbr.QUEST_CONTENTS_EXT q
+--where q.VP_IDSEQ = cg$pk.VP_IDSEQ
+--); 
+----and T_QTL_NAME = 'QUESTION' and S_QTL_NAME = 'VALID_VALUE';
+--commit;
 --dbms_output.put_line('JR1074 before delete 1');
-delete from SBREXT.VALID_VALUES_ATT_EXT v where QC_IDSEQ in (
-select v.QC_IDSEQ from SBREXT.VALID_VALUES_ATT_EXT v, sbr.QUEST_CONTENTS_EXT q
-where v.QC_IDSEQ = q.QC_IDSEQ
-and
-q.VP_IDSEQ = cg$pk.VP_IDSEQ
-);
+--delete from SBREXT.VALID_VALUES_ATT_EXT v where QC_IDSEQ in (
+--select v.QC_IDSEQ from SBREXT.VALID_VALUES_ATT_EXT v, sbr.QUEST_CONTENTS_EXT q
+--where v.QC_IDSEQ = q.QC_IDSEQ
+--and
+--q.VP_IDSEQ = cg$pk.VP_IDSEQ
+--);
+--commit;
+--dbms_output.put_line('JR1074 before delete 2 cg$pk.VP_IDSEQ ' || cg$pk.VP_IDSEQ);
+--delete from sbr.QUEST_CONTENTS_EXT where VP_IDSEQ in (
+--select q.VP_IDSEQ from sbr.QUEST_CONTENTS_EXT q, sbr.VD_PVS_VIEW vd
+--where q.VP_IDSEQ = vd.VP_IDSEQ
+--and
+--q.VP_IDSEQ = cg$pk.VP_IDSEQ
+--);
+update sbrext.quest_contents_ext set vp_idseq = '' where vp_idseq = cg$pk.VP_IDSEQ;
 commit;
---dbms_output.put_line('JR1074 before delete 2');
-delete from sbr.QUEST_CONTENTS_EXT where VP_IDSEQ in (
-select q.VP_IDSEQ from sbr.QUEST_CONTENTS_EXT q, sbr.VD_PVS_VIEW vd
-where q.VP_IDSEQ = vd.VP_IDSEQ
-and
-q.VP_IDSEQ = cg$pk.VP_IDSEQ
-);
-commit;                
---dbms_output.put_line('JR1074 before delete 3');
+dbms_output.put_line('JR1074 before delete 3');
            IF cg$pk.the_rowid is null THEN
-              --dbms_output.put_line('JR1074 310 cg$pk.the_rowid is null (cg$pk.VP_IDSEQ is not null)!');
-              --dbms_output.put_line(cg$pk.VP_IDSEQ);
-              DELETE sbr.VD_PVS_VIEW
+              dbms_output.put_line('JR1074 310 cg$pk.the_rowid is null (cg$pk.VP_IDSEQ is not null)!');
+              dbms_output.put_line(cg$pk.VP_IDSEQ);
+               DELETE sbr.VD_PVS_VIEW
               WHERE                    VP_IDSEQ = cg$pk.VP_IDSEQ; --"Used by Forms"
 commit;                
            ELSE
-              --dbms_output.put_line('JR1074 320 cg$pk.the_rowid it not null!');
-              --dbms_output.put_line(cg$pk.the_rowid);             
-              --dbms_output.put_line(cg$rec.VP_IDSEQ);             
-              DELETE sbr.VD_PVS_VIEW
+              dbms_output.put_line('JR1074 320 cg$pk.the_rowid it not null!');
+              dbms_output.put_line(cg$pk.the_rowid);             
+              dbms_output.put_line(cg$rec.VP_IDSEQ);             
+                DELETE sbr.VD_PVS_VIEW
               WHERE  rowid = cg$pk.the_rowid; --the newly added row
 commit;                
            END IF;
@@ -831,17 +841,17 @@ commit;
 --  Application_logic Post-Delete << End >>
 EXCEPTION
     WHEN cg$errors.cg$error THEN
---dbms_output.put_line('JR1074 err1');
+dbms_output.put_line('JR1074 err1');
         called_from_package := FALSE;
         cg$errors.raise_failure;
     WHEN cg$errors.delete_restrict THEN
---dbms_output.put_line('JR1074 err2.11: '||SQLERRM);
+dbms_output.put_line('JR1074 err2.11: '||SQLERRM);
 --JR1074 err2: ORA-02292: integrity constraint (SBREXT.QC_VPV_FK) violated - child record found
     err_msg(SQLERRM, cg$errors.ERR_DELETE_RESTRICT, 'cg$VD_PVS_VIEW.del.delete_restrict');
         called_from_package := FALSE;
         cg$errors.raise_failure;
     WHEN no_data_found THEN
---dbms_output.put_line('JR1074 err3');
+dbms_output.put_line('JR1074 err3');
         cg$errors.push(cg$errors.MsgGetText(cg$errors.API_ROW_DEL, cg$errors.ROW_DEL),
                        'E',
                        'ORA',
@@ -850,7 +860,7 @@ EXCEPTION
         called_from_package := FALSE;
         cg$errors.raise_failure;
     WHEN OTHERS THEN
---dbms_output.put_line('JR1074 err4');
+dbms_output.put_line('JR1074 err4');
         cg$errors.push(SQLERRM,
                        'E',
                        'ORA',

@@ -17,6 +17,9 @@ import org.junit.runners.Suite;
  */
 @RunWith(Suite.class)
 @Suite.SuiteClasses({ 
+	JR1099.class,
+	JR625.class,
+	JR1047.class,
 	//GF30798.class,	//commented out, for some reason it is having infinite redirect issue with Firefox
 	JR1000.class,
 	JR1016.class,
