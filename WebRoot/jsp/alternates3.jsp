@@ -165,7 +165,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 						</td>
 						<td class="taby">
 		<%
-            text = (String) req.getAttribute(AltNamesDefsServlet._tabNameDef);
+            text = StringUtil.cleanJavascriptAndHtml( (String) req.getAttribute(AltNamesDefsServlet._tabNameDef));	//JR1107
         %>
 							<%=text%>
 						</td>
@@ -196,7 +196,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 							<td style="vertical-align: top">
 								<span class="mandatory">*</span><span class="prompt">Name:</span> (<%=length%> character max)<br />
 		<%
-                text = (String) req.getAttribute(AltNamesDefsServlet._parmNameDef);
+                text = StringUtil.cleanJavascriptAndHtml( (String) req.getAttribute(AltNamesDefsServlet._parmNameDef));	//JR1107
         %>
 								<input type="text" name="<%=AltNamesDefsServlet._parmNameDef%>" value="<%=text%>" maxlength="<%=length%>" style="width: 100%" />
 							</td>
@@ -209,7 +209,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 							<td style="vertical-align: top">
 								<span class="mandatory">*</span><span class="prompt">Definition:</span> (<%=length%> character max)<br />
 		<%
-                text = (String) req.getAttribute(AltNamesDefsServlet._parmNameDef);
+                text = StringUtil.cleanJavascriptAndHtml( (String) req.getAttribute(AltNamesDefsServlet._parmNameDef));	//JR1107
         %>
 								<textarea name="<%=AltNamesDefsServlet._parmNameDef%>" style="width: 100%; height: 1in"/><%=text%></textarea>
 							</td>
