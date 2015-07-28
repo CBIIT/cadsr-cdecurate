@@ -10,6 +10,8 @@ import java.util.Arrays;
 import java.util.regex.Pattern;
 
 import org.apache.log4j.Logger;
+import org.owasp.html.PolicyFactory;
+import org.owasp.html.Sanitizers;
 
 public class StringUtil {
 
@@ -188,15 +190,33 @@ public class StringUtil {
 		if (stringToClean == null)
 			return stringToClean;
 
-		stringToClean = stringToClean.replaceAll("alert\\(", "(");
-		stringToClean = stringToClean.replaceAll("<script", "<");
-		stringToClean = stringToClean.replaceAll("</script", "</");
-		stringToClean = stringToClean.replaceAll("javascript", "");
-		stringToClean = stringToClean.replaceAll(".html", "");
-		stringToClean = stringToClean.replaceAll("iframe", "");
-		stringToClean = stringToClean.replaceAll("UTL_HTTP.REQUEST", "");
+//		stringToClean = stringToClean.replaceAll("alert\\(", "(");
+//		stringToClean = stringToClean.replaceAll("<script", "<");
+//		stringToClean = stringToClean.replaceAll("</script", "</");
+//		stringToClean = stringToClean.replaceAll("javascript", "");
+//		stringToClean = stringToClean.replaceAll(".html", "");
+//		stringToClean = stringToClean.replaceAll("iframe", "");
+//		stringToClean = stringToClean.replaceAll("UTL_HTTP.REQUEST", "");
 
+		//JR1107
+		stringToClean = sanitizeHTML(stringToClean);
+		
 		return stringToClean;
+	}
+
+	private static String sanitizeHTML(String untrustedHTML) {
+		String ret = untrustedHTML;
+
+		try {
+			if(untrustedHTML != null) {
+				PolicyFactory policy = Sanitizers.FORMATTING.and(Sanitizers.LINKS);
+				ret = policy.sanitize(untrustedHTML);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return ret;
 	}
 
 	public static String[] cleanJavascriptAndHtmlArray(String[] stringToClean) {

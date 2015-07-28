@@ -88,6 +88,9 @@
 			<attribute name="org.eclipse.ajdt.aspectpath" value="org.eclipse.ajdt.aspectpath"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/guava.jar"/>
+	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/jsr305.jar"/>
+	<classpathentry kind="lib" path="WebRoot/WEB-INF/lib/owasp-java-html-sanitizer.jar"/>
 	<classpathentry kind="con" path="org.eclipse.ajdt.core.ASPECTJRT_CONTAINER"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.launching.macosx.MacOSXType/Java SE 6 [1.6.0_65-b14-462]"/>
 	<classpathentry kind="output" path="WebRoot/WEB-INF/classes"/>

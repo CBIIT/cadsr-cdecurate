@@ -2858,7 +2858,7 @@ public class CurationServlet
                 {
                     vCheckList = new Vector<String>();
                     String unCheckedRowId = StringUtil.cleanJavascriptAndHtml((String) m_classReq.getParameter("unCheckedRowId"));
-                    if (unCheckedRowId != null && !(unCheckedRowId == "")){
+                    if (!StringUtils.isEmpty(unCheckedRowId)){	//JR1107 not related to the ticket but just avoid NPE
                         int selectedRowID = new Integer(unCheckedRowId);
                         AC_Bean bean = (AC_Bean) vSRows.elementAt(selectedRowID);
                         stmt.setString(1, bean.getIDSEQ());
@@ -2875,7 +2875,7 @@ public class CurationServlet
                       for (ndx = 0; ndx < vSRows.size(); ++ndx){
                          String temp;
                          String ckName = ("CK" + ndx);
-                         temp = req.getParameter(ckName);
+                         temp = StringUtil.cleanJavascriptAndHtml((String) req.getParameter(ckName));	//JR1107
                          if (temp != null){
                             AC_Bean bean = (AC_Bean) vSRows.elementAt(ndx);
                             temp = bean.getIDSEQ();
