@@ -2858,7 +2858,8 @@ public class CurationServlet
                 {
                     vCheckList = new Vector<String>();
                     String unCheckedRowId = StringUtil.cleanJavascriptAndHtml((String) m_classReq.getParameter("unCheckedRowId"));
-                    if (!StringUtils.isEmpty(unCheckedRowId)){	//JR1107 not related to the ticket but just avoid NPE
+//                    if (unCheckedRowId != null && !(unCheckedRowId == "")){
+                  if (!StringUtils.isEmpty(unCheckedRowId)){	//JR1107 nothing to do with the ticket, just fixing NPE
                         int selectedRowID = new Integer(unCheckedRowId);
                         AC_Bean bean = (AC_Bean) vSRows.elementAt(selectedRowID);
                         stmt.setString(1, bean.getIDSEQ());
@@ -2875,7 +2876,7 @@ public class CurationServlet
                       for (ndx = 0; ndx < vSRows.size(); ++ndx){
                          String temp;
                          String ckName = ("CK" + ndx);
-                         temp = StringUtil.cleanJavascriptAndHtml((String) req.getParameter(ckName));	//JR1107
+                         temp = req.getParameter(ckName);
                          if (temp != null){
                             AC_Bean bean = (AC_Bean) vSRows.elementAt(ndx);
                             temp = bean.getIDSEQ();
@@ -2936,14 +2937,19 @@ public class CurationServlet
             }
             finally{
             	stmt = SQLHelper.closeCallableStatement(stmt);
+                // Send the message back to the user.
+                GetACSearch getACSearch = new GetACSearch(req, res, this);
+                getACSearch.getACShowResult2(req, res, "Monitor");
+                DataManager.setAttribute(session, Session_Data.SESSION_STATUS_MESSAGE, msg);
+                ForwardJSP(req, res, "/SearchResultsPage.jsp");
               }
             break;
         }
         // Send the message back to the user.
-        GetACSearch getACSearch = new GetACSearch(req, res, this);
-        getACSearch.getACShowResult2(req, res, "Monitor");
-        DataManager.setAttribute(session, Session_Data.SESSION_STATUS_MESSAGE, msg);
-        ForwardJSP(req, res, "/SearchResultsPage.jsp");
+//        GetACSearch getACSearch = new GetACSearch(req, res, this);
+//        getACSearch.getACShowResult2(req, res, "Monitor");
+//        DataManager.setAttribute(session, Session_Data.SESSION_STATUS_MESSAGE, msg);
+//        ForwardJSP(req, res, "/SearchResultsPage.jsp");
     }
     
     /**
@@ -2978,7 +2984,8 @@ public class CurationServlet
             // Get list of selected AC's.
             Vector<String> list = new Vector<String>();
             String unCheckedRowId = StringUtil.cleanJavascriptAndHtml((String) m_classReq.getParameter("unCheckedRowId"));
-            if (unCheckedRowId != null && !(unCheckedRowId == "")){
+//            if (unCheckedRowId != null && !(unCheckedRowId == "")){
+            if (!StringUtils.isEmpty(unCheckedRowId)){	//JR1107 nothing to do with the ticket, just fixing NPE
                 int selectedRowID = new Integer(unCheckedRowId);
                 AC_Bean bean = (AC_Bean) vSRows.elementAt(selectedRowID);
                 list.add(bean.getIDSEQ());
@@ -3034,15 +3041,20 @@ public class CurationServlet
                     logger.error("cdecurate: doUnmonitor(): " + e.toString(), e);
                 }finally{
                 	stmt = SQLHelper.closeCallableStatement(stmt);
+                    // Send the message back to the user.
+                    GetACSearch getACSearch = new GetACSearch(req, res, this);
+                    getACSearch.getACShowResult2(req, res, "Monitor");
+                    DataManager.setAttribute(session, Session_Data.SESSION_STATUS_MESSAGE, msg);
+                    ForwardJSP(req, res, "/SearchResultsPage.jsp");
                 }
             }
             break;
         }
         // Send the message back to the user.
-        GetACSearch getACSearch = new GetACSearch(req, res, this);
-        getACSearch.getACShowResult2(req, res, "Monitor");
-        DataManager.setAttribute(session, Session_Data.SESSION_STATUS_MESSAGE, msg);
-        ForwardJSP(req, res, "/SearchResultsPage.jsp");
+//        GetACSearch getACSearch = new GetACSearch(req, res, this);
+//        getACSearch.getACShowResult2(req, res, "Monitor");
+//        DataManager.setAttribute(session, Session_Data.SESSION_STATUS_MESSAGE, msg);
+//        ForwardJSP(req, res, "/SearchResultsPage.jsp");
     }
 
     /**
