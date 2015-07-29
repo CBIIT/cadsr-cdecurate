@@ -80,6 +80,33 @@ L-->
 		<url-pattern>/wireframe/*</url-pattern>
 	</filter-mapping -->
 	
+	  	<!--  CSRF library configuration (https://www.owasp.org/index.php/Category:OWASP_CSRFGuard_Project) -->
+  <!--	
+  <listener>
+  <listener-class>org.owasp.csrfguard.CsrfGuardServletContextListener</listener-class>
+   </listener>
+   <listener>
+  <listener-class>org.owasp.csrfguard.CsrfGuardHttpSessionListener</listener-class>
+  </listener>
+  -->
+   <context-param>
+   <param-name>Owasp.CsrfGuard.Config</param-name>
+   <param-value>WEB-INF/Owasp.CsrfGuard.properties</param-value>
+   </context-param>
+   <context-param>
+   <param-name>Owasp.CsrfGuard.Config.Print</param-name>
+   <param-value>true</param-value>
+   </context-param>
+   
+  <filter>
+  <filter-name>CSRFGuard</filter-name>
+  <filter-class>org.owasp.csrfguard.CsrfGuardFilter</filter-class>
+ </filter>
+ <filter-mapping>
+  <filter-name>CSRFGuard</filter-name>
+  <url-pattern>/*</url-pattern>
+ </filter-mapping>
+ 
   <session-config>
     <session-timeout>45</session-timeout>
   </session-config>
