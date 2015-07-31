@@ -4,7 +4,7 @@
   Distributed under the OSI-approved BSD 3-Clause License.
   See http://ncip.github.com/cadsr-cdecurate/LICENSE.txt for details.
 L--%>
-<!-- @tag cadsr-curationtool-4.1-qa-03 r25d -->
+<!-- @tag cadsr-curationtool-4.1-qa-03 r26 -->
 <%@page import="gov.nih.nci.cadsr.cdecurate.util.ToolURL"%><!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3functions-ca.org/TR/html4/loose.dtd">
 <%@taglib uri="/WEB-INF/tld/curate.tld" prefix="curate"%>
 <% String helpUrl = ToolURL.getCurationToolHelpURL(pageContext);%>
@@ -47,6 +47,7 @@ L--%>
                 <tr>
                     <td colspan="2" align="center">
                        <form name="LoginForm" method="POST" action="../../cdecurate/NCICurationServlet?reqType=login">
+						<input type="hidden" name="<csrf:token-name/>" value="<csrf:token-value/>"/>
         	            <input type="hidden" name="previousReqType" value="/SearchResultsPage.jsp">
         	            <input type="hidden" name="cancelLogin" value="No">
                         <table style="border-collapse: collapse"><col align="right"/><col />

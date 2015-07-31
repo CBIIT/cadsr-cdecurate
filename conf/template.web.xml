@@ -31,11 +31,11 @@ L-->
     </init-param>
     <init-param>
       <param-name>username</param-name>
-      <param-value>@CADSR.DS.USER@</param-value>
+      <param-value>cdecurate</param-value>
     </init-param>
     <init-param>
       <param-name>password</param-name>
-      <param-value>@CADSR.DS.PSWD@</param-value>
+      <param-value>dsr#cde2014</param-value>
     </init-param>
     <load-on-startup>1</load-on-startup>
 
@@ -80,33 +80,65 @@ L-->
 		<url-pattern>/wireframe/*</url-pattern>
 	</filter-mapping -->
 	
-	  	<!--  CSRF library configuration (https://www.owasp.org/index.php/Category:OWASP_CSRFGuard_Project) -->
-  <!--	
-  <listener>
-  <listener-class>org.owasp.csrfguard.CsrfGuardServletContextListener</listener-class>
-   </listener>
-   <listener>
-  <listener-class>org.owasp.csrfguard.CsrfGuardHttpSessionListener</listener-class>
-  </listener>
-  -->
-   <context-param>
-   <param-name>Owasp.CsrfGuard.Config</param-name>
-   <param-value>WEB-INF/Owasp.CsrfGuard.properties</param-value>
-   </context-param>
-   <context-param>
-   <param-name>Owasp.CsrfGuard.Config.Print</param-name>
-   <param-value>true</param-value>
-   </context-param>
-   
-  <filter>
-  <filter-name>CSRFGuard</filter-name>
-  <filter-class>org.owasp.csrfguard.CsrfGuardFilter</filter-class>
- </filter>
- <filter-mapping>
-  <filter-name>CSRFGuard</filter-name>
-  <url-pattern>/*</url-pattern>
- </filter-mapping>
- 
+<!-- JR1107 begin -->
+<!-- The NoTLDJarPattern paramter is configured in web.xml to reduce JSP taglib scanning time -->
+<context-param>
+    <param-name>org.mortbay.jetty.webapp.NoTLDJarPattern</param-name>
+    <param-value>test.jar|prefix-.*\.jar</param-value>
+</context-param>
+  	<!--  CSRF library configuration (http://owaspcsrfguard3.blogspot.com/2015/04/owasp-csrfguard-3.html) -->
+<!--  	
+	<listener>
+		<listener-class>org.owasp.csrfguard.CsrfGuardServletContextListener</listener-class>
+	</listener>
+	<listener>
+		<listener-class>org.owasp.csrfguard.CsrfGuardHttpSessionListener</listener-class>
+	</listener>	
+	<filter>
+		<filter-name>CSRFGuard</filter-name>
+		<filter-class>org.owasp.csrfguard.CsrfGuardFilter</filter-class>
+	</filter>
+	
+	<filter-mapping>
+		<filter-name>CSRFGuard</filter-name>
+		<url-pattern>/cdecurate</url-pattern>
+	</filter-mapping>
+
+	<servlet>
+		<servlet-name>JavaScriptServlet</servlet-name>
+		<servlet-class>org.owasp.csrfguard.servlet.JavaScriptServlet</servlet-class>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>JavaScriptServlet</servlet-name>
+		<url-pattern>/JavaScriptServlet</url-pattern>
+	</servlet-mapping>
+-->
+	<context-param>
+		<param-name>Owasp.CsrfGuard.Config</param-name>
+		<param-value>WEB-INF/Owasp.CsrfGuard.properties</param-value>
+	</context-param>
+	
+	<context-param>
+		<param-name>Owasp.CsrfGuard.Config.Print</param-name>
+		<param-value>true</param-value>
+	</context-param>
+	
+	<listener>
+		<listener-class>org.owasp.csrfguard.CsrfGuardListener</listener-class>
+	</listener>
+
+	<filter>
+		<filter-name>CSRFGuard</filter-name>
+		<filter-class>org.owasp.csrfguard.CsrfGuardFilter</filter-class>
+	</filter>
+ 	
+	<filter-mapping>
+		<filter-name>CSRFGuard</filter-name> 
+		<url-pattern>/cdecurate/*</url-pattern>
+	</filter-mapping>
+<!-- JR1107 end -->
+	
   <session-config>
     <session-timeout>45</session-timeout>
   </session-config>
@@ -121,7 +153,14 @@ L-->
     <taglib-uri>/WEB-INF/tld/curate.tld</taglib-uri>
     <taglib-location>/WEB-INF/tld/curate.tld</taglib-location>
   </taglib>
-    </jsp-config>
+<!-- JR1107 begin -->
+  <jsp-property-group>
+          <url-pattern>*.jsp</url-pattern>
+          <el-ignored>false</el-ignored>
+          <include-prelude>/WEB-INF/jspf/taglibs.jspf</include-prelude>
+  </jsp-property-group>
+<!-- JR1107 end -->
+  </jsp-config>
 
   <login-config>
     <auth-method>FORM</auth-method>
