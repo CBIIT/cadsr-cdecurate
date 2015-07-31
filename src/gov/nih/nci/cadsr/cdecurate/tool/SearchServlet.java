@@ -1925,7 +1925,8 @@ public class SearchServlet extends CurationServlet {
 		String defaultContext=null;
 		Statement stm =null;
 		ResultSet rs =null;
-		HttpSession session = Security.getSession(m_classReq);	//m_classReq.getSession(true);	//JR1107
+		HttpSession session = m_classReq.getSession(true);	//JR1107
+//		HttpSession session = Security.getSession(m_classReq);	//m_classReq.getSession(true);	//JR1107
         try
         {
             String sQuery = "select value from sbrext.tool_options_view_ext where property like 'REPTERM.DEFAULT.CONTEXT'";
@@ -1952,7 +1953,8 @@ public class SearchServlet extends CurationServlet {
 	private void getApprovedRepTerm() {
 		Vector vResult = new Vector();
 		String valueString = new String();
-		HttpSession session = Security.getSession(m_classReq);	//m_classReq.getSession(true);	//JR1107
+		HttpSession session = m_classReq.getSession(true);	//JR1107
+//		HttpSession session = Security.getSession(m_classReq);	//m_classReq.getSession(true);	//JR1107
 		ConceptServlet conSer = new ConceptServlet(m_classReq, m_classRes, this);
 		ConceptAction conact = new ConceptAction();
 		ResultSet rs =null;
