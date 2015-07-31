@@ -532,6 +532,7 @@ function LoadKeyHandler()
 
 	<body>
 		<form name="searchParmsForm" method="post"
+						<input type="hidden" name="<csrf:token-name/>" value="<csrf:token-value/>"/>
 			action="../../cdecurate/NCICurationServlet?reqType=searchACs">
 			<!-- need this style to keep the table aligned top which is different for crf questions   -->
 			<table class="sidebarBGColor" border="0" width="100%"

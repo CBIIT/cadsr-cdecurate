@@ -163,6 +163,7 @@ function autoLogIn()
 
 	<body onLoad="autoLogin();">
 		<form method="post" name="LoginForm" action="">
+						<input type="hidden" name="<csrf:token-name/>" value="<csrf:token-value/>"/>
 			<%
 String errMessage = (String)session.getAttribute("ErrorMessage");
 if (errMessage == null) errMessage = "";

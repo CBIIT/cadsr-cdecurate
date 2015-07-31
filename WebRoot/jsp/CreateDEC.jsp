@@ -346,6 +346,7 @@ String propCDR = "";
 
     <body onLoad="setup();" onUnload="closeDep();">
     <form name="SearchActionForm" method="post" action="../../cdecurate/NCICurationServlet?reqType=closeWindow">
+						<input type="hidden" name="<csrf:token-name/>" value="<csrf:token-value/>"/>
     <input type="hidden" name="searchComp" value="">
     <input type="hidden" name="searchEVS" value="DataElementConcept">
     <input type="hidden" name="isValidSearch" value="true">
@@ -355,6 +356,7 @@ String propCDR = "";
     <input type="hidden" name="closeWindow" value="">
     </form>
     <form id=newDECForm name=newDECForm method="POST" action="../../cdecurate/NCICurationServlet?reqType=newDECfromForm"> <!-- GF33087 added the form id for DOJO -->
+						<input type="hidden" name="<csrf:token-name/>" value="<csrf:token-value/>"/>
     <table width="100%" border="0">
     <tr>
     <td height="26" align="left" valign="top">

@@ -567,6 +567,7 @@ function openEVSConceptsWindow(){
 
 	<body onLoad="setup();hideCloseButton(<%=isView%>);">
 		<form name="createVDForm" method="POST" action="../../cdecurate/NCICurationServlet?reqType=editVD">
+						<input type="hidden" name="<csrf:token-name/>" value="<csrf:token-value/>"/>
 		    <% if ((displayErrorMessage != null)&&(displayErrorMessage).equals("Yes")){ %>
 		  	 <b><font  size="3">Not Authorized for Edits in this Context.</font></b></br></br>
 	       <%}%>
@@ -2332,6 +2333,7 @@ ShowEVSInfo('RepQualifier');
 		<!--  remvoed the searchactionform from here and put it on vdpvstab.jsp -->
 		<div style="display:none">
 			<form name="SearchActionForm" method="post" action="">
+						<input type="hidden" name="<csrf:token-name/>" value="<csrf:token-value/>"/>
 				<input type="hidden" name="searchComp" value="<%=sSearchAC%>">
 				<input type="hidden" name="searchEVS" value="ValueDomain">
 				<input type="hidden" name="isValidSearch" value="true">

@@ -191,6 +191,7 @@ L--%>
 	<body onLoad="Setup();">
 
 		<form name="designateForm" method="post">
+						<input type="hidden" name="<csrf:token-name/>" value="<csrf:token-value/>"/>
 			<table width="100%" cellspacing=0 cellpadding=0 border="0">
 				<col width="2%">
 				<col width="36%">

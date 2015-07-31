@@ -60,6 +60,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
         String text;
     %>
 		<form name="alternatesForm" method="post" action="NCICurationServlet">
+						<input type="hidden" name="<csrf:token-name/>" value="<csrf:token-value/>"/>
 			<input type="hidden" name="reqType" value="<%=AltNamesDefsServlet._reqType%>" />
 			<input type="hidden" name="<%=AltNamesDefsServlet._actionTag%>" value="<%=AltNamesDefsServlet._actionViewName%>" />
 			<input type="hidden" name="<%=AltNamesDefsServlet._prevActionTag%>" value="" />

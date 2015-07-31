@@ -558,6 +558,7 @@ function doMetaCodeSearch()
 	<body onLoad="Setup();">
 		<form name="searchParmsForm" method="post"
 			action="../../cdecurate/NCICurationServlet?reqType=searchBlocks">
+						<input type="hidden" name="<csrf:token-name/>" value="<csrf:token-value/>"/>
 			<table width="100%" class="sidebarBGColor">
 				<!-- style="position: relative; top: -22px;"> -->
 				<tr valign="top" align="left" class="firstRow">

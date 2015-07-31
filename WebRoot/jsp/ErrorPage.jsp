@@ -71,6 +71,7 @@ L--%>
 				<tr>
                     <td colspan="2" align="center">
                        <form name="LoginForm" method="POST" action="../../cdecurate/NCICurationServlet?reqType=login">
+						<input type="hidden" name="<csrf:token-name/>" value="<csrf:token-value/>"/>
         	            <input type="hidden" name="previousReqType" value="/SearchResultsPage.jsp">
         	            <input type="hidden" name="cancelLogin" value="No">
                         <table style="border-collapse: collapse"><col align="right"/><col />

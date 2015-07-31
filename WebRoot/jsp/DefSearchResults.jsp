@@ -282,6 +282,7 @@ if (results.size() > 0)
 
 	<body>
 		<form name="EVSSearchResultsForm" method="post" action="../../cdecurate/NCICurationServlet?reqType=showResult">
+						<input type="hidden" name="<csrf:token-name/>" value="<csrf:token-value/>"/>
 			<table width="100%" border="0">
 				<tr height="40" valign="bottom">
 					<td>

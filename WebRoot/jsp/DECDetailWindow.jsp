@@ -61,6 +61,7 @@ L--%>
 	</head>
 	<body onLoad="setup();">
 		<form name="DECDetailsForm" method="post" action="../../cdecurate/NCICurationServlet?reqType=showDECDetail">
+						<input type="hidden" name="<csrf:token-name/>" value="<csrf:token-value/>"/>
 			<br>
 			<table width="100%">
 				<tr>

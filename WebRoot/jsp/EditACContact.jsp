@@ -108,6 +108,7 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 
 	<body onload="setup();">
 		<form name="ACContactForm" method="post" action="../../cdecurate/NCICurationServlet?reqType=ACcontact">
+						<input type="hidden" name="<csrf:token-name/>" value="<csrf:token-value/>"/>
 			<table width="100%" border=0>
 				<!--DWLayoutTable-->
 				<tr>

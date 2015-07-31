@@ -419,6 +419,7 @@
         -->
 
         <form name="SearchActionForm" method="post" action="">
+						<input type="hidden" name="<csrf:token-name/>" value="<csrf:token-value/>"/>
         <input type="hidden" name="searchComp" value="">
         <input type="hidden" name="searchEVS" value="DataElementConcept">
         <input type="hidden" name="isValidSearch" value="true">
@@ -427,6 +428,7 @@
         <input type="hidden" name="itemType" value="">
         </form>
         <form name=newDECForm method="POST" action="../../cdecurate/NCICurationServlet?reqType=editDEC">
+						<input type="hidden" name="<csrf:token-name/>" value="<csrf:token-value/>"/>
         <input type="hidden" name="conceptName" value=""> <!-- GF32723 -->
         <input type="hidden" name="isAConcept" value="false"> <!-- GF30798 -->
         <input type="hidden" name="userSelectedDef" value="nothing"> <!-- GF30798 -->

@@ -1017,7 +1017,7 @@ function ShowSelectedRowss(){
  <tr>
 <td valign="top" align="left" style="background-color: #c9c9c9; border-right: 2px solid #ffffff">
 <form name="searchParmsForm" method="post" action="../../cdecurate/NCICurationServlet?reqType=searchACs">
-
+						<input type="hidden" name="<csrf:token-name/>" value="<csrf:token-value/>"/>
 
 			<!-- need this style to keep the table aligned top which is different for crf questions   -->
 			<table style="width: 225px;">
@@ -2279,6 +2279,7 @@ function ShowSelectedRowss(){
 
 
 <form name="searchResultsForm"  method="post" action=" ../../cdecurate/NCICurationServlet?reqType=showResult">
+						<input type="hidden" name="<csrf:token-name/>" value="<csrf:token-value/>"/>
 		   <input type="hidden" name="count" value="1">
 		   <input type="hidden" name="hidaction" value="nothing">
            <input type="hidden" name="hidMenuAction" value="nothing">
@@ -3058,6 +3059,7 @@ function ShowSelectedRowss(){
            </script>
 </form>
 <form name="SearchActionForm" method="post" action="">
+						<input type="hidden" name="<csrf:token-name/>" value="<csrf:token-value/>"/>
 			<input type="hidden" name="acID" value="">
 			<input type="hidden" name="ac2ID" value="">
 			<input type="hidden" name="itemType" value="">

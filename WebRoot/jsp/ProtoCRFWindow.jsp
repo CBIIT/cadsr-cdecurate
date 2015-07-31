@@ -60,6 +60,7 @@ L--%>
 
 	<body bgcolor="#FFFFFF" onLoad="setup();">
 		<form name="protoCRFform" method="post" action="../../cdecurate/NCICurationServlet?reqType=getProtoCRF">
+						<input type="hidden" name="<csrf:token-name/>" value="<csrf:token-value/>"/>
 			<br>
 			<table width="100%" border="0">
 				<tr height="20" valign="top">

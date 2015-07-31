@@ -102,6 +102,7 @@ function hourglass()
 
 	<body onLoad="Setup();" onHelp="showHelp('html/Help_SearchAC.html#EVSSearchParmsForm_SearchDefinition',helpUrl); return false">
 		<form name="EVSForm" method="post" action="../../cdecurate/NCICurationServlet?reqType=searchACs">
+						<input type="hidden" name="<csrf:token-name/>" value="<csrf:token-value/>"/>
 			<table width="100%" class="sidebarBGColor">
 				<col width="10px">
 				<tr valign="center" align="left" class="firstRow">

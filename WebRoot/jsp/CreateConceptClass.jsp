@@ -253,6 +253,7 @@ L--%>
 		<curate:header displayUser = "true"/>
 		<jsp:include  page = "menuDefs.jsp" />
 		<form name="createConceptClassForm" method="POST" action="../../cdecurate/NCICurationServlet?reqType=newConceptClass">
+						<input type="hidden" name="<csrf:token-name/>" value="<csrf:token-value/>"/>
 			<input type="hidden" name="pageAction" value="nothing">
 			<table width="100%" border="0">
 				<col width="4%">
@@ -316,6 +317,7 @@ L--%>
 											</label><br><br></div></th></tr>
 											<tr><td>		
 											<form name="VMDetail" method="POST" action="../../cdecurate/NCICurationServlet?reqType=newConceptClass">
+						<input type="hidden" name="<csrf:token-name/>" value="<csrf:token-value/>"/>
 											<div class="tabbody" style="width: 100%">
 											<div class="ind2">
 												

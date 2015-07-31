@@ -546,6 +546,7 @@ if(!sSelAC.equals("ValueMeaning"))
 	</head>
 	<body onLoad="setup();">
 		<form name="searchResultsForm" method="post" action="../../cdecurate/NCICurationServlet?reqType=showResult">
+						<input type="hidden" name="<csrf:token-name/>" value="<csrf:token-value/>"/>
 			<table width="100%" border="0" valign="top">
 				<tr>
 					<td height="7">
@@ -1353,6 +1354,7 @@ getSearchComponent();
 </script>
 		</form>
 		<form name="SearchActionForm" method="post" action="">
+						<input type="hidden" name="<csrf:token-name/>" value="<csrf:token-value/>"/>
 			<input type="hidden" name="acID" value="">
 			<input type="hidden" name="ac2ID" value="">
 			<input type="hidden" name="itemType" value="">

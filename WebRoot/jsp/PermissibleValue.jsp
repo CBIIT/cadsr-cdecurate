@@ -228,6 +228,7 @@ L--%>
 			<tr>
 				<td width="100%" valign="top">
 					<form name="PVForm" method="POST" action="../../cdecurate/NCICurationServlet?reqType=pvEdits">
+						<input type="hidden" name="<csrf:token-name/>" value="<csrf:token-value/>"/>
 					    <% String displayErrorMessage = (String)session.getAttribute("displayErrorMessage");
 		                  if ((displayErrorMessage != null)&&(displayErrorMessage).equals("Yes")){ %>
 		  	                <b><font  size="3">Not Authorized for Edits in this Context.</font></b><br><br>
@@ -1646,6 +1647,7 @@ The Value Meaning matches the name of an existing Value Meaning. You may either 
 		</table>
 		<div style="display:none">
 			<form name="SearchActionForm" method="post" action="">
+						<input type="hidden" name="<csrf:token-name/>" value="<csrf:token-value/>"/>
 			   <%if (sSearchAC != null) %>
 				<input type="hidden" name="searchComp" value="<%=sSearchAC%>">
 				<input type="hidden" name="searchEVS" value="ValueDomain">

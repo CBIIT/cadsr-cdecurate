@@ -45,6 +45,7 @@ L--%>
       HashMap<String,ArrayList<String[]>> typeMap = (HashMap<String,ArrayList<String[]>>) session.getAttribute("typeMap");%>
         
       <form name="columnSubmission" method="post" action="../../cdecurate/NCICurationServlet?reqType=dlExcelColumns">
+						<input type="hidden" name="<csrf:token-name/>" value="<csrf:token-value/>"/>
             <input type="hidden" name="cdlColumns" value=""/>
        
 	      <button type="button" onClick="submitSelectedColumnNames('Excel');">Download Excel</button>
@@ -60,6 +61,7 @@ L--%>
 	       
       <div id="simpleViewContainer" style="width: 100%; display: block">
       <form>  
+						<input type="hidden" name="<csrf:token-name/>" value="<csrf:token-value/>"/>
           <table border="0">
           		<tr>
                   <td align="center">

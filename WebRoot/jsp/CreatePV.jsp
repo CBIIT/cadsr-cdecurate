@@ -47,6 +47,7 @@ function ViewConceptInTree()
 </head>
 <body>
 <form name="createPVForm" method="POST" action="../../cdecurate/NCICurationServlet?reqType=newPV">
+						<input type="hidden" name="<csrf:token-name/>" value="<csrf:token-value/>"/>
 <%
     UtilService serUtil = new UtilService();
     String sPVAction = (String)session.getAttribute("PVAction");
@@ -332,6 +333,7 @@ displayStatusMessage();
 </form>
 
 <form name="SearchActionForm" method="post" action="">
+						<input type="hidden" name="<csrf:token-name/>" value="<csrf:token-value/>"/>
   <input type="hidden" name="searchComp" value="ValueMeaning">
   <input type="hidden" name="searchEVS" value="PermissibleValue">
   <input type="hidden" name="isValidSearch" value="false">
@@ -343,6 +345,7 @@ displayStatusMessage();
   <input type="hidden" name="sConteIdseq" value="">
 </form>
 <form name="FormVM" method="post" action="../../cdecurate/NCICurationServlet?reqType=createVM">
+						<input type="hidden" name="<csrf:token-name/>" value="<csrf:token-value/>"/>
   <input type="hidden" name="hiddenPValue" value="">
   <input type="hidden" name="VMOrigin" value="Permissible">
 </form>

@@ -76,11 +76,13 @@ function displayStatusMessage()
 	</head>
 	<body onLoad="JavaScript:currentDate();">
 		<form name="SearchActionForm" method="post" action="">
+						<input type="hidden" name="<csrf:token-name/>" value="<csrf:token-value/>"/>
 			<input type="hidden" name="searchComp" value="">
 			<input type="hidden" name="isValidSearch" value="true">
 			<input type="hidden" name="searchEVS" value="ValueMeaning">
 		</form>
 		<form name="createVMForm" method="POST" action="../../cdecurate/NCICurationServlet?reqType=newVM">
+						<input type="hidden" name="<csrf:token-name/>" value="<csrf:token-value/>"/>
 			<%  
     VM_Bean m_VM = new VM_Bean();
     m_VM = (VM_Bean)session.getAttribute("m_VM");

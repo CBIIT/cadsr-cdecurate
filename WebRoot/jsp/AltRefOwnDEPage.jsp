@@ -190,6 +190,7 @@ L--%>
 
 	<body>
 		<form name="designateDEForm" method="POST" action="../../cdecurate/NCICurationServlet?reqType=AltRefOwnDE">
+						<input type="hidden" name="<csrf:token-name/>" value="<csrf:token-value/>"/>
 			<table width="100%" border=0>
 				<!--DWLayoutTable-->
 				<tr>

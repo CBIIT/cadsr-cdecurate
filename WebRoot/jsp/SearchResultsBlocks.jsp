@@ -378,6 +378,7 @@ L--%>
 
 	<body>
 		<form name="searchResultsForm" method="post" action="../../cdecurate/NCICurationServlet?reqType=doSortBlocks">
+						<input type="hidden" name="<csrf:token-name/>" value="<csrf:token-value/>"/>
 			<br>
 			<table border="0" style="z-index:100;"> <!-- NT1 -->
 				<tr align="left">

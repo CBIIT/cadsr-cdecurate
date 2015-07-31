@@ -14,7 +14,7 @@ L--%>
 <%@ page import="java.util.Vector"%>
 <script LANGUAGE="JavaScript" SRC="js/RefDocumentUpload.js"></SCRIPT>
 <form enctype="multipart/form-data" name="RefDocumentUploadForm" method="post" action="../../cdecurate/NCICurationServlet?reqType=RefDocumentUpload">
-
+						<input type="hidden" name="<csrf:token-name/>" value="<csrf:token-value/>"/>
 	<%
 
     session = request.getSession();

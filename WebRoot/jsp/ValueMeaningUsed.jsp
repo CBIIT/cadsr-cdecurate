@@ -103,6 +103,7 @@ L--%>
 			<tr>
 				<td>
 					<form name="VMUse" method="POST" action="../../cdecurate/NCICurationServlet?reqType=<%=VMForm.ELM_FORM_REQ_USED%>">
+						<input type="hidden" name="<csrf:token-name/>" value="<csrf:token-value/>"/>
 						<jsp:include page="<%=VMForm.JSP_VM_TITLE%>" flush="true" />
 						<div class="tabbody" style="width: 99%">
 							<div class="ind2">
@@ -453,6 +454,7 @@ L--%>
 					</form>
 					<div style="display:none">
 						<form name="SearchActionForm" method="post" action="">
+						<input type="hidden" name="<csrf:token-name/>" value="<csrf:token-value/>"/>
 							<input type="hidden" name="searchComp" value="">
 							<input type="hidden" name="searchEVS" value="ValueMeaningEdit">
 							<input type="hidden" name="isValidSearch" value="true">

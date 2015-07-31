@@ -212,11 +212,20 @@ function linkNCICB()
 	</head>
 
 	<body bgcolor="#FFFFFF" text="#000000">
-		<form name="Form1" method="post" action="../../cdecurate/NCICurationServlet?reqType=newDEFromMenu"></form>
-		<form name="Form2" method="post" action="../../cdecurate/NCICurationServlet?reqType=newDECFromMenu"></form>
-		<form name="Form3" method="post" action="../../cdecurate/NCICurationServlet?reqType=newVDFromMenu"></form>
-		<form name="LogoutForm" method="post" action="../../cdecurate/NCICurationServlet?reqType=logout"></form>
+		<form name="Form1" method="post" action="../../cdecurate/NCICurationServlet?reqType=newDEFromMenu">
+						<input type="hidden" name="<csrf:token-name/>" value="<csrf:token-value/>"/>
+		</form>
+		<form name="Form2" method="post" action="../../cdecurate/NCICurationServlet?reqType=newDECFromMenu">
+						<input type="hidden" name="<csrf:token-name/>" value="<csrf:token-value/>"/>
+		</form>
+		<form name="Form3" method="post" action="../../cdecurate/NCICurationServlet?reqType=newVDFromMenu">
+						<input type="hidden" name="<csrf:token-name/>" value="<csrf:token-value/>"/>
+		</form>
+		<form name="LogoutForm" method="post" action="../../cdecurate/NCICurationServlet?reqType=logout">
+						<input type="hidden" name="<csrf:token-name/>" value="<csrf:token-value/>"/>
+		</form>
 		<form name="Form4" method="post" action="../../cdecurate/NCICurationServlet?reqType=actionFromMenu">
+						<input type="hidden" name="<csrf:token-name/>" value="<csrf:token-value/>"/>
 		<input type="hidden" name="hidMenuAction" value="<%=StringEscapeUtils.escapeHtml(strNothing)%>"/>
 		</form>
 		<%

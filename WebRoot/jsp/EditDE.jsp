@@ -395,9 +395,14 @@ newUrl = newUrl + "&idseq=" +idseq+"&type="+type;
 	</head>
 
 	<body onLoad = "hideCloseButton(<%=isView%>);" onUnload="closeDep();">
-		<form name="FormNewDEC" method="post" action="../../cdecurate/NCICurationServlet?reqType=createNewDEC"></form>
-		<form name="FormNewVD" method="post" action="../../cdecurate/NCICurationServlet?reqType=createNewVD"></form>
+		<form name="FormNewDEC" method="post" action="../../cdecurate/NCICurationServlet?reqType=createNewDEC">
+								<input type="hidden" name="<csrf:token-name/>" value="<csrf:token-value/>"/>
+		</form>
+		<form name="FormNewVD" method="post" action="../../cdecurate/NCICurationServlet?reqType=createNewVD">
+								<input type="hidden" name="<csrf:token-name/>" value="<csrf:token-value/>"/>
+		</form>
 		<form name="SearchActionForm" method="post" action="">
+						<input type="hidden" name="<csrf:token-name/>" value="<csrf:token-value/>"/>
 			<input type="hidden" name="searchComp" value="">
 			<input type="hidden" name="searchEVS" value="DataElement">
 			<input type="hidden" name="isValidSearch" value="true">
@@ -405,6 +410,7 @@ newUrl = newUrl + "&idseq=" +idseq+"&type="+type;
 			<input type="hidden" name="itemType" value="">
 		</form>
 		<form name="newCDEForm" method="POST" action="../../cdecurate/NCICurationServlet?reqType=editDE">
+						<input type="hidden" name="<csrf:token-name/>" value="<csrf:token-value/>"/>
 		  <%String displayErrorMessage = (String)session.getAttribute("displayErrorMessage");
 		    if ((displayErrorMessage != null)&&(displayErrorMessage).equals("Yes")){ %>
 		  	 <b><font  size="3">Not Authorized for Edits in this Context.</font></b></br></br>

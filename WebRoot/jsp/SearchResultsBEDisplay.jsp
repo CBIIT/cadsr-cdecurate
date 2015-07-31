@@ -107,6 +107,7 @@ function setup()
 	</head>
 	<body onLoad="setup();">
 		<form name="searchBEDisplayForm" method="post" action="../../cdecurate/NCICurationServlet?reqType=showBEDisplayResult">
+						<input type="hidden" name="<csrf:token-name/>" value="<csrf:token-value/>"/>
 			<br>
 			<table width="100%">
 				<tr>
@@ -243,6 +244,7 @@ function setup()
 </script>
 		</form>
 		<form name="SearchActionForm" method="post" action="">
+						<input type="hidden" name="<csrf:token-name/>" value="<csrf:token-value/>"/>
 			<input type="hidden" name="acID" value="">
 			<input type="hidden" name="itemType" value="">
 			<input type="hidden" name="ac2ID" value="">

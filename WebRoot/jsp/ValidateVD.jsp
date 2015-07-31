@@ -117,6 +117,7 @@ newUrl = newUrl + '&idseq=' +idseq+'&type='+type;
 
 	<body bgcolor="#666666">
 		<form name="validateVDForm" method="POST" action="../../cdecurate/NCICurationServlet?reqType=validateVDFromForm">
+						<input type="hidden" name="<csrf:token-name/>" value="<csrf:token-value/>"/>
 			<font color="#CCCCCC"></font>
 			<table width="100%" border="0" cellpadding="0" cellspacing="0">
 				<tr>

@@ -51,6 +51,7 @@ L--%>
 
 	<body onLoad="setup();">
 		<form name="derivedDEForm" method="post" action="../../cdecurate/NCICurationServlet?reqType=getDDEDetails">
+						<input type="hidden" name="<csrf:token-name/>" value="<csrf:token-value/>"/>
 			<br>
 			<table width="100%" border="0">
 				<tr height="20" valign="top">

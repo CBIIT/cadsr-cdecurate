@@ -140,6 +140,7 @@ L--%>
 	</head>
 	<body onLoad="setup();">
 		<form name="nonEVSSearchPage" method="post" action="../../cdecurate/NCICurationServlet?reqType=nonEVSSearch">
+						<input type="hidden" name="<csrf:token-name/>" value="<csrf:token-value/>"/>
 			<table width="100%" border="2" cellpadding="0" cellspacing="0">
 				<col width="21%">
 				<col width="79%">

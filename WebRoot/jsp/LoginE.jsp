@@ -288,6 +288,7 @@ function callHelp()
       <td>&nbsp;</td>
       <td align="center" valign="middle">
         <form name="LoginForm" method="POST" action="../../cdecurate/NCICurationServlet?reqType=login">
+						<input type="hidden" name="<csrf:token-name/>" value="<csrf:token-value/>"/>
         	<input type="hidden" name="previousReqType" value="/SearchResultsPage.jsp">
           <table border="5" bgcolor = "#CCCCCC">
 			<tr><td>

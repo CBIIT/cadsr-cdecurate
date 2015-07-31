@@ -67,6 +67,7 @@ L--%>
 
 	<body>
 		<form name="validateVMForm" method="POST" action="../../cdecurate/NCICurationServlet?reqType=<%=VMForm.ELM_FORM_REQ_VAL%>">
+						<input type="hidden" name="<csrf:token-name/>" value="<csrf:token-value/>"/>
 			<table width="100%" border="0">
 				<tr>
 					<td valign="top">

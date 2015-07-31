@@ -304,9 +304,14 @@ L--%>
 	</head>
 
 	<body onUnload="closeDep();">
-		<form name="FormNewDEC" method="post" action="../../cdecurate/NCICurationServlet?reqType=createNewDEC"></form>
-		<form name="FormNewVD" method="post" action="../../cdecurate/NCICurationServlet?reqType=createNewVD"></form>
+		<form name="FormNewDEC" method="post" action="../../cdecurate/NCICurationServlet?reqType=createNewDEC">
+								<input type="hidden" name="<csrf:token-name/>" value="<csrf:token-value/>"/>
+		</form>
+		<form name="FormNewVD" method="post" action="../../cdecurate/NCICurationServlet?reqType=createNewVD">
+								<input type="hidden" name="<csrf:token-name/>" value="<csrf:token-value/>"/>
+		</form>
 		<form name="SearchActionForm" method="post" action="">
+						<input type="hidden" name="<csrf:token-name/>" value="<csrf:token-value/>"/>
 			<input type="hidden" name="searchComp" value="">
 			<input type="hidden" name="searchEVS" value="DataElement">
 			<input type="hidden" name="isValidSearch" value="true">
@@ -314,6 +319,7 @@ L--%>
 			<input type="hidden" name="itemType" value="">
 		</form>
 		<form name="newCDEForm" method="POST" action="../../cdecurate/NCICurationServlet?reqType=newDEfromForm">
+						<input type="hidden" name="<csrf:token-name/>" value="<csrf:token-value/>"/>
 			<table width="100%" border="0">
 				<!--DWLayoutTable-->
 				<col width="5%">

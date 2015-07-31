@@ -433,6 +433,7 @@ L--%>
 
 	<body onLoad="setup();">
 		<form name="createVDForm" method="POST" action="../../cdecurate/NCICurationServlet?reqType=newVDfromForm">
+						<input type="hidden" name="<csrf:token-name/>" value="<csrf:token-value/>"/>
 			<!-- include the vdpvstab.jsp here -->
 			<jsp:include page="VDPVSTab.jsp" flush="true" />
 			<div style="margin-left: 0in; margin-right: 0in; border-left: 2px solid black; border-bottom: 2px solid black; border-right: 2px solid black; width: 100%; padding: 0.1in 0in 0.1in 0in">
@@ -1652,6 +1653,7 @@ changeDataType();
 		<!--  remvoed the searchactionform from here and put it on vdpvstab.jsp -->
 		<div style="display:none">
 			<form name="SearchActionForm" method="post" action="">
+						<input type="hidden" name="<csrf:token-name/>" value="<csrf:token-value/>"/>
 				<input type="hidden" name="searchComp" value="<%=sSearchAC%>">
 				<input type="hidden" name="searchEVS" value="ValueDomain">
 				<input type="hidden" name="isValidSearch" value="true">

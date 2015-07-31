@@ -334,6 +334,7 @@ L--%>
 
 	<body onload="refreshPage();">
 		<form name="designateDEForm" method="post" action="../../cdecurate/NCICurationServlet?reqType=designateDE">
+						<input type="hidden" name="<csrf:token-name/>" value="<csrf:token-value/>"/>
 			<table width="100%" border=0>
 				<!--DWLayoutTable-->
 				<tr>
