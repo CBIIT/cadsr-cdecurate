@@ -232,11 +232,11 @@ public class NCICurationServlet extends HttpServlet
     	System.out.println("NCICurationServlet:end -------------------------------------------------");
 		*/
 		//this should cause minimal overhead, or can be totally before production
-		TimeWatch watch;
-		if(TimeWatch.ENABLED) {
-			watch = TimeWatch.start();
-		}
-        ClockTime clock = new ClockTime();
+//		TimeWatch watch;
+//		if(TimeWatch.ENABLED) {
+//			watch = TimeWatch.start();
+//		}
+//        ClockTime clock = new ClockTime();
         try
         {
         	String reqType = StringUtil.cleanJavascriptAndHtml(req.getParameter("reqType"));
@@ -296,12 +296,12 @@ public class NCICurationServlet extends HttpServlet
         {
             logger.error("Service error : " + e.toString(), e);
         }
-        logger.debug("service response time " + clock.toStringLifeTime());
-		if(TimeWatch.ENABLED) {
-			long passedTimeInSeconds = watch.time(TimeUnit.SECONDS);	
-			//long passedTimeInMs = watch.time();
-			System.out.println(this.getClass().getName() +":execute elapsed time in s = " + passedTimeInSeconds);
-		}
+//        logger.debug("service response time " + clock.toStringLifeTime());
+//		if(TimeWatch.ENABLED) {
+//			long passedTimeInSeconds = watch.time(TimeUnit.SECONDS);	
+//			//long passedTimeInMs = watch.time();
+//			System.out.println(this.getClass().getName() +":execute elapsed time in s = " + passedTimeInSeconds);
+//		}
     }
 
     /**

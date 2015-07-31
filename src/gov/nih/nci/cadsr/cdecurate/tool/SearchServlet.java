@@ -1,6 +1,7 @@
 package gov.nih.nci.cadsr.cdecurate.tool;
 
 import gov.nih.nci.cadsr.cdecurate.common.NO_SQL_CHECK;
+import gov.nih.nci.cadsr.cdecurate.common.Security;
 import gov.nih.nci.cadsr.cdecurate.database.SQLHelper;
 import gov.nih.nci.cadsr.cdecurate.ui.AltNamesDefsSession;
 import gov.nih.nci.cadsr.cdecurate.ui.DesDEServlet;
@@ -43,10 +44,10 @@ public class SearchServlet extends CurationServlet {
 	
 	public void execute(ACRequestTypes reqType) throws Exception {
 		//this should cause minimal overhead, or can be totally before production
-		TimeWatch watch;
-		if(TimeWatch.ENABLED) {
-			watch = TimeWatch.start();
-		}
+//		TimeWatch watch;
+//		if(TimeWatch.ENABLED) {
+//			watch = TimeWatch.start();
+//		}
 
 		switch (reqType){
 			case homePage:
@@ -95,11 +96,11 @@ public class SearchServlet extends CurationServlet {
                doConClassSearchActions();
                break;
 			case showCDDetail:
-				if(TimeWatch.ENABLED) {
-					long passedTimeInSeconds = watch.time(TimeUnit.SECONDS);	
-					//long passedTimeInMs = watch.time();
-					System.out.println(this.getClass().getName() +":execute elaped time in s = " + passedTimeInSeconds);
-				}
+//				if(TimeWatch.ENABLED) {
+//					long passedTimeInSeconds = watch.time(TimeUnit.SECONDS);	
+//					//long passedTimeInMs = watch.time();
+//					System.out.println(this.getClass().getName() +":execute elaped time in s = " + passedTimeInSeconds);
+//				}
                doConDomainSearchActions();	//GF32155
                break;
 			case showUsedBy:
@@ -107,11 +108,11 @@ public class SearchServlet extends CurationServlet {
 			   break;
  		}
 		
-		if(TimeWatch.ENABLED) {
-			long passedTimeInSeconds = watch.time(TimeUnit.SECONDS);	
-			//long passedTimeInMs = watch.time();
-			System.out.println(this.getClass().getName() +":execute elaped time in s = " + passedTimeInSeconds);
-		}
+//		if(TimeWatch.ENABLED) {
+//			long passedTimeInSeconds = watch.time(TimeUnit.SECONDS);	
+//			//long passedTimeInMs = watch.time();
+//			System.out.println(this.getClass().getName() +":execute elaped time in s = " + passedTimeInSeconds);
+//		}
 	}
 	
     /**
@@ -122,10 +123,10 @@ public class SearchServlet extends CurationServlet {
      */
     public void doHomePage()
     {
-    	TimeWatch watch;
-		if(TimeWatch.ENABLED) {
-			watch = TimeWatch.start();
-		}
+//    	TimeWatch watch;
+//		if(TimeWatch.ENABLED) {
+//			watch = TimeWatch.start();
+//		}
     	
         try
         {
@@ -184,11 +185,11 @@ public class SearchServlet extends CurationServlet {
                 // ForwardErrorJSP(m_classReq, m_classRes, "Unable to connect to the database. Please log in again.");
             }
             
-    		if(TimeWatch.ENABLED) {
-    			long passedTimeInSeconds = watch.time(TimeUnit.SECONDS);	
-    			//long passedTimeInMs = watch.time();
-    			System.out.println(this.getClass().getName() +":doHomePage elaped time in s = " + passedTimeInSeconds);
-    		}
+//    		if(TimeWatch.ENABLED) {
+//    			long passedTimeInSeconds = watch.time(TimeUnit.SECONDS);	
+//    			//long passedTimeInMs = watch.time();
+//    			System.out.println(this.getClass().getName() +":doHomePage elaped time in s = " + passedTimeInSeconds);
+//    		}
         }
         catch (Exception e)
         {
@@ -1924,7 +1925,7 @@ public class SearchServlet extends CurationServlet {
 		String defaultContext=null;
 		Statement stm =null;
 		ResultSet rs =null;
-		HttpSession session = m_classReq.getSession(true);
+		HttpSession session = Security.getSession(m_classReq);	//m_classReq.getSession(true);	//JR1107
         try
         {
             String sQuery = "select value from sbrext.tool_options_view_ext where property like 'REPTERM.DEFAULT.CONTEXT'";
@@ -1951,7 +1952,7 @@ public class SearchServlet extends CurationServlet {
 	private void getApprovedRepTerm() {
 		Vector vResult = new Vector();
 		String valueString = new String();
-		HttpSession session = m_classReq.getSession(true);
+		HttpSession session = Security.getSession(m_classReq);	//m_classReq.getSession(true);	//JR1107
 		ConceptServlet conSer = new ConceptServlet(m_classReq, m_classRes, this);
 		ConceptAction conact = new ConceptAction();
 		ResultSet rs =null;

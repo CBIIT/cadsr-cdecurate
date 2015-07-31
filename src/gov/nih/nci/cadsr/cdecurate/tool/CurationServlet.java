@@ -6,6 +6,7 @@
 package gov.nih.nci.cadsr.cdecurate.tool;
 
 // import files
+import gov.nih.nci.cadsr.cdecurate.common.Security;
 import gov.nih.nci.cadsr.cdecurate.database.SQLHelper;
 import gov.nih.nci.cadsr.cdecurate.ui.AltNamesDefsServlet;
 import gov.nih.nci.cadsr.cdecurate.ui.DesDEServlet;
@@ -43,6 +44,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.sql.DataSource;
+
 
 
 
@@ -310,7 +312,7 @@ public class CurationServlet
     	    userbean.setPassword(password);
      		uc.validateCredentials(NCICurationServlet._userName, NCICurationServlet._password, username, password);
      		req.getSession().invalidate();  // per Appscan, new Session ID should be generated after successful login
-     		session = req.getSession(true);
+     		session = Security.getSession(req);	//req.getSession(true);	//JR1107
      		if (m_conn == null){
      			get_m_conn();
      		}
@@ -385,7 +387,7 @@ public class CurationServlet
 */
     public void get_m_conn()
     {
-        HttpSession session = m_classReq.getSession(true);
+        HttpSession session = Security.getSession(m_classReq);	//m_classReq.getSession(true);	//JR1107
     	// get the session data object from the session
         sessionData = (Session_Data) session.getAttribute(Session_Data.CURATION_SESSION_ATTR);
         if (sessionData == null)
@@ -407,7 +409,7 @@ public class CurationServlet
     	UserBean ub = checkUserBean(m_classReq, m_classRes);
         if (ub == null)
         {
-        	HttpSession session = m_classReq.getSession(true);
+        	HttpSession session = Security.getSession(m_classReq);	//m_classReq.getSession(true);	//JR1107
             String errMsg = getDBConnectMessage("Session Terminated");
 			DataManager.setAttribute(session, "ErrorMessage", errMsg);
 			// get the menu action from request
@@ -432,7 +434,7 @@ public class CurationServlet
     {
         UserBean ub = null;
         HttpSession session;
-        session = m_classReq.getSession(true);
+        session = Security.getSession(m_classReq);	//m_classReq.getSession(true);	//JR1107
         try
         {
         	// get the session data object from the session
@@ -675,7 +677,7 @@ public class CurationServlet
     private UserBean checkUserBean(HttpServletRequest req, @SuppressWarnings("unused") HttpServletResponse res) throws Exception
     {
         HttpSession session;
-        session = req.getSession(true);
+        session = Security.getSession(m_classReq);	//req.getSession(true);	//JR1107
         UserBean userbean = (UserBean) session.getAttribute("Userbean");
         if (userbean == null)
         {
@@ -3839,7 +3841,7 @@ public class CurationServlet
         try
         {
             HttpSession session;
-            session = req.getSession(true);
+            session = Security.getSession(m_classReq);	//req.getSession(true);	//JR1107
             String fullPage = "/";
             String reqMsg = (String) req.getAttribute("ReqErrorMessage");
             if (reqMsg != null && !reqMsg.equals(""))
