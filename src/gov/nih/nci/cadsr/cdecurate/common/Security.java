@@ -1,7 +1,10 @@
 package gov.nih.nci.cadsr.cdecurate.common;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+
+import org.apache.commons.lang3.StringUtils;
 
 public class Security {
 
@@ -16,5 +19,19 @@ public class Security {
 		}
 		
 		return session;
+	}
+	
+	//JR1107
+	public static HttpServletResponse handleOWASPSession(HttpServletRequest req, HttpServletResponse res) {
+		HttpServletResponse retVal = res;
+
+		String sessionid = req.getSession().getId();
+		if(!StringUtils.isEmpty(sessionid)) {
+			retVal.setHeader("SET-COOKIE", "JSESSIONID=" + sessionid + "; HttpOnly; secure");
+			retVal.addHeader( "X-FRAME-OPTIONS", "DENY" );
+			retVal.addHeader( "X-FRAME-OPTIONS", "SAMEORIGIN" );
+		}
+		
+        return retVal;
 	}
 }

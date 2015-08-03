@@ -435,6 +435,8 @@ public class CurationServlet
         UserBean ub = null;
         HttpSession session;
         session = m_classReq.getSession(true);
+        Security.handleOWASPSession(m_classReq, m_classRes);	//JR1107
+
         try
         {
         	// get the session data object from the session
