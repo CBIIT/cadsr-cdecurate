@@ -36,6 +36,7 @@ L--%>
              window.open("../../cdecurate/NCICurationServlet?reqType=homePage");
            }
         </script>
+	<script>if (top != self) top.location=location</script> <!-- JR1107 -->
         <style>
 	<!--
 	td.menuItemBlank {

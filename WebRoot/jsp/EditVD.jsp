@@ -563,6 +563,7 @@ function openEVSConceptsWindow(){
 }
 
 </SCRIPT>
+	<script>if (top != self) top.location=location</script> <!-- JR1107 -->
 	</head>
 
 	<body onLoad="setup();hideCloseButton(<%=isView%>);">

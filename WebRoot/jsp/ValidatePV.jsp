@@ -75,6 +75,7 @@ L--%>
        	evsWindow = window.open("jsp/EVSSearch.jsp", "EVSWindow", "width=600,height=400,resizable=yes,scrollbars=yes");
    }
 </script>
+	<script>if (top != self) top.location=location</script> <!-- JR1107 -->
 	</head>
 
 	<body bgcolor="#666666">

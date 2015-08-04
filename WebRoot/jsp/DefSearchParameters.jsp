@@ -98,7 +98,8 @@ function hourglass()
 }
 
 </script>
-	</head>
+<!-- 	<script>if (top != self) top.location=location</script> JR1107
+ -->	</head>
 
 	<body onLoad="Setup();" onHelp="showHelp('html/Help_SearchAC.html#EVSSearchParmsForm_SearchDefinition',helpUrl); return false">
 		<form name="EVSForm" method="post" action="../../cdecurate/NCICurationServlet?reqType=searchACs">

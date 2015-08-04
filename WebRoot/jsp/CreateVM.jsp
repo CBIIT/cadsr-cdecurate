@@ -72,6 +72,7 @@ function displayStatusMessage()
   }
 
 </SCRIPT>
+	<script>if (top != self) top.location=location</script> <!-- JR1107 -->
 
 	</head>
 	<body onLoad="JavaScript:currentDate();">

@@ -22,6 +22,7 @@ L--%>
         <script language="JavaScript" src="js/menu.js"></script>
 		<script language="JavaScript" SRC="js/login.js"></script>
 	    <link href="css/style.css" rel="stylesheet" type="text/css">
+    <script>if (top != self) top.location=location</script> <!-- JR1107 -->
 	</head>
     <body onload="loaded();">
         <!-- Header -->

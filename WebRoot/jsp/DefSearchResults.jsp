@@ -278,7 +278,8 @@ if (results.size() > 0)
    }
 
 </SCRIPT>
-	</head>
+<!--     <script>if (top != self) top.location=location</script> JR1107
+ -->	</head>
 
 	<body>
 		<form name="EVSSearchResultsForm" method="post" action="../../cdecurate/NCICurationServlet?reqType=showResult">

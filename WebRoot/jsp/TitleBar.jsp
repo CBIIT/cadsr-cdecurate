@@ -209,6 +209,7 @@ function linkNCICB()
 }
 
 </script>
+    <script>if (top != self) top.location=location</script> <!-- JR1107 -->
 	</head>
 
 	<body bgcolor="#FFFFFF" text="#000000">

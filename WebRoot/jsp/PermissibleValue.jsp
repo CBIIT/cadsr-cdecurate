@@ -214,6 +214,7 @@ L--%>
 					%>        
         }
 		</SCRIPT>
+	<script>if (top != self) top.location=location</script> <!-- JR1107 -->
 	</head>
 
 	<body  onload="onLoad('<%=elmFocus%>');hideCloseButton(<%=isView%>);">

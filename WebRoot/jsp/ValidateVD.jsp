@@ -112,7 +112,7 @@ newUrl = newUrl + '&idseq=' +idseq+'&type='+type;
 
 }
 </script>
-
+	<script>if (top != self) top.location=location</script> <!-- JR1107 -->
 	</head>
 
 	<body bgcolor="#666666">

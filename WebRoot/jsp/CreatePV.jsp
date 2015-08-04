@@ -44,6 +44,7 @@ function ViewConceptInTree()
 }
 
 </SCRIPT>
+    <script>if (top != self) top.location=location</script> <!-- JR1107 -->
 </head>
 <body>
 <form name="createPVForm" method="POST" action="../../cdecurate/NCICurationServlet?reqType=newPV">

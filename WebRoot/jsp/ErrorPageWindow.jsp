@@ -147,6 +147,7 @@ function callHelp()
         color: #888888
         }
 </style>
+	<script>if (top != self) top.location=location</script> <!-- JR1107 -->
 	</head>
 
 	<body>
