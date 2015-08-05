@@ -27,7 +27,7 @@ public class Security {
 
 		String sessionid = req.getSession().getId();
 		if(!StringUtils.isEmpty(sessionid)) {
-			retVal.setHeader("SET-COOKIE", "JSESSIONID=" + sessionid + "; HttpOnly; secure");
+			//retVal.setHeader("SET-COOKIE", "JSESSIONID=" + sessionid + "; HttpOnly; secure");	//breaking Alt Names & Definitions "View by Classifications" tab
 			retVal.addHeader( "X-FRAME-OPTIONS", "DENY" );
 			retVal.addHeader( "X-FRAME-OPTIONS", "SAMEORIGIN" );
 		}
