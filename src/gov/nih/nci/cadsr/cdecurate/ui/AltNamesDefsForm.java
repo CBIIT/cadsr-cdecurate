@@ -15,6 +15,8 @@ package gov.nih.nci.cadsr.cdecurate.ui;
 import gov.nih.nci.cadsr.cdecurate.database.Alternates;
 import gov.nih.nci.cadsr.cdecurate.database.DBAccess;
 import gov.nih.nci.cadsr.cdecurate.util.Tree;
+import gov.nih.nci.cadsr.common.StringUtil;
+
 import javax.servlet.http.HttpServletRequest;
 
 /**
@@ -49,14 +51,14 @@ public class AltNamesDefsForm
         _mode = _req.getParameter(AltNamesDefsServlet._modeFlag);
         _targetIdseq = _req.getParameter(AltNamesDefsServlet._parmIdseq);
         
-        _nameDef = _req.getParameter(AltNamesDefsServlet._parmNameDef);
+        _nameDef = StringUtil.cleanJavascriptAndHtml(_req.getParameter(AltNamesDefsServlet._parmNameDef));		//JR1107
         Alternates alt = _sess.getEdit();
         if (_nameDef == null || _nameDef.length() == 0)
             _nameDef = alt.getName();
         else if (_nameDef.length() > DBAccess._MAXDEFLEN)
             _nameDef = _nameDef.trim().substring(0, DBAccess._MAXDEFLEN);
 
-        _contextID = _req.getParameter(AltNamesDefsServlet._parmContext);
+        _contextID = StringUtil.cleanJavascriptAndHtml(_req.getParameter(AltNamesDefsServlet._parmContext));	//JR1107
         if (_contextID == null || _contextID.length() == 0)
         {
             _contextID = alt.getConteIdseq();
@@ -67,11 +69,11 @@ public class AltNamesDefsForm
             _contextName = _sess.getContextName(_contextID);
         }
 
-        _type = _req.getParameter(AltNamesDefsServlet._parmType);
+        _type = StringUtil.cleanJavascriptAndHtml(_req.getParameter(AltNamesDefsServlet._parmType));	//JR1107
         if (_type == null || _type.length() == 0)
             _type = alt.getType();
         
-        _lang = _req.getParameter(AltNamesDefsServlet._parmLang);
+        _lang = StringUtil.cleanJavascriptAndHtml(_req.getParameter(AltNamesDefsServlet._parmLang));	//JR1107
         if (_lang == null || _lang.length() == 0)
             _lang = alt.getLanguage();
 
@@ -179,7 +181,7 @@ public class AltNamesDefsForm
      */
     public void save()
     {
-        _sess.editUpdates(_nameDef, _type, _lang, _contextID, _contextName);
+        _sess.editUpdates(_nameDef, _type, _lang, _contextID, _contextName);	//JR1107 - nothing is changed here, just verify that the inputs are safe here!
     }
     
     /**

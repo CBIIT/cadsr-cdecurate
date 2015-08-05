@@ -149,7 +149,8 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 				<input type="button" name="btnAddName" value="Add Name" onclick="doAction('<%=AltNamesDefsServlet._actionAddName%>');">
 				<input type="button" name="btnAddDef" value="Add Definition" onclick="doAction('<%=AltNamesDefsServlet._actionAddDef%>');">
 				<%
-                text = StringUtil.cleanJavascriptAndHtml( (String) pageContext.getRequest().getAttribute(AltNamesDefsServlet._reqAttribute) );
+                //text = StringUtil.cleanJavascriptAndHtml( (String) pageContext.getRequest().getAttribute(AltNamesDefsServlet._reqAttribute) );
+                text = (String) pageContext.getRequest().getAttribute(AltNamesDefsServlet._reqAttribute);	//JR1107 do not sanitize the output, it will break html formating (santize the input instead c.f. AltNamesDefsForm's write() and write3() for example in this case)
             %>
 				<%=text%>
 			</div>

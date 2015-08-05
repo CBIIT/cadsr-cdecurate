@@ -278,7 +278,8 @@ String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.
 				</table>
 				<div id="csiList" class="list" style="height: 3in">
         <%
-            text = StringUtil.cleanJavascriptAndHtml((String) req.getAttribute(AltNamesDefsServlet._reqAttribute));
+            //text = StringUtil.cleanJavascriptAndHtml((String) req.getAttribute(AltNamesDefsServlet._reqAttribute));
+        	text = (String) req.getAttribute(AltNamesDefsServlet._reqAttribute);	//JR1107 do not sanitize the output, it will break html formating (santize the input instead c.f. AltNamesDefsForm's write() and write3() for example in this case)
         %>
 					<%=text%>
 				</div>
