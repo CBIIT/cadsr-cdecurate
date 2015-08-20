@@ -1359,10 +1359,10 @@ public class SearchServlet extends CurationServlet {
         String sCreFrom = "", sCreTo = "", sModFrom = "", sModTo = "", sCre = "", sMod = "";
         if (actType.equals("ChangeSearchIn"))
         {
-            sCreFrom = (String) m_classReq.getParameter("createdFrom"); // filter by createdFrom
-            sCreTo = (String) m_classReq.getParameter("createdTo"); // filter by createdTo
-            sModFrom = (String) m_classReq.getParameter("modifiedFrom"); // filter by modifiedFrom
-            sModTo = (String) m_classReq.getParameter("modifiedTo"); // filter by modifiedTo
+            sCreFrom = StringUtil.cleanJavascriptAndHtml((String) m_classReq.getParameter("createdFrom")); // filter by createdFrom //JR-1107 tagged
+            sCreTo = StringUtil.cleanJavascriptAndHtml((String) m_classReq.getParameter("createdTo")); // filter by createdTo //JR-1107 tagged
+            sModFrom = StringUtil.cleanJavascriptAndHtml((String) m_classReq.getParameter("modifiedFrom")); // filter by modifiedFrom //JR-1107 tagged
+            sModTo = StringUtil.cleanJavascriptAndHtml((String) m_classReq.getParameter("modifiedTo")); // filter by modifiedTo //JR-1107 tagged
             sCre = (String) m_classReq.getParameter("creator"); // filter by creator
             sMod = (String) m_classReq.getParameter("modifier"); // filter by modifier
         }

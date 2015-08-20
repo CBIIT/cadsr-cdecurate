@@ -67,10 +67,10 @@ L--%>
 		if (sUIFilter == null)
 			sUIFilter = "simple";
 		if (sUIFilter.equals("advanced")) {
-			sCreatedFrom = (String) session.getAttribute("creCreatedFrom");
-			sCreatedTo = (String) session.getAttribute("creCreatedTo");
-			sModifiedFrom = (String) session.getAttribute("creModifiedFrom");
-			sModifiedTo = (String) session.getAttribute("creModifiedTo");
+			sCreatedFrom = StringUtil.cleanJavascriptAndHtml( (String) session.getAttribute("creCreatedFrom")); //JR1107
+			sCreatedTo = StringUtil.cleanJavascriptAndHtml( (String) session.getAttribute("creCreatedTo")); //JR1107
+			sModifiedFrom = StringUtil.cleanJavascriptAndHtml( (String) session.getAttribute("creModifiedFrom")); //JR1107
+			sModifiedTo = StringUtil.cleanJavascriptAndHtml( (String) session.getAttribute("creModifiedTo")); //JR1107
 			sCreator = (String) session.getAttribute("creCreator");
 			sModifier = (String) session.getAttribute("creModifier");
 		}

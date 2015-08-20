@@ -272,22 +272,22 @@ public class GetACSearch implements Serializable
                 if (sDataType == null || sDataType.equals("allData"))
                     sDataType = "";
                 // filter by date created from date
-                String sCreatedFrom = (String) req.getParameter("createdFrom");
+                String sCreatedFrom = StringUtil.cleanJavascriptAndHtml((String) req.getParameter("createdFrom") ); //JR1107
                 DataManager.setAttribute(session, "serCreatedFrom", sCreatedFrom);
                 if (sCreatedFrom == null)
                     sCreatedFrom = "";
                 // filter by date created To date
-                String sCreatedTo = (String) req.getParameter("createdTo");
+                String sCreatedTo = StringUtil.cleanJavascriptAndHtml((String) req.getParameter("createdTo") ); //JR1107
                 DataManager.setAttribute(session, "serCreatedTo", sCreatedTo);
                 if (sCreatedTo == null)
                     sCreatedTo = "";
                 // filter by date Modified from date
-                String sModifiedFrom = (String) req.getParameter("modifiedFrom");
+                String sModifiedFrom = StringUtil.cleanJavascriptAndHtml((String) req.getParameter("modifiedFrom") ); //JR1107
                 DataManager.setAttribute(session, "serModifiedFrom", sModifiedFrom);
                 if (sModifiedFrom == null)
                     sModifiedFrom = "";
                 // filter by date Modified To date
-                String sModifiedTo = (String) req.getParameter("modifiedTo");
+                String sModifiedTo = StringUtil.cleanJavascriptAndHtml((String) req.getParameter("modifiedTo") ); //JR1107
                 DataManager.setAttribute(session, "serModifiedTo", sModifiedTo);
                 if (sModifiedTo == null)
                     sModifiedTo = "";
