@@ -63,7 +63,8 @@ import org.apache.log4j.Logger;
  * @version 3.0
  *
  */
-/*
+
+/**
  * The CaCORE Software License, Version 3.0 Copyright 2002-2005 ScenPro, Inc. ("ScenPro") Copyright Notice. The software
  * subject to this notice and license includes both human readable source code form and machine readable, binary, object
  * code form ("the CaCORE Software"). The CaCORE Software was developed in conjunction with the National Cancer
@@ -267,7 +268,6 @@ public class CurationServlet
     }
 
      /**
-     * @param ub_
      * @return Connection
      */
     public Connection connectDB()
@@ -342,7 +342,7 @@ public class CurationServlet
     	  }
       }
 
-    /**
+    /*
      * Authenticates the user login credentials with the jboss authentication
      * data source.
      * @param user
@@ -446,6 +446,8 @@ public class CurationServlet
             else
         	m_conn = connectDB();
             String reqType = StringUtil.cleanJavascriptAndHtml(m_classReq.getParameter("reqType"));
+            //FIXME MHL dev time only
+            System.out.println("MHL service - reqType: " + reqType);
             m_classReq.setAttribute("LatestReqType", reqType);
             if (reqType != null)
             {
@@ -715,8 +717,7 @@ public class CurationServlet
 */
     /**
      * Gets the Help URL from Tool options table.
-     * @param req
-     * @param res
+     * @param con
      */
     public String getHelpURL(Connection con)
     {
@@ -3213,11 +3214,6 @@ public class CurationServlet
      * permission to write to the selected context goes back to search page. otherwise forwards to create/edit pages for
      * the selected component.
      *
-     * @param req
-     *            The HttpServletRequest from the client
-     * @param res
-     *            The HttpServletResponse back to the client
-     *
      * @throws Exception
      */
     protected void doSearchSelectionBEAction() throws Exception
@@ -3953,7 +3949,7 @@ public class CurationServlet
 	}
 
 	/**
-	 * @param m_conn the m_conn to set
+	 * @param conn the m_conn to set
 	 */
 	public void setConn(Connection conn) {
 		this.m_conn = conn;

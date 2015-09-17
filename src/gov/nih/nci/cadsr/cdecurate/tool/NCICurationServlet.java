@@ -240,7 +240,10 @@ public class NCICurationServlet extends HttpServlet
         try
         {
         	String reqType = StringUtil.cleanJavascriptAndHtml(req.getParameter("reqType"));
-        	HttpSession session = req.getSession();
+            //FIXME MHL dev time only
+            System.out.println("MHL NCICurationServlet.service - reqType: " + reqType);
+
+            HttpSession session = req.getSession();
         	String menuAction = (String) session.getAttribute(Session_Data.SESSION_MENU_ACTION);
         	if((menuAction == null) 
         			&& !(reqType.equals("homePage")) 

@@ -7,6 +7,7 @@ import java.io.StringWriter;
 import java.text.CharacterIterator;
 import java.text.StringCharacterIterator;
 import java.util.Arrays;
+import java.util.List;
 import java.util.regex.Pattern;
 
 import org.apache.log4j.Logger;
@@ -271,5 +272,33 @@ public class StringUtil {
 			e.printStackTrace();
 		}
 		return false;
+	}
+
+
+	/**
+	 *  Return false if s contains > or < or %
+	 *  This used to catch attempts to sneak JavaScript or HTML int server call parameters.
+	 * @param s string to be checked
+	 * @return
+	 */
+	public static boolean isHtmlAndScriptClean( String s)
+	{
+		if( s.matches( "^.*(%|<|>).*$" ))
+		{
+			return false;
+		}
+		return true;
+	}
+
+	public static boolean isHtmlAndScriptClean( List<String> s)
+	{
+		for( String str: s )
+		{
+			if( ! isHtmlAndScriptClean(s) )
+			{
+				return false;
+			}
+		}
+		return true;
 	}
 }
