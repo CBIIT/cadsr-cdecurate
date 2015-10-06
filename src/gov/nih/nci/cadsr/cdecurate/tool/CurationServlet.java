@@ -118,6 +118,7 @@ import org.apache.log4j.Logger;
  */
 public class CurationServlet
 {
+
     protected SetACService       m_setAC          = new SetACService(this);
     public HttpServletRequest  m_classReq       = null;
     public HttpServletResponse m_classRes       = null;
@@ -257,13 +258,45 @@ public class CurationServlet
         Connection con = null;
         try
         {
-            con = ds.getConnection(user_, pswd_);
+            con = ds.getConnection( user_, pswd_ );
+        } catch( SQLException e )
+        {
+            logger.fatal("Could not open database connection.", e);
+            return null;
+        }
+
+/*        try
+        {
+            //FIXMENOW MHL  just for dev time testing
+            System.out.println("*************   MHL getConnFromDS con = ds.getConnection( " + user_ + ", " + pswd_  + ")");
+            if( (con == null) || (con.isClosed()))
+            {
+                if( con == null)
+                {
+                    System.out.println("*************   MHL connection is null");
+                }
+                else
+                {
+                    if( con.isClosed())
+                    {
+                        System.out.println("*************   MHL connection is closed");
+                    }
+                }
+                System.out.println("*************   MHL Getting connection");
+                con = ds.getConnection( user_, pswd_ );
+            }
+            else
+            {
+                System.out.println("*************   MHL Reuse connection");
+            }
         }
         catch (Exception e)
         {
             logger.fatal("Could not open database connection.", e);
             return null;
         }
+        */
+
         return con;
     }
 
@@ -446,8 +479,10 @@ public class CurationServlet
             else
         	m_conn = connectDB();
             String reqType = StringUtil.cleanJavascriptAndHtml(m_classReq.getParameter("reqType"));
+
             //FIXME MHL dev time only
             System.out.println("MHL service - reqType: " + reqType);
+
             m_classReq.setAttribute("LatestReqType", reqType);
             if (reqType != null)
             {
@@ -2783,7 +2818,9 @@ public class CurationServlet
                 stmt.execute();
                 System.out.println("Done with CallableStatement: doMonitor()");
                 if (stmt.getString(3) != null)
-                    csi_idseq = stmt.getString(3);
+                {
+                    csi_idseq = stmt.getString( 3 );
+                }
              
                 if (csi_idseq == null)
                 {

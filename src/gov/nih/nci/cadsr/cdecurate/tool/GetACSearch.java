@@ -4334,7 +4334,7 @@ public class GetACSearch implements Serializable
             session.setAttribute( "designateBE", "" );
             Vector selectedRows = new Vector();
             String unCheckedRowId = StringUtil.cleanJavascriptAndHtml( ( String ) m_classReq.getParameter( "unCheckedRowId" ) );
-/*
+
 
 
             logger.info( "MHL  unCheckedRowId: [" + unCheckedRowId + "]  Type: " + unCheckedRowId.getClass().getName() );
@@ -4361,7 +4361,7 @@ public class GetACSearch implements Serializable
                 System.out.println(" NOT  unCheckedRowId != null");
             }
 
-*/
+
 
             if( ( unCheckedRowId != null ) && ( !( unCheckedRowId.isEmpty() ) ) )
             {

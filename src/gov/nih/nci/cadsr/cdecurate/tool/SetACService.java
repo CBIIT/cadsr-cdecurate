@@ -484,7 +484,7 @@ public class SetACService implements Serializable
             int iNoLengthLimit = -1;
 
             //HttpSession session = req.getSession();
-            String sDDERepTypes[] = req.getParameterValues( "selRepType" );
+            String sDDERepTypes[] = StringUtil.sanitizeHTML( req.getParameterValues( "selRepType" ));
             String sRepType = sDDERepTypes[0];
             String sRule = StringUtil.cleanJavascriptAndHtml( ( String ) req.getParameter( "DDERule" ) );
             String sMethod = StringUtil.cleanJavascriptAndHtml( ( String ) req.getParameter( "DDEMethod" ) );
@@ -3071,7 +3071,7 @@ public class SetACService implements Serializable
           retValue = "Not unique within the Context. ";
         } */
             }
-			/*   if(sField.equals("Version"))
+            /*   if(sField.equals("Version"))
       {
         String sName = getAC.isUniqueInContext(sSQL);
         if(sName == null || sName.equals(""))
@@ -3701,36 +3701,37 @@ public class SetACService implements Serializable
      */
     public void setDEValueFromPage( HttpServletRequest req, HttpServletResponse res, DE_Bean m_DE )
     {
-
-        // Defence against Cross-Site Scripting
-        if( ( req.getParameter( "txtPreferredName" ) != null ) && ( !StringUtil.isHtmlAndScriptClean( ( String ) req.getParameter( "txtPreferredName" ) ) ) )
+        boolean hasSuspectPeramater = false;
+        // CURATNTOOL-1107
+        if( ( req.getParameter( "txtPreferredName" ) != null ) && ( !StringUtil.isHtmlAndScriptClean( req.getParameter( "txtPreferredName" ) ) ) )
         {
             logger.warn( "Bad value for txtPreferredName[" + req.getParameter( "txtPreferredName" ) + "]" );
-            return;
+            System.out.println( "MHL getACNames Bad value for setDEValueFromPage[" + req.getParameter( "txtPreferredName" ) + "]" );
+            hasSuspectPeramater = true;
         }
 
-        if( ( req.getParameter( "txtPreferredName" ) != null ) && ( !StringUtil.isHtmlAndScriptClean( ( String ) req.getParameter( "CreateDefinition" ) ) ) )
+        if( ( req.getParameter( "CreateDefinition" ) != null ) && ( !StringUtil.isHtmlAndScriptClean( req.getParameter( "CreateDefinition" ) ) ) )
         {
             logger.warn( "Bad value for CreateDefinition[" + req.getParameter( "CreateDefinition" ) + "]" );
-            return;
+            hasSuspectPeramater = true;
         }
 
-        if( ( req.getParameter( "CreateDocumentText" ) != null ) && ( !StringUtil.isHtmlAndScriptClean( ( String ) req.getParameter( "CreateDocumentText" ) ) ) )
+        if( ( req.getParameter( "CreateDocumentText" ) != null ) && ( !StringUtil.isHtmlAndScriptClean( req.getParameter( "CreateDocumentText" ) ) ) )
         {
             logger.warn( "Bad value for CreateDocumentText[" + req.getParameter( "CreateDocumentText" ) + "]" );
-            return;
+            hasSuspectPeramater = true;
         }
 
-        if( ( req.getParameter( "selSource" ) != null ) && ( !StringUtil.isHtmlAndScriptClean( ( String ) req.getParameter( "selSource" ) ) ) )
+        if( ( req.getParameter( "selSource" ) != null ) && ( !StringUtil.isHtmlAndScriptClean(  req.getParameter( "selSource" ) ) ) )
         {
             logger.warn( "Bad value for selSource[" + req.getParameter( "selSource" ) + "]" );
-            return;
+            hasSuspectPeramater = true;
         }
 
-        if( ( req.getParameter( "CreateChangeNote" ) != null ) && ( !StringUtil.isHtmlAndScriptClean( ( String ) req.getParameter( "CreateChangeNote" ) ) ) )
+        if( ( req.getParameter( "CreateChangeNote" ) != null ) && ( !StringUtil.isHtmlAndScriptClean( req.getParameter( "CreateChangeNote" ) ) ) )
         {
             logger.warn( "Bad value for CreateChangeNote[" + req.getParameter( "CreateChangeNote" ) + "]" );
-            return;
+            hasSuspectPeramater = true;
         }
 
         try
@@ -3811,14 +3812,26 @@ public class SetACService implements Serializable
             }
 
             if( sOriginAction.equals( "BlockEditDE" ) )
+            {
                 sName = "";
+            }
             else
-                sName = StringUtil.cleanJavascriptAndHtml( ( String ) req.getParameter( "txtPreferredName" ) );
+            {
+                // CURATNTOOL-1107
+                if( hasSuspectPeramater )
+                {
+                    sName = null;
+                }
+                else
+                {
+                    sName = StringUtil.cleanJavascriptAndHtml( req.getParameter( "txtPreferredName" ) );
+                }
+            }
             if( sName != null )
             {
                 sName = m_util.removeNewLineChar( sName );   //replace newline with empty string
                 m_DE.setDE_PREFERRED_NAME( sName );
-				/*  String sNameType = (String)req.getParameter("rNameConv");
+                /*  String sNameType = (String)req.getParameter("rNameConv");
       m_DE.setAC_PREF_NAME_TYPE(sNameType);
       String sSysName = m_DE.getAC_SYS_PREF_NAME();
       String sAbbName = m_DE.getAC_ABBR_PREF_NAME();
@@ -3829,122 +3842,134 @@ public class SetACService implements Serializable
             }
 
             //set DE_PREFERRED_DEFINITION
-            sName = StringUtil.cleanJavascriptAndHtml( ( String ) req.getParameter( "CreateDefinition" ) );
-            if( sName != null )
+            // CURATNTOOL-1107
+            if( hasSuspectPeramater )
             {
-                sName = m_util.removeNewLineChar( sName );   //replace newline with empty string
-                m_DE.setDE_PREFERRED_DEFINITION( sName );
-            }
-
-            //set DOC_TEXT_PREFERRED_QUESTION
-            sName = StringUtil.cleanJavascriptAndHtml( ( String ) req.getParameter( "CreateDocumentText" ) );
-            if( sName != null )
-            {
-                sName = m_util.removeNewLineChar( sName );   //replace newline with empty string
-                m_DE.setDOC_TEXT_PREFERRED_QUESTION( sName );
-            }
-            //set DOC_TEXT_PREFERRED_QUESTION
-            sName = StringUtil.cleanJavascriptAndHtml( ( String ) req.getParameter( "doctextIDSEQ" ) );
-            if( sName != null )
-            {
-                m_DE.setDOC_TEXT_PREFERRED_QUESTION_IDSEQ( sName );
-            }
-
-            //set DE_SOURCE
-            sName = StringUtil.cleanJavascriptAndHtml( ( String ) req.getParameter( "selSource" ) );
-            if( sName != null )
-            {
-                m_DE.setDE_SOURCE( sName );
-            }
-            //set DE_SOURCE
-            sName = StringUtil.cleanJavascriptAndHtml( ( String ) req.getParameter( "sourceIDSEQ" ) );
-            if( sName != null )
-            {
-                m_DE.setDE_SOURCE_IDSEQ( sName );
-            }
-
-            //set DE_BEGIN_DATE
-            sName = StringUtil.cleanJavascriptAndHtml( ( String ) req.getParameter( "BeginDate" ) );
-            if( sName != null )
-            {
-                m_DE.setDE_BEGIN_DATE( sName );
-            }
-
-            //set DE_END_DATE
-            sName = StringUtil.cleanJavascriptAndHtml( ( String ) req.getParameter( "EndDate" ) );
-            if( sName != null )
-            {
-                m_DE.setDE_END_DATE( sName );
-            }
-
-            //set DE_CHANGE_NOTE
-            sName = StringUtil.cleanJavascriptAndHtml( ( String ) req.getParameter( "CreateChangeNote" ) );
-            if( sName != null )
-            {
-                sName = m_util.removeNewLineChar( sName );   //replace newline with empty string
-                m_DE.setDE_CHANGE_NOTE( sName );
-            }
-
-            //set DE_VERSION
-            if( sOriginAction.equals( "BlockEditDE" ) )
-            {
-                sName = StringUtil.cleanJavascriptAndHtml( ( String ) req.getParameter( "VersionCheck" ) );
-                if( sName == null )
-                    sName = "";
-                else
-                {
-                    sName = StringUtil.cleanJavascriptAndHtml( ( String ) req.getParameter( "WholeCheck" ) );
-                    if( sName == null )
-                    {
-                        sName = StringUtil.cleanJavascriptAndHtml( ( String ) req.getParameter( "PointCheck" ) );
-                        if( sName != null )
-                            m_DE.setDE_VERSION( "Point" );
-                    }
-                    else
-                        m_DE.setDE_VERSION( "Whole" );
-                }
+                sName = null;
             }
             else
             {
-                sName = StringUtil.cleanJavascriptAndHtml( ( String ) req.getParameter( "Version" ) );
+                sName = StringUtil.cleanJavascriptAndHtml( ( String ) req.getParameter( "CreateDefinition" ) );
+
+
                 if( sName != null )
                 {
-                    sName = sName.trim();
-                    String isNum = this.checkValueIsNumeric( sName, "Version" );
-                    //if numeric and no . and less than 2 length add .0 in the end.
-                    if( ( isNum == null || isNum.equals( "" ) ) && ( sName.indexOf( "." ) == -1 && sName.length() < 3 ) )
-                        sName = sName + ".0";
-                    m_DE.setDE_VERSION( sName );
+                    sName = m_util.removeNewLineChar( sName );   //replace newline with empty string
+                    m_DE.setDE_PREFERRED_DEFINITION( sName );
                 }
-            }
 
-            //set DE_ASL_NAME
-            sName = StringUtil.cleanJavascriptAndHtml( ( String ) req.getParameter( "selStatus" ) );
-            if( sName != null )
-                m_DE.setDE_ASL_NAME( sName );
+                //set DOC_TEXT_PREFERRED_QUESTION
+                sName = StringUtil.cleanJavascriptAndHtml( ( String ) req.getParameter( "CreateDocumentText" ) );
 
-            //set DE_REG_STATUS
-            sName = StringUtil.cleanJavascriptAndHtml( ( String ) req.getParameter( "selRegStatus" ) );
-            if( sName != null )
-                m_DE.setDE_REG_STATUS( sName );
+                if( sName != null )
+                {
+                    sName = m_util.removeNewLineChar( sName );   //replace newline with empty string
+                    m_DE.setDOC_TEXT_PREFERRED_QUESTION( sName );
+                }
+                //set DOC_TEXT_PREFERRED_QUESTION
+                sName = StringUtil.cleanJavascriptAndHtml( ( String ) req.getParameter( "doctextIDSEQ" ) );
+                if( sName != null )
+                {
+                    m_DE.setDOC_TEXT_PREFERRED_QUESTION_IDSEQ( sName );
+                }
 
-            //set DE_REG_STATUS_ID
-            sName = StringUtil.cleanJavascriptAndHtml( ( String ) req.getParameter( "regStatusIDSEQ" ) );
-            if( sName != null )
-                m_DE.setDE_REG_STATUS_IDSEQ( sName );
+                //set DE_SOURCE
+                sName = StringUtil.cleanJavascriptAndHtml( ( String ) req.getParameter( "selSource" ) );
+                if( sName != null )
+                {
+                    m_DE.setDE_SOURCE( sName );
+                }
+                //set DE_SOURCE
+                sName = StringUtil.cleanJavascriptAndHtml( ( String ) req.getParameter( "sourceIDSEQ" ) );
+                if( sName != null )
+                {
+                    m_DE.setDE_SOURCE_IDSEQ( sName );
+                }
 
-            sName = StringUtil.cleanJavascriptAndHtml( ( String ) req.getParameter( "DECDefinition" ) );
-            if( sName != null )
-            {
-                sName = m_util.removeNewLineChar( sName );   //replace newline with empty string
-                m_DE.setDE_DEC_Definition( sName );
-            }
+                //set DE_BEGIN_DATE
+                sName = StringUtil.cleanJavascriptAndHtml( ( String ) req.getParameter( "BeginDate" ) );
+                if( sName != null )
+                {
+                    m_DE.setDE_BEGIN_DATE( sName );
+                }
 
-            sName = StringUtil.cleanJavascriptAndHtml( ( String ) req.getParameter( "VDDefinition" ) );
-            if( sName != null )
-            {
-                sName = m_util.removeNewLineChar( sName );   //replace newline with empty string
-                m_DE.setDE_VD_Definition( sName );
+                //set DE_END_DATE
+                sName = StringUtil.cleanJavascriptAndHtml( ( String ) req.getParameter( "EndDate" ) );
+                if( sName != null )
+                {
+                    m_DE.setDE_END_DATE( sName );
+                }
+
+                //set DE_CHANGE_NOTE
+                sName = StringUtil.cleanJavascriptAndHtml( ( String ) req.getParameter( "CreateChangeNote" ) );
+                if( sName != null )
+                {
+                    sName = m_util.removeNewLineChar( sName );   //replace newline with empty string
+                    m_DE.setDE_CHANGE_NOTE( sName );
+                }
+
+                //set DE_VERSION
+                if( sOriginAction.equals( "BlockEditDE" ) )
+                {
+                    sName = StringUtil.cleanJavascriptAndHtml( ( String ) req.getParameter( "VersionCheck" ) );
+                    if( sName == null )
+                        sName = "";
+                    else
+                    {
+                        sName = StringUtil.cleanJavascriptAndHtml( ( String ) req.getParameter( "WholeCheck" ) );
+                        if( sName == null )
+                        {
+                            sName = StringUtil.cleanJavascriptAndHtml( ( String ) req.getParameter( "PointCheck" ) );
+                            if( sName != null )
+                                m_DE.setDE_VERSION( "Point" );
+                        }
+                        else
+                            m_DE.setDE_VERSION( "Whole" );
+                    }
+                }
+                else
+                {
+                    sName = StringUtil.cleanJavascriptAndHtml( ( String ) req.getParameter( "Version" ) );
+                    if( sName != null )
+                    {
+                        sName = sName.trim();
+                        String isNum = this.checkValueIsNumeric( sName, "Version" );
+                        //if numeric and no . and less than 2 length add .0 in the end.
+                        if( ( isNum == null || isNum.equals( "" ) ) && ( sName.indexOf( "." ) == -1 && sName.length() < 3 ) )
+                            sName = sName + ".0";
+                        m_DE.setDE_VERSION( sName );
+                    }
+                }
+
+                //set DE_ASL_NAME
+                sName = StringUtil.cleanJavascriptAndHtml( ( String ) req.getParameter( "selStatus" ) );
+                if( sName != null )
+                    m_DE.setDE_ASL_NAME( sName );
+
+                //set DE_REG_STATUS
+                sName = StringUtil.cleanJavascriptAndHtml( ( String ) req.getParameter( "selRegStatus" ) );
+                if( sName != null )
+                    m_DE.setDE_REG_STATUS( sName );
+
+                //set DE_REG_STATUS_ID
+                sName = StringUtil.cleanJavascriptAndHtml( ( String ) req.getParameter( "regStatusIDSEQ" ) );
+                if( sName != null )
+                    m_DE.setDE_REG_STATUS_IDSEQ( sName );
+
+                sName = StringUtil.cleanJavascriptAndHtml( ( String ) req.getParameter( "DECDefinition" ) );
+                if( sName != null )
+                {
+                    sName = m_util.removeNewLineChar( sName );   //replace newline with empty string
+                    m_DE.setDE_DEC_Definition( sName );
+                }
+
+                sName = StringUtil.cleanJavascriptAndHtml( ( String ) req.getParameter( "VDDefinition" ) );
+                if( sName != null )
+                {
+                    sName = m_util.removeNewLineChar( sName );   //replace newline with empty string
+                    m_DE.setDE_VD_Definition( sName );
+                }
+
             }
 
             //cs-csi relationship
@@ -3966,30 +3991,30 @@ public class SetACService implements Serializable
      */
     public void setDECValueFromPage( HttpServletRequest req, HttpServletResponse res, DEC_Bean m_DEC )
     {
-
-        // Defence against Cross-Site Scripting
-        if( ( req.getParameter( "txtPreferredName" ) != null ) && ( !StringUtil.isHtmlAndScriptClean( ( String ) req.getParameter( "txtPreferredName" ) ) ) )
+        boolean hasSuspectPeramater = false;
+        // CURATNTOOL-1107
+        if( ( req.getParameter( "txtPreferredName" ) != null ) && ( !StringUtil.isHtmlAndScriptClean( req.getParameter( "txtPreferredName" ) ) ) )
         {
             logger.warn( "Bad value for txtPreferredName[" + req.getParameter( "txtPreferredName" ) + "]" );
-            return;
+            hasSuspectPeramater = true;
         }
 
-        if( ( req.getParameter( "txtPreferredName" ) != null ) && ( !StringUtil.isHtmlAndScriptClean( ( String ) req.getParameter( "CreateDefinition" ) ) ) )
+        if( ( req.getParameter( "CreateDefinition" ) != null ) && ( !StringUtil.isHtmlAndScriptClean( req.getParameter( "CreateDefinition" ) ) ) )
         {
             logger.warn( "Bad value for CreateDefinition[" + req.getParameter( "CreateDefinition" ) + "]" );
-            return;
+            hasSuspectPeramater = true;
         }
 
-        if( ( req.getParameter( "selSource" ) != null ) && ( !StringUtil.isHtmlAndScriptClean( ( String ) req.getParameter( "selSource" ) ) ) )
+        if( ( req.getParameter( "selSource" ) != null ) && ( !StringUtil.isHtmlAndScriptClean( req.getParameter( "selSource" ) ) ) )
         {
             logger.warn( "Bad value for selSource[" + req.getParameter( "selSource" ) + "]" );
-            return;
+            hasSuspectPeramater = true;
         }
 
-        if( ( req.getParameter( "CreateChangeNote" ) != null ) && ( !StringUtil.isHtmlAndScriptClean( ( String ) req.getParameter( "CreateChangeNote" ) ) ) )
+        if( ( req.getParameter( "CreateChangeNote" ) != null ) && ( !StringUtil.isHtmlAndScriptClean( req.getParameter( "CreateChangeNote" ) ) ) )
         {
             logger.warn( "Bad value for CreateChangeNote[" + req.getParameter( "CreateChangeNote" ) + "]" );
-            return;
+            hasSuspectPeramater = true;
         }
 
         try
@@ -4051,9 +4076,21 @@ public class SetACService implements Serializable
 
             //set PREFERRED_NAME
             if( sOriginAction.equals( "BlockEditDEC" ) )
+            {
                 sName = "";
+            }
             else
-                sName = StringUtil.cleanJavascriptAndHtml( ( String ) req.getParameter( "txtPreferredName" ) );
+            {
+                // CURATNTOOL-1107
+                if( hasSuspectPeramater )
+                {
+                    sName = null;
+                }
+                else
+                {
+                    sName = StringUtil.cleanJavascriptAndHtml( req.getParameter( "txtPreferredName" ) );
+                }
+            }
             if( sName != null )
             {
                 sName = m_util.removeNewLineChar( sName );
@@ -4062,7 +4099,16 @@ public class SetACService implements Serializable
             }
 
             //set DEC_PREFERRED_DEFINITION
-            sName = StringUtil.cleanJavascriptAndHtml( ( String ) req.getParameter( "CreateDefinition" ) );
+            // CURATNTOOL-1107
+            if( hasSuspectPeramater )
+            {
+                sName = null;
+            }
+            else
+            {
+                sName = StringUtil.cleanJavascriptAndHtml( ( String ) req.getParameter( "CreateDefinition" ) );
+            }
+
             if( sName != null )
             {
                 sName = m_util.removeNewLineChar( sName );
@@ -4099,10 +4145,20 @@ public class SetACService implements Serializable
             logger.debug( "RegStatusID is " + sName + "**********" );
             //=============GF32398=======END
             //set DEC_SOURCE
-            sName = StringUtil.cleanJavascriptAndHtml( ( String ) req.getParameter( "selSource" ) );
-            if( sName != null )
-                m_DEC.setDEC_SOURCE( sName );
+            // CURATNTOOL-1107
+            if( hasSuspectPeramater )
+            {
+                sName = null;
+            }
+            else
+            {
+                sName = StringUtil.cleanJavascriptAndHtml( ( String ) req.getParameter( "selSource" ) );
+            }
 
+            if( sName != null )
+            {
+                m_DEC.setDEC_SOURCE( sName );
+            }
             //set DEC_BEGIN_DATE
             sName = StringUtil.cleanJavascriptAndHtml( ( String ) req.getParameter( "BeginDate" ) );
             if( sName != null ) ;
@@ -4114,7 +4170,16 @@ public class SetACService implements Serializable
                 m_DEC.setDEC_END_DATE( sName );
 
             //set DE_CHANGE_NOTE
-            sName = StringUtil.cleanJavascriptAndHtml( ( String ) req.getParameter( "CreateChangeNote" ) );
+            // CURATNTOOL-1107
+            if( hasSuspectPeramater )
+            {
+                sName = null;
+            }
+            else
+            {
+                sName = StringUtil.cleanJavascriptAndHtml( ( String ) req.getParameter( "CreateChangeNote" ) );
+            }
+
             if( sName != null )
             {
                 sName = m_util.removeNewLineChar( sName );   //replace newline with empty string
@@ -4160,7 +4225,16 @@ public class SetACService implements Serializable
                 m_DEC.setDEC_ASL_NAME( sName );
 
             //set DE_CHANGE_NOTE
-            sName = StringUtil.cleanJavascriptAndHtml( ( String ) req.getParameter( "CreateChangeNote" ) );
+            // CURATNTOOL-1107
+            if( hasSuspectPeramater )
+            {
+                sName = null;
+            }
+            else
+            {
+                sName = StringUtil.cleanJavascriptAndHtml( ( String ) req.getParameter( "CreateChangeNote" ) );
+            }
+
             if( sName != null )
             {
                 sName = m_util.removeNewLineChar( sName );   //replace newline with empty string
@@ -4419,29 +4493,30 @@ public class SetACService implements Serializable
      */
     public void setVDValueFromPage( HttpServletRequest req, HttpServletResponse res, VD_Bean m_VD )
     {
-        // Defence against Cross-Site Scripting
-        if( ( req.getParameter( "txtPreferredName" ) != null ) && ( !StringUtil.isHtmlAndScriptClean( ( String ) req.getParameter( "txtPreferredName" ) ) ) )
+        boolean hasSuspectPeramater = false;
+        // CURATNTOOL-1107
+        if( ( req.getParameter( "txtPreferredName" ) != null ) && ( !StringUtil.isHtmlAndScriptClean( req.getParameter( "txtPreferredName" ) ) ) )
         {
             logger.warn( "Bad value for txtPreferredName[" + req.getParameter( "txtPreferredName" ) + "]" );
-            return;
+            hasSuspectPeramater = true;
         }
 
-        if( ( req.getParameter( "txtPreferredName" ) != null ) && ( !StringUtil.isHtmlAndScriptClean( ( String ) req.getParameter( "CreateDefinition" ) ) ) )
+        if( ( req.getParameter( "CreateDefinition" ) != null ) && ( !StringUtil.isHtmlAndScriptClean( req.getParameter( "CreateDefinition" ) ) ) )
         {
             logger.warn( "Bad value for CreateDefinition[" + req.getParameter( "CreateDefinition" ) + "]" );
-            return;
+            hasSuspectPeramater = true;
         }
 
-        if( ( req.getParameter( "selSource" ) != null ) && ( !StringUtil.isHtmlAndScriptClean( ( String ) req.getParameter( "selSource" ) ) ) )
+        if( ( req.getParameter( "selSource" ) != null ) && ( !StringUtil.isHtmlAndScriptClean( req.getParameter( "selSource" ) ) ) )
         {
             logger.warn( "Bad value for selSource[" + req.getParameter( "selSource" ) + "]" );
-            return;
+            hasSuspectPeramater = true;
         }
 
-        if( ( req.getParameter( "CreateChangeNote" ) != null ) && ( !StringUtil.isHtmlAndScriptClean( ( String ) req.getParameter( "CreateChangeNote" ) ) ) )
+        if( ( req.getParameter( "CreateChangeNote" ) != null ) && ( !StringUtil.isHtmlAndScriptClean( req.getParameter( "CreateChangeNote" ) ) ) )
         {
             logger.warn( "Bad value for CreateChangeNote[" + req.getParameter( "CreateChangeNote" ) + "]" );
-            return;
+            hasSuspectPeramater = true;
         }
 
         try
@@ -4505,7 +4580,17 @@ public class SetACService implements Serializable
             if( sOriginAction.equals( "BlockEditVD" ) )
                 sName = "";
             else
-                sName = StringUtil.cleanJavascriptAndHtml( ( String ) req.getParameter( "txtPreferredName" ) );
+            {
+                // CURATNTOOL-1107
+                if( hasSuspectPeramater )
+                {
+                    sName = null;
+                }
+                else
+                {
+                    sName = StringUtil.cleanJavascriptAndHtml( req.getParameter( "txtPreferredName" ) );
+                }
+            }
             if( sName != null )
             {
                 sName = m_util.removeNewLineChar( sName );   //replace newline with empty string
@@ -4513,7 +4598,16 @@ public class SetACService implements Serializable
             }
 
             //set VD_PREFERRED_DEFINITION
-            sName = StringUtil.cleanJavascriptAndHtml( ( String ) req.getParameter( "CreateDefinition" ) );
+            // CURATNTOOL-1107
+            if( hasSuspectPeramater )
+            {
+                sName = null;
+            }
+            else
+            {
+                sName = StringUtil.cleanJavascriptAndHtml( ( String ) req.getParameter( "CreateDefinition" ) );
+            }
+
             if( sName != null )
             {
                 sName = m_util.removeNewLineChar( sName );   //replace newline with empty string
@@ -4594,7 +4688,16 @@ public class SetACService implements Serializable
                 m_VD.setVD_DATA_TYPE( sName );
 
             //set VD_SOURCE
-            sName = StringUtil.cleanJavascriptAndHtml( ( String ) req.getParameter( "selSource" ) );
+            // CURATNTOOL-1107
+            if( hasSuspectPeramater )
+            {
+                sName = null;
+            }
+            else
+            {
+                sName = StringUtil.cleanJavascriptAndHtml( ( String ) req.getParameter( "selSource" ) );
+            }
+
             if( sName != null )
                 m_VD.setVD_SOURCE( sName );
 
@@ -4655,7 +4758,16 @@ public class SetACService implements Serializable
                 m_VD.setVD_END_DATE( sName );
 
             //set VD_CHANGE_NOTE
-            sName = StringUtil.cleanJavascriptAndHtml( ( String ) req.getParameter( "CreateChangeNote" ) );
+            // CURATNTOOL-1107
+            if( hasSuspectPeramater )
+            {
+                sName = null;
+            }
+            else
+            {
+                sName = StringUtil.cleanJavascriptAndHtml( ( String ) req.getParameter( "CreateChangeNote" ) );
+            }
+
             if( sName != null )
             {
                 sName = m_util.removeNewLineChar( sName );   //replace newline with empty string

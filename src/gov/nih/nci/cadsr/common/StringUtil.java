@@ -205,8 +205,11 @@ public class StringUtil {
 		return stringToClean;
 	}
 
+
+
+
 	private static String sanitizeHTML(String untrustedHTML) {
-		String ret = untrustedHTML;
+        String ret = resolveHex( untrustedHTML );
 
 		try {
 			if(untrustedHTML != null) {
@@ -219,6 +222,30 @@ public class StringUtil {
 
 		return ret;
 	}
+
+    public static String[] sanitizeHTML( String[] untrustedHTML )
+    {
+        if( untrustedHTML == null)
+        {
+            return null;
+        }
+        String ret[] = new String[untrustedHTML.length];
+        PolicyFactory policy = Sanitizers.FORMATTING.and( Sanitizers.LINKS );
+        for( int f = 0; f < untrustedHTML.length; f++ )
+        {
+            try
+            {
+                if( untrustedHTML != null )
+                {
+                    ret[f] = policy.sanitize( resolveHex(untrustedHTML[f] ));
+                }
+            } catch( Exception e )
+            {
+                e.printStackTrace();
+            }
+        }
+        return ret;
+    }
 
 	public static String[] cleanJavascriptAndHtmlArray(String[] stringToClean) {
 		if (stringToClean != null && stringToClean.length > 0) {
@@ -275,6 +302,40 @@ public class StringUtil {
 	}
 
 
+    public static String resolveHex( String s )
+    {
+        String retVal = "";
+        for( int f = 0; f < s.length() - 1; f++ )
+        {
+            //System.out.println( "sub(" + f + ",  " + f + "): " + s.substring( f, f + 1 ) );
+            if( s.substring( f, f + 1 ).compareTo( "%" ) == 0 )
+            {
+                retVal += convertHexToString( s.substring( f + 1, f + 3 ) );
+                f += 2;
+            } else
+            {
+                retVal += s.substring( f, f + 1 );
+            }
+        }
+        return retVal;
+    }
+    public static String convertHexToString( String hex )
+    {
+
+        StringBuilder sb = new StringBuilder();
+        for( int i = 0; i < hex.length() - 1; i += 2 )
+        {
+
+            //grab the hex in pairs
+            String output = hex.substring( i, ( i + 2 ) );
+            //convert hex to decimal
+            int decimal = Integer.parseInt( output, 16 );
+            //convert the decimal to character
+            sb.append( ( char ) decimal );
+        }
+        return sb.toString();
+    }
+
 	/**
 	 *  Return false if s contains > or < or %
 	 *  This used to catch attempts to sneak JavaScript or HTML int server call parameters.
@@ -287,7 +348,7 @@ public class StringUtil {
 		{
 			return false;
 		}
-		return true;
+        return true;
 	}
 
 	public static boolean isHtmlAndScriptClean( List<String> s)
