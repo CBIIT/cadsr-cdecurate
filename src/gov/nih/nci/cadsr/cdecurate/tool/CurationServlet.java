@@ -265,37 +265,6 @@ public class CurationServlet
             return null;
         }
 
-/*        try
-        {
-            //FIXMENOW MHL  just for dev time testing
-            System.out.println("*************   MHL getConnFromDS con = ds.getConnection( " + user_ + ", " + pswd_  + ")");
-            if( (con == null) || (con.isClosed()))
-            {
-                if( con == null)
-                {
-                    System.out.println("*************   MHL connection is null");
-                }
-                else
-                {
-                    if( con.isClosed())
-                    {
-                        System.out.println("*************   MHL connection is closed");
-                    }
-                }
-                System.out.println("*************   MHL Getting connection");
-                con = ds.getConnection( user_, pswd_ );
-            }
-            else
-            {
-                System.out.println("*************   MHL Reuse connection");
-            }
-        }
-        catch (Exception e)
-        {
-            logger.fatal("Could not open database connection.", e);
-            return null;
-        }
-        */
 
         return con;
     }
@@ -479,9 +448,6 @@ public class CurationServlet
             else
         	m_conn = connectDB();
             String reqType = StringUtil.cleanJavascriptAndHtml(m_classReq.getParameter("reqType"));
-
-            //FIXME MHL dev time only
-            System.out.println("MHL service - reqType: " + reqType);
 
             m_classReq.setAttribute("LatestReqType", reqType);
             if (reqType != null)

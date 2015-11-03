@@ -4336,12 +4336,6 @@ public class GetACSearch implements Serializable
             String unCheckedRowId = StringUtil.cleanJavascriptAndHtml( ( String ) m_classReq.getParameter( "unCheckedRowId" ) );
 
 
-
-            logger.info( "MHL  unCheckedRowId: [" + unCheckedRowId + "]  Type: " + unCheckedRowId.getClass().getName() );
-            System.out.println( "MHL  unCheckedRowId: [" + unCheckedRowId + "]  Type: " + unCheckedRowId.getClass().getName() );
-            System.out.println( "MHL  unCheckedRowId: [" + unCheckedRowId + "]  isEmpty: " + unCheckedRowId.isEmpty() );
-            System.out.println( "MHL  unCheckedRowId: [" + unCheckedRowId + "]  len: " + unCheckedRowId.length() );
-
             // ORIG if (unCheckedRowId != null && !(unCheckedRowId == ""))
             if( !(unCheckedRowId == ""))
             {

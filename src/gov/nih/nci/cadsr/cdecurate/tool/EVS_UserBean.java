@@ -1177,8 +1177,6 @@ public final class EVS_UserBean implements Serializable
         {
           String sVocab = (String)vocabname.elementAt(i);
           //compare with evs vocab names  and also the vocab name that only does meta search
-// MHL  11_SEP_2015 System.out.println("Comparing [" + sVocab + "] against [" +  Arrays.toString(arrEVSVocab.toArray()) + "]");
-// MHL  11_SEP_2015 System.out.println("Comparing [" + sVocab + "] against [" +  Arrays.toString(metavocab.toArray()) + "]");
           if (!arrEVSVocab.contains(sVocab) && !metavocab.contains(sVocab))
           {
             logger.error(sVocab + " from caDSR does not contain in EVS Vocab list.");

@@ -34,6 +34,7 @@ public class SQLSelectCSIAll
 
         return
             "select level, cc.cs_idseq, cs.long_name, cc.cs_csi_idseq, csi.long_name, cs.preferred_definition, cs.version, c.name, csi.csitl_name, cs.cs_id, csi.csi_id, csi.version "
+        //    "select level, cc.cs_idseq, cs.long_name, cc.cs_csi_idseq, csi.long_name, cs.preferred_definition, cs.version, csi.csitl_name, cs.cs_id, csi.csi_id, csi.version "
             + "from sbr.cs_csi_view cc, sbr.cs_items_view csi, sbr.classification_schemes_view cs, sbr.contexts_view c "
             + "where csi.csi_idseq = cc.csi_idseq and cs.cs_idseq(+) = cc.cs_idseq and c.conte_idseq(+) = cs.conte_idseq " + inClause
             + "connect by prior cc.cs_csi_idseq = cc.p_cs_csi_idseq "

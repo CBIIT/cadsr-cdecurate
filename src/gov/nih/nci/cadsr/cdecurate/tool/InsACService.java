@@ -4759,7 +4759,6 @@ public class InsACService implements Serializable
     public String getAC_REG( String ac_id ) // returns idseq
     {
         ResultSet rs = null;
-        // MHL
         //Statement cstmt = null;
         PreparedStatement stmt = null;
         String regID = "";
@@ -4790,7 +4789,6 @@ public class InsACService implements Serializable
         } finally
         {
             rs = SQLHelper.closeResultSet( rs );
-            // MHL
             //cstmt = SQLHelper.closeStatement(cstmt);
             try
             {

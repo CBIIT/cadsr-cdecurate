@@ -3706,7 +3706,6 @@ public class SetACService implements Serializable
         if( ( req.getParameter( "txtPreferredName" ) != null ) && ( !StringUtil.isHtmlAndScriptClean( req.getParameter( "txtPreferredName" ) ) ) )
         {
             logger.warn( "Bad value for txtPreferredName[" + req.getParameter( "txtPreferredName" ) + "]" );
-            System.out.println( "MHL getACNames Bad value for setDEValueFromPage[" + req.getParameter( "txtPreferredName" ) + "]" );
             hasSuspectPeramater = true;
         }
 
