@@ -14,33 +14,75 @@ package gov.nih.nci.cadsr.cdecurate.database;
 
 /**
  * Define the SQL and replacement arguments to retrieve the CSI hierarchy.
- * 
- * @author lhebel
  *
+ * @author lhebel
  */
 public class SQLSelectCSIAll
 {
-    public static String getCSIHierarchy(String[] contexts_)
+    public static String getCSIHierarchyNoContextsViewName( String[] contexts_ )
     {
         String inClause = "";
-        if (contexts_ != null && contexts_.length > 0)
+        if( contexts_ != null && contexts_.length > 0 )
         {
-            for (String temp : contexts_)
+            for( String temp : contexts_ )
             {
                 inClause += ",'" + temp + "'";
             }
-            inClause = "and c.conte_idseq in (" + inClause.substring(1) + ") ";
+            inClause = "and c.conte_idseq in (" + inClause.substring( 1 ) + ") ";
         }
 
+
+        /**
+         JIRA 1134
+         On some tiers selecting "level" and the context name caused an Oracle error.
+         Here we query with level, but without c.name, the Context name will be added within the calling method.
+         */
         return
-            "select level, cc.cs_idseq, cs.long_name, cc.cs_csi_idseq, csi.long_name, cs.preferred_definition, cs.version, c.name, csi.csitl_name, cs.cs_id, csi.csi_id, csi.version "
-        //    "select level, cc.cs_idseq, cs.long_name, cc.cs_csi_idseq, csi.long_name, cs.preferred_definition, cs.version, csi.csitl_name, cs.cs_id, csi.csi_id, csi.version "
-            + "from sbr.cs_csi_view cc, sbr.cs_items_view csi, sbr.classification_schemes_view cs, sbr.contexts_view c "
-            + "where csi.csi_idseq = cc.csi_idseq and cs.cs_idseq(+) = cc.cs_idseq and c.conte_idseq(+) = cs.conte_idseq " + inClause
-            + "connect by prior cc.cs_csi_idseq = cc.p_cs_csi_idseq "
-            + "start with cc.p_cs_csi_idseq is null and cc.cs_idseq = cs.cs_idseq";
+                // "select level, cc.cs_idseq, cs.long_name, cc.cs_csi_idseq, csi.long_name, cs.preferred_definition, cs.version, c.name, csi.csitl_name, cs.cs_id, csi.csi_id, csi.version "
+                "select level, cc.cs_idseq, cs.long_name, cc.cs_csi_idseq, csi.long_name, cs.preferred_definition, cs.version, csi.csitl_name, cs.cs_id, csi.csi_id, csi.version "
+                        + "from sbr.cs_csi_view cc, sbr.cs_items_view csi, sbr.classification_schemes_view cs, sbr.contexts_view c "
+                        + "where csi.csi_idseq = cc.csi_idseq and cs.cs_idseq(+) = cc.cs_idseq and c.conte_idseq(+) = cs.conte_idseq " + inClause
+                        + "connect by prior cc.cs_csi_idseq = cc.p_cs_csi_idseq "
+                        + "start with cc.p_cs_csi_idseq is null and cc.cs_idseq = cs.cs_idseq";
     }
-    
+
+    /**
+     * JIRA 1134
+     * On some tiers selecting "level" and the context name caused an Oracle error.
+     * Here we query for the Context name separately without level and will match them up later by cs_idseq, cs_csi_idseq, and long_name
+     */
+    public static String getCSIHierarchyNoLevel( String[] contexts_ )
+    {
+        String inClause = "";
+        if( contexts_ != null && contexts_.length > 0 )
+        {
+            for( String temp : contexts_ )
+            {
+                inClause += ",'" + temp + "'";
+            }
+            inClause = "and c.conte_idseq in (" + inClause.substring( 1 ) + ") ";
+        }
+
+        return "select  c.name, cc.cs_idseq, cc.cs_csi_idseq, csi.long_name "
+                + "from sbr.cs_csi_view cc, sbr.cs_items_view csi, sbr.classification_schemes_view cs, sbr.contexts_view c "
+                + "where csi.csi_idseq = cc.csi_idseq and cs.cs_idseq(+) = cc.cs_idseq and c.conte_idseq(+) = cs.conte_idseq " + inClause;
+    }
+
+    public static final int _LEVEL = 1;
+    public static final int _CSIDSEQ = 2;
+    public static final int _CSNAME = 3;
+    public static final int _CSCSIIDSEQ = 4;
+    public static final int _CSINAME = 5;
+    public static final int _CSDEFIN = 6;
+    public static final int _CSVERS = 7;
+
+    public static final int _CSCONTE = 8;
+
+    public static final int _CSITYPE = 8;
+    public static final int _CSID = 9;
+    public static final int _CSIID = 10;
+    public static final int _CSIVERSION = 11;
+/*
     public static final int _LEVEL = 1;
     public static final int _CSIDSEQ = 2;
     public static final int _CSNAME = 3;
@@ -53,4 +95,5 @@ public class SQLSelectCSIAll
     public static final int _CSID = 10;
     public static final int _CSIID = 11;
     public static final int _CSIVERSION = 12;
+*/
 }

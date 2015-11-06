@@ -84,8 +84,7 @@ public class AdministeredItemUtil {
 				retVal = dateString.substring(0, i);
 			}
 		}
-		System.out.println("******* at line 28 of AdministeredItemUtil.java"
-				+ retVal);
+		//System.out.println("******* at line 28 of AdministeredItemUtil.java" + retVal);
 
 		return retVal;
 	}
