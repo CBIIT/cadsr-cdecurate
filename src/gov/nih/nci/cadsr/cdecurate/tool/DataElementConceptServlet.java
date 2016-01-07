@@ -389,7 +389,7 @@ public class DataElementConceptServlet extends CurationServlet
         // get the existing preferred name to make sure earlier typed one is saved in the user
         String sPrefName = null;
         // CURATNTOOL-1107
-        if(! hasSuspectPeramater )
+        if( !hasSuspectPeramater )
         {
             sPrefName = StringUtil.cleanJavascriptAndHtml( ( String ) m_classReq.getParameter( "txtPreferredName" ) );
         }
@@ -662,12 +662,10 @@ public class DataElementConceptServlet extends CurationServlet
             for( int i = 0; i < vObjectClass.size(); i++ )
             {
                 EVS_Bean eBean = ( EVS_Bean ) vObjectClass.get( i );
-                logger.debug( "At line 598 of DECServlet.java " + eBean.getPREFERRED_DEFINITION() );
             }
             for( int i = 0; i < vProperty.size(); i++ )
             {
                 EVS_Bean eBean = ( EVS_Bean ) vProperty.get( i );
-                logger.debug( "At line 602 of DECServlet.java " + eBean.getPREFERRED_DEFINITION() );
             }
             if( sIDSEQ == null )
                 sIDSEQ = "";
@@ -705,7 +703,6 @@ public class DataElementConceptServlet extends CurationServlet
                         {
                             if( sComp.equals( "ObjectClass" ) || sComp.equals( "ObjectQualifier" ) )
                             {
-                                logger.debug( "At line 622 of DECServlet.java" );
                                 if( j == 0 ) // Primary Concept
                                     m_DEC = this.addOCConcepts( nameAction, m_DEC, bean, "Primary" );
                                 else
@@ -715,7 +712,6 @@ public class DataElementConceptServlet extends CurationServlet
                             else if( sComp.equals( "Property" ) || sComp.equals( "PropertyClass" )
                                     || sComp.equals( "PropertyQualifier" ) )
                             {
-                                logger.debug( "At line 632 of DECServlet.java" );
                                 if( j == 0 ) // Primary Concept
                                     m_DEC = this.addPropConcepts( nameAction, m_DEC, bean, "Primary" );
                                 else
@@ -760,12 +756,10 @@ public class DataElementConceptServlet extends CurationServlet
         InsACService ins = new InsACService( m_classReq, m_classRes, this );
         Vector vObjectClass = ( Vector ) session.getAttribute( "vObjectClass" );
         Vector vProperty = ( Vector ) session.getAttribute( "vProperty" );
-        logger.debug( "at Line 700 of DEC.java" + "***" + sComp + "***" + newBean );
         if( newBean != null )
         {
             if( sComp.startsWith( "Object" ) )
             {
-                logger.debug( "at Line 703 of DEC.java" + newBean.getEVS_DATABASE() );
                 if( !( newBean.getEVS_DATABASE().equals( "caDSR" ) ) )
                 {
                     String conIdseq = ins.getConcept( "", newBean, false );
@@ -782,7 +776,6 @@ public class DataElementConceptServlet extends CurationServlet
             }
             else if( sComp.startsWith( "Prop" ) )
             {
-                logger.debug( "at Line 714 of DEC.java" + newBean.getEVS_DATABASE() );
                 if( !( newBean.getEVS_DATABASE().equals( "caDSR" ) ) )
                 {
                     String conIdseq = ins.getConcept( "", newBean, false );
@@ -803,21 +796,25 @@ public class DataElementConceptServlet extends CurationServlet
         {
             sLongName = pageDEC.getDEC_LONG_NAME();
             if( sLongName == null )
+            {
                 sLongName = "";
+            }
             sDef = pageDEC.getDEC_PREFERRED_DEFINITION();
             if( sDef == null )
+            {
                 sDef = "";
-            logger.debug( "At line 688 of DECServlet.java" + sLongName + "**" + sDef );
+            }
         }
         // get the typed text on to user name
         String selNameType = "";
         if( nameAct.equals( "Search" ) || nameAct.equals( "Remove" ) )
         {
-            logger.info( "At line 750 of DECServlet.java" );
             selNameType = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml( ( String ) m_classReq.getParameter( "rNameConv" ) );
             sPrefName = ( String ) m_classReq.getParameter( "txPreferredName" );
             if( selNameType != null && selNameType.equals( "USER" ) && sPrefName != null )
+            {
                 pageDEC.setAC_USER_PREF_NAME( sPrefName );
+            }
         }
         // get the object class into the long name and abbr name
         //Vector vObjectClass = (Vector) session.getAttribute("vObjectClass");	//GF30798
@@ -829,7 +826,6 @@ public class DataElementConceptServlet extends CurationServlet
         for( int i = 0; i < vObjectClass.size(); i++ )
         {
             EVS_Bean eBean = ( EVS_Bean ) vObjectClass.get( i );
-            logger.debug( "At line 762 of DECServlet.java " + eBean.getPREFERRED_DEFINITION() + "**" + eBean.getLONG_NAME() + "**" + eBean.getCONCEPT_IDENTIFIER() );
         }
         //end of GF30798
         // add the Object Class qualifiers first
@@ -843,7 +839,6 @@ public class DataElementConceptServlet extends CurationServlet
                 conName = "";
             if( !conName.equals( "" ) )
             {
-                logger.info( "At line 778 of DECServlet.java" );
                 String nvpValue = "";
                 if( this.checkNVP( eCon ) )
                     nvpValue = "::" + eCon.getNVP_CONCEPT_VALUE();
@@ -857,7 +852,6 @@ public class DataElementConceptServlet extends CurationServlet
                     if( !sDef.equals( "" ) )
                         sDef += "_"; // add definition
                     sDef += eCon.getPREFERRED_DEFINITION() + nvpValue;
-                    logger.debug( "At line 792 of DECServlet.java" + sLongName + "**" + sDef );
 
                 }
                 if( !sAbbName.equals( "" ) )
@@ -1052,13 +1046,17 @@ public class DataElementConceptServlet extends CurationServlet
     @SuppressWarnings( "unchecked" )
     private void doDECUseSelection( String nameAction )
     {
+        // JIRA 1023 (more "work around" than fix)
+        String tempPropPreferredDefinition = "";
+        String tempDecPreferredDefinition = "";
+
         try
         {
             HttpSession session = m_classReq.getSession();
             //begin of GF30798
             String isAConcept = ( String ) m_classReq.getParameter( "isAConcept" );
             session.setAttribute( isAConcept, isAConcept );
-            System.out.println( "*************** isAConcept set to " + isAConcept + " ***************" );
+            //System.out.println( "*************** isAConcept set to " + isAConcept + " ***************" );
             String userSelectedDef = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml( ( String ) m_classReq.getParameter( "userSelectedDef" ) );
             session.setAttribute( userSelectedDef, userSelectedDef );
             //(isAConcept != null && isAConcept.trim().equals("false"))	//GF30798
@@ -1151,7 +1149,7 @@ public class DataElementConceptServlet extends CurationServlet
             DECHelper.createFinalAlternateDefinition( m_classReq, userSelectedDef );    //GF30798
 
             vAC = ( Vector ) session.getAttribute( "vACSearch" );
-            logger.debug( "At Line 951 of DECServlet.java" + Arrays.asList( vAC ) );
+            //logger.debug( "At Line 951 of DECServlet.java" + Arrays.asList( vAC ) );
             if( vAC == null )
                 vAC = new Vector();
             if( sSelRow != null && !sSelRow.equals( "" ) )
@@ -1170,9 +1168,8 @@ public class DataElementConceptServlet extends CurationServlet
                     blockBean.setLONG_NAME( sName + "::" + sNVP );
                     blockBean.setPREFERRED_DEFINITION( blockBean.getPREFERRED_DEFINITION() + "::" + sNVP );
                 }
-                logger.debug( "At Line 977 of DECServlet.java" + sNVP + "**" + blockBean.getLONG_NAME() + "**" + blockBean.getPREFERRED_DEFINITION() );
+                //logger.debug( "At Line 977 of DECServlet.java" + sNVP + "**" + blockBean.getLONG_NAME() + "**" + blockBean.getPREFERRED_DEFINITION() );
 
-                //System.out.println(sNVP + sComp + blockBean.getLONG_NAME() + blockBean.getPREFERRED_DEFINITION());
             }
             else
             {
@@ -1206,7 +1203,7 @@ public class DataElementConceptServlet extends CurationServlet
                     codes = ( Vector<String> ) session.getAttribute( "chosenOCCodes" );
                     defs = ( Vector<String> ) session.getAttribute( "chosenOCDefs" );
                 }
-                logger.debug( "At line 1009 of DECServlet.java" + codes + "***" + defs );
+                //logger.debug( "At line 1009 of DECServlet.java" + codes + "***" + defs );
             }
 
             else if( sComp.startsWith( "Prop" ) )
@@ -1221,27 +1218,27 @@ public class DataElementConceptServlet extends CurationServlet
                     codes = ( Vector<String> ) session.getAttribute( "chosenPropCodes" );
                     defs = ( Vector<String> ) session.getAttribute( "chosenPropDefs" );
                 }
-                logger.debug( "At line 1102 of DECServlet.java" + Arrays.asList( codes ) + "***" + Arrays.asList( defs ) );
+                //logger.debug( "At line 1102 of DECServlet.java" + Arrays.asList( codes ) + "***" + Arrays.asList( defs ) );
             }
 
             if( !codes.contains( code ) )
             {
                 codes.add( code );
                 defs.add( def );
-                logger.debug( "At line 1108 of DECServlet.java" + Arrays.asList( codes ) + "***" + Arrays.asList( defs ) );
+                //logger.debug( "At line 1108 of DECServlet.java" + Arrays.asList( codes ) + "***" + Arrays.asList( defs ) );
             }
 
             // do the primary search selection action
             if( sComp.equals( "ObjectClass" ) || sComp.equals( "Property" ) || sComp.equals( "PropertyClass" ) )
             {
-                logger.debug( "At line 1114 of DECServlet.java" );
+                //logger.debug( "At line 1114 of DECServlet.java" );
                 if( blockBean.getEVS_DATABASE().equals( "caDSR" ) )
                 {
-                    logger.debug( "At line 1117 of DECServlet.java" );
+                    //logger.debug( "At line 1117 of DECServlet.java" );
                     // split it if rep term, add concept class to the list if evs id exists
                     if( blockBean.getCONDR_IDSEQ() == null || blockBean.getCONDR_IDSEQ().equals( "" ) )
                     {
-                        logger.debug( "At line 1121 of DECServlet.java" );
+                       // logger.debug( "At line 1121 of DECServlet.java" );
                         if( blockBean.getCONCEPT_IDENTIFIER() == null || blockBean.getCONCEPT_IDENTIFIER().equals( "" ) )
                         {
                             storeStatusMsg( "This " + sComp
@@ -1260,7 +1257,7 @@ public class DataElementConceptServlet extends CurationServlet
                     }
                     else
                     {
-                        logger.debug( "At line 1139 of DECServlet.java " );
+                        //logger.debug( "At line 1139 of DECServlet.java " );
                         // split it into concepts for object class or property search results
                         splitIntoConcepts( sComp, blockBean, nameAction );
                     }
@@ -1276,7 +1273,7 @@ public class DataElementConceptServlet extends CurationServlet
             }
             else if( sComp.equals( "ObjectQualifier" ) )
             {
-                logger.debug( "At line 1081 of DECServlet.java " );
+                //logger.debug( "At line 1081 of DECServlet.java " );
                 // Do this to reserve zero position in vector for primary concept
                 if( vObjectClass.size() < 1 )
                 {
@@ -1285,11 +1282,14 @@ public class DataElementConceptServlet extends CurationServlet
                     DataManager.setAttribute( session, "vObjectClass", vObjectClass );
                 }
                 m_DEC.setDEC_OCL_IDSEQ( "" );
+
+                // JIRA 1023 (more "work around" than fix)
+                tempDecPreferredDefinition = m_DEC.getDEC_PREFERRED_DEFINITION();
                 m_DEC = this.addOCConcepts( nameAction, m_DEC, blockBean, "Qualifier" );
             }
             else if( sComp.equals( "PropertyQualifier" ) )
             {
-                logger.debug( "At line 1078 of DECServlet.java " );
+                //logger.debug( "At line 1078 of DECServlet.java " );
                 // Do this to reserve zero position in vector for primary concept
                 if( vProperty.size() < 1 )
                 {
@@ -1297,6 +1297,9 @@ public class DataElementConceptServlet extends CurationServlet
                     vProperty.addElement( PCBean );
                     DataManager.setAttribute( session, "vProperty", vProperty );
                 }
+                // JIRA 1023 (more "work around" than fix)
+                tempPropPreferredDefinition = m_DEC.getDEC_PREFERRED_DEFINITION();
+
                 m_DEC.setDEC_PROPL_IDSEQ( "" );
                 m_DEC = this.addPropConcepts( nameAction, m_DEC, blockBean, "Qualifier" ); //GF30798 #3
             }
@@ -1307,7 +1310,7 @@ public class DataElementConceptServlet extends CurationServlet
                 for( int i = 0; i < vObjectClass.size(); i++ )
                 {
                     EVS_Bean eBean = ( EVS_Bean ) vObjectClass.get( i );
-                    System.out.println( "testing OC Bean" + eBean.getEVS_DATABASE() + "and the OC_CON_CODE is" + eBean.getCONCEPT_IDENTIFIER() );//GF32723 2
+                    //System.out.println( "testing OC Bean" + eBean.getEVS_DATABASE() + "and the OC_CON_CODE is" + eBean.getCONCEPT_IDENTIFIER() );//GF32723 2
 
                     String user_selected_vocab = eBean.getEVS_DATABASE();
                     session.setAttribute( "userSelectedVocabOC", user_selected_vocab );
@@ -1315,16 +1318,16 @@ public class DataElementConceptServlet extends CurationServlet
                     session.setAttribute( "userSelectedConCodeOC", user_selected_con_code );//GF32723 save front end EVS vocab
 
 
-                    logger.debug( "At line 1186 of DECServlet.java " + eBean.getPREFERRED_DEFINITION() + "**" + eBean.getLONG_NAME() + "**" + eBean.getCONCEPT_IDENTIFIER() );
+                    //logger.debug( "At line 1186 of DECServlet.java " + eBean.getPREFERRED_DEFINITION() + "**" + eBean.getLONG_NAME() + "**" + eBean.getCONCEPT_IDENTIFIER() );
                 }
                 if( vObjectClass != null && vObjectClass.size() > 0 )
                 {
-                    logger.debug( "at line 1189 of DECServlet.java" + vObjectClass.size() );    //GF32723 3
+                    //logger.debug( "at line 1189 of DECServlet.java" + vObjectClass.size() );    //GF32723 3
                     vObjectClass = this.getMatchingThesarusconcept( vObjectClass, "Object Class" );    //GF32723 4 should get NCIt code here e.g. C12434 (Blood); get the matching concept from EVS based on the caDSR's CDR (object class)
                     for( int i = 0; i < vObjectClass.size(); i++ )
                     {
                         EVS_Bean eBean = ( EVS_Bean ) vObjectClass.get( i );
-                        logger.debug( "At line 1193 of DECServlet.java " + eBean.getPREFERRED_DEFINITION() + "**" + eBean.getLONG_NAME() + "**" + eBean.getCONCEPT_IDENTIFIER() + "**" + vObjectClass.size() );
+                        //logger.debug( "At line 1193 of DECServlet.java " + eBean.getPREFERRED_DEFINITION() + "**" + eBean.getLONG_NAME() + "**" + eBean.getCONCEPT_IDENTIFIER() + "**" + vObjectClass.size() );
                     }
                     m_DEC = this.updateOCAttribues( vObjectClass, m_DEC );    //populate caDSR's DEC bean based on VO (from EVS results)
 
@@ -1334,14 +1337,14 @@ public class DataElementConceptServlet extends CurationServlet
 
                 if( blockBean.getcaDSR_COMPONENT() != null && blockBean.getcaDSR_COMPONENT().equals( "Concept Class" ) )
                 {
-                    logger.debug( "At line 1139 of DECServlet.java" );
+                    //logger.debug( "At line 1139 of DECServlet.java" );
                     m_DEC.setDEC_OCL_IDSEQ( "" );
                 }
                 else
                 {//Object Class or from vocabulary
                     if( blockBean.getcaDSR_COMPONENT() != null && !selectedOCQualifiers )
                     {//if selected existing object class (JT just checking getcaDSR_COMPONENT???)
-                        logger.debug( "At line 1108 of DECServlet.java" );
+                       // logger.debug( "At line 1108 of DECServlet.java" );
                         ValidationStatusBean statusBean = new ValidationStatusBean();
                         statusBean.setStatusMessage( "**  Using existing " + blockBean.getcaDSR_COMPONENT() + " " + blockBean.getLONG_NAME() + " (" + blockBean.getID() + "v" + blockBean.getVERSION() + ") from " + blockBean.getCONTEXT_NAME() );
                         statusBean.setCondrExists( true );
@@ -1365,7 +1368,7 @@ public class DataElementConceptServlet extends CurationServlet
                     eBean = evs.getThesaurusConcept( eBean );
 
                     //end GF32723
-                    logger.debug( "At line 1220 of DECServlet.java " + eBean.getPREFERRED_DEFINITION() + "**" + eBean.getLONG_NAME() + "**" + eBean.getCONCEPT_IDENTIFIER() );
+                    //logger.debug( "At line 1220 of DECServlet.java " + eBean.getPREFERRED_DEFINITION() + "**" + eBean.getLONG_NAME() + "**" + eBean.getCONCEPT_IDENTIFIER() );
                 }
             }
             if( sComp.equals( "Property" ) || sComp.equals( "PropertyClass" ) || sComp.equals( "PropertyQualifier" ) )
@@ -1374,7 +1377,7 @@ public class DataElementConceptServlet extends CurationServlet
                 for( int i = 0; i < vProperty.size(); i++ )
                 {
                     EVS_Bean eBean = ( EVS_Bean ) vProperty.get( i );
-                    System.out.println( "testing OC Bean" + eBean.getEVS_DATABASE() + "and the OC_CON_CODE is" + eBean.getCONCEPT_IDENTIFIER() );//GF32723 2
+                    //System.out.println( "testing OC Bean" + eBean.getEVS_DATABASE() + "and the OC_CON_CODE is" + eBean.getCONCEPT_IDENTIFIER() );//GF32723 2
 
                     String user_selected_vocab_prop = eBean.getEVS_DATABASE();
                     session.setAttribute( "userSelectedVocabPROP", user_selected_vocab_prop );
@@ -1385,7 +1388,7 @@ public class DataElementConceptServlet extends CurationServlet
                 if( vProperty != null && vProperty.size() > 0 )
                 {
                     vProperty = this.getMatchingThesarusconcept( vProperty, "Property" );
-                    logger.debug( "At line 1127 of DECServlet.java " + Arrays.asList( vProperty ) );
+                    //logger.debug( "At line 1127 of DECServlet.java " + Arrays.asList( vProperty ) );
                     m_DEC = this.updatePropAttribues( vProperty, m_DEC );
 
                     boolean warning = false;
@@ -1401,14 +1404,14 @@ public class DataElementConceptServlet extends CurationServlet
                 }
                 if( blockBean.getcaDSR_COMPONENT() != null && blockBean.getcaDSR_COMPONENT().equals( "Concept Class" ) )
                 {
-                    logger.debug( "At line 1141 of DECServlet.java" );
+                    //logger.debug( "At line 1141 of DECServlet.java" );
                     m_DEC.setDEC_PROPL_IDSEQ( "" );
                 }
                 else
                 {//Property or from vocabulary
                     if( blockBean.getcaDSR_COMPONENT() != null && !selectedPropQualifiers )
                     {//if selected existing property
-                        logger.debug( "At line 1145 of DECServlet.java" );
+                        //logger.debug( "At line 1145 of DECServlet.java" );
                         ValidationStatusBean statusBean = new ValidationStatusBean();
                         statusBean.setStatusMessage( "**  Using existing " + blockBean.getcaDSR_COMPONENT() + " " + blockBean.getLONG_NAME() + " (" + blockBean.getID() + "v" + blockBean.getVERSION() + ") from " + blockBean.getCONTEXT_NAME() );
                         statusBean.setCondrExists( true );
@@ -1423,8 +1426,19 @@ public class DataElementConceptServlet extends CurationServlet
                     }
                 }
                 DataManager.setAttribute( session, "vProperty", vProperty );
-                logger.debug( "At line 1158 of DECServlet.java" + Arrays.asList( vProperty ) );
+                //logger.debug( "At line 1158 of DECServlet.java" + Arrays.asList( vProperty ) );
             }
+
+
+            if( ! tempPropPreferredDefinition.isEmpty())
+            {
+                m_DEC.setDEC_PREFERRED_DEFINITION( tempPropPreferredDefinition + "_" + vProperty.get( vProperty.size() - 1 ).getPREFERRED_DEFINITION() );
+            }
+            else
+            {
+                m_DEC.setDEC_PREFERRED_DEFINITION( tempDecPreferredDefinition + "_" + vProperty.get( vProperty.size() - 1 ).getPREFERRED_DEFINITION() );
+            }
+
             // rebuild new name if not appending
             EVS_Bean nullEVS = null;
             if( nameAction.equals( "newName" ) )
@@ -1443,7 +1457,6 @@ public class DataElementConceptServlet extends CurationServlet
 //			}
 
             DataManager.setAttribute( session, "m_DEC", m_DEC );    //set the user's selection + data from EVS in the DEC in session (for submission later on)
-            logger.info( "DataElementConceptServlet:doDECUseSelection() DEC_Bean = " + m_DEC );
         } catch( Exception e )
         {
             this.logger.error( "ERROR - doDECUseSelection : " + e.toString(), e );
@@ -1460,7 +1473,7 @@ public class DataElementConceptServlet extends CurationServlet
         }
         else if( codes == null )
             return;
-        logger.debug( "At line 1207 of DECServlet.java " + Arrays.asList( codes ) + "**" + Arrays.asList( defs ) );
+        //logger.debug( "At line 1207 of DECServlet.java " + Arrays.asList( codes ) + "**" + Arrays.asList( defs ) );
 //		boolean warning = false;
         //Rebuilding codes and defs to get rid of unused codes
         Vector<String> rebuiltCodes = new Vector<String>();

@@ -395,7 +395,7 @@ public class ValueDomainServlet extends CurationServlet
         // get the existing preferred name to make sure earlier typed one is saved in the user
         String sPrefName = null;
         // CURATNTOOL-1107
-        if( ! hasSuspectPeramater )
+        if( !hasSuspectPeramater )
         {
             sPrefName = StringUtil.cleanJavascriptAndHtml( ( String ) m_classReq.getParameter( "txtPreferredName" ) );
         }
@@ -602,7 +602,7 @@ public class ValueDomainServlet extends CurationServlet
         m_REPQ = ( EVS_Bean ) session.getAttribute( "m_REPQ" );
         m_setAC.setValidatePageValuesVD( m_classReq, m_classRes, m_VD, m_OC, m_PC, m_REP, m_OCQ, m_PCQ, m_REPQ, getAC );
         DataManager.setAttribute( session, "m_VD", m_VD );
-		/*
+        /*
 		 * if(sAction.equals("Enum") || sAction.equals("NonEnum") || sAction.equals("EnumByRef")) ForwardJSP(m_classReq, m_classRes,
 		 * "/CreateVDPage.jsp"); else if (!sAction.equals("vdpvstab") && !sAction.equals("vddetailstab"))
 		 * ForwardJSP(req, res, "/ValidateVDPage.jsp");

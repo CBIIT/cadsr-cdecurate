@@ -132,7 +132,7 @@ public class DataElementServlet extends CurationServlet
         DataManager.setAttribute( session, "DEAction", sSubAction );
         String sOriginAction = ( String ) session.getAttribute( "originAction" );
         // save DDE info every case except back from DEComp
-        String ddeType =  StringUtil.cleanJavascriptAndHtml( m_classReq.getParameter( "selRepType" ) );
+        String ddeType = StringUtil.cleanJavascriptAndHtml( m_classReq.getParameter( "selRepType" ) );
         if( ddeType != null && !ddeType.equals( "" ) )
             doUpdateDDEInfo();
         // handle all page actions
@@ -261,7 +261,7 @@ public class DataElementServlet extends CurationServlet
         if( sOriginAction == null )
             sOriginAction = "";
         // save DDE info every case except back from DEComp
-        String ddeType = StringUtil.cleanJavascriptAndHtml( m_classReq.getParameter( "selRepType" ));
+        String ddeType = StringUtil.cleanJavascriptAndHtml( m_classReq.getParameter( "selRepType" ) );
         String oldDDEType = ( String ) session.getAttribute( "sRepType" );
         // update the dde info if new one or if old one if not block edit
         if( !sOriginAction.equals( "BlockEditDE" )
@@ -386,7 +386,7 @@ public class DataElementServlet extends CurationServlet
      */
     public AC_Bean getACNames( String nameAct, String sOrigin, AC_Bean pageAC )
     {
-         boolean hasSuspectPeramater = false;
+        boolean hasSuspectPeramater = false;
         // CURATNTOOL-1107
         if( ( m_classReq.getParameter( "txtPreferredName" ) != null ) && ( !StringUtil.isHtmlAndScriptClean( m_classReq.getParameter( "txtPreferredName" ) ) ) )
         {
@@ -416,7 +416,7 @@ public class DataElementServlet extends CurationServlet
 
             String sPrefName = null;
             // CURATNTOOL-1107
-            if( ! hasSuspectPeramater)
+            if( !hasSuspectPeramater )
             {
                 sPrefName = StringUtil.cleanJavascriptAndHtml( ( String ) m_classReq.getParameter( "txtPreferredName" ) );
             }
@@ -564,7 +564,7 @@ public class DataElementServlet extends CurationServlet
         // get the existing preferred name to make sure earlier typed one is saved in the user
         String sPrefName = null;
         // CURATNTOOL-1107
-        if( ! hasSuspectPeramater)
+        if( !hasSuspectPeramater )
         {
             sPrefName = StringUtil.cleanJavascriptAndHtml( ( String ) m_classReq.getParameter( "txtPreferredName" ) );
         }
@@ -1333,12 +1333,10 @@ public class DataElementServlet extends CurationServlet
             }
 
 
-
             for( int i = 0; i < ( vBERows.size() ); i++ )
             {
                 System.out.println( "vBERows[" + i + "]: " + vBERows.get( i ).toString() );
             }
-
 
 
             for( int i = 0; i < ( vBERows.size() ); i++ )
@@ -1554,7 +1552,7 @@ public class DataElementServlet extends CurationServlet
         DataManager.setAttribute( session, "vDECompDelete", vDECompDelete );
         DataManager.setAttribute( session, "vDECompDelName", vDECompDelName );
         // DDE rules
-        String sDDERepTypes[] = StringUtil.sanitizeHTML( m_classReq.getParameterValues( "selRepType" ));
+        String sDDERepTypes[] = StringUtil.sanitizeHTML( m_classReq.getParameterValues( "selRepType" ) );
         String sRepType = sDDERepTypes[0];
         String sRule = StringUtil.cleanJavascriptAndHtml( ( String ) m_classReq.getParameter( "DDERule" ) );
         String sMethod = StringUtil.cleanJavascriptAndHtml( ( String ) m_classReq.getParameter( "DDEMethod" ) );

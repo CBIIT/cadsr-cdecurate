@@ -13,6 +13,7 @@
 package gov.nih.nci.cadsr.cdecurate.tool;
 
 // import files
+
 import gov.nih.nci.cadsr.cdecurate.common.NO_SQL_CHECK;
 import gov.nih.nci.cadsr.cdecurate.database.SQLHelper;
 import gov.nih.nci.cadsr.cdecurate.util.ClockTime;
@@ -39,7 +40,7 @@ import org.apache.log4j.Logger;
 
 /**
  * The NCICurationServlet is the main servlet for communicating between the client and the server.
- * <P>
+ * <p/>
  *
  * @author Joe Zhou, Sumana Hegde, Tom Phillips, Jesse McKean
  * @version 3.0
@@ -81,6 +82,7 @@ import org.apache.log4j.Logger;
  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH
  * DAMAGE.
  */
+
 /**
  * @author shegde
  */
@@ -95,7 +97,7 @@ public class NCICurationServlet extends HttpServlet
     public static String _userName = null;
     public static String _password = null;
 
-    public static final Logger logger = Logger.getLogger(NCICurationServlet.class.getName());
+    public static final Logger logger = Logger.getLogger( NCICurationServlet.class.getName() );
 
     /**
      * To initialize global variables and load the Oracle driver.
@@ -105,34 +107,33 @@ public class NCICurationServlet extends HttpServlet
      * @throws ServletException
      *         Any exception that occurs during initialization
      */
-    public void init(ServletConfig config) throws ServletException
+    public void init( ServletConfig config ) throws ServletException
     {
-        if (false)
+        if( false )
         {
             // For development debug only.
-        Enumeration attrs = config.getServletContext().getAttributeNames();
-        while (attrs.hasMoreElements())
-        {
-            String name = (String) attrs.nextElement();
-            Object obj = config.getServletContext().getAttribute(name);
-            logger.debug(name + " = " + obj.toString());
-        }
+            Enumeration attrs = config.getServletContext().getAttributeNames();
+            while( attrs.hasMoreElements() )
+            {
+                String name = ( String ) attrs.nextElement();
+                Object obj = config.getServletContext().getAttribute( name );
+                logger.debug( name + " = " + obj.toString() );
+            }
         }
 
-        logger.info(" ");
-        logger.info("Starting " + this.getClass().getName());
-        logger.info(" ");
+        logger.info( " " );
+        logger.info( "Starting " + this.getClass().getName() );
+        logger.info( " " );
 
-        super.init(config);
+        super.init( config );
         try
         {
             // Get the properties settings
             // Placeholder data for AC creation coming from CRT
             getProperties();
-        }
-        catch (Exception ee)
+        } catch( Exception ee )
         {
-            logger.fatal("Servlet-init : Unable to start curation tool : " + ee.toString(), ee);
+            logger.fatal( "Servlet-init : Unable to start curation tool : " + ee.toString(), ee );
         }
 
         // call the method to make oracle connection **database connection class requires lot of changes everywhere;
@@ -151,51 +152,49 @@ public class NCICurationServlet extends HttpServlet
     {
         try
         {
-            logger.info("initOracleConnect - accessing data source pool");
-            _dataSourceName = "java:/" + getServletConfig().getInitParameter("jbossDataSource");
-            _authenticateDSName="java:/" + getServletConfig().getInitParameter("jbossAuthenticate");
-            _userName= getServletConfig().getInitParameter("username");
-           _password = getServletConfig().getInitParameter("password");
+            logger.info( "initOracleConnect - accessing data source pool" );
+            _dataSourceName = "java:/" + getServletConfig().getInitParameter( "jbossDataSource" );
+            _authenticateDSName = "java:/" + getServletConfig().getInitParameter( "jbossAuthenticate" );
+            _userName = getServletConfig().getInitParameter( "username" );
+            _password = getServletConfig().getInitParameter( "password" );
 
             // Test connnection
             Connection con = null;
             Statement stmt = null;
             ResultSet rset = null;
-            boolean connected =false;
+            boolean connected = false;
             CurationServlet curser = new CurationServlet();
             try
             {
                 con = curser.getConnFromDS();
                 stmt = con.createStatement();
-                rset = stmt.executeQuery("Select sysdate from dual");	/* JR1046 checked */
-                if (rset.next())
-                    {
-                	 rset.getString(1);
-                	 connected =true;
-                    }
+                rset = stmt.executeQuery( "Select sysdate from dual" );	/* JR1046 checked */
+                if( rset.next() )
+                {
+                    rset.getString( 1 );
+                    connected = true;
+                }
                 else
-                    throw (new Exception("DBPool connection test failed."));
-				/*
+                    throw ( new Exception( "DBPool connection test failed." ) );
+                /*
 				 * Per GForge#30445, updated HelpURL to retrieve
 				 * CurationToolHelpURL from a properties file
 				 * 
 				 * if(connected) { String helpURL = curser.getHelpURL(con);
 				 * HelpURL.setCurationToolHelpURL(helpURL); }
 				 */
-            }
-            catch (Exception e)
+            } catch( Exception e )
             {
-                logger.fatal("Could not open database connection.", e);
+                logger.fatal( "Could not open database connection.", e );
+            } finally
+            {
+                rset = SQLHelper.closeResultSet( rset );
+                stmt = SQLHelper.closeStatement( stmt );
+                con = SQLHelper.closeConnection( con );
             }
-            finally{
-    			rset = SQLHelper.closeResultSet(rset);
-    			stmt = SQLHelper.closeStatement(stmt);
-    			con = SQLHelper.closeConnection(con);
-            }
-        }
-        catch (Exception e)
+        } catch( Exception e )
         {
-            logger.fatal("initOracleConnect - Some other error", e);
+            logger.fatal( "initOracleConnect - Some other error", e );
         }
     }
 
@@ -207,10 +206,10 @@ public class NCICurationServlet extends HttpServlet
      * @param res
      *        The HttpServletResponse object that contains the response
      */
-    public void service(HttpServletRequest req, HttpServletResponse res)
+    public void service( HttpServletRequest req, HttpServletResponse res )
     {
-    	HttpSession session1 = req.getSession();
-    	Enumeration attributeNames = session1.getAttributeNames();
+        HttpSession session1 = req.getSession();
+        Enumeration attributeNames = session1.getAttributeNames();
     	/*
     	System.out.println("NCICurationServlet:begin -------------------------------------------------");
     	String name = null;
@@ -231,7 +230,7 @@ public class NCICurationServlet extends HttpServlet
     	}
     	System.out.println("NCICurationServlet:end -------------------------------------------------");
 		*/
-		//this should cause minimal overhead, or can be totally before production
+        //this should cause minimal overhead, or can be totally before production
 //		TimeWatch watch;
 //		if(TimeWatch.ENABLED) {
 //			watch = TimeWatch.start();
@@ -239,63 +238,64 @@ public class NCICurationServlet extends HttpServlet
 //        ClockTime clock = new ClockTime();
         try
         {
-        	String reqType = StringUtil.cleanJavascriptAndHtml(req.getParameter("reqType"));
+            String reqType = StringUtil.cleanJavascriptAndHtml( req.getParameter( "reqType" ) );
 
             HttpSession session = req.getSession();
-        	String menuAction = (String) session.getAttribute(Session_Data.SESSION_MENU_ACTION);
-        	if((menuAction == null) 
-        			&& !(reqType.equals("homePage")) 
-        			&& !(reqType.equals("login"))
-        			&& !(reqType.equals("view")) 
-        			&& !(reqType.equals("viewVDPVSTab"))
-        			&& !(reqType.equals("viewVMAction")) 
-        			&& !(reqType.equals("viewPVAction")) 
-        			&& !(reqType.equals("getAltNames")) 
-        			&& !(reqType.equals("getRefDocument")) 
-        			&& !(reqType.equals("jsonRequest")) 
-        			&& !(reqType.equals("dlExcelColumns"))
-        			&& !(reqType.equals("dlXMLColumns"))
-        			&& !(reqType.equals("showDEfromOutside"))) {
-				RequestDispatcher rd = this.getServletContext().getRequestDispatcher("/");
-				rd.forward(req, res);
-				return;
-			}
-		   	// add the forwarding to request to session (to go after login)
-        	String forwardReq = (String)session.getAttribute("forwardReq");
-        	if (forwardReq == null || !forwardReq.equals("login"))
-        	   session.setAttribute("forwardReq", reqType);
-        	if (forwardReq == null && reqType.equals("login"))
-        		session.setAttribute("directLogin", "yes");
+            String menuAction = ( String ) session.getAttribute( Session_Data.SESSION_MENU_ACTION );
+            if( ( menuAction == null )
+                    && !( reqType.equals( "homePage" ) )
+                    && !( reqType.equals( "login" ) )
+                    && !( reqType.equals( "view" ) )
+                    && !( reqType.equals( "viewVDPVSTab" ) )
+                    && !( reqType.equals( "viewVMAction" ) )
+                    && !( reqType.equals( "viewPVAction" ) )
+                    && !( reqType.equals( "getAltNames" ) )
+                    && !( reqType.equals( "getRefDocument" ) )
+                    && !( reqType.equals( "jsonRequest" ) )
+                    && !( reqType.equals( "dlExcelColumns" ) )
+                    && !( reqType.equals( "dlXMLColumns" ) )
+                    && !( reqType.equals( "showDEfromOutside" ) ) )
+            {
+                RequestDispatcher rd = this.getServletContext().getRequestDispatcher( "/" );
+                rd.forward( req, res );
+                return;
+            }
+            // add the forwarding to request to session (to go after login)
+            String forwardReq = ( String ) session.getAttribute( "forwardReq" );
+            if( forwardReq == null || !forwardReq.equals( "login" ) )
+                session.setAttribute( "forwardReq", reqType );
+            if( forwardReq == null && reqType.equals( "login" ) )
+                session.setAttribute( "directLogin", "yes" );
 
-        	ACRequestTypes acrt = null;
-        	CurationServlet curObj = null;
-        	try {
-        		acrt = ACRequestTypes.valueOf(reqType);
-				if (acrt != null)
-				{
-				   String className = acrt.getClassName();
-				   curObj = (CurationServlet) Class.forName(className).newInstance();
-				   curObj.init(req, res, this.getServletContext());
-				   curObj.get_m_conn();
-				   curObj.execute(acrt);
-				}
-			} catch (RuntimeException e) {
-				//logger.info(e.toString(), e);
-			}
-	        finally
-	        {
-	        	if (curObj != null)
-					curObj.destroy();
-	        }
-			if (acrt == null)
-			{
-				CurationServlet curser = new CurationServlet(req, res, this.getServletContext());
-				curser.service();
-			}
-        }
-        catch (Exception e)
+            ACRequestTypes acrt = null;
+            CurationServlet curObj = null;
+            try
+            {
+                acrt = ACRequestTypes.valueOf( reqType );
+                if( acrt != null )
+                {
+                    String className = acrt.getClassName();
+                    curObj = ( CurationServlet ) Class.forName( className ).newInstance();
+                    curObj.init( req, res, this.getServletContext() );
+                    curObj.get_m_conn();
+                    curObj.execute( acrt );
+                }
+            } catch( RuntimeException e )
+            {
+                //logger.info(e.toString(), e);
+            } finally
+            {
+                if( curObj != null )
+                    curObj.destroy();
+            }
+            if( acrt == null )
+            {
+                CurationServlet curser = new CurationServlet( req, res, this.getServletContext() );
+                curser.service();
+            }
+        } catch( Exception e )
         {
-            logger.error("Service error : " + e.toString(), e);
+            logger.error( "Service error : " + e.toString(), e );
         }
 //        logger.debug("service response time " + clock.toStringLifeTime());
 //		if(TimeWatch.ENABLED) {
@@ -316,22 +316,21 @@ public class NCICurationServlet extends HttpServlet
 
         // Set the defaults first
         defaultProperties = new Properties();
-        defaultProperties.put("DEDefinition", "Please provide definition.");
-        defaultProperties.put("VDDefinition", "Please provide definition.");
-        defaultProperties.put("DataType", "CHARACTER");
-        defaultProperties.put("MaxLength", "200");
+        defaultProperties.put( "DEDefinition", "Please provide definition." );
+        defaultProperties.put( "VDDefinition", "Please provide definition." );
+        defaultProperties.put( "DataType", "CHARACTER" );
+        defaultProperties.put( "MaxLength", "200" );
 
         // Now read the properties file for any changes
-        m_settings = new Properties(defaultProperties);
+        m_settings = new Properties( defaultProperties );
         try
         {
-            input = NCICurationServlet.class.getResourceAsStream("NCICuration.properties");
-            m_settings.load(input);
-        }
-        catch (Exception e)
+            input = NCICurationServlet.class.getResourceAsStream( "NCICuration.properties" );
+            m_settings.load( input );
+        } catch( Exception e )
         {
             // System.err.println("ERROR - Got exception reading properties " + e);
-            logger.error("Servlet-getProperties : " + e.hashCode() + " : " + e.toString(), e);
+            logger.error( "Servlet-getProperties : " + e.hashCode() + " : " + e.toString(), e );
         }
     }
 
@@ -350,10 +349,10 @@ public class NCICurationServlet extends HttpServlet
      */
     public void destroy()
     {
-        logger.info(" ");
-        logger.info("Stopping " + this.getClass().getName());
-        logger.info(" ");
+        logger.info( " " );
+        logger.info( "Stopping " + this.getClass().getName() );
+        logger.info( " " );
 
-     }
+    }
 
 }
