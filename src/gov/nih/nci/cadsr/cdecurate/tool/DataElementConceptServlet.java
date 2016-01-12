@@ -728,15 +728,13 @@ public class DataElementConceptServlet extends CurationServlet
         }
     }
 
-    /**
+     /**
      * makes three types of preferred names and stores it in the bean
      *
-     * @param m_classReq HttpServletRequest object
-     * @param response   HttpServletResponse object
-     * @param newBean    new evs bean
-     * @param nameAct    string new name or apeend name
-     * @param pageDEC    current dec bean
-     * @return dec bean
+     * @param newBean
+     * @param nameAct
+     * @param pageAC
+     * @return
      */
     public AC_Bean getACNames( EVS_Bean newBean, String nameAct, AC_Bean pageAC )
     {
@@ -1009,7 +1007,8 @@ public class DataElementConceptServlet extends CurationServlet
         // appending to the existing;
         if( newBean != null )
         {
-            String sSelectName = newBean.getLONG_NAME();
+            String sSelectName = newBean.getLONG_NAME().substring(0, 1).toUpperCase() + newBean.getLONG_NAME().substring(1);
+
             if( !sLongName.equals( "" ) )
                 sLongName += " ";
             sLongName += sSelectName;
@@ -1048,7 +1047,7 @@ public class DataElementConceptServlet extends CurationServlet
     {
         // JIRA 1023 (more "work around" than fix)
         String tempPropPreferredDefinition = "";
-        String tempDecPreferredDefinition = "";
+        String tempObjPreferredDefinition = "";
 
         try
         {
@@ -1238,7 +1237,7 @@ public class DataElementConceptServlet extends CurationServlet
                     // split it if rep term, add concept class to the list if evs id exists
                     if( blockBean.getCONDR_IDSEQ() == null || blockBean.getCONDR_IDSEQ().equals( "" ) )
                     {
-                       // logger.debug( "At line 1121 of DECServlet.java" );
+                        // logger.debug( "At line 1121 of DECServlet.java" );
                         if( blockBean.getCONCEPT_IDENTIFIER() == null || blockBean.getCONCEPT_IDENTIFIER().equals( "" ) )
                         {
                             storeStatusMsg( "This " + sComp
@@ -1284,7 +1283,7 @@ public class DataElementConceptServlet extends CurationServlet
                 m_DEC.setDEC_OCL_IDSEQ( "" );
 
                 // JIRA 1023 (more "work around" than fix)
-                tempDecPreferredDefinition = m_DEC.getDEC_PREFERRED_DEFINITION();
+                tempObjPreferredDefinition = m_DEC.getDEC_PREFERRED_DEFINITION();
                 m_DEC = this.addOCConcepts( nameAction, m_DEC, blockBean, "Qualifier" );
             }
             else if( sComp.equals( "PropertyQualifier" ) )
@@ -1344,7 +1343,7 @@ public class DataElementConceptServlet extends CurationServlet
                 {//Object Class or from vocabulary
                     if( blockBean.getcaDSR_COMPONENT() != null && !selectedOCQualifiers )
                     {//if selected existing object class (JT just checking getcaDSR_COMPONENT???)
-                       // logger.debug( "At line 1108 of DECServlet.java" );
+                        // logger.debug( "At line 1108 of DECServlet.java" );
                         ValidationStatusBean statusBean = new ValidationStatusBean();
                         statusBean.setStatusMessage( "**  Using existing " + blockBean.getcaDSR_COMPONENT() + " " + blockBean.getLONG_NAME() + " (" + blockBean.getID() + "v" + blockBean.getVERSION() + ") from " + blockBean.getCONTEXT_NAME() );
                         statusBean.setCondrExists( true );
@@ -1429,14 +1428,18 @@ public class DataElementConceptServlet extends CurationServlet
                 //logger.debug( "At line 1158 of DECServlet.java" + Arrays.asList( vProperty ) );
             }
 
-
+            // JIRA 1023 (more "work around" than fix)
             if( ! tempPropPreferredDefinition.isEmpty())
             {
+                // MHL  FIXME
+                System.out.println( "A m_DEC.setDEC_PREFERRED_DEFINITION: " + tempPropPreferredDefinition + "_" + vProperty.get( vProperty.size() - 1 ).getPREFERRED_DEFINITION());
                 m_DEC.setDEC_PREFERRED_DEFINITION( tempPropPreferredDefinition + "_" + vProperty.get( vProperty.size() - 1 ).getPREFERRED_DEFINITION() );
             }
-            else
+            else if( ! tempObjPreferredDefinition.isEmpty())
             {
-                m_DEC.setDEC_PREFERRED_DEFINITION( tempDecPreferredDefinition + "_" + vProperty.get( vProperty.size() - 1 ).getPREFERRED_DEFINITION() );
+                // MHL  FIXME
+                System.out.println( "B m_DEC.setDEC_PREFERRED_DEFINITION: " + tempObjPreferredDefinition + "_" + vObjectClass.get( vObjectClass.size() - 1 ).getPREFERRED_DEFINITION());
+                m_DEC.setDEC_PREFERRED_DEFINITION( tempObjPreferredDefinition + "_" + vObjectClass.get( vObjectClass.size() - 1 ).getPREFERRED_DEFINITION() );
             }
 
             // rebuild new name if not appending
@@ -1545,8 +1548,6 @@ public class DataElementConceptServlet extends CurationServlet
     /**
      * adds the selected concept to the vector of concepts for property
      *
-     * @param m_classReq HttpServletRequest
-     * @param response   HttpServletResponse
      * @param nameAction String naming action
      * @param decBean    selected DEC_Bean
      * @param eBean      selected EVS_Bean
@@ -1611,8 +1612,6 @@ public class DataElementConceptServlet extends CurationServlet
     /**
      * adds the selected concept to the vector of concepts for property
      *
-     * @param m_classReq HttpServletRequest
-     * @param response   HttpServletResponse
      * @param nameAction String naming action
      * @param decBean    selected DEC_Bean
      * @param eBean      selected EVS_Bean
