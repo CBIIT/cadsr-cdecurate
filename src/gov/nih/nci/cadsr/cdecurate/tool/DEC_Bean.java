@@ -459,8 +459,6 @@ public class DEC_Bean extends AC_Bean
      */
     public void setDEC_PREFERRED_DEFINITION( String s )
     {
-        //MHL FIXME
-        System.out.println( "setDEC_PREFERRED_DEFINITION: " + s );
         this.DEC_PREFERRED_DEFINITION = s;
     }
 

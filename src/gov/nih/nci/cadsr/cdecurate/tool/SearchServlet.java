@@ -41,7 +41,7 @@ public class SearchServlet extends CurationServlet {
 			ServletContext sc) {
 		super(req, res, sc);
 	}
-	
+
 	public void execute(ACRequestTypes reqType) throws Exception {
 		//this should cause minimal overhead, or can be totally before production
 //		TimeWatch watch;
@@ -52,9 +52,9 @@ public class SearchServlet extends CurationServlet {
 		switch (reqType){
 			case homePage:
 				doHomePage();	//GF32155
-				break;			
+				break;
 			case searchACs:
-				doGetACSearchActions(); 
+				doGetACSearchActions();
 				break;
 			case showResult:
 				doSearchResultsAction();
@@ -67,19 +67,19 @@ public class SearchServlet extends CurationServlet {
                 break;
 			case doSortCDE:
 				doSortACActions();
-				break;			
+				break;
 			case doSortBlocks:
 				doSortBlockActions();
-				break;			
+				break;
 			case getSearchFilter:
 				doOpenSearchPage();
-				break;			
+				break;
 			case searchBlocks:
 				doBlockSearchActions();
-				break;			
+				break;
 			case actionFromMenu:
 				doMenuAction();
-				break;			
+				break;
 			case getRefDocument:
                 doRefDocSearchActions();
                 break;
@@ -97,7 +97,7 @@ public class SearchServlet extends CurationServlet {
                break;
 			case showCDDetail:
 //				if(TimeWatch.ENABLED) {
-//					long passedTimeInSeconds = watch.time(TimeUnit.SECONDS);	
+//					long passedTimeInSeconds = watch.time(TimeUnit.SECONDS);
 //					//long passedTimeInMs = watch.time();
 //					System.out.println(this.getClass().getName() +":execute elaped time in s = " + passedTimeInSeconds);
 //				}
@@ -107,14 +107,14 @@ public class SearchServlet extends CurationServlet {
 			   doShowUsedBy();
 			   break;
  		}
-		
+
 //		if(TimeWatch.ENABLED) {
-//			long passedTimeInSeconds = watch.time(TimeUnit.SECONDS);	
+//			long passedTimeInSeconds = watch.time(TimeUnit.SECONDS);
 //			//long passedTimeInMs = watch.time();
 //			System.out.println(this.getClass().getName() +":execute elaped time in s = " + passedTimeInSeconds);
 //		}
 	}
-	
+
     /**
      * The doHomePage method gets the session, set some session attributes, then connects to the database. Called from
      * 'service' method where reqType is 'login', 'homePage' calls 'getAC.getACList' to get the Data list from the
@@ -127,7 +127,7 @@ public class SearchServlet extends CurationServlet {
 //		if(TimeWatch.ENABLED) {
 //			watch = TimeWatch.start();
 //		}
-    	
+
         try
         {
             HttpSession session = m_classReq.getSession();
@@ -184,9 +184,9 @@ public class SearchServlet extends CurationServlet {
                                 "Problem with login. User name/password may be incorrect, or database connection can not be established.");
                 // ForwardErrorJSP(m_classReq, m_classRes, "Unable to connect to the database. Please log in again.");
             }
-            
+
 //    		if(TimeWatch.ENABLED) {
-//    			long passedTimeInSeconds = watch.time(TimeUnit.SECONDS);	
+//    			long passedTimeInSeconds = watch.time(TimeUnit.SECONDS);
 //    			//long passedTimeInMs = watch.time();
 //    			System.out.println(this.getClass().getName() +":doHomePage elaped time in s = " + passedTimeInSeconds);
 //    		}
@@ -211,7 +211,7 @@ public class SearchServlet extends CurationServlet {
             }
         }
     }
-    
+
     /**
      * To search a component or to display more attributes after the serach. Called from 'service' method where reqType
      * is 'searchACs' calls 'getACSearch.getACKeywordResult' method when the action is a new search. calls
@@ -223,10 +223,25 @@ public class SearchServlet extends CurationServlet {
      */
     private void doGetACSearchActions() throws Exception
     {
+        boolean hasSuspectPerameter = false;
+
         HttpSession session = m_classReq.getSession();
         String actType = (String) m_classReq.getParameter("actSelect");
         String menuAction = (String) session.getAttribute(Session_Data.SESSION_MENU_ACTION);
         String sUISearchType = (String) m_classReq.getAttribute("UISearchType");
+
+        // CURATNTOOL-1107  The app scan only shows this one for this method, but others may still need to be fixed, so set a boolean here rather than throw Exception right here.
+        if( (sUISearchType != null ) && ( !StringUtil.isHtmlAndScriptClean( sUISearchType ) ) )
+        {
+            logger.warn( "Bad value for UISearchType[" + sUISearchType + "]" );
+            hasSuspectPerameter = true;
+        }
+
+        if( hasSuspectPerameter )
+        {
+            throw new Exception( "Input from client contains characters or combinations of characters that are not allowed because of security concerns." );
+        }
+
         if (sUISearchType == null || sUISearchType.equals("nothing"))
             sUISearchType = "";
        // String sSearchInEVS = "";
@@ -414,7 +429,7 @@ public class SearchServlet extends CurationServlet {
             ForwardJSP(m_classReq, m_classRes, "/ErrorPage.jsp");
     }
 
-    
+
     /**
      * To do edit/create from template/new version of a component, clear all records or to display only selected rows
      * after the serach. Called from 'service' method where reqType is 'showResult'. calls 'getACSearch.getSelRowToEdit'
@@ -690,7 +705,7 @@ public class SearchServlet extends CurationServlet {
         HttpSession session = m_classReq.getSession();
 		AltNamesDefsSession altSession = AltNamesDefsSession.getAlternates(m_classReq, AltNamesDefsSession._searchDEC);	//GF30796
 		DECHelper.clearAlternateDefinition(session, altSession);	//GF30798
-        
+
         DataManager.setAttribute(session, "vStatMsg", new Vector());
         DataManager.setAttribute(session, Session_Data.SESSION_MENU_ACTION, "nothing");		//JR3 tagged
         DataManager.setAttribute(session, "LastMenuButtonPressed", "Search");
@@ -1130,30 +1145,30 @@ public class SearchServlet extends CurationServlet {
             if (sSearchAC.equals("PermissibleValue")){
            	  	 if ((vSRows != null) && (vSRows.size()>0))
              	   pvBean = (PV_Bean) vSRows.elementAt(thisInd);
-            } 
+            }
             if (sSearchAC.equals("ClassSchemeItems")){
           	  	 if ((vSRows != null) && (vSRows.size()>0))
           	       csiBean = (CSI_Bean) vSRows.elementAt(thisInd);
-            } 
+            }
             if (sSearchAC.equals("DataElement")){
          	  	 if ((vSRows != null) && (vSRows.size()>0))
          	  		deBean = (DE_Bean) vSRows.elementAt(thisInd);
-            } 
+            }
             if (sSearchAC.equals("DataElementConcept")){
         	  	 if ((vSRows != null) && (vSRows.size()>0))
         	  		decBean = (DEC_Bean) vSRows.elementAt(thisInd);
-            } 
+            }
             if (sSearchAC.equals("ValueDomain")){
         	  	 if ((vSRows != null) && (vSRows.size()>0))
         	  		vdBean = (VD_Bean) vSRows.elementAt(thisInd);
-            } 
+            }
             if (sSearchAC.equals("ValueMeaning")){
        	  	   if ((vSRows != null) && (vSRows.size()>0))
        	  		  vmBean = (VM_Bean) vSRows.elementAt(thisInd);
-            } 
-    
+            }
+
             // get the search results from the database.
-           
+
             if (assocAC.equals("AssocDEs"))
             {
                 m_classReq.setAttribute("GetAssocSearchAC", "true");
@@ -1282,8 +1297,8 @@ public class SearchServlet extends CurationServlet {
             }else if (sSearchAC.equals("ValueDomain") && (vdBean != null)){
                 labelWord2 = labelWord2 + " [" + vdBean.getVD_VD_ID()+ "v" +vdBean.getVD_VERSION()+"]";
             }else if (sSearchAC.equals("ValueMeaning") && (vmBean != null)){
-                labelWord2 = labelWord2 + " [" + vmBean.getVM_ID()+ "v" +vmBean.getVM_VERSION()+"]";   
-            }else if(list != null && list.size()>0){	
+                labelWord2 = labelWord2 + " [" + vmBean.getVM_ID()+ "v" +vmBean.getVM_VERSION()+"]";
+            }else if(list != null && list.size()>0){
               String version = (String)list.get(1);
               labelWord2 =labelWord2 + " [" + list.get(0)+ "v" +Double.parseDouble(version)+"]";
             }
@@ -1305,7 +1320,7 @@ public class SearchServlet extends CurationServlet {
         ForwardJSP(m_classReq, m_classRes, "/SearchResultsPage.jsp");
     }
 
-    
+
     /**
      * To refresh the page when filter hyperlink is pressed. Called from 'doGetACSearchActions' method gets request
      * parameters to store the selected values in the session according to what the menu action is forwards JSP
@@ -1700,7 +1715,7 @@ public class SearchServlet extends CurationServlet {
 //        for (int i = 0; defaultContext.size() > i; i++) {
 //    		String sContextName = (String) defaultContext.elementAt(i);
 //    		if((!sContextName.equalsIgnoreCase("TEST"))
-//    				&& (!sContextName.equalsIgnoreCase("Training"))){	
+//    				&& (!sContextName.equalsIgnoreCase("Training"))){
 //    			serMultiContext.addElement(sContextName);
 //    		}
 //    	}
@@ -1959,21 +1974,21 @@ public class SearchServlet extends CurationServlet {
 		ConceptAction conact = new ConceptAction();
 		ResultSet rs =null;
 		Statement stm=null;
-		
+
 		try {
 			 stm = m_conn.createStatement();
 			rs = stm
 					.executeQuery("SELECT rep.Preferred_name FROM (SELECT xx.rep_idseq, COUNT(*) AS cnt FROM sbrext.representations_view_ext xx, sbrext.component_concepts_view_ext cc WHERE xx.asl_name = 'RELEASED' AND cc.condr_idseq = xx.condr_idseq GROUP BY xx.rep_idseq ORDER BY cnt ASC) hits, sbrext.representations_view_ext rep, sbr.ac_registrations_view reg WHERE hits.cnt = 1 AND rep.rep_idseq = hits.rep_idseq AND reg.ac_idseq = rep.rep_idseq AND reg.registration_status = 'Standard'");
-			if (rs.next()) 
+			if (rs.next())
 			{
 				do {
 					valueString += "'" + rs.getString(1) + "',";
 				} while (rs.next());
-				
+
 				//close the rs and stm
 				rs = SQLHelper.closeResultSet(rs);
 				stm = SQLHelper.closeStatement(stm);
-				
+
 				String valu = valueString
 						.substring(0, valueString.length() - 1);
 				String sql = "SELECT con.*,cont.name as Context FROM CONCEPTS_VIEW_EXT con,CONTEXTS_VIEW cont WHERE con.CONTE_IDSEQ=cont.CONTE_IDSEQ and PREFERRED_NAME IN ("
@@ -1985,8 +2000,8 @@ public class SearchServlet extends CurationServlet {
 					DataManager.setAttribute(session, "vACSearch", conSer
 							.getData().getConceptList());
 				}
-			} 
-			else 
+			}
+			else
 			{
 				Boolean approvedRep = new Boolean(false);
 				session.setAttribute("ApprovedRepTerm", approvedRep);
@@ -2065,7 +2080,7 @@ public class SearchServlet extends CurationServlet {
         Vector vResult = new Vector();
         DataManager.setAttribute(session, "results", vResult);
         session.setAttribute("recsFound", "No ");
-       
+
         //DataManager.setAttribute(session, "serKeyword", "");
         DataManager.setAttribute(session, "serProtoID", "");
         DataManager.setAttribute(session, "LastAppendWord", "");
@@ -2110,7 +2125,7 @@ public class SearchServlet extends CurationServlet {
         if (sMAction.equals("editDE") || sMAction.equals("editDEC") || sMAction.equals("editVD")) {
             DataManager.setAttribute(session, "LastMenuButtonPressed", "Edit");
     		AltNamesDefsSession altSession = AltNamesDefsSession.getAlternates(m_classReq, AltNamesDefsSession._searchDEC);	//GF30796
-    		DECHelper.clearAlternateDefinition(session, altSession);	//GF30798            
+    		DECHelper.clearAlternateDefinition(session, altSession);	//GF30798
         }
         else if (sMAction.equals("NewDETemplate") || sMAction.equals("NewDEVersion")
                         || sMAction.equals("NewDECTemplate") || sMAction.equals("NewDECVersion")
@@ -2143,7 +2158,7 @@ public class SearchServlet extends CurationServlet {
         Vector vResult = new Vector();
         DataManager.setAttribute(session, "results", vResult);
         session.setAttribute("recsFound", "No ");
-       
+
         DataManager.setAttribute(session, "serKeyword", "");
         DataManager.setAttribute(session, "serProtoID", "");
         DataManager.setAttribute(session, "LastAppendWord", "");
@@ -2161,8 +2176,8 @@ public class SearchServlet extends CurationServlet {
         session.setAttribute("showDefaultSortBtn", "No");
         ForwardJSP(m_classReq, m_classRes, "/SearchResultsPage.jsp");
     }
-    
-    
+
+
     public void getInitialListFromCadsr(GetACService getAC){
     	HttpSession session = m_classReq.getSession();
     	// get initial list from cadsr
@@ -2203,9 +2218,9 @@ public class SearchServlet extends CurationServlet {
         }else{
            ToolURL.setBrowserDispalyName(session, "CDE Browser");
         }
-        
+
         //===========GF32153 Add link to Password Change Station =====START
-        
+
         vList = new Vector();
         vList = getAC.getToolOptionData("PasswordChangeStation", "URL", "");
         aURL = null;
@@ -2234,9 +2249,9 @@ public class SearchServlet extends CurationServlet {
         }else{
            ToolURL.setPasswordChangeStationDispalyName(session, ToolConstants.LINKS_PCS_NAME);
         }
-        
+
         //=========GF32153 Add link to Password Change Station===========END
-        
+
         vList = new Vector();
         vList = getAC.getToolOptionData("SENTINEL", "URL", "");
         aURL = null;
@@ -2285,7 +2300,7 @@ public class SearchServlet extends CurationServlet {
         }else{
         	ToolURL.setUmlBrowserDispalyName(session, "UML Model Browser");
         }
-       
+
         vList = new Vector();
         vList = getAC.getToolOptionData("FREESTYLE", "URL", "");
         aURL = null;
@@ -2334,7 +2349,7 @@ public class SearchServlet extends CurationServlet {
         }else{
            ToolURL.setAdminToolDispalyName(session, "caDSR Admin Tool");
         }
-        
+
         vList = new Vector();
         vList = getAC.getToolOptionData("CADSRAPI", "URL", "");
         aURL = null;
@@ -2359,7 +2374,7 @@ public class SearchServlet extends CurationServlet {
         }else{
            ToolURL.setCadsrAPIDispalyName(session, "caDSR API Home");
         }
-        
+
         vList = new Vector();
         vList = getAC.getToolOptionData("FormBuilder", "URL", "");
         aURL = null;
@@ -2384,7 +2399,7 @@ public class SearchServlet extends CurationServlet {
         }else{
            ToolURL.setFormBuilderDisplayName(session, "Form Builder");
         }
-        
+
         vList = new Vector();
         vList = getAC.getToolOptionData("EVSBrowser", "URL", "");
         aURL = null;
@@ -2409,7 +2424,7 @@ public class SearchServlet extends CurationServlet {
         }else{
            ToolURL.setEVSBioPortalDisplayName(session, "EVS BioPortal");
         }
-        
+
     	/*
 		 * Per GForge#30445, updated HelpURL to retrieve CurationToolHelpURL
 		 * from a properties file
@@ -2438,7 +2453,7 @@ public class SearchServlet extends CurationServlet {
                 aURL = tob.getVALUE();
         }
         ToolURL.setCurationToolBusinessRulesURL(session, aURL);
-        
+
         vList = new Vector();
         vList = getAC.getToolOptionData("EVSBrowser", "CONCEPT.DETAILS.URL", "");
         aURL = null;
@@ -2450,7 +2465,7 @@ public class SearchServlet extends CurationServlet {
         }
         ToolURL.setEVSBrowserConceptUrl(session, aURL);
         session.setAttribute("evsBrowserConceptURL", aURL);
-        
+
         vList = new Vector();
         vList = getAC.getToolOptionData("CDEBrowser", "VIEWDEIDSEQ.URL", "");
         aURL = null;
@@ -2462,7 +2477,7 @@ public class SearchServlet extends CurationServlet {
         }
         ToolURL.setDEDetailsCDEBrowserURL(session, aURL);
     }
-    
+
     /**
      * to get reference documents for the selected ac and doc type called when the reference docuemnts window opened
      * first time and calls 'getAC.getReferenceDocuments' forwards page back to reference documents
@@ -2575,7 +2590,7 @@ public class SearchServlet extends CurationServlet {
         String sVM = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml((String) m_classReq.getParameter("acName"));
         // call the api to return concept attributes according to ac type and ac idseq
         Vector cdList = new Vector();
-        cdList = getAC.doCDSearch("", "", "", "", "", "", "", "", "", "", "", "", "", "", 0, "", "", sVM, cdList, "0"); 
+        cdList = getAC.doCDSearch("", "", "", "", "", "", "", "", "", "", "", "", "", "", 0, "", "", sVM, cdList, "0");
         m_classReq.setAttribute("ConDomainList", cdList);
         m_classReq.setAttribute("VMName", sVM);
         // store them in request parameter to display and forward the page
@@ -2613,26 +2628,26 @@ public class SearchServlet extends CurationServlet {
   				throw new Exception("idseq contains characters or combinations of characters that are not allowed because of security concerns.");
   		}
         String type = m_classReq.getParameter("type");
-    	
+
     	m_classReq.getSession().setAttribute("usedByResults", null);
     	HashMap<String,ArrayList<String[]>> crfResults = null;
-    	
-    	
+
+
     	if (type != null && type.equals("PV"))
     		crfResults = getAssociatedForms(idseq, crfResults);
     	if (type != null && type.equals("VD"))
     		crfResults = getVDAssociatedForms(idseq, crfResults);
     	if (type != null && type.equals("DE"))
     		crfResults = getDEAssociatedForms(idseq, crfResults);
-    	
+
     	m_classReq.getSession().setAttribute("usedByResults", crfResults);
     	ForwardJSP(m_classReq, m_classRes, "/ShowUsedBy.jsp");
     }
-    
+
     public HashMap<String,ArrayList<String[]>> getAssociatedForms(String vpIDseq, HashMap<String,ArrayList<String[]>> ret){
 
 		String idseqString = "VP_IDSEQ";
-	
+
 		String sql = "SELECT DISTINCT " +
 				"crf.long_name as \"Form Name\", " +
 				"crf.public_id as \"Pub. Id\", " +
@@ -2653,10 +2668,10 @@ public class SearchServlet extends CurationServlet {
            +" AND (CRF.CREATED_BY = UA.UA_NAME)"
            +" AND (VDPVS."+idseqString+" = ?)"
            +" order by crf.long_name desc";
-		
+
 		ResultSet rs = null;
 		PreparedStatement pstmt = null;
-		
+
 		try {
 			if (vpIDseq != null && !vpIDseq.equals("")) {
 				if (this.getConn() != null) {
@@ -2668,33 +2683,33 @@ public class SearchServlet extends CurationServlet {
 					ArrayList<String[]> usedInForms = new ArrayList<String[]>();
 					// Now we are ready to call the function
 					rs = pstmt.executeQuery();
-					
+
 					ResultSetMetaData rsmd = rs.getMetaData();
 		            int numColumns = rsmd.getColumnCount();
 		            String[] headerContent = new String[numColumns];
-		    		
+
 		         // Get the column names; column indices start from 1
 	                for (int i=1; i<numColumns+1; i++) {
 	                    String columnName = rsmd.getColumnName(i);
 	                    headerContent[i-1] = columnName;
 	                }
-	        		//Are we adding to the existing list?	
+	        		//Are we adding to the existing list?
 	        		if (ret == null) {
 	        			ret = new HashMap<String,ArrayList<String[]>>();
 	        			ArrayList<String[]> head = new ArrayList<String[]>();
 	        			head.add(headerContent);
 	        			ret.put("Head", head);
 	        		}
-	        		
+
 					while (rs.next()) {
 						String[] rowContent = new String[numColumns];
 						//TODO: Check for idseq and add the link
 						for (int i = 1; i < numColumns+1; i++)
 							rowContent[i-1] = rs.getString(i);
-						
+
 						usedInForms.add(rowContent);
 					}
-				
+
 				ret.put("Content", usedInForms);
 				}
 			}
@@ -2704,10 +2719,10 @@ public class SearchServlet extends CurationServlet {
 			rs = SQLHelper.closeResultSet(rs);
             pstmt = SQLHelper.closePreparedStatement(pstmt);
 		}
-		
+
 		return ret;
 	}
-    
+
     public HashMap<String,ArrayList<String[]>> getVDAssociatedForms(String vpIDseq, HashMap<String,ArrayList<String[]>> ret){
 
 		String idseqString = "VD_IDSEQ";
@@ -2733,7 +2748,7 @@ public class SearchServlet extends CurationServlet {
            +" AND (VD."+idseqString+" = ?)"
            +" AND (VD.VD_IDSEQ = DE.VD_IDSEQ)"
            +" order by crf.long_name desc";
-		
+
 		String sqlE = "SELECT DISTINCT " +
 			"crf.long_name as \"Form Name\", " +
 			"crf.public_id as \"Pub. Id\", " +
@@ -2754,12 +2769,12 @@ public class SearchServlet extends CurationServlet {
 	       +" AND (CRF.CREATED_BY = UA.UA_NAME)"
 	       +" AND (VDPVS."+idseqString+" = ?)"
 	       +" order by crf.long_name desc";
-			
+
 		ResultSet rs = null;
 		PreparedStatement pstmt = null;
-		
+
 		try {
-			
+
 			if (vpIDseq != null && !vpIDseq.equals("")) {
 				if (this.getConn() != null) {
 					pstmt = this
@@ -2770,33 +2785,33 @@ public class SearchServlet extends CurationServlet {
 					ArrayList<String[]> usedInForms = new ArrayList<String[]>();
 					// Now we are ready to call the function
 					rs = pstmt.executeQuery();
-					
+
 					ResultSetMetaData rsmd = rs.getMetaData();
 		            int numColumns = rsmd.getColumnCount();
 		            String[] headerContent = new String[numColumns];
-		    		
+
 		         // Get the column names; column indices start from 1
 	                for (int i=1; i<numColumns+1; i++) {
 	                    String columnName = rsmd.getColumnName(i);
 	                    headerContent[i-1] = columnName;
 	                }
-	        		//Are we adding to the existing list?	
+	        		//Are we adding to the existing list?
 	        		if (ret == null) {
 	        			ret = new HashMap<String,ArrayList<String[]>>();
 	        			ArrayList<String[]> head = new ArrayList<String[]>();
 	        			head.add(headerContent);
 	        			ret.put("Head", head);
 	        		}
-	        		
+
 					while (rs.next()) {
 						String[] rowContent = new String[numColumns];
 						//TODO: Check for idseq and add the link
 						for (int i = 1; i < numColumns+1; i++)
 							rowContent[i-1] = rs.getString(i);
-						
+
 						usedInForms.add(rowContent);
 					}
-				
+
 				ret.put("Content", usedInForms);
 				}
 			}
@@ -2806,12 +2821,12 @@ public class SearchServlet extends CurationServlet {
 			rs = SQLHelper.closeResultSet(rs);
             pstmt = SQLHelper.closePreparedStatement(pstmt);
 		}
-		
+
 		return ret;
 	}
-    
+
     public HashMap<String,ArrayList<String[]>> getDEAssociatedForms(String vpIDseq, HashMap<String,ArrayList<String[]>> ret){
-		
+
 		String sql = "SELECT DISTINCT " +
 				"crf.long_name as \"Form Name\", " +
 				"crf.public_id as \"Pub. Id\", " +
@@ -2830,11 +2845,11 @@ public class SearchServlet extends CurationServlet {
            +" AND (qc.DN_CRF_IDSEQ = crf.QC_IDSEQ)"
            +" AND (CRF.CREATED_BY = UA.UA_NAME)"
            +" order by crf.long_name desc";
-		
-		
+
+
 		ResultSet rs = null;
 		PreparedStatement pstmt = null;
-		
+
 		try {
 			if (vpIDseq != null && !vpIDseq.equals("")) {
 				if (this.getConn() != null) {
@@ -2846,32 +2861,32 @@ public class SearchServlet extends CurationServlet {
 					ArrayList<String[]> usedInForms = new ArrayList<String[]>();
 					// Now we are ready to call the function
 					rs = pstmt.executeQuery();
-					
+
 					ResultSetMetaData rsmd = rs.getMetaData();
 		            int numColumns = rsmd.getColumnCount();
 		            String[] headerContent = new String[numColumns];
-		    		
+
 		         // Get the column names; column indices start from 1
 	                for (int i=1; i<numColumns+1; i++) {
 	                    String columnName = rsmd.getColumnName(i);
 	                    headerContent[i-1] = columnName;
 	                }
-	        		//Are we adding to the existing list?	
+	        		//Are we adding to the existing list?
 	        		if (ret == null) {
 	        			ret = new HashMap<String,ArrayList<String[]>>();
 	        			ArrayList<String[]> head = new ArrayList<String[]>();
 	        			head.add(headerContent);
 	        			ret.put("Head", head);
 	        		}
-	        		
+
 					while (rs.next()) {
 						String[] rowContent = new String[numColumns];
 						for (int i = 1; i < numColumns+1; i++)
 							rowContent[i-1] = rs.getString(i);
-						
+
 						usedInForms.add(rowContent);
 					}
-				
+
 				ret.put("Content", usedInForms);
 				}
 			}
@@ -2881,7 +2896,7 @@ public class SearchServlet extends CurationServlet {
 			rs = SQLHelper.closeResultSet(rs);
             pstmt = SQLHelper.closePreparedStatement(pstmt);
 		}
-		
+
 		return ret;
 	}
 }

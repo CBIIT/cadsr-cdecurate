@@ -254,8 +254,22 @@ public class ValueDomainServlet extends CurationServlet
     {
         //TestUtil.dumpAllHttpRequests("ValueDomainServlet.java: JR1024 pv tab is clicked in vd - doEditVDActions()<<<", m_classReq);
         HttpSession session = m_classReq.getSession();
+        boolean hasSuspectPerameter = false;
+
         //begin GF7680
         String workflowStatus = /* app scan fix */ StringUtil.cleanJavascriptAndHtml( ( String ) m_classReq.getParameter( "selStatus" ) );
+        // CURATNTOOL-1107  The app scan only shows this one for this method, but others may still need to be fixed, so, set a boolean here rather than throw Exception right here.
+        if( (workflowStatus != null ) && ( !StringUtil.isHtmlAndScriptClean( workflowStatus ) ) )
+        {
+            logger.error( "Bad value for UISearchType[" + workflowStatus + "]" );
+            hasSuspectPerameter = true;
+        }
+
+        if( hasSuspectPerameter )
+        {
+            throw new Exception( "Input from client contains characters or combinations of characters that are not allowed because of security concerns." );
+        }
+
         session.setAttribute( "selStatus", workflowStatus );
         //end GF7680
         String sMenuAction = /* app scan fix */ StringUtil.cleanJavascriptAndHtml( ( String ) m_classReq.getParameter( "MenuAction" ) );
@@ -373,12 +387,12 @@ public class ValueDomainServlet extends CurationServlet
      */
     private void doChangeVDNameType() throws Exception
     {
-        boolean hasSuspectPeramater = false;
+        boolean hasSuspectPerameter = false;
+
         // CURATNTOOL-1107
-        if( ( m_classReq.getParameter( "txtPreferredName" ) != null ) && ( !StringUtil.isHtmlAndScriptClean( m_classReq.getParameter( "txtPreferredName" ) ) ) )
+        if( ! StringUtil.isValidParmeter(  m_classReq, "txtPreferredName"))
         {
-            logger.warn( "Bad value for txtPreferredName[" + m_classReq.getParameter( "txtPreferredName" ) + "]" );
-            hasSuspectPeramater = true;
+            hasSuspectPerameter = true;
         }
 
         HttpSession session = m_classReq.getSession();
@@ -395,7 +409,7 @@ public class ValueDomainServlet extends CurationServlet
         // get the existing preferred name to make sure earlier typed one is saved in the user
         String sPrefName = null;
         // CURATNTOOL-1107
-        if( !hasSuspectPeramater )
+        if( !hasSuspectPerameter )
         {
             sPrefName = StringUtil.cleanJavascriptAndHtml( ( String ) m_classReq.getParameter( "txtPreferredName" ) );
         }
@@ -2386,7 +2400,7 @@ public class ValueDomainServlet extends CurationServlet
         {
             HttpSession session = m_classReq.getSession();
             VD_Bean VDBean = ( VD_Bean ) session.getAttribute( "oldVDBean" );
-            //clear related the session attributes 
+            //clear related the session attributes
             clearBuildingBlockSessionAttributes( m_classReq, m_classRes );
             String sVDID = VDBean.getVD_VD_IDSEQ();
             Vector vList = new Vector();

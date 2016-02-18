@@ -33,7 +33,7 @@ import org.apache.log4j.Logger;
 
 /**
  * @author lhebel
- * 
+ *
  */
 public class DesDEServlet
 {
@@ -43,7 +43,7 @@ public class DesDEServlet
         // Don't need to keep UserBean, signature includes argument for consistency
         // with other Servlet classes.
     }
-    
+
     private String doOpen(HttpServletRequest req, HttpServletResponse res)
     {
         HttpSession session = req.getSession();
@@ -54,7 +54,7 @@ public class DesDEServlet
 
         return "/EditDesignateDEPage.jsp";
     }
-    
+
     private void doEditNothing(HttpSession session, GetACSearch getACSearch)
     {
         // logger.debug("clearing designate de " + sAction);
@@ -84,7 +84,7 @@ public class DesDEServlet
 //            Vector vAlt = getACSearch.doRefDocSearch(deID, "ALL TYPES", "open");
         }
     }
-    
+
     private void doEditCreate(HttpServletRequest req, HttpServletResponse res, String sAction, HttpSession session) throws Exception
     {
         // logger.debug("inserting data");
@@ -95,7 +95,7 @@ public class DesDEServlet
 
     /**
      * adds alternate names to the vectors
-     * 
+     *
      * @param req
      * @throws java.lang.Exception
      */
@@ -195,7 +195,7 @@ public class DesDEServlet
 
     /**
      * adds reference documents to the vectors
-     * 
+     *
      * @param req
      * @throws java.lang.Exception
      */
@@ -297,7 +297,7 @@ public class DesDEServlet
 
     /**
      * removes alternate names from the vectors
-     * 
+     *
      * @param req
      * @throws java.lang.Exception
      */
@@ -369,7 +369,7 @@ public class DesDEServlet
 
     /**
      * removes reference documents from the vectors
-     * 
+     *
      * @param req
      * @throws java.lang.Exception
      */
@@ -440,7 +440,7 @@ public class DesDEServlet
 
     /**
      * adds and removes alternate names and reference documents from the vectors
-     * 
+     *
      * @param req
      * @param pageAct
      * @throws java.lang.Exception
@@ -470,7 +470,7 @@ public class DesDEServlet
             DataManager.setAttribute(session, _beanDE, deBean);
         }
     }
-    
+
     private String doEditOpen(HttpServletRequest req, HttpServletResponse res, String dispType, String sAction, HttpSession session)
     {
         String sAC = (String) session.getAttribute("dispACType");
@@ -479,22 +479,29 @@ public class DesDEServlet
         if (sAction.equalsIgnoreCase("open for Reference Documents"))
             dispType = "Reference Documents";
         _servlet.doMarkACBeanForAltRef(req, res, sAC, "all", "openAR");
-        
+
         return dispType;
     }
-    
+
     private int doEditAction(HttpServletRequest req, HttpServletResponse res, HttpSession session) throws Exception
     {
         GetACSearch getACSearch = new GetACSearch(req, res, _servlet);
 
         String dispType = StringUtil.cleanJavascriptAndHtml((String) req.getParameter("pageDisplayType"));
+        // CURATNTOOL-1107
+        if( (dispType != null ) && ( !StringUtil.isHtmlAndScriptClean( dispType ) ) )
+        {
+            logger.error( "Bad value for pageDisplayType[" + dispType + "]" );
+            throw new Exception( "Input from client contains characters or combinations of characters that are not allowed because of security concerns." );
+        }
+
         if (dispType == null)
             dispType = "";
 
         String sAction = (String) req.getParameter("pageAction");
         if (sAction == null)
             sAction = "";
-        
+
         int forward = -1;
         if (sAction.equals("") || sAction.equals("clearBoxes") || sAction.equals("nothing"))
         {
@@ -534,7 +541,7 @@ public class DesDEServlet
         req.setAttribute("displayType", dispType);
         if (forward == -1 && dispType.equals("Designation"))
             forward = 1;
-        
+
         return forward;
     }
 
@@ -569,20 +576,20 @@ public class DesDEServlet
      * The doDesignateDEActions method handles DesignatedDE actions of the request. Called from 'service' method where
      * reqType is 'DesignatedDE' Calls 'ValidateDEC' if the action is Validate or submit. Calls 'doSuggestionDEC' if the
      * action is open EVS Window.
-     * 
+     *
      * @param req
      *            The HttpServletRequest from the client
      * @param res
      *            The HttpServletResponse back to the client
      * @param sOrigin
      *            String origin action
-     * 
+     *
      * @throws Exception
      */
     public void doAction(HttpServletRequest req, HttpServletResponse res, String sOrigin) throws Exception
     {
         String jsp;
-        
+
         // do the open designate page action
         if (sOrigin.equals("Open")) // get the list of checked DEs from the page
         {

@@ -14,6 +14,8 @@ import org.apache.log4j.Logger;
 import org.owasp.html.PolicyFactory;
 import org.owasp.html.Sanitizers;
 
+import javax.servlet.http.HttpServletRequest;
+
 public class StringUtil {
 
 	private static final Logger logger = Logger.getLogger(StringUtil.class
@@ -183,14 +185,13 @@ public class StringUtil {
 
 	/**
 	 * This method is added to address XSS issue discovered during app scan.
-	 * 
+	 *
 	 * @param stringToClean
 	 * @return
 	 */
 	public static String cleanJavascriptAndHtml(String stringToClean) {
 		if (stringToClean == null)
 			return stringToClean;
-
 //		stringToClean = stringToClean.replaceAll("alert\\(", "(");
 //		stringToClean = stringToClean.replaceAll("<script", "<");
 //		stringToClean = stringToClean.replaceAll("</script", "</");
@@ -201,7 +202,6 @@ public class StringUtil {
 
 		//JR1107
 		stringToClean = sanitizeHTML(stringToClean);
-		
 		return stringToClean;
 	}
 
@@ -257,8 +257,8 @@ public class StringUtil {
 	}
 
 	/**
-	 * Validate the ID sequence 
-	 * 
+	 * Validate the ID sequence
+	 *
 	 * @param idSequenceToCheck
 	 * @return
 	 */
@@ -268,7 +268,7 @@ public class StringUtil {
 
 	/**
 	 * Validate the search parameter type
-	 * 
+	 *
 	 * @param parameterTypeToCheck
 	 * @return
 	 */
@@ -280,7 +280,7 @@ public class StringUtil {
 
 	/**
 	 * Validate the Public Id of a CDE Element
-	 * 
+	 *
 	 * @param publicIdToCheck
 	 * @return
 	 */
@@ -362,4 +362,15 @@ public class StringUtil {
 		}
 		return true;
 	}
+
+   public static boolean isValidParmeter(HttpServletRequest req, String parameter )
+   {
+       boolean isValid = true;
+       if( ( req.getParameter( parameter ) != null ) && ( !StringUtil.isHtmlAndScriptClean( req.getParameter( parameter ) ) ) )
+       {
+           logger.error( "Bad value for " + parameter + " [" + req.getParameter( parameter ) + "]" );
+           isValid = false;
+       }
+        return isValid;
+   }
 }

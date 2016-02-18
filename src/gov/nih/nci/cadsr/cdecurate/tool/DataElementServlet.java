@@ -133,6 +133,12 @@ public class DataElementServlet extends CurationServlet
         String sOriginAction = ( String ) session.getAttribute( "originAction" );
         // save DDE info every case except back from DEComp
         String ddeType = StringUtil.cleanJavascriptAndHtml( m_classReq.getParameter( "selRepType" ) );
+        // CURATNTOOL-1107
+        if( (ddeType != null ) && ( !StringUtil.isHtmlAndScriptClean( ddeType ) ) )
+        {
+            logger.error( "Bad value for selRepType[" + ddeType + "]" );
+            throw new Exception( "Input from client contains characters or combinations of characters that are not allowed because of security concerns." );
+        }
         if( ddeType != null && !ddeType.equals( "" ) )
             doUpdateDDEInfo();
         // handle all page actions
@@ -241,8 +247,6 @@ public class DataElementServlet extends CurationServlet
      * open EVS Window. Calls 'doOpenDECForEdit' if the action is Edit DEC from EditDE Page. Calls 'doOpenVDForEdit' if
      * the action is Edit VD from EditDE Page.
      *
-     * @param req The HttpServletRequest from the client
-     * @param res The HttpServletResponse back to the client
      * @throws Exception
      */
     private void doEditDEActions() throws Exception
@@ -262,6 +266,13 @@ public class DataElementServlet extends CurationServlet
             sOriginAction = "";
         // save DDE info every case except back from DEComp
         String ddeType = StringUtil.cleanJavascriptAndHtml( m_classReq.getParameter( "selRepType" ) );
+        // CURATNTOOL-1107  The app scan only shows this one for this method, but others may still need to be fixed, so set a boolean here rather than throw Exception right here.
+        if( (ddeType != null ) && ( !StringUtil.isHtmlAndScriptClean( ddeType ) ) )
+        {
+            logger.error( "Bad value for selRepType[" + ddeType + "]" );
+            throw new Exception( "Input from client contains characters or combinations of characters that are not allowed because of security concerns." );
+        }
+
         String oldDDEType = ( String ) session.getAttribute( "sRepType" );
         // update the dde info if new one or if old one if not block edit
         if( !sOriginAction.equals( "BlockEditDE" )
@@ -386,12 +397,12 @@ public class DataElementServlet extends CurationServlet
      */
     public AC_Bean getACNames( String nameAct, String sOrigin, AC_Bean pageAC )
     {
-        boolean hasSuspectPeramater = false;
+        boolean hasSuspectPerameter = false;
         // CURATNTOOL-1107
         if( ( m_classReq.getParameter( "txtPreferredName" ) != null ) && ( !StringUtil.isHtmlAndScriptClean( m_classReq.getParameter( "txtPreferredName" ) ) ) )
         {
             logger.warn( "Bad value for txtPreferredName[" + m_classReq.getParameter( "txtPreferredName" ) + "]" );
-            hasSuspectPeramater = true;
+            hasSuspectPerameter = true;
         }
 
 
@@ -416,7 +427,7 @@ public class DataElementServlet extends CurationServlet
 
             String sPrefName = null;
             // CURATNTOOL-1107
-            if( !hasSuspectPeramater )
+            if( !hasSuspectPerameter )
             {
                 sPrefName = StringUtil.cleanJavascriptAndHtml( ( String ) m_classReq.getParameter( "txtPreferredName" ) );
             }
@@ -541,12 +552,12 @@ public class DataElementServlet extends CurationServlet
     {
         HttpSession session = m_classReq.getSession();
 
-        boolean hasSuspectPeramater = false;
+        boolean hasSuspectPerameter = false;
         // CURATNTOOL-1107
         if( ( m_classReq.getParameter( "txtPreferredName" ) != null ) && ( !StringUtil.isHtmlAndScriptClean( m_classReq.getParameter( "txtPreferredName" ) ) ) )
         {
             logger.warn( "Bad value for txtPreferredName[" + m_classReq.getParameter( "txtPreferredName" ) + "]" );
-            hasSuspectPeramater = true;
+            hasSuspectPerameter = true;
         }
 
 
@@ -564,7 +575,7 @@ public class DataElementServlet extends CurationServlet
         // get the existing preferred name to make sure earlier typed one is saved in the user
         String sPrefName = null;
         // CURATNTOOL-1107
-        if( !hasSuspectPeramater )
+        if( !hasSuspectPerameter )
         {
             sPrefName = StringUtil.cleanJavascriptAndHtml( ( String ) m_classReq.getParameter( "txtPreferredName" ) );
         }
@@ -1335,12 +1346,6 @@ public class DataElementServlet extends CurationServlet
 
             for( int i = 0; i < ( vBERows.size() ); i++ )
             {
-                System.out.println( "vBERows[" + i + "]: " + vBERows.get( i ).toString() );
-            }
-
-
-            for( int i = 0; i < ( vBERows.size() ); i++ )
-            {
                 DE_Bean DEBeanSR = new DE_Bean();
                 DEBeanSR = ( DE_Bean ) vBERows.elementAt( i );
                 // udpate the status message with DE name and ID
@@ -1499,6 +1504,7 @@ public class DataElementServlet extends CurationServlet
     @SuppressWarnings( "unchecked" )
     private void doUpdateDDEInfo() throws Exception
     {
+        boolean hasSuspectPerameter = false;
         HttpSession session = m_classReq.getSession();
         // Create DDE from CreateDE page, save existed DEComp to session first, then goto CreateDE page for DDE
         // get exist vDEComp vectors from jsp
@@ -1557,6 +1563,29 @@ public class DataElementServlet extends CurationServlet
         String sRule = StringUtil.cleanJavascriptAndHtml( ( String ) m_classReq.getParameter( "DDERule" ) );
         String sMethod = StringUtil.cleanJavascriptAndHtml( ( String ) m_classReq.getParameter( "DDEMethod" ) );
         String sConcatChar = StringUtil.cleanJavascriptAndHtml( ( String ) m_classReq.getParameter( "DDEConcatChar" ) );
+
+        // CURATNTOOL-1107
+        if( !StringUtil.isValidParmeter( m_classReq, "selRepType" ) )
+        {
+            hasSuspectPerameter = true;
+        }
+        if( !StringUtil.isValidParmeter( m_classReq, "DDERule" ) )
+        {
+            hasSuspectPerameter = true;
+        }
+        if( !StringUtil.isValidParmeter( m_classReq, "DDEMethod" ) )
+        {
+            hasSuspectPerameter = true;
+        }
+        if( !StringUtil.isValidParmeter( m_classReq, "DDEConcatChar" ) )
+        {
+            hasSuspectPerameter = true;
+        }
+        if( hasSuspectPerameter )
+        {
+            throw new Exception( "Input from client contains characters or combinations of characters that are not allowed because of security concerns." );
+        }
+
         if( sRepType != null )
             DataManager.setAttribute( session, "sRepType", sRepType );
         else

@@ -15,15 +15,15 @@ import gov.nih.nci.cadsr.common.StringUtil;
 
 /**
   * https://tracker.nci.nih.gov/browse/CURATNTOOL-1107
-  * 
+  *
   * Source: https://github.com/owasp/java-html-sanitizer
-  * 
+  *
   */
 public class JR1107 {
 	private static String userId;
 	private static String password;
 //	private static Connection conn;
-	
+
 	@BeforeClass
 	public static void initDB() {
 //		userId = System.getProperty("u");

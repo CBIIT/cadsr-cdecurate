@@ -1404,7 +1404,7 @@ public class GetACSearch implements Serializable
                     //If offset exists then apply it.
                     if( iOffset > 0 )
                         rs.absolute( iOffset );
-                    // loop through the resultSet and add them to the bean                
+                    // loop through the resultSet and add them to the bean
                     while( rs.next() && g < recordsDisplayed )
                     {
 
@@ -1759,7 +1759,7 @@ public class GetACSearch implements Serializable
                     int g = 0;
                     recordsDisplayed = getInt( sRecordsDisplayed );
 
-                    // loop through the resultSet and add them to the bean                
+                    // loop through the resultSet and add them to the bean
                     while( rs.next() && g < recordsDisplayed )
                     {
                         g = g + 1;
@@ -1821,7 +1821,7 @@ public class GetACSearch implements Serializable
 //							 DECBean.setDEC_REG_STATUS("REG_STATUS");//GF32398
 //						}
 //                        if (rs.getString("ar_idseq") != null) {
-                        DECBean.setDEC_REG_STATUS_IDSEQ( rs.getString( "ar_idseq" ) );//GF32398	
+                        DECBean.setDEC_REG_STATUS_IDSEQ( rs.getString( "ar_idseq" ) );//GF32398
 //						}else{
 //							 DECBean.setDEC_REG_STATUS_IDSEQ("REG_STATUS_ID");//GF32398
 //						}
@@ -1959,7 +1959,7 @@ public class GetACSearch implements Serializable
                     int g = 0;
                     recordsDisplayed = getInt( sRecordsDisplayed );
 
-                    // loop through the resultSet and add them to the bean                
+                    // loop through the resultSet and add them to the bean
                     while( rs.next() && g < recordsDisplayed )
                     {
                         g = g + 1;
@@ -2225,7 +2225,7 @@ public class GetACSearch implements Serializable
                     int g = 0;
                     recordsDisplayed = getInt( sRecordsDisplayed );
 
-                    // loop through the resultSet and add them to the bean                
+                    // loop through the resultSet and add them to the bean
                     while( rs.next() && g < recordsDisplayed )
                     {
                         g = g + 1;
@@ -3875,7 +3875,7 @@ public class GetACSearch implements Serializable
                 int g = 0;
                 recordsDisplayed = getInt( sRecordsDisplayed );
                 EVSSearch evs = new EVSSearch( m_classReq, m_classRes, m_servlet );
-                // loop through the resultSet and add them to the bean                
+                // loop through the resultSet and add them to the bean
                 while( rs.next() && g < recordsDisplayed )
                 {
                     g = g + 1;
@@ -4003,7 +4003,7 @@ public class GetACSearch implements Serializable
                 int g = 0;
                 recordsDisplayed = getInt( sRecordsDisplayed );    //JT sRecordsDisplayed can be NULL due to empty sSearchAC!!!
 
-                // loop through the resultSet and add them to the bean                
+                // loop through the resultSet and add them to the bean
                 while( rs.next() && g < recordsDisplayed )
                 {
                     g = g + 1;
@@ -4293,7 +4293,7 @@ public class GetACSearch implements Serializable
             String sSearchAC = ( String ) session.getAttribute( "searchAC" );
             Vector vSRows = ( Vector ) session.getAttribute( "vSelRows" );
             /*if(sSearchAC.equals("ValueMeaning"))
-            {	
+            {
             Vector vRSel = (Vector) session.getAttribute("vACSearch");
             vSRows=vRSel;
             session.setAttribute("vSelRows", vRSel);
@@ -4337,24 +4337,23 @@ public class GetACSearch implements Serializable
 
 
             // ORIG if (unCheckedRowId != null && !(unCheckedRowId == ""))
-            if( !(unCheckedRowId == ""))
+            if( !( unCheckedRowId == "" ) )
             {
-                System.out.println("!(unCheckedRowId == \"\")");
+                System.out.println( "!(unCheckedRowId == \"\")" );
             }
             else
             {
-                System.out.println(" NOT  !(unCheckedRowId == \"\")");
+                System.out.println( " NOT  !(unCheckedRowId == \"\")" );
             }
 
-            if( unCheckedRowId != null)
+            if( unCheckedRowId != null )
             {
-                System.out.println("unCheckedRowId != null");
+                System.out.println( "unCheckedRowId != null" );
             }
             else
             {
-                System.out.println(" NOT  unCheckedRowId != null");
+                System.out.println( " NOT  unCheckedRowId != null" );
             }
-
 
 
             if( ( unCheckedRowId != null ) && ( !( unCheckedRowId.isEmpty() ) ) )
@@ -6764,7 +6763,7 @@ public class GetACSearch implements Serializable
                 if( vSelAttr.contains( "Conceptual Domain" ) )
                     vResult = addMultiRecordConDomain( PVBean.getPV_CONCEPTUAL_DOMAIN(), PVBean
                             .getPV_SHORT_MEANING(), vResult );
-                
+
                 /*
                  * EVS_Bean vmCon = PVBean.getVM_CONCEPT(); if (vmCon == null) vmCon = new EVS_Bean(); if
                  * (vSelAttr.contains("EVS Identifier")) vResult.addElement(vmCon.getCONCEPT_IDENTIFIER()); if
@@ -7480,6 +7479,8 @@ public class GetACSearch implements Serializable
      */
     public void getACSearchForCreate( HttpServletRequest req, HttpServletResponse res, boolean isIntSearch )
     {
+        boolean hasSuspectPerameter = false;
+
         try
         {
             HttpSession session = req.getSession();
@@ -7745,7 +7746,21 @@ public class GetACSearch implements Serializable
             DataManager.setAttribute( session, "creCreator", sCreator );
             if( ( sCreator == null ) || sCreator.equals( "allUsers" ) )
                 sCreator = "";
+
             String sUISearchType = ( String ) req.getAttribute( "UISearchType" );
+            // CURATNTOOL-1107  The app scan only shows this one for this method, but others may still need to be fixed, so set a boolean here rather than throw Exception right here.
+            if( !StringUtil.isValidParmeter( req, "UISearchType" ) )
+            {
+                logger.warn( "Bad value for UISearchType[" + sUISearchType + "]" );
+                hasSuspectPerameter = true;
+            }
+
+            if( hasSuspectPerameter )
+            {
+                throw new Exception( "Input from client contains characters or combinations of characters that are not allowed because of security concerns." );
+            }
+
+
             if( sUISearchType == null || sUISearchType.equals( "nothing" ) )
                 sUISearchType = "term";
             //Retrieve result offset
@@ -8204,6 +8219,8 @@ public class GetACSearch implements Serializable
      */
     public void getBlockSortedResult( HttpServletRequest req, HttpServletResponse res, String ACType )
     {
+        boolean hasSuspectPerameter = false;
+
         try
         {
             HttpSession session = req.getSession();
@@ -8213,7 +8230,21 @@ public class GetACSearch implements Serializable
                 DataManager.setAttribute( session, "blockSortType", sSortType );
             String sComponent = "";
             sComponent = ( String ) session.getAttribute( "creSearchAC" );
+
+
             String sUISearchType = ( String ) req.getParameter( "UISearchType" );
+            // CURATNTOOL-1107  The app scan only shows this one for this method, but others may still need to be fixed, so set a boolean here rather than throw Exception right here.
+            if( ( sUISearchType != null ) && ( !StringUtil.isHtmlAndScriptClean( sUISearchType ) ) )
+            {
+                logger.warn( "Bad value for UISearchType[" + sUISearchType + "]" );
+                hasSuspectPerameter = true;
+            }
+
+            if( hasSuspectPerameter )
+            {
+                throw new Exception( "Input from client contains characters or combinations of characters that are not allowed because of security concerns." );
+            }
+
             req.setAttribute( "UISearchType", sUISearchType );
             EVSSearch evs = new EVSSearch( m_classReq, m_classRes, m_servlet );
             if( ( !sComponent.equals( "" ) ) && ( sComponent != null ) )
@@ -9439,6 +9470,8 @@ public class GetACSearch implements Serializable
      */
     public void doSearchEVS( HttpServletRequest req, HttpServletResponse res ) throws Exception
     {
+        boolean hasSuspectPerameter = false;
+
         try
         {
             HttpSession session = req.getSession();
@@ -9461,7 +9494,20 @@ public class GetACSearch implements Serializable
             String sRetired = ( String ) req.getParameter( "rRetired" );
             if( sRetired == null )
                 sRetired = "Exclude";
+
             String sUISearchType = ( String ) req.getAttribute( "UISearchType" );
+            // CURATNTOOL-1107  The app scan only shows this one for this method, but others may still need to be fixed, so set a boolean here rather than throw Exception right here.
+            if( ( sUISearchType != null ) && ( !StringUtil.isHtmlAndScriptClean( sUISearchType ) ) )
+            {
+                logger.warn( "Bad value for UISearchType[" + sUISearchType + "]" );
+                hasSuspectPerameter = true;
+            }
+
+            if( hasSuspectPerameter )
+            {
+                throw new Exception( "Input from client contains characters or combinations of characters that are not allowed because of security concerns." );
+            }
+
             if( sUISearchType == null || sUISearchType.equals( "nothing" ) )
                 sUISearchType = "term";
             String sMetaLimit = ( String ) req.getParameter( "listMetaLimit" );
@@ -10079,7 +10125,7 @@ public class GetACSearch implements Serializable
                     // No action type....
                 }
 
-                // capture the duration                
+                // capture the duration
                 vCheckList = new Vector();
                 for( int m = 0; m < ( vSRows.size() ); m++ )
                 {

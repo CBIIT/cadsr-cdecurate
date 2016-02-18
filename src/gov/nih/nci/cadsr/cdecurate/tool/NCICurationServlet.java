@@ -179,7 +179,7 @@ public class NCICurationServlet extends HttpServlet
                 /*
 				 * Per GForge#30445, updated HelpURL to retrieve
 				 * CurationToolHelpURL from a properties file
-				 * 
+				 *
 				 * if(connected) { String helpURL = curser.getHelpURL(con);
 				 * HelpURL.setCurationToolHelpURL(helpURL); }
 				 */
@@ -208,10 +208,12 @@ public class NCICurationServlet extends HttpServlet
      */
     public void service( HttpServletRequest req, HttpServletResponse res )
     {
-        HttpSession session1 = req.getSession();
-        Enumeration attributeNames = session1.getAttributeNames();
+        boolean hasSuspectPerameter = false;
+
     	/*
     	System.out.println("NCICurationServlet:begin -------------------------------------------------");
+    	HttpSession session1 = req.getSession();
+    	Enumeration attributeNames = session1.getAttributeNames();
     	String name = null;
     	String value = null;
     	while (attributeNames.hasMoreElements()) {
@@ -239,6 +241,25 @@ public class NCICurationServlet extends HttpServlet
         try
         {
             String reqType = StringUtil.cleanJavascriptAndHtml( req.getParameter( "reqType" ) );
+            // CURATNTOOL-1107
+            if( ( reqType != null ) && ( !StringUtil.isHtmlAndScriptClean( reqType ) ) )
+            {
+                logger.error( "Bad value for reqType[" + reqType + "]" );
+                hasSuspectPerameter = true;
+            }
+
+           if( ( req.getParameter( "Version" ) != null ) && ( !StringUtil.isHtmlAndScriptClean( req.getParameter( "Version" ) ) ) )
+            {
+                logger.error( "Bad value for Version[" + req.getParameter( "Version" ) + "]" );
+                hasSuspectPerameter = true;
+            }
+
+           if( ( req.getParameter( "selVDText" ) != null ) && ( !StringUtil.isHtmlAndScriptClean( req.getParameter( "selVDText" ) ) ) )
+            {
+                logger.error( "Bad value for selVDText[" + req.getParameter( "selVDText" ) + "]" );
+                hasSuspectPerameter = true;
+            }
+
 
             HttpSession session = req.getSession();
             String menuAction = ( String ) session.getAttribute( Session_Data.SESSION_MENU_ACTION );
@@ -262,32 +283,40 @@ public class NCICurationServlet extends HttpServlet
             }
             // add the forwarding to request to session (to go after login)
             String forwardReq = ( String ) session.getAttribute( "forwardReq" );
+
             if( forwardReq == null || !forwardReq.equals( "login" ) )
                 session.setAttribute( "forwardReq", reqType );
+
             if( forwardReq == null && reqType.equals( "login" ) )
                 session.setAttribute( "directLogin", "yes" );
 
             ACRequestTypes acrt = null;
             CurationServlet curObj = null;
-            try
+
+            // If we got a bad parameter skipping this part will give us a null acrt, which "should" let this method finish harmlessly.
+            if( ! hasSuspectPerameter ) // JIRA CURATNTOOL-1107
             {
-                acrt = ACRequestTypes.valueOf( reqType );
-                if( acrt != null )
+                try
                 {
-                    String className = acrt.getClassName();
-                    curObj = ( CurationServlet ) Class.forName( className ).newInstance();
-                    curObj.init( req, res, this.getServletContext() );
-                    curObj.get_m_conn();
-                    curObj.execute( acrt );
+                    acrt = ACRequestTypes.valueOf( reqType );
+                    if( acrt != null )
+                    {
+                        String className = acrt.getClassName();
+                        curObj = ( CurationServlet ) Class.forName( className ).newInstance();
+                        curObj.init( req, res, this.getServletContext() );
+                        curObj.get_m_conn();
+                        curObj.execute( acrt );
+                    }
+                } catch( RuntimeException e )
+                {
+                    //logger.info(e.toString(), e);
+                } finally
+                {
+                    if( curObj != null )
+                        curObj.destroy();
                 }
-            } catch( RuntimeException e )
-            {
-                //logger.info(e.toString(), e);
-            } finally
-            {
-                if( curObj != null )
-                    curObj.destroy();
             }
+
             if( acrt == null )
             {
                 CurationServlet curser = new CurationServlet( req, res, this.getServletContext() );
@@ -299,7 +328,7 @@ public class NCICurationServlet extends HttpServlet
         }
 //        logger.debug("service response time " + clock.toStringLifeTime());
 //		if(TimeWatch.ENABLED) {
-//			long passedTimeInSeconds = watch.time(TimeUnit.SECONDS);	
+//			long passedTimeInSeconds = watch.time(TimeUnit.SECONDS);
 //			//long passedTimeInMs = watch.time();
 //			System.out.println(this.getClass().getName() +":execute elapsed time in s = " + passedTimeInSeconds);
 //		}

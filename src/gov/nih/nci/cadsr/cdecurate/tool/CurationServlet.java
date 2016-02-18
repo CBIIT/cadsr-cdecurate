@@ -6,6 +6,7 @@
 package gov.nih.nci.cadsr.cdecurate.tool;
 
 // import files
+
 import gov.nih.nci.cadsr.cdecurate.common.Security;
 import gov.nih.nci.cadsr.cdecurate.database.SQLHelper;
 import gov.nih.nci.cadsr.cdecurate.ui.AltNamesDefsServlet;
@@ -46,22 +47,113 @@ import javax.servlet.http.HttpSession;
 import javax.sql.DataSource;
 
 
-
-
-
 //import oracle.jdbc.driver.OracleTypes;
-import oracle.jdbc.OracleTypes;		//GF30779
+import oracle.jdbc.OracleTypes;        //GF30779
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 
 /**
  * The CurationServlet is the main servlet for communicating between the client and the server.
- * <P>
+ * <p/>
  *
  * @author Joe Zhou, Sumana Hegde, Tom Phillips, Jesse McKean
  * @version 3.0
- *
+ * <p/>
+ * <p/>
+ * The CaCORE Software License, Version 3.0 Copyright 2002-2005 ScenPro, Inc. ("ScenPro") Copyright Notice. The software
+ * subject to this notice and license includes both human readable source code form and machine readable, binary, object
+ * code form ("the CaCORE Software"). The CaCORE Software was developed in conjunction with the National Cancer
+ * Institute ("NCI") by NCI employees and employees of SCENPRO. To the extent government employees are authors, any
+ * rights in such works shall be subject to Title 17 of the United States Code, section 105. This CaCORE Software
+ * License (the "License") is between NCI and You. "You (or "Your") shall mean a person or an entity, and all other
+ * entities that control, are controlled by, or are under common control with the entity. "Control" for purposes of this
+ * definition means (i) the direct or indirect power to cause the direction or management of such entity, whether by
+ * contract or otherwise, or (ii) ownership of fifty percent (50%) or more of the outstanding shares, or (iii)
+ * beneficial ownership of such entity. This License is granted provided that You agree to the conditions described
+ * below. NCI grants You a non-exclusive, worldwide, perpetual, fully-paid-up, no-charge, irrevocable, transferable and
+ * royalty-free right and license in its rights in the CaCORE Software to (i) use, install, access, operate, execute,
+ * copy, modify, translate, market, publicly display, publicly perform, and prepare derivative works of the CaCORE
+ * Software; (ii) distribute and have distributed to and by third parties the CaCORE Software and any modifications and
+ * derivative works thereof; and (iii) sublicense the foregoing rights set out in (i) and (ii) to third parties,
+ * including the right to license such rights to further third parties. For sake of clarity, and not by way of
+ * limitation, NCI shall have no right of accounting or right of payment from You or Your sublicensees for the rights
+ * granted under this License. This License is granted at no charge to You. 1. Your redistributions of the source code
+ * for the Software must retain the above copyright notice, this list of conditions and the disclaimer and limitation of
+ * liability of Article 6, below. Your redistributions in object code form must reproduce the above copyright notice,
+ * this list of conditions and the disclaimer of Article 6 in the documentation and/or other materials provided with the
+ * distribution, if any. 2. Your end-user documentation included with the redistribution, if any, must include the
+ * following acknowledgment: "This product includes software developed by SCENPRO and the National Cancer Institute." If
+ * You do not include such end-user documentation, You shall include this acknowledgment in the Software itself,
+ * wherever such third-party acknowledgments normally appear. 3. You may not use the names "The National Cancer
+ * Institute", "NCI" "ScenPro, Inc." and "SCENPRO" to endorse or promote products derived from this Software. This
+ * License does not authorize You to use any trademarks, service marks, trade names, logos or product names of either
+ * NCI or SCENPRO, except as required to comply with the terms of this License. 4. For sake of clarity, and not by way
+ * of limitation, You may incorporate this Software into Your proprietary programs and into any third party proprietary
+ * programs. However, if You incorporate the Software into third party proprietary programs, You agree that You are
+ * solely responsible for obtaining any permission from such third parties required to incorporate the Software into
+ * such third party proprietary programs and for informing Your sublicensees, including without limitation Your
+ * end-users, of their obligation to secure any required permissions from such third parties before incorporating the
+ * Software into such third party proprietary software programs. In the event that You fail to obtain such permissions,
+ * You agree to indemnify NCI for any claims against NCI by such third parties, except to the extent prohibited by law,
+ * resulting from Your failure to obtain such permissions. 5. For sake of clarity, and not by way of limitation, You may
+ * add Your own copyright statement to Your modifications and to the derivative works, and You may provide additional or
+ * different license terms and conditions in Your sublicenses of modifications of the Software, or any derivative works
+ * of the Software as a whole, provided Your use, reproduction, and distribution of the Work otherwise complies with the
+ * conditions stated in this License. 6. THIS SOFTWARE IS PROVIDED "AS IS," AND ANY EXPRESSED OR IMPLIED WARRANTIES,
+ * (INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY, NON-INFRINGEMENT AND FITNESS FOR A
+ * PARTICULAR PURPOSE) ARE DISCLAIMED. IN NO EVENT SHALL THE NATIONAL CANCER INSTITUTE, SCENPRO, OR THEIR AFFILIATES BE
+ * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED
+ * TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+ * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ * <p/>
+ * The CaCORE Software License, Version 3.0 Copyright 2002-2005 ScenPro, Inc. ("ScenPro") Copyright Notice. The software
+ * subject to this notice and license includes both human readable source code form and machine readable, binary, object
+ * code form ("the CaCORE Software"). The CaCORE Software was developed in conjunction with the National Cancer
+ * Institute ("NCI") by NCI employees and employees of SCENPRO. To the extent government employees are authors, any
+ * rights in such works shall be subject to Title 17 of the United States Code, section 105. This CaCORE Software
+ * License (the "License") is between NCI and You. "You (or "Your") shall mean a person or an entity, and all other
+ * entities that control, are controlled by, or are under common control with the entity. "Control" for purposes of this
+ * definition means (i) the direct or indirect power to cause the direction or management of such entity, whether by
+ * contract or otherwise, or (ii) ownership of fifty percent (50%) or more of the outstanding shares, or (iii)
+ * beneficial ownership of such entity. This License is granted provided that You agree to the conditions described
+ * below. NCI grants You a non-exclusive, worldwide, perpetual, fully-paid-up, no-charge, irrevocable, transferable and
+ * royalty-free right and license in its rights in the CaCORE Software to (i) use, install, access, operate, execute,
+ * copy, modify, translate, market, publicly display, publicly perform, and prepare derivative works of the CaCORE
+ * Software; (ii) distribute and have distributed to and by third parties the CaCORE Software and any modifications and
+ * derivative works thereof; and (iii) sublicense the foregoing rights set out in (i) and (ii) to third parties,
+ * including the right to license such rights to further third parties. For sake of clarity, and not by way of
+ * limitation, NCI shall have no right of accounting or right of payment from You or Your sublicensees for the rights
+ * granted under this License. This License is granted at no charge to You. 1. Your redistributions of the source code
+ * for the Software must retain the above copyright notice, this list of conditions and the disclaimer and limitation of
+ * liability of Article 6, below. Your redistributions in object code form must reproduce the above copyright notice,
+ * this list of conditions and the disclaimer of Article 6 in the documentation and/or other materials provided with the
+ * distribution, if any. 2. Your end-user documentation included with the redistribution, if any, must include the
+ * following acknowledgment: "This product includes software developed by SCENPRO and the National Cancer Institute." If
+ * You do not include such end-user documentation, You shall include this acknowledgment in the Software itself,
+ * wherever such third-party acknowledgments normally appear. 3. You may not use the names "The National Cancer
+ * Institute", "NCI" "ScenPro, Inc." and "SCENPRO" to endorse or promote products derived from this Software. This
+ * License does not authorize You to use any trademarks, service marks, trade names, logos or product names of either
+ * NCI or SCENPRO, except as required to comply with the terms of this License. 4. For sake of clarity, and not by way
+ * of limitation, You may incorporate this Software into Your proprietary programs and into any third party proprietary
+ * programs. However, if You incorporate the Software into third party proprietary programs, You agree that You are
+ * solely responsible for obtaining any permission from such third parties required to incorporate the Software into
+ * such third party proprietary programs and for informing Your sublicensees, including without limitation Your
+ * end-users, of their obligation to secure any required permissions from such third parties before incorporating the
+ * Software into such third party proprietary software programs. In the event that You fail to obtain such permissions,
+ * You agree to indemnify NCI for any claims against NCI by such third parties, except to the extent prohibited by law,
+ * resulting from Your failure to obtain such permissions. 5. For sake of clarity, and not by way of limitation, You may
+ * add Your own copyright statement to Your modifications and to the derivative works, and You may provide additional or
+ * different license terms and conditions in Your sublicenses of modifications of the Software, or any derivative works
+ * of the Software as a whole, provided Your use, reproduction, and distribution of the Work otherwise complies with the
+ * conditions stated in this License. 6. THIS SOFTWARE IS PROVIDED "AS IS," AND ANY EXPRESSED OR IMPLIED WARRANTIES,
+ * (INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY, NON-INFRINGEMENT AND FITNESS FOR A
+ * PARTICULAR PURPOSE) ARE DISCLAIMED. IN NO EVENT SHALL THE NATIONAL CANCER INSTITUTE, SCENPRO, OR THEIR AFFILIATES BE
+ * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED
+ * TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
+ * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
 /**
@@ -112,6 +204,7 @@ import org.apache.log4j.Logger;
  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR
  * OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
+
 /**
  * @author shegde
  *
@@ -119,17 +212,17 @@ import org.apache.log4j.Logger;
 public class CurationServlet
 {
 
-    protected SetACService       m_setAC          = new SetACService(this);
-    public HttpServletRequest  m_classReq       = null;
-    public HttpServletResponse m_classRes       = null;
+    protected SetACService m_setAC = new SetACService( this );
+    public HttpServletRequest m_classReq = null;
+    public HttpServletResponse m_classRes = null;
     protected ServletContext m_servletContext;
-    protected Connection m_conn=null;
+    protected Connection m_conn = null;
 
-    public static final Logger  logger  = Logger.getLogger(CurationServlet.class.getName());
+    public static final Logger logger = Logger.getLogger( CurationServlet.class.getName() );
     /** declare the global variable sessionData */
-    public Session_Data        sessionData;
+    public Session_Data sessionData;
 
-    private UtilService  m_util = new UtilService();
+    private UtilService m_util = new UtilService();
 
     /**
      * @param req HttpServletRequest object
@@ -137,7 +230,7 @@ public class CurationServlet
      * @param sc ServletContext object
      *
      */
-    public CurationServlet(HttpServletRequest req, HttpServletResponse res, ServletContext sc)
+    public CurationServlet( HttpServletRequest req, HttpServletResponse res, ServletContext sc )
     {
         m_classReq = req;
         m_classRes = res;
@@ -158,7 +251,7 @@ public class CurationServlet
      * @param sc ServletContext object
      *
      */
-    public void init(HttpServletRequest req, HttpServletResponse res, ServletContext sc)
+    public void init( HttpServletRequest req, HttpServletResponse res, ServletContext sc )
     {
         m_classReq = req;
         m_classRes = res;
@@ -180,8 +273,9 @@ public class CurationServlet
      *            date end date to calculate teh duration
      * @return String message
      */
-    public String getLogMessage(HttpServletRequest req, String sMethod, String endMsg, java.util.Date bDate,
-                    java.util.Date eDate)
+    public String getLogMessage(
+            HttpServletRequest req, String sMethod, String endMsg, java.util.Date bDate,
+            java.util.Date eDate )
     {
         String sMsg = "";
         try
@@ -189,11 +283,10 @@ public class CurationServlet
             HttpSession session = req.getSession();
             // call this in utility service class
             UtilService util = new UtilService();
-            sMsg = util.makeLogMessage(session, sMethod, endMsg, bDate, eDate);
-        }
-        catch (Exception e)
+            sMsg = util.makeLogMessage( session, sMethod, endMsg, bDate, eDate );
+        } catch( Exception e )
         {
-            logger.warn("Unable to get the log message - " + sMsg);
+            logger.warn( "Unable to get the log message - " + sMsg );
         }
         return sMsg;
     }
@@ -206,16 +299,16 @@ public class CurationServlet
      *            String message
      * @return String user friendly message
      */
-    private String getDBConnectMessage(String eMsg)
+    private String getDBConnectMessage( String eMsg )
     {
         String retMsg = "";
-        if (eMsg.contains("invalid username/password"))
+        if( eMsg.contains( "invalid username/password" ) )
             retMsg = "caDSR connection error, please verify the user name and password.";
-        else if (eMsg.contains("maximum number of processes"))
+        else if( eMsg.contains( "maximum number of processes" ) )
             retMsg = "Reached connection limits, please try again later. If this persists contact the NIH Help Desk.";
-        else if (eMsg.contains("Network Adapter") || eMsg.contains("Got minus one"))
+        else if( eMsg.contains( "Network Adapter" ) || eMsg.contains( "Got minus one" ) )
             retMsg = "Network connection error, please contact the NIH Help Desk.";
-        else if (eMsg.contains("Session Terminated"))
+        else if( eMsg.contains( "Session Terminated" ) )
             retMsg = "Session has been terminated. Possible reasons could be a session timeout or an internal processing error. Please try again or contact the NIH Help Desk.";
         else
             retMsg = "Encountered an unexpected and unknown connection error, please contact the NIH Help Desk.";
@@ -244,14 +337,13 @@ public class CurationServlet
         try
         {
             envContext = new InitialContext();
-            ds = (DataSource) envContext.lookup(NCICurationServlet._dataSourceName);
+            ds = ( DataSource ) envContext.lookup( NCICurationServlet._dataSourceName );
             user_ = NCICurationServlet._userName;
             pswd_ = NCICurationServlet._password;
-        }
-        catch (Exception e)
+        } catch( Exception e )
         {
             String stErr = "Error creating database pool[" + e.getMessage() + "].";
-            logger.fatal(stErr, e);
+            logger.fatal( stErr, e );
             return null;
         }
         // Open connection
@@ -261,7 +353,7 @@ public class CurationServlet
             con = ds.getConnection( user_, pswd_ );
         } catch( SQLException e )
         {
-            logger.fatal("Could not open database connection.", e);
+            logger.fatal( "Could not open database connection.", e );
             return null;
         }
 
@@ -269,7 +361,7 @@ public class CurationServlet
         return con;
     }
 
-     /**
+    /**
      * @return Connection
      */
     public Connection connectDB()
@@ -279,16 +371,14 @@ public class CurationServlet
         {
             try
             {
-              	 SBRDb_conn = this.getConnFromDS();
-            }
-            catch (Exception e)
+                SBRDb_conn = this.getConnFromDS();
+            } catch( Exception e )
             {
-                logger.error("Servlet error: no pool connection.", e);
+                logger.error( "Servlet error: no pool connection.", e );
             }
-        }
-        catch (Exception e)
+        } catch( Exception e )
         {
-            logger.error("Servlet connectDB : " + e.toString(), e);
+            logger.error( "Servlet connectDB : " + e.toString(), e );
         }
         return SBRDb_conn;
     }
@@ -300,49 +390,49 @@ public class CurationServlet
      * @param session
      */
 //    @NO_REQUEST_CHECK
-    private void login(HttpServletRequest req, HttpServletResponse res,HttpSession session)throws Exception
+    private void login( HttpServletRequest req, HttpServletResponse res, HttpSession session ) throws Exception
     {
-    	String username = req.getParameter("Username").toUpperCase();
-        String password = req.getParameter("Password");
-    	CaDsrUserCredentials uc = new CaDsrUserCredentials();
-    	GetACService getAC = new GetACService(m_classReq, m_classRes, this);
-	    UserBean userbean = new UserBean();
-	    User_Accounts_Mgr userAccountMgr = new User_Accounts_Mgr();
-	    try
-    	 {
-    	    userbean.setUsername(username);
-    	    userbean.setPassword(password);
-     		uc.validateCredentials(NCICurationServlet._userName, NCICurationServlet._password, username, password);
-     		//req.getSession().invalidate();  // per Appscan, new Session ID should be generated after successful login
-     		session = Security.getSession(req);	//req.getSession(true);	//JR1107
-     		if (m_conn == null){
-     			get_m_conn();
-     		}
-     		userbean.setUserFullName(userAccountMgr.getUserFullName(username, m_conn));
-    	    userbean.setPassword("");
-            userbean.setDBAppContext("/cdecurate");
-            userbean.setSuperuser(getAC.getSuperUserFlag(userbean.getUsername()));
-          	DataManager.setAttribute(session, "Userbean", userbean);
-          	DataManager.setAttribute(session, "Username", userbean.getUsername());
-          	sessionData.UsrBean = userbean;
+        String username = req.getParameter( "Username" ).toUpperCase();
+        String password = req.getParameter( "Password" );
+        CaDsrUserCredentials uc = new CaDsrUserCredentials();
+        GetACService getAC = new GetACService( m_classReq, m_classRes, this );
+        UserBean userbean = new UserBean();
+        User_Accounts_Mgr userAccountMgr = new User_Accounts_Mgr();
+        try
+        {
+            userbean.setUsername( username );
+            userbean.setPassword( password );
+            uc.validateCredentials( NCICurationServlet._userName, NCICurationServlet._password, username, password );
+            //req.getSession().invalidate();  // per Appscan, new Session ID should be generated after successful login
+            session = Security.getSession( req );    //req.getSession(true);	//JR1107
+            if( m_conn == null )
+            {
+                get_m_conn();
+            }
+            userbean.setUserFullName( userAccountMgr.getUserFullName( username, m_conn ) );
+            userbean.setPassword( "" );
+            userbean.setDBAppContext( "/cdecurate" );
+            userbean.setSuperuser( getAC.getSuperUserFlag( userbean.getUsername() ) );
+            DataManager.setAttribute( session, "Userbean", userbean );
+            DataManager.setAttribute( session, "Username", userbean.getUsername() );
+            sessionData.UsrBean = userbean;
             getAC.getWriteContextList();
             getEVSInfo();
-           //get cs-csi relationship data
+            //get cs-csi relationship data
             getAC.getCSCSIListBeann();
             getDefaultContext();
-    	  }
-	      catch(DBException e){
-	    	 logger.error("Unable to get User FullName" + e);
-	      }
-    	  catch (Exception ex)
-    	  {
-    		  ex.printStackTrace();
-    		  userbean=null;
-    		  logger.error("Failed credential validation, code is " + uc.getCheckCode());
-    	      logger.error("Redirecting the user to Login Page");
-			  ForwardErrorJSP(req, res, ErrorHelper.getLoginMessage());		//GF32153
-    	  }
-      }
+        } catch( DBException e )
+        {
+            logger.error( "Unable to get User FullName" + e );
+        } catch( Exception ex )
+        {
+            ex.printStackTrace();
+            userbean = null;
+            logger.error( "Failed credential validation, code is " + uc.getCheckCode() );
+            logger.error( "Redirecting the user to Login Page" );
+            ForwardErrorJSP( req, res, ErrorHelper.getLoginMessage() );        //GF32153
+        }
+    }
 
     /*
      * Authenticates the user login credentials with the jboss authentication
@@ -389,45 +479,48 @@ public class CurationServlet
 */
     public void get_m_conn()
     {
-        HttpSession session = m_classReq.getSession(true);	//JR1107
-    	// get the session data object from the session
-        sessionData = (Session_Data) session.getAttribute(Session_Data.CURATION_SESSION_ATTR);
-        if (sessionData == null)
+        HttpSession session = m_classReq.getSession( true );    //JR1107
+        // get the session data object from the session
+        sessionData = ( Session_Data ) session.getAttribute( Session_Data.CURATION_SESSION_ATTR );
+        if( sessionData == null )
             sessionData = new Session_Data();
         //get the connection
-        if (m_conn == null)
+        if( m_conn == null )
         {
-        	m_conn = connectDB();
-        	setConn(m_conn);
-        	String userName = (String)session.getAttribute("Username");
-        	if (userName != null){
-        		setEffectiveUser(userName);
-        	}
+            m_conn = connectDB();
+            setConn( m_conn );
+            String userName = ( String ) session.getAttribute( "Username" );
+            if( userName != null )
+            {
+                setEffectiveUser( userName );
+            }
         }
     }
 
     protected UserBean checkLoggedIn() throws Exception
     {
-    	UserBean ub = checkUserBean(m_classReq, m_classRes);
-        if (ub == null)
+        UserBean ub = checkUserBean( m_classReq, m_classRes );
+        if( ub == null )
         {
-        	HttpSession session = m_classReq.getSession(true);
-            String errMsg = getDBConnectMessage("Session Terminated");
-			DataManager.setAttribute(session, "ErrorMessage", errMsg);
-			// get the menu action from request
-			String mnReq = /*SECURITYTEAM-299*/StringUtil.cleanJavascriptAndHtml((String) m_classReq.getParameter("serMenuAct"));
-			if(mnReq!=null){
-				if(!StringUtil.validateSearchParameterType(mnReq))
-					throw new Exception("serMenuAct contains characters or combinations of characters that are not allowed because of security concerns.");
-			}
-			if (mnReq == null)
-			mnReq = "";
-			DataManager.setAttribute(session, "serMenuAct", mnReq);
-			// forward the error page
-			ForwardErrorJSP(m_classReq, m_classRes, errMsg);
+            HttpSession session = m_classReq.getSession( true );
+            String errMsg = getDBConnectMessage( "Session Terminated" );
+            DataManager.setAttribute( session, "ErrorMessage", errMsg );
+            // get the menu action from request
+            String mnReq = /*SECURITYTEAM-299*/StringUtil.cleanJavascriptAndHtml( ( String ) m_classReq.getParameter( "serMenuAct" ) );
+            if( mnReq != null )
+            {
+                if( !StringUtil.validateSearchParameterType( mnReq ) )
+                    throw new Exception( "serMenuAct contains characters or combinations of characters that are not allowed because of security concerns." );
+            }
+            if( mnReq == null )
+                mnReq = "";
+            DataManager.setAttribute( session, "serMenuAct", mnReq );
+            // forward the error page
+            ForwardErrorJSP( m_classReq, m_classRes, errMsg );
         }
         return ub;
     }
+
     /**
      * The service method services all requests to this servlet.
      *
@@ -436,104 +529,110 @@ public class CurationServlet
     {
         UserBean ub = null;
         HttpSession session;
-        session = m_classReq.getSession(true);
-        Security.handleOWASPSession(m_classReq, m_classRes);	//JR1107
+        session = m_classReq.getSession( true );
+        Security.handleOWASPSession( m_classReq, m_classRes );    //JR1107
 
         try
         {
-        	// get the session data object from the session
-            sessionData = (Session_Data) session.getAttribute(Session_Data.CURATION_SESSION_ATTR);
-            if (sessionData == null)
-                     	sessionData = new Session_Data();
+            // get the session data object from the session
+            sessionData = ( Session_Data ) session.getAttribute( Session_Data.CURATION_SESSION_ATTR );
+            if( sessionData == null )
+                sessionData = new Session_Data();
             else
-        	m_conn = connectDB();
-            String reqType = StringUtil.cleanJavascriptAndHtml(m_classReq.getParameter("reqType"));
+                m_conn = connectDB();
+            String reqType = StringUtil.cleanJavascriptAndHtml( m_classReq.getParameter( "reqType" ) );
 
-            m_classReq.setAttribute("LatestReqType", reqType);
-            if (reqType != null)
+            m_classReq.setAttribute( "LatestReqType", reqType );
+            if( reqType != null )
             {
-                while (true)
+                while( true )
                 {
-                   // check the validity of the user login
-                    if (reqType.equals("login"))
+                    // check the validity of the user login
+                    if( reqType.equals( "login" ) )
                     {
                         //DataManager.clearSessionAttributes(session);
-                       // sessionData = new Session_Data();
-                    	 String cancelLogin = (String)m_classReq.getParameter("cancelLogin");
-                    	 if (cancelLogin == null || cancelLogin.equals("No")){	//GF30779 fix NPE which is not part of the fix
-                           login(m_classReq,m_classRes,session);
-                         }
-                    	 String userName = (String)session.getAttribute("Username");
-                    	 String directLogin = (String)session.getAttribute("directLogin");
-                    	 if ((directLogin != null) && (directLogin).equals("yes")) {
-							if ((userName != null) || ((userName == null) && (!cancelLogin.equals("No")))) {
-								session.setAttribute("directLogin", "No");
-								RequestDispatcher rd = this.m_servletContext.getRequestDispatcher("/");
-								rd.forward(m_classReq, m_classRes);
-								return;
-							}
-						}
-						if ((userName != null) || ((userName == null) && (!cancelLogin.equals("No")))) {
-	                        String prevReq = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml((String) m_classReq.getParameter("previousReqType"));
-	                        if (prevReq == null)
-								prevReq = "/SearchResultsPage.jsp";
-							ForwardJSP(m_classReq, m_classRes, prevReq);
-						}
+                        // sessionData = new Session_Data();
+                        String cancelLogin = ( String ) m_classReq.getParameter( "cancelLogin" );
+                        if( cancelLogin == null || cancelLogin.equals( "No" ) )
+                        {    //GF30779 fix NPE which is not part of the fix
+                            login( m_classReq, m_classRes, session );
+                        }
+                        String userName = ( String ) session.getAttribute( "Username" );
+                        String directLogin = ( String ) session.getAttribute( "directLogin" );
+                        if( ( directLogin != null ) && ( directLogin ).equals( "yes" ) )
+                        {
+                            if( ( userName != null ) || ( ( userName == null ) && ( !cancelLogin.equals( "No" ) ) ) )
+                            {
+                                session.setAttribute( "directLogin", "No" );
+                                RequestDispatcher rd = this.m_servletContext.getRequestDispatcher( "/" );
+                                rd.forward( m_classReq, m_classRes );
+                                return;
+                            }
+                        }
+                        if( ( userName != null ) || ( ( userName == null ) && ( !cancelLogin.equals( "No" ) ) ) )
+                        {
+                            String prevReq = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml( ( String ) m_classReq.getParameter( "previousReqType" ) );
+                            if( prevReq == null )
+                                prevReq = "/SearchResultsPage.jsp";
+                            ForwardJSP( m_classReq, m_classRes, prevReq );
+                        }
                         break;
                     }
-                    if ("heartbeat".equals(reqType))
+                    if( "heartbeat".equals( reqType ) )
                     {
-                        doLogout(m_classReq, m_classRes, false);
+                        doLogout( m_classReq, m_classRes, false );
                         break;
                     }
-                    if (reqType.equals("viewVMAction")){
-                    	doViewVMActions(m_classReq, m_classRes);
-                    	break;
+                    if( reqType.equals( "viewVMAction" ) )
+                    {
+                        doViewVMActions( m_classReq, m_classRes );
+                        break;
                     }
-                    if (reqType.equals("viewPVAction")){
-                    	doViewPVActions(m_classReq, m_classRes);
-                    	break;
+                    if( reqType.equals( "viewPVAction" ) )
+                    {
+                        doViewPVActions( m_classReq, m_classRes );
+                        break;
                     }
                     // do the requests
-                    ub = checkUserBean(m_classReq, m_classRes);
-                    if (ub != null)
+                    ub = checkUserBean( m_classReq, m_classRes );
+                    if( ub != null )
                     {
-                    	 if (reqType.equals("newCCFromMenu")) // fromForm
-                         {
-                             doCreateCCActions(m_classReq, m_classRes);
-                         }
-                        else if (reqType.equals("newPV")) // fromForm
+                        if( reqType.equals( "newCCFromMenu" ) ) // fromForm
                         {
-                            doCreatePVActions(m_classReq, m_classRes);
+                            doCreateCCActions( m_classReq, m_classRes );
                         }
-                        else if (reqType.equals("pvEdits")) // fromForm
+                        else if( reqType.equals( "newPV" ) ) // fromForm
                         {
-                            doEditPVActions(m_classReq, m_classRes);
+                            doCreatePVActions( m_classReq, m_classRes );
                         }
-                        else if (reqType.equals(VMForm.ELM_FORM_REQ_DETAIL) || reqType.equals(VMForm.ELM_FORM_REQ_USED)
-                                        || reqType.equals(VMForm.ELM_FORM_REQ_VAL)) // fromForm
+                        else if( reqType.equals( "pvEdits" ) ) // fromForm
                         {
-                            doEditVMActions(m_classReq, m_classRes);
+                            doEditPVActions( m_classReq, m_classRes );
                         }
-                        else if (reqType.equals("createPV") || reqType.equals("editPV"))
+                        else if( reqType.equals( VMForm.ELM_FORM_REQ_DETAIL ) || reqType.equals( VMForm.ELM_FORM_REQ_USED )
+                                || reqType.equals( VMForm.ELM_FORM_REQ_VAL ) ) // fromForm
                         {
-                            doOpenCreatePVPage(m_classReq, m_classRes, reqType, "");
+                            doEditVMActions( m_classReq, m_classRes );
                         }
-                        else if (reqType.equals("errorPageForward"))
+                        else if( reqType.equals( "createPV" ) || reqType.equals( "editPV" ) )
                         {
-                            doJspErrorAction(m_classReq, m_classRes); // on click on the edit/create from menu
+                            doOpenCreatePVPage( m_classReq, m_classRes, reqType, "" );
                         }
-                        else if (reqType.equals("logout"))
+                        else if( reqType.equals( "errorPageForward" ) )
                         {
-                            doLogout(m_classReq, m_classRes, false);
+                            doJspErrorAction( m_classReq, m_classRes ); // on click on the edit/create from menu
                         }
-                        else if (reqType.equals("logoutfull"))
+                        else if( reqType.equals( "logout" ) )
                         {
-                            doLogout(m_classReq, m_classRes, true);
+                            doLogout( m_classReq, m_classRes, false );
                         }
-                        else if (reqType.equals("searchEVS"))
+                        else if( reqType.equals( "logoutfull" ) )
                         {
-                            doSearchEVS(m_classReq, m_classRes);
+                            doLogout( m_classReq, m_classRes, true );
+                        }
+                        else if( reqType.equals( "searchEVS" ) )
+                        {
+                            doSearchEVS( m_classReq, m_classRes );
                         }
 //                        else if (reqType.equals("searchQualifiers"))
 //                        {
@@ -569,70 +668,72 @@ public class CurationServlet
                         {
                             this.doConDomainSearchActions(m_classReq, m_classRes);
                         }
-*/                        else if (reqType.equals("treeSearch"))
+*/
+                        else if( reqType.equals( "treeSearch" ) )
                         {
-                            this.doEVSSearchActions(reqType, m_classReq, m_classRes);
+                            this.doEVSSearchActions( reqType, m_classReq, m_classRes );
                         }
-                        else if (reqType.equals("treeRefresh"))
+                        else if( reqType.equals( "treeRefresh" ) )
                         {
-                            this.doEVSSearchActions(reqType, m_classReq, m_classRes);
+                            this.doEVSSearchActions( reqType, m_classReq, m_classRes );
                         }
-                        else if (reqType.equals("treeExpand"))
+                        else if( reqType.equals( "treeExpand" ) )
                         {
-                            this.doEVSSearchActions(reqType, m_classReq, m_classRes);
+                            this.doEVSSearchActions( reqType, m_classReq, m_classRes );
                         }
-                        else if (reqType.equals("treeCollapse"))
+                        else if( reqType.equals( "treeCollapse" ) )
                         {
-                           this.doEVSSearchActions(reqType, m_classReq, m_classRes);
+                            this.doEVSSearchActions( reqType, m_classReq, m_classRes );
                         }
-                        else if (reqType.equals("getSubConcepts"))
+                        else if( reqType.equals( "getSubConcepts" ) )
                         {
-                           this.doEVSSearchActions(reqType, m_classReq, m_classRes);
+                            this.doEVSSearchActions( reqType, m_classReq, m_classRes );
                         }
-                        else if (reqType.equals("getSuperConcepts"))
+                        else if( reqType.equals( "getSuperConcepts" ) )
                         {
-                            this.doEVSSearchActions(reqType, m_classReq, m_classRes);
+                            this.doEVSSearchActions( reqType, m_classReq, m_classRes );
                         }
-                        else if (reqType.equals("designateDE"))
+                        else if( reqType.equals( "designateDE" ) )
                         {
-                            new DesDEServlet(this, ub).doAction(m_classReq, m_classRes, "Edit");
+                            new DesDEServlet( this, ub ).doAction( m_classReq, m_classRes, "Edit" );
                         }
-                        else if (reqType.equals(AltNamesDefsServlet._reqType))
+                        else if( reqType.equals( AltNamesDefsServlet._reqType ) )
                         {
-                            new AltNamesDefsServlet(this, ub).doAction(m_classReq, m_classRes);
+                            new AltNamesDefsServlet( this, ub ).doAction( m_classReq, m_classRes );
                         }
-                        else if (reqType.equals("RefDocumentUpload"))
+                        else if( reqType.equals( "RefDocumentUpload" ) )
                         {
-                            this.doRefDocumentUpload(m_classReq, m_classRes, "Request");
+                            this.doRefDocumentUpload( m_classReq, m_classRes, "Request" );
                         }
-                        else if (reqType.equals("nonEVSSearch"))
+                        else if( reqType.equals( "nonEVSSearch" ) )
                         {
-                            this.doNonEVSPageAction(m_classReq, m_classRes);
+                            this.doNonEVSPageAction( m_classReq, m_classRes );
                         }
-                        else if (reqType.equals("ACcontact"))
+                        else if( reqType.equals( "ACcontact" ) )
                         {
-                            this.doContactEditActions(m_classReq, m_classRes);
+                            this.doContactEditActions( m_classReq, m_classRes );
                         }
                         break;
                     }
-                    if (!reqType.equals("login"))
+                    if( !reqType.equals( "login" ) )
                     {
-                        String errMsg = getDBConnectMessage("Session Terminated"); // "Please login again. Your session has
-                                                                                    // been terminated. Possible reasons
-                                                                                    // could be a session timeout or an
-                                                                                    // internal processing error.";
-                        DataManager.setAttribute(session, "ErrorMessage", errMsg);
+                        String errMsg = getDBConnectMessage( "Session Terminated" ); // "Please login again. Your session has
+                        // been terminated. Possible reasons
+                        // could be a session timeout or an
+                        // internal processing error.";
+                        DataManager.setAttribute( session, "ErrorMessage", errMsg );
                         // get the menu action from request
-                        String mnReq = /*SECURITYTEAM-299*/StringUtil.cleanJavascriptAndHtml((String) m_classReq.getParameter("serMenuAct"));
-                        if(mnReq!=null){
-                        	if(!StringUtil.validateSearchParameterType(mnReq))
-                        		throw new Exception("serMenuAct contains characters or combinations of characters that are not allowed because of security concerns.");
+                        String mnReq = /*SECURITYTEAM-299*/StringUtil.cleanJavascriptAndHtml( ( String ) m_classReq.getParameter( "serMenuAct" ) );
+                        if( mnReq != null )
+                        {
+                            if( !StringUtil.validateSearchParameterType( mnReq ) )
+                                throw new Exception( "serMenuAct contains characters or combinations of characters that are not allowed because of security concerns." );
                         }
-                        if (mnReq == null)
+                        if( mnReq == null )
                             mnReq = "";
-                        DataManager.setAttribute(session, "serMenuAct", mnReq);
+                        DataManager.setAttribute( session, "serMenuAct", mnReq );
                         // forward the error page
-                        ForwardErrorJSP(m_classReq, m_classRes, errMsg);
+                        ForwardErrorJSP( m_classReq, m_classRes, errMsg );
                         break;
                     }
                     break;
@@ -640,30 +741,29 @@ public class CurationServlet
             }
             else
             {
-                this.logger.error("Service: no DB Connection");
-                ErrorLogin(m_classReq, m_classRes);
+                this.logger.error( "Service: no DB Connection" );
+                ErrorLogin( m_classReq, m_classRes );
             }
-            m_conn = SQLHelper.closeConnection(m_conn);
-        }
-        catch (Exception e)
+            m_conn = SQLHelper.closeConnection( m_conn );
+        } catch( Exception e )
         {
-            logger.error("Service error : " + e.toString(), e);
+            logger.error( "Service error : " + e.toString(), e );
             session = m_classReq.getSession();
             String msg = e.toString();
             try
             {
-                if (msg != null)
-                    ForwardErrorJSP(m_classReq, m_classRes, msg);
+                if( msg != null )
+                    ForwardErrorJSP( m_classReq, m_classRes, msg );
                 else
-                    ForwardErrorJSP(m_classReq, m_classRes, "A page error has occurred. Please login again.");
-            }
-            catch (Exception ee)
+                    ForwardErrorJSP( m_classReq, m_classRes, "A page error has occurred. Please login again." );
+            } catch( Exception ee )
             {
-                logger.error("Service forward error : " + ee.toString(), ee);
+                logger.error( "Service forward error : " + ee.toString(), ee );
             }
 
-        }finally{
-            m_conn = SQLHelper.closeConnection(m_conn);
+        } finally
+        {
+            m_conn = SQLHelper.closeConnection( m_conn );
         }
     } // end of service
 
@@ -679,22 +779,22 @@ public class CurationServlet
      *
      * @throws Exception
      */
-    private UserBean checkUserBean(HttpServletRequest req, @SuppressWarnings("unused") HttpServletResponse res) throws Exception
+    private UserBean checkUserBean( HttpServletRequest req, @SuppressWarnings( "unused" ) HttpServletResponse res ) throws Exception
     {
         HttpSession session;
-        session = req.getSession(true);
-        UserBean userbean = (UserBean) session.getAttribute("Userbean");
-        if (userbean == null)
+        session = req.getSession( true );
+        UserBean userbean = ( UserBean ) session.getAttribute( "Userbean" );
+        if( userbean == null )
         {
-            logger.error("User bean is null");
+            logger.error( "User bean is null" );
             // ForwardErrorJSP(req, res, "Please login again. Your session has been terminated. Possible reasons could
             // be a session timeout or an internal processing error.");
         }
         else
         {
-            EVS_UserBean eUser = (EVS_UserBean) this.sessionData.EvsUsrBean; // (EVS_UserBean)session.getAttribute(EVSSearch.EVS_USER_BEAN_ARG);
-                                                                                // //("EvsUserBean");
-            if (eUser == null)
+            EVS_UserBean eUser = ( EVS_UserBean ) this.sessionData.EvsUsrBean; // (EVS_UserBean)session.getAttribute(EVSSearch.EVS_USER_BEAN_ARG);
+            // //("EvsUserBean");
+            if( eUser == null )
                 eUser = new EVS_UserBean();
         }
         return userbean;
@@ -716,23 +816,24 @@ public class CurationServlet
         ForwardJSP(req, res, "/CDEHomePage.jsp");
     }
 */
+
     /**
      * Gets the Help URL from Tool options table.
      * @param con
      */
-    public String getHelpURL(Connection con)
+    public String getHelpURL( Connection con )
     {
-    	 GetACService getAC = new GetACService();
-    	Vector vList = new Vector();
-        vList = getAC.getToolOptionData(con,"CURATION", "HELP.HOME", "");
+        GetACService getAC = new GetACService();
+        Vector vList = new Vector();
+        vList = getAC.getToolOptionData( con, "CURATION", "HELP.HOME", "" );
         String aURL = null;
-        if (vList != null && vList.size() > 0)
+        if( vList != null && vList.size() > 0 )
         {
-            TOOL_OPTION_Bean tob = (TOOL_OPTION_Bean) vList.elementAt(0);
-            if (tob != null)
+            TOOL_OPTION_Bean tob = ( TOOL_OPTION_Bean ) vList.elementAt( 0 );
+            if( tob != null )
                 aURL = tob.getVALUE();
         }
-       return aURL;
+        return aURL;
     }
 
     /**
@@ -740,10 +841,11 @@ public class CurationServlet
      * @param res
      * @throws Exception
      */
-    private void doCreateCCActions(HttpServletRequest req, HttpServletResponse res) throws Exception
+    private void doCreateCCActions( HttpServletRequest req, HttpServletResponse res ) throws Exception
     {
-    	 ForwardJSP(req, res, "/CreateConceptClass.jsp");
+        ForwardJSP( req, res, "/CreateConceptClass.jsp" );
     }
+
     /**
      * The doCreatePVActions method handles the submission of a CreatePV form Called from DON'T KNOW Calls
      * 'doValidatePV' if the action is Validate or submit.
@@ -755,79 +857,80 @@ public class CurationServlet
      *
      * @throws Exception
      */
-    @SuppressWarnings("unchecked")
-    private void doCreatePVActions(HttpServletRequest req, HttpServletResponse res) throws Exception
+    @SuppressWarnings( "unchecked" )
+    private void doCreatePVActions( HttpServletRequest req, HttpServletResponse res ) throws Exception
     {
         HttpSession session = req.getSession();
-        String sAction = StringUtil.cleanJavascriptAndHtml( (String) req.getParameter("pageAction") );
-        String sMenuAction = StringUtil.cleanJavascriptAndHtml( (String) req.getParameter("MenuAction") );
-        if (sMenuAction != null)
-            DataManager.setAttribute(session, Session_Data.SESSION_MENU_ACTION, sMenuAction);
-        String sButtonPressed = (String) session.getAttribute("LastMenuButtonPressed");
-       // String sOriginAction = (String) session.getAttribute("originAction");
+        String sAction = StringUtil.cleanJavascriptAndHtml( ( String ) req.getParameter( "pageAction" ) );
+        String sMenuAction = StringUtil.cleanJavascriptAndHtml( ( String ) req.getParameter( "MenuAction" ) );
+        if( sMenuAction != null )
+            DataManager.setAttribute( session, Session_Data.SESSION_MENU_ACTION, sMenuAction );
+        String sButtonPressed = ( String ) session.getAttribute( "LastMenuButtonPressed" );
+        // String sOriginAction = (String) session.getAttribute("originAction");
         // clear searched data from teh session attributes
         /*
          * if (sAction.equals("submit")) doSubmitPV(req, res); else if (sAction.equals("validate")) doValidatePV(req,
          * res); else
-         */if (sAction.equals("createNewVM"))
-            this.doOpenCreateVMPage(req, res, "vm");
-        // store vm attributes in pv bean
-         	else if (sAction.equals("appendSearchVM"))
-         	{
-            PV_Bean pvBean = (PV_Bean) session.getAttribute("m_PV");
-            if (pvBean == null)
+         */
+        if( sAction.equals( "createNewVM" ) )
+            this.doOpenCreateVMPage( req, res, "vm" );
+            // store vm attributes in pv bean
+        else if( sAction.equals( "appendSearchVM" ) )
+        {
+            PV_Bean pvBean = ( PV_Bean ) session.getAttribute( "m_PV" );
+            if( pvBean == null )
                 pvBean = new PV_Bean();
-            SetACService setAC = new SetACService(this);
-            setAC.setPVValueFromPage(req, res, pvBean);
+            SetACService setAC = new SetACService( this );
+            setAC.setPVValueFromPage( req, res, pvBean );
             String selVM = pvBean.getPV_SHORT_MEANING();
-            Vector vRSel = (Vector) session.getAttribute("vACSearch");
-            if (vRSel == null)
+            Vector vRSel = ( Vector ) session.getAttribute( "vACSearch" );
+            if( vRSel == null )
                 vRSel = new Vector();
-            for (int i = 0; i < (vRSel.size()); i++)
+            for( int i = 0; i < ( vRSel.size() ); i++ )
             {
-                VM_Bean vmBean = (VM_Bean) vRSel.elementAt(i);
+                VM_Bean vmBean = ( VM_Bean ) vRSel.elementAt( i );
                 // store the vm attributes in pv attribute
                 /*if (vmBean.getVM_SHORT_MEANING().equals(selVM))*/
-                if (vmBean.getVM_LONG_NAME().equals(selVM))
+                if( vmBean.getVM_LONG_NAME().equals( selVM ) )
                 {
-                   // pvBean.setPV_MEANING_DESCRIPTION(vmBean.getVM_DESCRIPTION());
-                	pvBean.setPV_MEANING_DESCRIPTION(vmBean.getVM_PREFERRED_DEFINITION());
+                    // pvBean.setPV_MEANING_DESCRIPTION(vmBean.getVM_DESCRIPTION());
+                    pvBean.setPV_MEANING_DESCRIPTION( vmBean.getVM_PREFERRED_DEFINITION() );
                     // pvBean.setVM_CONCEPT(vmBean.getVM_CONCEPT());
-                    pvBean.setPV_VM(vmBean);
+                    pvBean.setPV_VM( vmBean );
                     break;
                 }
             }
-            DataManager.setAttribute(session, "m_PV", pvBean);
-            ForwardJSP(req, res, "/CreatePVPage.jsp");
+            DataManager.setAttribute( session, "m_PV", pvBean );
+            ForwardJSP( req, res, "/CreatePVPage.jsp" );
         }
-        else if (sAction.equals("clearBoxes"))
+        else if( sAction.equals( "clearBoxes" ) )
         {
-            PV_Bean pvOpen = (PV_Bean) session.getAttribute("pageOpenBean");
-            PV_Bean pvBean = (PV_Bean) session.getAttribute("m_PV");
-            if (pvOpen != null)
-                pvBean = pvBean.copyBean(pvOpen);
-            DataManager.setAttribute(session, "m_PV", pvBean);
-            ForwardJSP(req, res, "/CreatePVPage.jsp");
+            PV_Bean pvOpen = ( PV_Bean ) session.getAttribute( "pageOpenBean" );
+            PV_Bean pvBean = ( PV_Bean ) session.getAttribute( "m_PV" );
+            if( pvOpen != null )
+                pvBean = pvBean.copyBean( pvOpen );
+            DataManager.setAttribute( session, "m_PV", pvBean );
+            ForwardJSP( req, res, "/CreatePVPage.jsp" );
         }
-        else if (sAction.equals("backToVD"))
+        else if( sAction.equals( "backToVD" ) )
         {
             // set the checked property to false
-            Vector<PV_Bean> vOldVDPVList = (Vector) session.getAttribute("oldVDPVList");
-            if (vOldVDPVList != null)
+            Vector<PV_Bean> vOldVDPVList = ( Vector ) session.getAttribute( "oldVDPVList" );
+            if( vOldVDPVList != null )
             {
-                for (int i = 0; i < vOldVDPVList.size(); i++)
+                for( int i = 0; i < vOldVDPVList.size(); i++ )
                 {
-                    PV_Bean oldPV = (PV_Bean) vOldVDPVList.elementAt(i);
+                    PV_Bean oldPV = ( PV_Bean ) vOldVDPVList.elementAt( i );
                     // System.out.println(oldPV.getPV_BEGIN_DATE() + " back vd old " + oldPV.getPV_END_DATE());
-                    oldPV.setPV_CHECKED(false);
-                    vOldVDPVList.setElementAt(oldPV, i);
+                    oldPV.setPV_CHECKED( false );
+                    vOldVDPVList.setElementAt( oldPV, i );
                 }
-                DataManager.setAttribute(session, "VDPVList", vOldVDPVList);
+                DataManager.setAttribute( session, "VDPVList", vOldVDPVList );
             }
-            if (sMenuAction.equals("editVD") || sMenuAction.equals("editDE") || sButtonPressed.equals("Search"))
-                ForwardJSP(req, res, "/EditVDPage.jsp"); // back to Edit VD Screen
+            if( sMenuAction.equals( "editVD" ) || sMenuAction.equals( "editDE" ) || sButtonPressed.equals( "Search" ) )
+                ForwardJSP( req, res, "/EditVDPage.jsp" ); // back to Edit VD Screen
             else
-                ForwardJSP(req, res, "/CreateVDPage.jsp");
+                ForwardJSP( req, res, "/CreateVDPage.jsp" );
         }
     }
 
@@ -836,16 +939,16 @@ public class CurationServlet
      * @param res
      * @throws Exception
      */
-    protected void doOpenEditVM(HttpServletRequest req, HttpServletResponse res, VM_Bean vm, PV_Bean pv) throws Exception
+    protected void doOpenEditVM( HttpServletRequest req, HttpServletResponse res, VM_Bean vm, PV_Bean pv ) throws Exception
     {
-    	ValueDomainServlet vdServ = (ValueDomainServlet) this.getACServlet("ValueDomain");
-        PVServlet pvSer = new PVServlet(req, res, vdServ);
-        String pageFor = pvSer.openVMPageEdit(vm,pv);
-        if (pageFor != null && !pageFor.equals(""))
+        ValueDomainServlet vdServ = ( ValueDomainServlet ) this.getACServlet( "ValueDomain" );
+        PVServlet pvSer = new PVServlet( req, res, vdServ );
+        String pageFor = pvSer.openVMPageEdit( vm, pv );
+        if( pageFor != null && !pageFor.equals( "" ) )
         {
-            if (pageFor.charAt(0) != '/')
+            if( pageFor.charAt( 0 ) != '/' )
                 pageFor = "/" + pageFor;
-            ForwardJSP(req, res, pageFor);
+            ForwardJSP( req, res, pageFor );
         }
     }
 
@@ -860,20 +963,19 @@ public class CurationServlet
      *
      * @throws Exception
      */
-    private void doEditPVActions(HttpServletRequest req, HttpServletResponse res) throws Exception
+    private void doEditPVActions( HttpServletRequest req, HttpServletResponse res ) throws Exception
     {
-		TestUtil.dumpAllHttpRequests("CurationServlet.java:doEditPVActions() <<<", req);
-		//JR1024 new codes save the index of the edited PV
-		req.setAttribute(Constants.USER_SELECTED_VM, req.getParameter("currentPVVM"));
-		System.out.println("CurationServlet.java doEditPVActions(): currentPVVM [" + req.getParameter("currentPVVM") + "]");
-    	ValueDomainServlet vdServ = (ValueDomainServlet) this.getACServlet("ValueDomain");
-        PVServlet pvSer = new PVServlet(req, res, vdServ);
+        TestUtil.dumpAllHttpRequests( "CurationServlet.java:doEditPVActions() <<<", req );
+        //JR1024 new codes save the index of the edited PV
+        req.setAttribute( Constants.USER_SELECTED_VM, req.getParameter( "currentPVVM" ) );
+        ValueDomainServlet vdServ = ( ValueDomainServlet ) this.getACServlet( "ValueDomain" );
+        PVServlet pvSer = new PVServlet( req, res, vdServ );
         String pageFor = pvSer.doEditPVActions();
-        if (pageFor != null && !pageFor.equals(""))
+        if( pageFor != null && !pageFor.equals( "" ) )
         {
-            if (pageFor.charAt(0) != '/')
+            if( pageFor.charAt( 0 ) != '/' )
                 pageFor = "/" + pageFor;
-            ForwardJSP(req, res, pageFor);
+            ForwardJSP( req, res, pageFor );
         }
     }
 
@@ -888,15 +990,15 @@ public class CurationServlet
      *
      * @throws Exception
      */
-    private void doEditVMActions(HttpServletRequest req, HttpServletResponse res) throws Exception
+    private void doEditVMActions( HttpServletRequest req, HttpServletResponse res ) throws Exception
     {
-        VMServlet vmSer = new VMServlet(req, res, this);
+        VMServlet vmSer = new VMServlet( req, res, this );
         String pageFor = vmSer.run(); // doEditVMActions();
-        if (pageFor != null && !pageFor.equals(""))
+        if( pageFor != null && !pageFor.equals( "" ) )
         {
-            if (pageFor.charAt(0) != '/')
+            if( pageFor.charAt( 0 ) != '/' )
                 pageFor = "/" + pageFor;
-            ForwardJSP(req, res, pageFor);
+            ForwardJSP( req, res, pageFor );
         }
     }
 
@@ -907,17 +1009,17 @@ public class CurationServlet
      * @param pageAct
      * @throws java.lang.Exception
      */
-    private void doMarkAddRemoveDesignation(HttpServletRequest req, String pageAct) throws Exception
+    private void doMarkAddRemoveDesignation( HttpServletRequest req, String pageAct ) throws Exception
     {
         // call methods for different actions
-        if (pageAct.equals("addAlt")) // do add alt name action
-            this.doMarkAddAltNames(req);
-        else if (pageAct.equals("addRefDoc")) // do add ref doc action
-            this.doMarkAddRefDocs(req);
-        else if (pageAct.equals("removeAlt")) // remove alt names
-            this.doMarkRemoveAltNames(req);
-        else if (pageAct.equals("removeRefDoc")) // remove refernece documents
-            this.doMarkRemoveRefDocs(req);
+        if( pageAct.equals( "addAlt" ) ) // do add alt name action
+            this.doMarkAddAltNames( req );
+        else if( pageAct.equals( "addRefDoc" ) ) // do add ref doc action
+            this.doMarkAddRefDocs( req );
+        else if( pageAct.equals( "removeAlt" ) ) // remove alt names
+            this.doMarkRemoveAltNames( req );
+        else if( pageAct.equals( "removeRefDoc" ) ) // remove refernece documents
+            this.doMarkRemoveRefDocs( req );
     }
 
     /**
@@ -926,101 +1028,101 @@ public class CurationServlet
      * @param req
      * @throws java.lang.Exception
      */
-    @SuppressWarnings("unchecked")
-    private void doMarkAddAltNames(HttpServletRequest req) throws Exception
+    @SuppressWarnings( "unchecked" )
+    private void doMarkAddAltNames( HttpServletRequest req ) throws Exception
     {
         HttpSession session = req.getSession();
-       // InsACService insAC = new InsACService(m_classReq, m_classRes, this);
-       // String stgContMsg = "";
+        // InsACService insAC = new InsACService(m_classReq, m_classRes, this);
+        // String stgContMsg = "";
         // get the sessin vectors
-        Vector<ALT_NAME_Bean> vAltNames = (Vector) session.getAttribute("AllAltNameList");
-        Vector vContext = (Vector) session.getAttribute("vWriteContextDE");
-        if (vContext == null)
+        Vector<ALT_NAME_Bean> vAltNames = ( Vector ) session.getAttribute( "AllAltNameList" );
+        Vector vContext = ( Vector ) session.getAttribute( "vWriteContextDE" );
+        if( vContext == null )
             vContext = new Vector();
         // add alternate names
-        String selName = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml((String) m_classReq.getParameter("txtAltName"));
-        if (selName == null)
+        String selName = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml( ( String ) m_classReq.getParameter( "txtAltName" ) );
+        if( selName == null )
             selName = "";
         selName = selName.trim();
-        if (selName.equals(""))
+        if( selName.equals( "" ) )
         {
-            storeStatusMsg("Please enter a text for the alternate name");
+            storeStatusMsg( "Please enter a text for the alternate name" );
             return;
         }
         // get the request vectors
-        Vector<String> vACId = (Vector) session.getAttribute("vACId");
-        if (vACId == null)
+        Vector<String> vACId = ( Vector ) session.getAttribute( "vACId" );
+        if( vACId == null )
             vACId = new Vector<String>();
-        Vector<String> vACName = (Vector) session.getAttribute("vACName");
-        if (vACName == null)
+        Vector<String> vACName = ( Vector ) session.getAttribute( "vACName" );
+        if( vACName == null )
             vACName = new Vector<String>();
-        String sContID = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml((String) m_classReq.getParameter("selContext"));
-        String sContext = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml((String) m_classReq.getParameter("contextName"));
-        if (sContID != null)
-            req.setAttribute("desContext", sContID);
-        String sLang = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml((String) m_classReq.getParameter("dispLanguage"));
-        if (sLang != null)
-            req.setAttribute("desLang", sLang);
-        String selType = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml((String) m_classReq.getParameter("selAltType"));
+        String sContID = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml( ( String ) m_classReq.getParameter( "selContext" ) );
+        String sContext = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml( ( String ) m_classReq.getParameter( "contextName" ) );
+        if( sContID != null )
+            req.setAttribute( "desContext", sContID );
+        String sLang = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml( ( String ) m_classReq.getParameter( "dispLanguage" ) );
+        if( sLang != null )
+            req.setAttribute( "desLang", sLang );
+        String selType = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml( ( String ) m_classReq.getParameter( "selAltType" ) );
         // handle the context and ac name for new AC (DE, DEC and VD)
-        if (vACId.size() < 1)
-            vACId.addElement("new");
-        if (vACName.size() < 1)
-            vACName.addElement("new");
-        if (sContID == null || sContID.equals(""))
+        if( vACId.size() < 1 )
+            vACId.addElement( "new" );
+        if( vACName.size() < 1 )
+            vACName.addElement( "new" );
+        if( sContID == null || sContID.equals( "" ) )
             sContID = "new";
         // continue with acitons
-        for (int i = 0; i < vACId.size(); i++)
+        for( int i = 0; i < vACId.size(); i++ )
         {
             // get ac names
-            String acID = (String) vACId.elementAt(i);
-            if (acID == null)
+            String acID = ( String ) vACId.elementAt( i );
+            if( acID == null )
                 acID = "";
             String acName = "";
-            if (vACName.size() > i)
-                acName = (String) vACName.elementAt(i);
+            if( vACName.size() > i )
+                acName = ( String ) vACName.elementAt( i );
             // get page attributes
             // check if another record with same type, name, ac and context exists already
             boolean isExist = false;
-            for (int k = 0; k < vAltNames.size(); k++)
+            for( int k = 0; k < vAltNames.size(); k++ )
             {
-                ALT_NAME_Bean altBean = (ALT_NAME_Bean) vAltNames.elementAt(k);
+                ALT_NAME_Bean altBean = ( ALT_NAME_Bean ) vAltNames.elementAt( k );
                 // check if it was existed in the list already
-                if (altBean.getALT_TYPE_NAME().equals(selType) && altBean.getALTERNATE_NAME().equals(selName)
-                                && altBean.getCONTE_IDSEQ().equals(sContID) && altBean.getAC_IDSEQ().equals(acID))
+                if( altBean.getALT_TYPE_NAME().equals( selType ) && altBean.getALTERNATE_NAME().equals( selName )
+                        && altBean.getCONTE_IDSEQ().equals( sContID ) && altBean.getAC_IDSEQ().equals( acID ) )
                 {
                     // change the submit action if deleted
-                    if (altBean.getALT_SUBMIT_ACTION().equals("DEL"))
+                    if( altBean.getALT_SUBMIT_ACTION().equals( "DEL" ) )
                     {
                         // mark it as ins if new one or upd if old one
                         String altID = altBean.getALT_NAME_IDSEQ();
-                        if (altID == null || altID.equals("") || altID.equals("new"))
-                            altBean.setALT_SUBMIT_ACTION("INS");
+                        if( altID == null || altID.equals( "" ) || altID.equals( "new" ) )
+                            altBean.setALT_SUBMIT_ACTION( "INS" );
                         else
-                            altBean.setALT_SUBMIT_ACTION("UPD");
-                        vAltNames.setElementAt(altBean, k);
+                            altBean.setALT_SUBMIT_ACTION( "UPD" );
+                        vAltNames.setElementAt( altBean, k );
                     }
                     isExist = true;
                 }
             }
             // add new one if not existed in teh bean already
-            if (isExist == false)
+            if( isExist == false )
             {
                 // fill in the bean and vector
                 ALT_NAME_Bean AltNameBean = new ALT_NAME_Bean();
-                AltNameBean.setALT_NAME_IDSEQ("new");
-                AltNameBean.setCONTE_IDSEQ(sContID);
-                AltNameBean.setCONTEXT_NAME(sContext);
-                AltNameBean.setALTERNATE_NAME(selName);
-                AltNameBean.setALT_TYPE_NAME(selType);
-                AltNameBean.setAC_LONG_NAME(acName);
-                AltNameBean.setAC_IDSEQ(acID);
-                AltNameBean.setAC_LANGUAGE(sLang);
-                AltNameBean.setALT_SUBMIT_ACTION("INS");
-                vAltNames.addElement(AltNameBean); // add the bean to a vector
+                AltNameBean.setALT_NAME_IDSEQ( "new" );
+                AltNameBean.setCONTE_IDSEQ( sContID );
+                AltNameBean.setCONTEXT_NAME( sContext );
+                AltNameBean.setALTERNATE_NAME( selName );
+                AltNameBean.setALT_TYPE_NAME( selType );
+                AltNameBean.setAC_LONG_NAME( acName );
+                AltNameBean.setAC_IDSEQ( acID );
+                AltNameBean.setAC_LANGUAGE( sLang );
+                AltNameBean.setALT_SUBMIT_ACTION( "INS" );
+                vAltNames.addElement( AltNameBean ); // add the bean to a vector
             }
         }
-        DataManager.setAttribute(session, "AllAltNameList", vAltNames);
+        DataManager.setAttribute( session, "AllAltNameList", vAltNames );
     }
 
     /**
@@ -1029,26 +1131,26 @@ public class CurationServlet
      * @param req
      * @throws java.lang.Exception
      */
-    @SuppressWarnings("unchecked")
-    private void doMarkRemoveAltNames(HttpServletRequest req) throws Exception
+    @SuppressWarnings( "unchecked" )
+    private void doMarkRemoveAltNames( HttpServletRequest req ) throws Exception
     {
         HttpSession session = req.getSession();
-       // InsACService insAC = new InsACService(m_classReq, m_classRes, this);
+        // InsACService insAC = new InsACService(m_classReq, m_classRes, this);
         String stgContMsg = "";
         // get the sessin vectors
-        Vector<ALT_NAME_Bean> vAltNames = (Vector) session.getAttribute("AllAltNameList");
-        Vector<String> vContext = (Vector) session.getAttribute("vWriteContextDE");
-        if (vContext == null)
+        Vector<ALT_NAME_Bean> vAltNames = ( Vector ) session.getAttribute( "AllAltNameList" );
+        Vector<String> vContext = ( Vector ) session.getAttribute( "vWriteContextDE" );
+        if( vContext == null )
             vContext = new Vector<String>();
-        String sContID = StringUtil.cleanJavascriptAndHtml((String) req.getParameter("selContext"));
-        if (sContID != null)
-            req.setAttribute("desContext", sContID);
+        String sContID = StringUtil.cleanJavascriptAndHtml( ( String ) req.getParameter( "selContext" ) );
+        if( sContID != null )
+            req.setAttribute( "desContext", sContID );
         int j = -1; // to keep track of number of items on the page
         Vector<String> vAltAttrs = new Vector<String>();
-        for (int i = 0; i < vAltNames.size(); i++)
+        for( int i = 0; i < vAltNames.size(); i++ )
         {
-            ALT_NAME_Bean aBean = (ALT_NAME_Bean) vAltNames.elementAt(i);
-            if (!aBean.getALT_SUBMIT_ACTION().equals("DEL"))
+            ALT_NAME_Bean aBean = ( ALT_NAME_Bean ) vAltNames.elementAt( i );
+            if( !aBean.getALT_SUBMIT_ACTION().equals( "DEL" ) )
             {
                 String altName = aBean.getALTERNATE_NAME();
                 String altType = aBean.getALT_TYPE_NAME();
@@ -1056,31 +1158,31 @@ public class CurationServlet
                 // go to next record if same type, name and context does exist
                 String curAltAttr = altType + " " + altName + " " + altCont;
                 // increase teh count only if it didn't exist in the disp vecot list
-                if (!vAltAttrs.contains(curAltAttr))
+                if( !vAltAttrs.contains( curAltAttr ) )
                 {
-                    vAltAttrs.addElement(curAltAttr);
+                    vAltAttrs.addElement( curAltAttr );
                     j += 1;
                 }
-                String ckItem = (String) req.getParameter("ACK" + j);
+                String ckItem = ( String ) req.getParameter( "ACK" + j );
                 // get the right selected item to mark as deleted
-                if (ckItem != null)
+                if( ckItem != null )
                 {
-                    if (vContext.contains(altCont) || altCont.equals("") || altCont.equalsIgnoreCase("new"))
+                    if( vContext.contains( altCont ) || altCont.equals( "" ) || altCont.equalsIgnoreCase( "new" ) )
                     {
-                        aBean.setALT_SUBMIT_ACTION("DEL");
-                        vAltNames.setElementAt(aBean, i);
+                        aBean.setALT_SUBMIT_ACTION( "DEL" );
+                        vAltNames.setElementAt( aBean, i );
                         // check if another record with same type, name and context but diff ac exists to remove
-                        for (int k = 0; k < vAltNames.size(); k++)
+                        for( int k = 0; k < vAltNames.size(); k++ )
                         {
-                            ALT_NAME_Bean altBean = (ALT_NAME_Bean) vAltNames.elementAt(k);
-                            if (!altBean.getALT_SUBMIT_ACTION().equals("DEL")
-                                            && altBean.getALTERNATE_NAME().equals(altName))
+                            ALT_NAME_Bean altBean = ( ALT_NAME_Bean ) vAltNames.elementAt( k );
+                            if( !altBean.getALT_SUBMIT_ACTION().equals( "DEL" )
+                                    && altBean.getALTERNATE_NAME().equals( altName ) )
                             {
-                                if (altBean.getALT_TYPE_NAME().equals(altType)
-                                                && altBean.getCONTEXT_NAME().equals(altCont))
+                                if( altBean.getALT_TYPE_NAME().equals( altType )
+                                        && altBean.getCONTEXT_NAME().equals( altCont ) )
                                 {
-                                    altBean.setALT_SUBMIT_ACTION("DEL"); // mark them also deleted
-                                    vAltNames.setElementAt(altBean, k);
+                                    altBean.setALT_SUBMIT_ACTION( "DEL" ); // mark them also deleted
+                                    vAltNames.setElementAt( altBean, k );
                                 }
                             }
                         }
@@ -1091,10 +1193,10 @@ public class CurationServlet
                 }
             }
         }
-        if (stgContMsg != null && !stgContMsg.equals(""))
-            storeStatusMsg("Unable to remove the following Alternate Names, because the user does not have write permission to remove "
-                                            + stgContMsg);
-        DataManager.setAttribute(session, "AllAltNameList", vAltNames);
+        if( stgContMsg != null && !stgContMsg.equals( "" ) )
+            storeStatusMsg( "Unable to remove the following Alternate Names, because the user does not have write permission to remove "
+                    + stgContMsg );
+        DataManager.setAttribute( session, "AllAltNameList", vAltNames );
     } // end remove alt names
 
     /**
@@ -1103,103 +1205,103 @@ public class CurationServlet
      * @param req
      * @throws java.lang.Exception
      */
-    @SuppressWarnings("unchecked")
-    private void doMarkAddRefDocs(HttpServletRequest req) throws Exception
+    @SuppressWarnings( "unchecked" )
+    private void doMarkAddRefDocs( HttpServletRequest req ) throws Exception
     {
         HttpSession session = req.getSession();
-       // InsACService insAC = new InsACService(m_classReq, m_classRes, this);
-        String selName = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml((String) m_classReq.getParameter("txtRefName"));
-        if (selName == null)
+        // InsACService insAC = new InsACService(m_classReq, m_classRes, this);
+        String selName = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml( ( String ) m_classReq.getParameter( "txtRefName" ) );
+        if( selName == null )
             selName = "";
         selName = selName.trim();
-        if (selName.equals(""))
+        if( selName.equals( "" ) )
         {
-            storeStatusMsg("Please enter a text for the alternate name");
+            storeStatusMsg( "Please enter a text for the alternate name" );
             return;
         }
         // continue with adding
-       // String stgContMsg = "";
-        Vector<REF_DOC_Bean> vRefDocs = (Vector) session.getAttribute("AllRefDocList");
-        Vector<String> vACId = (Vector) session.getAttribute("vACId");
-        if (vACId == null)
+        // String stgContMsg = "";
+        Vector<REF_DOC_Bean> vRefDocs = ( Vector ) session.getAttribute( "AllRefDocList" );
+        Vector<String> vACId = ( Vector ) session.getAttribute( "vACId" );
+        if( vACId == null )
             vACId = new Vector<String>();
-        Vector<String> vACName = (Vector) session.getAttribute("vACName");
-        if (vACName == null)
+        Vector<String> vACName = ( Vector ) session.getAttribute( "vACName" );
+        if( vACName == null )
             vACName = new Vector<String>();
-        Vector vContext = (Vector) session.getAttribute("vWriteContextDE");
-        if (vContext == null)
+        Vector vContext = ( Vector ) session.getAttribute( "vWriteContextDE" );
+        if( vContext == null )
             vContext = new Vector();
         // get request attributes
-        String sContID = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml((String) m_classReq.getParameter("selContext"));
-        String sContext = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml((String) m_classReq.getParameter("contextName"));
-        if (sContID != null)
-            req.setAttribute("desContext", sContID);
-        String sLang = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml((String) m_classReq.getParameter("dispLanguage"));
-        if (sLang != null)
-            req.setAttribute("desLang", sLang);
-        String selType = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml((String) m_classReq.getParameter("selRefType"));
-        String selText = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml((String) m_classReq.getParameter("txtRefText"));
-        String selUrl = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml((String) m_classReq.getParameter("txtRefURL"));
+        String sContID = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml( ( String ) m_classReq.getParameter( "selContext" ) );
+        String sContext = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml( ( String ) m_classReq.getParameter( "contextName" ) );
+        if( sContID != null )
+            req.setAttribute( "desContext", sContID );
+        String sLang = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml( ( String ) m_classReq.getParameter( "dispLanguage" ) );
+        if( sLang != null )
+            req.setAttribute( "desLang", sLang );
+        String selType = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml( ( String ) m_classReq.getParameter( "selRefType" ) );
+        String selText = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml( ( String ) m_classReq.getParameter( "txtRefText" ) );
+        String selUrl = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml( ( String ) m_classReq.getParameter( "txtRefURL" ) );
         // handle the context and ac name for new AC (DE, DEC and VD)
-        if (vACId.size() < 1)
-            vACId.addElement("new");
-        if (vACName.size() < 1)
-            vACName.addElement("new");
-        if (sContID == null || sContID.equals(""))
+        if( vACId.size() < 1 )
+            vACId.addElement( "new" );
+        if( vACName.size() < 1 )
+            vACName.addElement( "new" );
+        if( sContID == null || sContID.equals( "" ) )
             sContID = "new";
         // do add ref doc action
-        for (int i = 0; i < vACId.size(); i++)
+        for( int i = 0; i < vACId.size(); i++ )
         {
             // get ac names
-            String acID = (String) vACId.elementAt(i);
-            if (acID == null)
+            String acID = ( String ) vACId.elementAt( i );
+            if( acID == null )
                 acID = "";
             String acName = "";
-            if (vACName.size() > i)
-                acName = (String) vACName.elementAt(i);
+            if( vACName.size() > i )
+                acName = ( String ) vACName.elementAt( i );
             // check if another record with same type, name, ac and context exists already
             boolean isExist = false;
-            for (int k = 0; k < vRefDocs.size(); k++)
+            for( int k = 0; k < vRefDocs.size(); k++ )
             {
-                REF_DOC_Bean refBean = (REF_DOC_Bean) vRefDocs.elementAt(k);
+                REF_DOC_Bean refBean = ( REF_DOC_Bean ) vRefDocs.elementAt( k );
                 // check if it was existed in the list already
-                if (refBean.getDOC_TYPE_NAME().equals(selType) && refBean.getDOCUMENT_NAME().equals(selName)
-                                && refBean.getCONTE_IDSEQ().equals(sContID) && refBean.getAC_IDSEQ().equals(acID))
+                if( refBean.getDOC_TYPE_NAME().equals( selType ) && refBean.getDOCUMENT_NAME().equals( selName )
+                        && refBean.getCONTE_IDSEQ().equals( sContID ) && refBean.getAC_IDSEQ().equals( acID ) )
                 {
                     // change the submit action if deleted
-                    if (refBean.getREF_SUBMIT_ACTION().equals("DEL"))
+                    if( refBean.getREF_SUBMIT_ACTION().equals( "DEL" ) )
                     {
                         // mark it as ins if new one or upd if old one
                         String refID = refBean.getREF_DOC_IDSEQ();
-                        if (refID == null || refID.equals("") || refID.equals("new"))
-                            refBean.setREF_SUBMIT_ACTION("INS");
+                        if( refID == null || refID.equals( "" ) || refID.equals( "new" ) )
+                            refBean.setREF_SUBMIT_ACTION( "INS" );
                         else
-                            refBean.setREF_SUBMIT_ACTION("UPD");
-                        vRefDocs.setElementAt(refBean, k);
+                            refBean.setREF_SUBMIT_ACTION( "UPD" );
+                        vRefDocs.setElementAt( refBean, k );
                     }
                     isExist = true;
                 }
             }
             // add new one if not existed in teh bean already
-            if (isExist == false)
+            if( isExist == false )
             {
                 // fill in the bean and vector
                 REF_DOC_Bean RefDocBean = new REF_DOC_Bean();
-                RefDocBean.setAC_IDSEQ(acID);
-                RefDocBean.setAC_LONG_NAME(acName);
-                RefDocBean.setREF_DOC_IDSEQ("new");
-                RefDocBean.setDOCUMENT_NAME(selName);
-                RefDocBean.setDOC_TYPE_NAME(selType);
-                RefDocBean.setDOCUMENT_TEXT(selText);
-                RefDocBean.setDOCUMENT_URL(selUrl);
-                RefDocBean.setCONTE_IDSEQ(sContID);
-                RefDocBean.setCONTEXT_NAME(sContext);
-                RefDocBean.setAC_LANGUAGE(sLang);
-                RefDocBean.setREF_SUBMIT_ACTION("INS");
-                vRefDocs.addElement(RefDocBean); // add the bean to a vector
+                RefDocBean.setAC_IDSEQ( acID );
+                RefDocBean.setAC_LONG_NAME( acName );
+                RefDocBean.setREF_DOC_IDSEQ( "new" );
+                RefDocBean.setDOCUMENT_NAME( selName );
+                RefDocBean.setDOC_TYPE_NAME( selType );
+                RefDocBean.setDOCUMENT_TEXT( selText );
+                RefDocBean.setDOCUMENT_URL( selUrl );
+                RefDocBean.setCONTE_IDSEQ( sContID );
+                RefDocBean.setCONTEXT_NAME( sContext );
+                RefDocBean.setAC_LANGUAGE( sLang );
+                RefDocBean.setREF_SUBMIT_ACTION( "INS" );
+                vRefDocs.addElement( RefDocBean ); // add the bean to a vector
             }
         }
-        DataManager.setAttribute(session, "AllRefDocList", vRefDocs);
+        DataManager.setAttribute( session, "AllRefDocList", vRefDocs );
     } // end add ref docs
 
     /**
@@ -1208,26 +1310,26 @@ public class CurationServlet
      * @param req
      * @throws java.lang.Exception
      */
-    @SuppressWarnings("unchecked")
-    private void doMarkRemoveRefDocs(HttpServletRequest req) throws Exception
+    @SuppressWarnings( "unchecked" )
+    private void doMarkRemoveRefDocs( HttpServletRequest req ) throws Exception
     {
         HttpSession session = req.getSession();
         //InsACService insAC = new InsACService(m_classReq, m_classRes, this);
         String stgContMsg = "";
-        Vector<REF_DOC_Bean> vRefDocs = (Vector) session.getAttribute("AllRefDocList");
-        Vector vContext = (Vector) session.getAttribute("vWriteContextDE");
-        if (vContext == null)
+        Vector<REF_DOC_Bean> vRefDocs = ( Vector ) session.getAttribute( "AllRefDocList" );
+        Vector vContext = ( Vector ) session.getAttribute( "vWriteContextDE" );
+        if( vContext == null )
             vContext = new Vector();
-        String sContID = StringUtil.cleanJavascriptAndHtml((String) req.getParameter("selContext"));
-        if (sContID != null)
-            req.setAttribute("desContext", sContID);
+        String sContID = StringUtil.cleanJavascriptAndHtml( ( String ) req.getParameter( "selContext" ) );
+        if( sContID != null )
+            req.setAttribute( "desContext", sContID );
         int j = -1; // to keep track of number of items on the page
         Vector<String> vRefAttrs = new Vector<String>();
-        for (int i = 0; i < vRefDocs.size(); i++)
+        for( int i = 0; i < vRefDocs.size(); i++ )
         {
-            REF_DOC_Bean rBean = (REF_DOC_Bean) vRefDocs.elementAt(i);
-          //  String refID = rBean.getREF_DOC_IDSEQ();
-            if (!rBean.getREF_SUBMIT_ACTION().equals("DEL"))
+            REF_DOC_Bean rBean = ( REF_DOC_Bean ) vRefDocs.elementAt( i );
+            //  String refID = rBean.getREF_DOC_IDSEQ();
+            if( !rBean.getREF_SUBMIT_ACTION().equals( "DEL" ) )
             {
                 String refName = rBean.getDOCUMENT_NAME();
                 String refType = rBean.getDOC_TYPE_NAME();
@@ -1235,31 +1337,31 @@ public class CurationServlet
                 // go to next record if same type, name and context does exist
                 String curRefAttr = refType + " " + refName + " " + refCont;
                 // increase teh count only if it didn't exist in the disp vecot list
-                if (!vRefAttrs.contains(curRefAttr))
+                if( !vRefAttrs.contains( curRefAttr ) )
                 {
-                    vRefAttrs.addElement(curRefAttr);
+                    vRefAttrs.addElement( curRefAttr );
                     j += 1; // increase the count
                 }
-                String ckItem = StringUtil.cleanJavascriptAndHtml((String) req.getParameter("RCK" + j));
+                String ckItem = StringUtil.cleanJavascriptAndHtml( ( String ) req.getParameter( "RCK" + j ) );
                 // get the right selected item to mark as deleted
-                if (ckItem != null)
+                if( ckItem != null )
                 {
-                    if (vContext.contains(refCont) || refCont.equals("") || refCont.equalsIgnoreCase("new"))
+                    if( vContext.contains( refCont ) || refCont.equals( "" ) || refCont.equalsIgnoreCase( "new" ) )
                     {
-                        rBean.setREF_SUBMIT_ACTION("DEL");
-                        vRefDocs.setElementAt(rBean, i);
+                        rBean.setREF_SUBMIT_ACTION( "DEL" );
+                        vRefDocs.setElementAt( rBean, i );
                         // check if another record with same type, name and context but diff ac exists to remove
-                        for (int k = 0; k < vRefDocs.size(); k++)
+                        for( int k = 0; k < vRefDocs.size(); k++ )
                         {
-                            REF_DOC_Bean refBean = (REF_DOC_Bean) vRefDocs.elementAt(k);
-                            if (!refBean.getREF_SUBMIT_ACTION().equals("DEL")
-                                            && refBean.getDOCUMENT_NAME().equals(refName))
+                            REF_DOC_Bean refBean = ( REF_DOC_Bean ) vRefDocs.elementAt( k );
+                            if( !refBean.getREF_SUBMIT_ACTION().equals( "DEL" )
+                                    && refBean.getDOCUMENT_NAME().equals( refName ) )
                             {
-                                if (refBean.getDOC_TYPE_NAME().equals(refType)
-                                                && refBean.getCONTEXT_NAME().equals(refCont))
+                                if( refBean.getDOC_TYPE_NAME().equals( refType )
+                                        && refBean.getCONTEXT_NAME().equals( refCont ) )
                                 {
-                                    refBean.setREF_SUBMIT_ACTION("DEL"); // mark them also deleted
-                                    vRefDocs.setElementAt(refBean, k);
+                                    refBean.setREF_SUBMIT_ACTION( "DEL" ); // mark them also deleted
+                                    vRefDocs.setElementAt( refBean, k );
                                 }
                             }
                         }
@@ -1270,10 +1372,10 @@ public class CurationServlet
                 }
             }
         }
-        if (stgContMsg != null && !stgContMsg.equals(""))
-            storeStatusMsg("Unable to remove the following Reference Documents, because the user does not have write permission to remove "
-                                            + stgContMsg);
-        DataManager.setAttribute(session, "AllRefDocList", vRefDocs);
+        if( stgContMsg != null && !stgContMsg.equals( "" ) )
+            storeStatusMsg( "Unable to remove the following Reference Documents, because the user does not have write permission to remove "
+                    + stgContMsg );
+        DataManager.setAttribute( session, "AllRefDocList", vRefDocs );
     } // end remove ref doc
 
     /**
@@ -1290,107 +1392,108 @@ public class CurationServlet
      * @param sACAct
      *            is ac edit or create
      */
-    public void doMarkACBeanForAltRef(HttpServletRequest req, HttpServletResponse res, String sAC, String sType,
-                    String sACAct)
+    public void doMarkACBeanForAltRef(
+            HttpServletRequest req, HttpServletResponse res, String sAC, String sType,
+            String sACAct )
     {
-        HttpSession session = (HttpSession) req.getSession();
-        if (sACAct.equals("openAR") || sACAct.equals("submitAR"))
+        HttpSession session = ( HttpSession ) req.getSession();
+        if( sACAct.equals( "openAR" ) || sACAct.equals( "submitAR" ) )
         {
             Vector vRefDoc = new Vector(), vAltName = new Vector();
             // get the alt names and ref docs from teh bean
-            if (sAC.equals("DataElement"))
+            if( sAC.equals( "DataElement" ) )
             {
-                DE_Bean de = (DE_Bean) session.getAttribute("m_DE");
-                vAltName = (Vector) de.getAC_ALT_NAMES();
-                vRefDoc = (Vector) de.getAC_REF_DOCS();
+                DE_Bean de = ( DE_Bean ) session.getAttribute( "m_DE" );
+                vAltName = ( Vector ) de.getAC_ALT_NAMES();
+                vRefDoc = ( Vector ) de.getAC_REF_DOCS();
             }
-            if (sAC.equals("DataElementConcept"))
+            if( sAC.equals( "DataElementConcept" ) )
             {
-                DEC_Bean dec = (DEC_Bean) session.getAttribute("m_DEC");
+                DEC_Bean dec = ( DEC_Bean ) session.getAttribute( "m_DEC" );
                 vAltName = dec.getAC_ALT_NAMES();
                 vRefDoc = dec.getAC_REF_DOCS();
             }
-            if (sAC.equals("ValueDomain"))
+            if( sAC.equals( "ValueDomain" ) )
             {
-                VD_Bean vd = (VD_Bean) session.getAttribute("m_VD");
+                VD_Bean vd = ( VD_Bean ) session.getAttribute( "m_VD" );
                 vAltName = vd.getAC_ALT_NAMES();
                 vRefDoc = vd.getAC_REF_DOCS();
             }
             // store the alt name and ref doc in the session
-            if (vAltName == null)
+            if( vAltName == null )
                 vAltName = new Vector();
             Vector<ALT_NAME_Bean> vAllAltName = new Vector<ALT_NAME_Bean>();
-            for (int i = 0; i < vAltName.size(); i++)
+            for( int i = 0; i < vAltName.size(); i++ )
             {
                 ALT_NAME_Bean thisAlt = new ALT_NAME_Bean();
-                thisAlt = thisAlt.copyAltNames((ALT_NAME_Bean) vAltName.elementAt(i));
-                vAllAltName.addElement(thisAlt);
+                thisAlt = thisAlt.copyAltNames( ( ALT_NAME_Bean ) vAltName.elementAt( i ) );
+                vAllAltName.addElement( thisAlt );
             }
-            DataManager.setAttribute(session, "AllAltNameList", vAllAltName);
-            if (vRefDoc == null)
+            DataManager.setAttribute( session, "AllAltNameList", vAllAltName );
+            if( vRefDoc == null )
                 vRefDoc = new Vector();
             Vector<REF_DOC_Bean> vAllRefDoc = new Vector<REF_DOC_Bean>();
-            for (int i = 0; i < vRefDoc.size(); i++)
+            for( int i = 0; i < vRefDoc.size(); i++ )
             {
                 REF_DOC_Bean thisDoc = new REF_DOC_Bean();
-                thisDoc = thisDoc.copyRefDocs((REF_DOC_Bean) vRefDoc.elementAt(i));
-                vAllRefDoc.addElement(thisDoc);
+                thisDoc = thisDoc.copyRefDocs( ( REF_DOC_Bean ) vRefDoc.elementAt( i ) );
+                vAllRefDoc.addElement( thisDoc );
             }
-            DataManager.setAttribute(session, "AllRefDocList", vAllRefDoc);
+            DataManager.setAttribute( session, "AllRefDocList", vAllRefDoc );
         }
         else
         {
-            sType = sType.replace("Store ", ""); // remove word store from the string to use later
-            Vector vAllRefDoc = (Vector) session.getAttribute("AllRefDocList");
-            Vector vAllAltName = (Vector) session.getAttribute("AllAltNameList");
-            if (sAC.equals("DataElement"))
+            sType = sType.replace( "Store ", "" ); // remove word store from the string to use later
+            Vector vAllRefDoc = ( Vector ) session.getAttribute( "AllRefDocList" );
+            Vector vAllAltName = ( Vector ) session.getAttribute( "AllAltNameList" );
+            if( sAC.equals( "DataElement" ) )
             {
                 // System.out.println("checking de bean");
                 // stroe it in the bean
-                DE_Bean de = (DE_Bean) session.getAttribute("m_DE");
-                m_setAC.setDEValueFromPage(req, res, de); // capture all other page or request attributes
-                if (sType.equals("Alternate Names"))
-                    de.setAC_ALT_NAMES((Vector) vAllAltName);
-                else if (sType.equals("Reference Documents"))
-                    de.setAC_REF_DOCS((Vector) vAllRefDoc);
+                DE_Bean de = ( DE_Bean ) session.getAttribute( "m_DE" );
+                m_setAC.setDEValueFromPage( req, res, de ); // capture all other page or request attributes
+                if( sType.equals( "Alternate Names" ) )
+                    de.setAC_ALT_NAMES( ( Vector ) vAllAltName );
+                else if( sType.equals( "Reference Documents" ) )
+                    de.setAC_REF_DOCS( ( Vector ) vAllRefDoc );
                 // update session and forward
-                DataManager.setAttribute(session, "m_DE", de);
-                if (sACAct.equals("createAC"))
-                    ForwardJSP(req, res, "/CreateDEPage.jsp");
-                else if (sACAct.equals("editAC"))
-                    ForwardJSP(req, res, "/EditDEPage.jsp");
+                DataManager.setAttribute( session, "m_DE", de );
+                if( sACAct.equals( "createAC" ) )
+                    ForwardJSP( req, res, "/CreateDEPage.jsp" );
+                else if( sACAct.equals( "editAC" ) )
+                    ForwardJSP( req, res, "/EditDEPage.jsp" );
             }
-            else if (sAC.equals("DataElementConcept"))
+            else if( sAC.equals( "DataElementConcept" ) )
             {
                 // stroe it in the bean
-                DEC_Bean dec = (DEC_Bean) session.getAttribute("m_DEC");
-                m_setAC.setDECValueFromPage(req, res, dec); // capture all other page or request attributes
-                if (sType.equals("Alternate Names"))
-                    dec.setAC_ALT_NAMES(vAllAltName);
-                else if (sType.equals("Reference Documents"))
-                    dec.setAC_REF_DOCS(vAllRefDoc);
+                DEC_Bean dec = ( DEC_Bean ) session.getAttribute( "m_DEC" );
+                m_setAC.setDECValueFromPage( req, res, dec ); // capture all other page or request attributes
+                if( sType.equals( "Alternate Names" ) )
+                    dec.setAC_ALT_NAMES( vAllAltName );
+                else if( sType.equals( "Reference Documents" ) )
+                    dec.setAC_REF_DOCS( vAllRefDoc );
                 // update session and forward
-                DataManager.setAttribute(session, "m_DEC", dec);
-                if (sACAct.equals("createAC"))
-                    ForwardJSP(req, res, "/CreateDECPage.jsp");
-                else if (sACAct.equals("editAC"))
-                    ForwardJSP(req, res, "/EditDECPage.jsp");
+                DataManager.setAttribute( session, "m_DEC", dec );
+                if( sACAct.equals( "createAC" ) )
+                    ForwardJSP( req, res, "/CreateDECPage.jsp" );
+                else if( sACAct.equals( "editAC" ) )
+                    ForwardJSP( req, res, "/EditDECPage.jsp" );
             }
-            else if (sAC.equals("ValueDomain"))
+            else if( sAC.equals( "ValueDomain" ) )
             {
                 // stroe it in the bean
-                VD_Bean vd = (VD_Bean) session.getAttribute("m_VD");
-                m_setAC.setVDValueFromPage(req, res, vd); // capture all other page or request attributes
-                if (sType.equals("Alternate Names"))
-                    vd.setAC_ALT_NAMES(vAllAltName);
-                else if (sType.equals("Reference Documents"))
-                    vd.setAC_REF_DOCS(vAllRefDoc);
+                VD_Bean vd = ( VD_Bean ) session.getAttribute( "m_VD" );
+                m_setAC.setVDValueFromPage( req, res, vd ); // capture all other page or request attributes
+                if( sType.equals( "Alternate Names" ) )
+                    vd.setAC_ALT_NAMES( vAllAltName );
+                else if( sType.equals( "Reference Documents" ) )
+                    vd.setAC_REF_DOCS( vAllRefDoc );
                 // update session and forward
-                DataManager.setAttribute(session, "m_VD", vd);
-                if (sACAct.equals("createAC"))
-                    ForwardJSP(req, res, "/CreateVDPage.jsp");
-                else if (sACAct.equals("editAC"))
-                    ForwardJSP(req, res, "/EditVDPage.jsp");
+                DataManager.setAttribute( session, "m_VD", vd );
+                if( sACAct.equals( "createAC" ) )
+                    ForwardJSP( req, res, "/CreateVDPage.jsp" );
+                else if( sACAct.equals( "editAC" ) )
+                    ForwardJSP( req, res, "/EditVDPage.jsp" );
             }
         }
     }
@@ -1455,6 +1558,7 @@ public class CurationServlet
         }
     }
 */
+
     /**
      * gets the row number from the hiddenSelRow Loops through the selected row and gets the evs bean for that row from
      * the vector of evs search results. adds it to vList vector and return the vector back
@@ -1464,36 +1568,36 @@ public class CurationServlet
      * @return Vector of EVS Beans
      * @throws java.lang.Exception
      */
-    public EVS_Bean getEVSSelRow(HttpServletRequest req) throws Exception
+    public EVS_Bean getEVSSelRow( HttpServletRequest req ) throws Exception
     {
         HttpSession session = req.getSession();
-     //   InsACService insAC = new InsACService(req, m_classRes, this);
+        //   InsACService insAC = new InsACService(req, m_classRes, this);
         // get the result vector from the session
         EVS_Bean eBean = new EVS_Bean();
-        Vector vRSel = (Vector) session.getAttribute("vACSearch");
-        if (vRSel == null)
+        Vector vRSel = ( Vector ) session.getAttribute( "vACSearch" );
+        if( vRSel == null )
             vRSel = new Vector();
         // get the array from teh hidden list
-        String selRows[] = StringUtil.cleanJavascriptAndHtmlArray(req.getParameterValues("hiddenSelRow"));
-        if (selRows == null)
-            storeStatusMsg("Unable to select Concept, please try again");
+        String selRows[] = StringUtil.cleanJavascriptAndHtmlArray( req.getParameterValues( "hiddenSelRow" ) );
+        if( selRows == null )
+            storeStatusMsg( "Unable to select Concept, please try again" );
         else
         {
             // loop through the array of strings
-            for (int i = 0; i < selRows.length; i++)
+            for( int i = 0; i < selRows.length; i++ )
             {
                 String thisRow = selRows[i];
-                Integer IRow = new Integer(thisRow);
+                Integer IRow = new Integer( thisRow );
                 int iRow = IRow.intValue();
-                if (iRow < 0 || iRow > vRSel.size())
-                    storeStatusMsg("Row size is either too big or too small.");
+                if( iRow < 0 || iRow > vRSel.size() )
+                    storeStatusMsg( "Row size is either too big or too small." );
                 else
                 {
-                    eBean = (EVS_Bean) vRSel.elementAt(iRow);
-                    if (eBean == null || eBean.getLONG_NAME() == null)
+                    eBean = ( EVS_Bean ) vRSel.elementAt( iRow );
+                    if( eBean == null || eBean.getLONG_NAME() == null )
                     {
-                        storeStatusMsg("Unable to obtain concept from the " + iRow
-                                        + " row of the search results.\\n" + "Please try again.");
+                        storeStatusMsg( "Unable to obtain concept from the " + iRow
+                                + " row of the search results.\\n" + "Please try again." );
                         continue;
                     }
                 }
@@ -1513,49 +1617,49 @@ public class CurationServlet
      * @return Vector of EVS Beans
      * @throws java.lang.Exception
      */
-    private Vector<EVS_Bean> getEVSSelRowVector(HttpServletRequest req, Vector<EVS_Bean> vList) throws Exception
+    private Vector<EVS_Bean> getEVSSelRowVector( HttpServletRequest req, Vector<EVS_Bean> vList ) throws Exception
     {
         HttpSession session = req.getSession();
         // get the result vector from the session
-        Vector vRSel = (Vector) session.getAttribute("vACSearch");
-        if (vRSel == null)
+        Vector vRSel = ( Vector ) session.getAttribute( "vACSearch" );
+        if( vRSel == null )
             vRSel = new Vector();
         // get the array from teh hidden list
-        String selRows[] = StringUtil.cleanJavascriptAndHtmlArray(req.getParameterValues("hiddenSelRow"));
-        if (selRows == null)
-            storeStatusMsg("Unable to select Concept, please try again");
+        String selRows[] = StringUtil.cleanJavascriptAndHtmlArray( req.getParameterValues( "hiddenSelRow" ) );
+        if( selRows == null )
+            storeStatusMsg( "Unable to select Concept, please try again" );
         else
         {
             // loop through the array of strings
-            for (int i = 0; i < selRows.length; i++)
+            for( int i = 0; i < selRows.length; i++ )
             {
                 String thisRow = selRows[i];
-                int iRow = Integer.parseInt(thisRow);
-               // Integer IRow = new Integer(thisRow);
-               // int iRow = IRow.intValue();
-                if (iRow < 0 || iRow > vRSel.size())
+                int iRow = Integer.parseInt( thisRow );
+                // Integer IRow = new Integer(thisRow);
+                // int iRow = IRow.intValue();
+                if( iRow < 0 || iRow > vRSel.size() )
                 {
-                    storeStatusMsg(iRow + " Row size is either too big or too small.");
-                    logger.error(iRow + " CurationServelt - getEVSSelRowVector:  Row size is either too big or too small.");
+                    storeStatusMsg( iRow + " Row size is either too big or too small." );
+                    logger.error( iRow + " CurationServelt - getEVSSelRowVector:  Row size is either too big or too small." );
                 }
                 else
                 {
-                    EVS_Bean eBean = (EVS_Bean) vRSel.elementAt(iRow);
+                    EVS_Bean eBean = ( EVS_Bean ) vRSel.elementAt( iRow );
                     // send it back if unable to obtion the concept
-                    if (eBean == null || eBean.getLONG_NAME() == null)
+                    if( eBean == null || eBean.getLONG_NAME() == null )
                     {
-                        storeStatusMsg("Unable to obtain concept from the " + thisRow
-                                        + " row of the search results.\\n" + "Please try again.");
-                        logger.error(thisRow + " CurationServelt - getEVSSelRowVector:  Unable to obtain concept from the results.");
+                        storeStatusMsg( "Unable to obtain concept from the " + thisRow
+                                + " row of the search results.\\n" + "Please try again." );
+                        logger.error( thisRow + " CurationServelt - getEVSSelRowVector:  Unable to obtain concept from the results." );
                         continue;
                     }
-                    vList.addElement(eBean);
+                    vList.addElement( eBean );
                 }
             }
             //add duplicate checks logic here
-            EVSSearch serEVS = new EVSSearch(m_classReq, m_classRes, this);
-            if (vList != null && vList.size() > 0)
-                vList = serEVS.getNCIPrefConcepts(vList);
+            EVSSearch serEVS = new EVSSearch( m_classReq, m_classRes, this );
+            if( vList != null && vList.size() > 0 )
+                vList = serEVS.getNCIPrefConcepts( vList );
         }
         return vList;
     }
@@ -1569,36 +1673,36 @@ public class CurationServlet
      *            HttpServletResponse object
      * @throws java.lang.Exception
      */
-    private void doNonEVSPageAction(HttpServletRequest req, HttpServletResponse res) throws Exception
+    private void doNonEVSPageAction( HttpServletRequest req, HttpServletResponse res ) throws Exception
     {
         HttpSession session = req.getSession();
-        String sPageAct = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml((String) m_classReq.getParameter("actSelect"));
-        if (sPageAct.equals("viewParent"))
+        String sPageAct = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml( ( String ) m_classReq.getParameter( "actSelect" ) );
+        if( sPageAct.equals( "viewParent" ) )
         {
-            VD_Bean vd = (VD_Bean) session.getAttribute("m_VD");
+            VD_Bean vd = ( VD_Bean ) session.getAttribute( "m_VD" );
             Vector<EVS_Bean> vParentCon = vd.getReferenceConceptList(); // (Vector)session.getAttribute("VDParentConcept");
-            if (vParentCon != null)
+            if( vParentCon != null )
             {
-                String selName = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml((String) m_classReq.getParameter("txtRefName"));
-                for (int i = 0; i < vParentCon.size(); i++)
+                String selName = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml( ( String ) m_classReq.getParameter( "txtRefName" ) );
+                for( int i = 0; i < vParentCon.size(); i++ )
                 {
-                    EVS_Bean eBean = (EVS_Bean) vParentCon.elementAt(i);
+                    EVS_Bean eBean = ( EVS_Bean ) vParentCon.elementAt( i );
                     String thisName = eBean.getLONG_NAME();
                     String sDB = eBean.getEVS_DATABASE();
                     // get the selected name from the vector
-                    if (selName != null && thisName != null && sDB != null && selName.equals(thisName)
-                                    && sDB.equals("Non_EVS"))
+                    if( selName != null && thisName != null && sDB != null && selName.equals( thisName )
+                            && sDB.equals( "Non_EVS" ) )
                     {
-                        req.setAttribute("SelectedVDParent", eBean);
+                        req.setAttribute( "SelectedVDParent", eBean );
                         break;
                     }
                 }
             }
-            this.ForwardJSP(req, res, "/NonEVSSearchPage.jsp");
+            this.ForwardJSP( req, res, "/NonEVSSearchPage.jsp" );
         }
         else
         { // send back to block search for parent
-            ForwardJSP(req, res, "/OpenSearchWindowBlocks.jsp");
+            ForwardJSP( req, res, "/OpenSearchWindowBlocks.jsp" );
         }
     }
 
@@ -1613,142 +1717,141 @@ public class CurationServlet
      *            string pv action
      *
      */
-    public void doSelectVMConcept(HttpServletRequest req, HttpServletResponse res, String sPVAction)
+    public void doSelectVMConcept( HttpServletRequest req, HttpServletResponse res, String sPVAction )
     {
         try
         {
             //InsACService insAC = new InsACService(req, res, this);
             HttpSession session = req.getSession();
-            DataManager.setAttribute(session, "PVAction", sPVAction);
-            VD_Bean m_VD = (VD_Bean) session.getAttribute("m_VD"); // new VD_Bean();
+            DataManager.setAttribute( session, "PVAction", sPVAction );
+            VD_Bean m_VD = ( VD_Bean ) session.getAttribute( "m_VD" ); // new VD_Bean();
             // get the existing pvs from the session
             Vector<PV_Bean> vVDPVList = m_VD.getVD_PV_List(); // (Vector)session.getAttribute("VDPVList");
-            if (vVDPVList == null)
+            if( vVDPVList == null )
                 vVDPVList = new Vector<PV_Bean>();
             // get the VMs selected from EVS from the page.
-            Vector<EVS_Bean> vEVSList = this.getEVSSelRowVector(req, new Vector<EVS_Bean>());
-            if (vEVSList != null && vEVSList.size() > 0)
+            Vector<EVS_Bean> vEVSList = this.getEVSSelRowVector( req, new Vector<EVS_Bean>() );
+            if( vEVSList != null && vEVSList.size() > 0 )
             {
                 // get the parent concept which is same for all the selected values
-                String sSelectedParentName = (String) session.getAttribute("SelectedParentName");
-                String sSelectedParentCC = (String) session.getAttribute("SelectedParentCC");
-                String sSelectedParentDB = (String) session.getAttribute("SelectedParentDB");
-                String sSelectedParentMetaSource = (String) session.getAttribute("SelectedParentMetaSource");
+                String sSelectedParentName = ( String ) session.getAttribute( "SelectedParentName" );
+                String sSelectedParentCC = ( String ) session.getAttribute( "SelectedParentCC" );
+                String sSelectedParentDB = ( String ) session.getAttribute( "SelectedParentDB" );
+                String sSelectedParentMetaSource = ( String ) session.getAttribute( "SelectedParentMetaSource" );
                 // get the parent concept
                 EVS_Bean parConcept = new EVS_Bean();
-                if (sSelectedParentName != null && !sSelectedParentName.equals(""))
+                if( sSelectedParentName != null && !sSelectedParentName.equals( "" ) )
                 {
-                    parConcept.setLONG_NAME(sSelectedParentName);
-                    parConcept.setCONCEPT_IDENTIFIER(sSelectedParentCC);
-                    parConcept.setEVS_DATABASE(sSelectedParentDB);
-                    parConcept.setEVS_CONCEPT_SOURCE(sSelectedParentMetaSource);
+                    parConcept.setLONG_NAME( sSelectedParentName );
+                    parConcept.setCONCEPT_IDENTIFIER( sSelectedParentCC );
+                    parConcept.setEVS_DATABASE( sSelectedParentDB );
+                    parConcept.setEVS_CONCEPT_SOURCE( sSelectedParentMetaSource );
                 }
                 String notUpdateVDPVs = "";
                 // String updatedVDPVs = "";
-                for (int i = 0; i < vEVSList.size(); i++)
+                for( int i = 0; i < vEVSList.size(); i++ )
                 {
-                    EVS_Bean eBean = (EVS_Bean) vEVSList.elementAt(i);
-                    EVS_UserBean eUser = (EVS_UserBean) this.sessionData.EvsUsrBean; //
+                    EVS_Bean eBean = ( EVS_Bean ) vEVSList.elementAt( i );
+                    EVS_UserBean eUser = ( EVS_UserBean ) this.sessionData.EvsUsrBean; //
 
-                    if (eUser == null)
+                    if( eUser == null )
                         eUser = new EVS_UserBean();
                     // get the nci vocab if it meta or other vocab only if not referenced
-                    if (sSelectedParentName == null || sSelectedParentName.equals(""))
+                    if( sSelectedParentName == null || sSelectedParentName.equals( "" ) )
                     {
                         // get teh right vocab name
-                        String eDB = eBean.getVocabAttr(eUser, eBean.getEVS_ORIGIN(), EVSSearch.VOCAB_NAME,
-                                        EVSSearch.VOCAB_DBORIGIN); // "vocabName", "vocabDBOrigin");
-                        if (eDB.equals(EVSSearch.META_VALUE)) // "MetaValue"))
+                        String eDB = eBean.getVocabAttr( eUser, eBean.getEVS_ORIGIN(), EVSSearch.VOCAB_NAME,
+                                EVSSearch.VOCAB_DBORIGIN ); // "vocabName", "vocabDBOrigin");
+                        if( eDB.equals( EVSSearch.META_VALUE ) ) // "MetaValue"))
                             eDB = eBean.getEVS_ORIGIN();
-                        eBean.setEVS_DATABASE(eDB); // eBean.getEVS_ORIGIN());
+                        eBean.setEVS_DATABASE( eDB ); // eBean.getEVS_ORIGIN());
                         // get the thesaurus term
-                        EVSSearch evs = new EVSSearch(req, res, this);
-                        eBean = evs.getThesaurusConcept(eBean);
+                        EVSSearch evs = new EVSSearch( req, res, this );
+                        eBean = evs.getThesaurusConcept( eBean );
                     }
                     // get cadsr data
                     ConceptAction conact = new ConceptAction();
                     ConceptForm data = new ConceptForm();
                     //data.setDBConnection(this.connectDB(req, res));
-                    data.setDBConnection(m_conn);
-                    data.setCurationServlet(this);
-                    eBean = conact.getCaDSRConcept(eBean, eUser, data);
+                    data.setDBConnection( m_conn );
+                    data.setCurationServlet( this );
+                    eBean = conact.getCaDSRConcept( eBean, eUser, data );
                     //this.freeConnection(data.getDBConnection());
-                    String  errMsg = data.getStatusMsg();
-                    if (!errMsg.equals(""))
-                        storeStatusMsg(errMsg + "\\n");
+                    String errMsg = data.getStatusMsg();
+                    if( !errMsg.equals( "" ) )
+                        storeStatusMsg( errMsg + "\\n" );
                     String sValue = eBean.getLONG_NAME();
                     String sMean = eBean.getLONG_NAME();
                     //System.out.println(sValue + " selectVMConcept " + sMean);
                     // add the level to the value if parent exists to update the value
-                    if (sSelectedParentName != null && !sSelectedParentName.equals(""))
+                    if( sSelectedParentName != null && !sSelectedParentName.equals( "" ) )
                     {
-                        Integer iLevel = new Integer(eBean.getLEVEL());
+                        Integer iLevel = new Integer( eBean.getLEVEL() );
                         sValue = sValue + " [" + iLevel.toString() + "]";
                     }
                     boolean isExist = false;
                     boolean isUpdated = false;
                     // int updRow = -1;
-                    for (int j = 0; j < vVDPVList.size(); j++) // check if the concept already exists.
+                    for( int j = 0; j < vVDPVList.size(); j++ ) // check if the concept already exists.
                     {
                         PV_Bean pvBean = new PV_Bean();
-                        pvBean = (PV_Bean) vVDPVList.elementAt(j);
+                        pvBean = ( PV_Bean ) vVDPVList.elementAt( j );
                         VM_Bean vdVM = pvBean.getPV_VM();
                         String vdValue = pvBean.getPV_VALUE();
                         String vdMean = "";
-                        if (vdVM != null)
+                        if( vdVM != null )
                             vdMean = vdVM.getVM_LONG_NAME();//vdVM.getVM_SHORT_MEANING(); // pvBean.getPV_SHORT_MEANING();
                         // check if value meaning was already existed
-                        if (vdMean != null && vdMean.equalsIgnoreCase(sMean))
+                        if( vdMean != null && vdMean.equalsIgnoreCase( sMean ) )
                         {
                             String pvSubmit = pvBean.getVP_SUBMIT_ACTION();
                             // put back the deleted pv if it has same value-vm pair
-                            if (pvSubmit != null && pvSubmit.equals("DEL") && vdValue.equalsIgnoreCase(sValue))
+                            if( pvSubmit != null && pvSubmit.equals( "DEL" ) && vdValue.equalsIgnoreCase( sValue ) )
                             {
                                 // set to update if idseq is non evs and is from cadsr
-                                if (pvBean.getPV_PV_IDSEQ() != null && !pvBean.getPV_PV_IDSEQ().equals("EVS_" + sValue))
-                                    pvBean.setVP_SUBMIT_ACTION("UPD");
+                                if( pvBean.getPV_PV_IDSEQ() != null && !pvBean.getPV_PV_IDSEQ().equals( "EVS_" + sValue ) )
+                                    pvBean.setVP_SUBMIT_ACTION( "UPD" );
                                 else
-                                    pvBean.setVP_SUBMIT_ACTION("INS"); // evs term
+                                    pvBean.setVP_SUBMIT_ACTION( "INS" ); // evs term
                                 // mark as deleted
                                 isUpdated = true;
                                 // updRow = j; //need this to update the vector
-                                this.storePVinVDPVList(vVDPVList, pvBean, eBean, parConcept, sValue, sMean, j, true);
+                                this.storePVinVDPVList( vVDPVList, pvBean, eBean, parConcept, sValue, sMean, j, true );
                             }
-                            else if (pvSubmit != null && !pvSubmit.equals("DEL") && vdValue.equalsIgnoreCase(sValue)) // was not deleted
+                            else if( pvSubmit != null && !pvSubmit.equals( "DEL" ) && vdValue.equalsIgnoreCase( sValue ) ) // was not deleted
                             {
                                 String sValMean = "\\tValue: " + sValue + " and Meaning: "
-                                                + sMean + "\\n";
+                                        + sMean + "\\n";
                                 notUpdateVDPVs += sValMean;
                                 isExist = true;
                             }
                         }
                     }
                     // add to the bean if not exists
-                    if (isExist == false && !isUpdated)
+                    if( isExist == false && !isUpdated )
                     {
-                        this.storePVinVDPVList(vVDPVList, new PV_Bean(), eBean, parConcept, sValue, sMean, -1, false);
+                        this.storePVinVDPVList( vVDPVList, new PV_Bean(), eBean, parConcept, sValue, sMean, -1, false );
                     }
                 }
                 // System.out.println(updatedVDPVs + " selMinVD " + vVDPVList.size());
                 // DataManager.setAttribute(session, "VDPVList", vVDPVList);
-                m_VD.setVD_PV_List(vVDPVList);
-                DataManager.setAttribute(session, "m_VD", m_VD);
+                m_VD.setVD_PV_List( vVDPVList );
+                DataManager.setAttribute( session, "m_VD", m_VD );
                 // alert if value meaning alredy exists but updated with concept info
                 /*
                  * if (updatedVDPVs != null && !updatedVDPVs.equals("")) { String stMsg = "The following Value and
                  * Meaning is updated with the Concept Relationship. \\n"; InsACService insAC = new InsACService(req,
                  * res, this); insAC.storeStatusMsg(stMsg + updatedVDPVs); }
                  */// alert if value meaning alredy exists for pv on the page
-                if (notUpdateVDPVs != null && !notUpdateVDPVs.equals(""))
+                if( notUpdateVDPVs != null && !notUpdateVDPVs.equals( "" ) )
                 {
                     String stMsg = "The following Value and Meaning already exists in the Value Domain.\\n";
-                    storeStatusMsg(stMsg + notUpdateVDPVs);
+                    storeStatusMsg( stMsg + notUpdateVDPVs );
                 }
             }
-        }
-        catch (Exception e)
+        } catch( Exception e )
         {
-            logger.error("ERROR - ", e);
+            logger.error( "ERROR - ", e );
         }
     }
 
@@ -1764,51 +1867,51 @@ public class CurationServlet
      * @param isUpdated boolean value of updated or not
      * @return Vector<PV_Bean> object
      */
-    private Vector<PV_Bean> storePVinVDPVList(Vector<PV_Bean> vVPList, PV_Bean pBean, EVS_Bean eBean, EVS_Bean parBean,
-                    String sValue, String sMean, int updRow, boolean isUpdated)
+    private Vector<PV_Bean> storePVinVDPVList(
+            Vector<PV_Bean> vVPList, PV_Bean pBean, EVS_Bean eBean, EVS_Bean parBean,
+            String sValue, String sMean, int updRow, boolean isUpdated )
     {
         try
         {
-            if (!isUpdated) // do not update these if
+            if( !isUpdated ) // do not update these if
             {
                 // store concept name as value and vm in the pv bean
                 // pBean = new PV_Bean();
-                pBean.setPV_PV_IDSEQ("EVS_" + sValue); // store id as EVS
-                pBean.setPV_VALUE(sValue);
-                pBean.setPV_SHORT_MEANING(sMean);
-                pBean.setVP_SUBMIT_ACTION("INS");
+                pBean.setPV_PV_IDSEQ( "EVS_" + sValue ); // store id as EVS
+                pBean.setPV_VALUE( sValue );
+                pBean.setPV_SHORT_MEANING( sMean );
+                pBean.setVP_SUBMIT_ACTION( "INS" );
             }
             // allow to update the definition if different description for evs selected items
-            pBean.setPV_MEANING_DESCRIPTION(eBean.getPREFERRED_DEFINITION());
+            pBean.setPV_MEANING_DESCRIPTION( eBean.getPREFERRED_DEFINITION() );
             // these are for vd-pvs
-            SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
-            if (pBean.getVP_SUBMIT_ACTION().equals("INS"))
-                pBean.setPV_BEGIN_DATE(formatter.format(new java.util.Date()));
+            SimpleDateFormat formatter = new SimpleDateFormat( "MM/dd/yyyy" );
+            if( pBean.getVP_SUBMIT_ACTION().equals( "INS" ) )
+                pBean.setPV_BEGIN_DATE( formatter.format( new java.util.Date() ) );
             // add evs bean to pv bean
             VM_Bean vm = new VM_Bean();
-         //   vm.setVM_SHORT_MEANING(pBean.getPV_SHORT_MEANING());
-            logger.debug("VM_LONG_NAME at Line 1759 of CurationServlet.java"+pBean.getPV_SHORT_MEANING());
-			vm.setVM_LONG_NAME(AdministeredItemUtil.handleLongName(pBean.getPV_SHORT_MEANING()));	//GF32004;
-			logger.debug("VM_LONG_NAME at Line 1761 of CurationServlet.java"+vm.getVM_LONG_NAME());
-           // vm.setVM_DESCRIPTION(pBean.getPV_MEANING_DESCRIPTION());
-            vm.setVM_PREFERRED_DEFINITION(pBean.getPV_MEANING_DESCRIPTION());
-            vm.setVM_CONDR_IDSEQ(eBean.getCONDR_IDSEQ());
+            //   vm.setVM_SHORT_MEANING(pBean.getPV_SHORT_MEANING());
+            logger.debug( "VM_LONG_NAME at Line 1759 of CurationServlet.java" + pBean.getPV_SHORT_MEANING() );
+            vm.setVM_LONG_NAME( AdministeredItemUtil.handleLongName( pBean.getPV_SHORT_MEANING() ) );    //GF32004;
+            logger.debug( "VM_LONG_NAME at Line 1761 of CurationServlet.java" + vm.getVM_LONG_NAME() );
+            // vm.setVM_DESCRIPTION(pBean.getPV_MEANING_DESCRIPTION());
+            vm.setVM_PREFERRED_DEFINITION( pBean.getPV_MEANING_DESCRIPTION() );
+            vm.setVM_CONDR_IDSEQ( eBean.getCONDR_IDSEQ() );
             Vector<EVS_Bean> vmCon = new Vector<EVS_Bean>();
-            vmCon.addElement(eBean);
-            vm.setVM_CONCEPT_LIST(vmCon);
-            vm.setVM_SUBMIT_ACTION(VMForm.CADSR_ACTION_INS);
-            pBean.setPV_VM(vm);
+            vmCon.addElement( eBean );
+            vm.setVM_CONCEPT_LIST( vmCon );
+            vm.setVM_SUBMIT_ACTION( VMForm.CADSR_ACTION_INS );
+            pBean.setPV_VM( vm );
             //System.out.println(eBean.getCONCEPT_IDENTIFIER() + " vm concepts " + vmCon.size());
             // pBean.setVM_CONCEPT(eBean);
-            pBean.setPARENT_CONCEPT(parBean);
-            if (isUpdated)
-                vVPList.setElementAt(pBean, updRow); // udpate the vector
+            pBean.setPARENT_CONCEPT( parBean );
+            if( isUpdated )
+                vVPList.setElementAt( pBean, updRow ); // udpate the vector
             else
-                vVPList.addElement(pBean); // store bean in vector
-        }
-        catch (Exception e)
+                vVPList.addElement( pBean ); // store bean in vector
+        } catch( Exception e )
         {
-            logger.error("Error - store value and meaning in vdpv list: Value - " + sValue + " and Meaning - " + sMean, e);
+            logger.error( "Error - store value and meaning in vdpv list: Value - " + sValue + " and Meaning - " + sMean, e );
         }
         return vVPList;
     }
@@ -1846,6 +1949,7 @@ public class CurationServlet
         DataManager.setAttribute(session, "selRepRow", "");
     }
 */
+
     /**
      * gets the point or whole version number from old version for block versioning.
      *
@@ -1857,45 +1961,45 @@ public class CurationServlet
      * @return newVersion version number that need to updated to.
      * @throws Exception
      */
-    protected String getNewVersionNumber(String version, String lastVersion) throws Exception
+    protected String getNewVersionNumber( String version, String lastVersion ) throws Exception
     {
         int index = -1;
         String pointStr = ".";
         String strWhBegNumber = "";
         int iWhBegNumber = 0;
-        index = lastVersion.indexOf(pointStr);
-        String strPtBegNumber = lastVersion.substring(0, index);
-        String afterDecimalNumber = lastVersion.substring((index + 1), (index + 2));
-        if (index == 1)
+        index = lastVersion.indexOf( pointStr );
+        String strPtBegNumber = lastVersion.substring( 0, index );
+        String afterDecimalNumber = lastVersion.substring( ( index + 1 ), ( index + 2 ) );
+        if( index == 1 )
             strWhBegNumber = "";
-        else if (index == 2)
+        else if( index == 2 )
         {
-            strWhBegNumber = lastVersion.substring(0, index - 1);
-            Integer WhBegNumber = new Integer(strWhBegNumber);
+            strWhBegNumber = lastVersion.substring( 0, index - 1 );
+            Integer WhBegNumber = new Integer( strWhBegNumber );
             iWhBegNumber = WhBegNumber.intValue();
         }
         String strWhEndNumber = ".0";
-        String beforeDecimalNumber = lastVersion.substring((index - 1), (index));
+        String beforeDecimalNumber = lastVersion.substring( ( index - 1 ), ( index ) );
         String sNewVersion = "";
-        Integer IadNumber = new Integer(0);
-        Integer IbdNumber = new Integer(0);
+        Integer IadNumber = new Integer( 0 );
+        Integer IbdNumber = new Integer( 0 );
         String strIncADNumber = "";
         String strIncBDNumber = "";
-        if (version == null)
+        if( version == null )
             version = "";
-        else if (version.equals("Point"))
+        else if( version.equals( "Point" ) )
         {
             // Point new version
             int incrementADNumber = 0;
             int incrementBDNumber = 0;
-            Integer adNumber = new Integer(afterDecimalNumber);
-            Integer bdNumber = new Integer(strPtBegNumber);
+            Integer adNumber = new Integer( afterDecimalNumber );
+            Integer bdNumber = new Integer( strPtBegNumber );
             int iADNumber = adNumber.intValue(); // after decimal
             int iBDNumber = bdNumber.intValue(); // before decimal
-            if (iADNumber != 9)
+            if( iADNumber != 9 )
             {
                 incrementADNumber = iADNumber + 1;
-                IadNumber = new Integer(incrementADNumber);
+                IadNumber = new Integer( incrementADNumber );
                 strIncADNumber = IadNumber.toString();
                 sNewVersion = strPtBegNumber + "." + strIncADNumber; // + strPtEndNumber;
             }
@@ -1904,23 +2008,23 @@ public class CurationServlet
             {
                 incrementADNumber = 0;
                 incrementBDNumber = iBDNumber + 1;
-                IbdNumber = new Integer(incrementBDNumber);
+                IbdNumber = new Integer( incrementBDNumber );
                 strIncBDNumber = IbdNumber.toString();
-                IadNumber = new Integer(incrementADNumber);
+                IadNumber = new Integer( incrementADNumber );
                 strIncADNumber = IadNumber.toString();
                 sNewVersion = strIncBDNumber + "." + strIncADNumber; // + strPtEndNumber;
             }
             // DEBeanSR.setDE_VERSION(sNewVersion);
         }
-        else if (version.equals("Whole"))
+        else if( version.equals( "Whole" ) )
         {
             // Whole new version
-            Integer bdNumber = new Integer(beforeDecimalNumber);
+            Integer bdNumber = new Integer( beforeDecimalNumber );
             int iBDNumber = bdNumber.intValue();
             int incrementBDNumber = iBDNumber + 1;
-            if (iBDNumber != 9)
+            if( iBDNumber != 9 )
             {
-                IbdNumber = new Integer(incrementBDNumber);
+                IbdNumber = new Integer( incrementBDNumber );
                 strIncBDNumber = IbdNumber.toString();
                 sNewVersion = strWhBegNumber + strIncBDNumber + strWhEndNumber;
             }
@@ -1928,9 +2032,9 @@ public class CurationServlet
             // before decimal number == 9
             {
                 int incrementWhBegNumber = iWhBegNumber + 1;
-                Integer IWhBegNumber = new Integer(incrementWhBegNumber);
+                Integer IWhBegNumber = new Integer( incrementWhBegNumber );
                 String strIncWhBegNumber = IWhBegNumber.toString();
-                IbdNumber = new Integer(0);
+                IbdNumber = new Integer( 0 );
                 strIncBDNumber = IbdNumber.toString();
                 sNewVersion = strIncWhBegNumber + strIncBDNumber + strWhEndNumber;
             }
@@ -1949,9 +2053,9 @@ public class CurationServlet
      *
      * @throws Exception
      */
-    protected void doSuggestionDE(HttpServletRequest req, HttpServletResponse res) throws Exception
+    protected void doSuggestionDE( HttpServletRequest req, HttpServletResponse res ) throws Exception
     {
-        ForwardJSP(req, res, "/EVSSearch.jsp");
+        ForwardJSP( req, res, "/EVSSearch.jsp" );
     }
 
     /**
@@ -1969,35 +2073,35 @@ public class CurationServlet
      *
      * @throws Exception
      */
-    protected void doOpenCreatePVPage(HttpServletRequest req, HttpServletResponse res, String sPVAction, String vdPage)
-                    throws Exception
+    protected void doOpenCreatePVPage( HttpServletRequest req, HttpServletResponse res, String sPVAction, String vdPage )
+            throws Exception
     {
         HttpSession session = req.getSession();
-        DataManager.setAttribute(session, "PVAction", sPVAction);
-        VD_Bean m_VD = (VD_Bean) session.getAttribute("m_VD"); // new VD_Bean();
-        m_setAC.setVDValueFromPage(req, res, m_VD); // store VD bean
-        DataManager.setAttribute(session, "VDPageAction", "validate");
-        DataManager.setAttribute(session, "m_VD", m_VD);
+        DataManager.setAttribute( session, "PVAction", sPVAction );
+        VD_Bean m_VD = ( VD_Bean ) session.getAttribute( "m_VD" ); // new VD_Bean();
+        m_setAC.setVDValueFromPage( req, res, m_VD ); // store VD bean
+        DataManager.setAttribute( session, "VDPageAction", "validate" );
+        DataManager.setAttribute( session, "m_VD", m_VD );
         // call the method to add/remove pvs.
-        m_setAC.addRemovePageVDPVs(req, res);
-        if (sPVAction.equals("removePV"))
+        m_setAC.addRemovePageVDPVs( req, res );
+        if( sPVAction.equals( "removePV" ) )
         {
-            if (vdPage.equals("editVD"))
-                ForwardJSP(req, res, "/EditVDPage.jsp");
+            if( vdPage.equals( "editVD" ) )
+                ForwardJSP( req, res, "/EditVDPage.jsp" );
             else
-                ForwardJSP(req, res, "/CreateVDPage.jsp");
+                ForwardJSP( req, res, "/CreateVDPage.jsp" );
         }
         else
         {
             // store the old pv in another session
-            PV_Bean pvBean = (PV_Bean) session.getAttribute("m_PV");
-            if (pvBean == null)
+            PV_Bean pvBean = ( PV_Bean ) session.getAttribute( "m_PV" );
+            if( pvBean == null )
                 pvBean = new PV_Bean();
             // copy the pv session attributes to store that can be used for clear button
             PV_Bean pageBean = new PV_Bean();
-            pageBean = pageBean.copyBean(pvBean);
-            DataManager.setAttribute(session, "pageOpenBean", pageBean);
-            ForwardJSP(req, res, "/CreatePVPage.jsp");
+            pageBean = pageBean.copyBean( pvBean );
+            DataManager.setAttribute( session, "pageOpenBean", pageBean );
+            ForwardJSP( req, res, "/CreatePVPage.jsp" );
         }
     }
 
@@ -2012,9 +2116,9 @@ public class CurationServlet
      *
      * @throws Exception
      */
-    public void doJspErrorAction(HttpServletRequest req, HttpServletResponse res) throws Exception
+    public void doJspErrorAction( HttpServletRequest req, HttpServletResponse res ) throws Exception
     {
-    //    doOpenSearchPage(req, res);  Later***
+        //    doOpenSearchPage(req, res);  Later***
     }
 
     /**
@@ -2051,6 +2155,7 @@ public class CurationServlet
         ForwardJSP(req, res, "/SearchResultsPage.jsp");
     }
 */
+
     /**
      * The doOpenCreateVMPage method gets the session, gets some values from the createVD page and stores in bean m_VD,
      * sets some session attributes, then forwards to CreateVM page
@@ -2063,27 +2168,27 @@ public class CurationServlet
      *
      * @throws Exception
      */
-    protected void doOpenCreateVMPage(HttpServletRequest req, HttpServletResponse res, @SuppressWarnings("unused") String origin) throws Exception
+    protected void doOpenCreateVMPage( HttpServletRequest req, HttpServletResponse res, @SuppressWarnings( "unused" ) String origin ) throws Exception
     {
         HttpSession session = req.getSession();
-        String sOrigin = (String) session.getAttribute("originAction");
+        String sOrigin = ( String ) session.getAttribute( "originAction" );
         PV_Bean m_PV = new PV_Bean();
-        SetACService setAC = new SetACService(this);
-        setAC.setPVValueFromPage(req, res, m_PV);
-        DataManager.setAttribute(session, "m_PV", m_PV);
+        SetACService setAC = new SetACService( this );
+        setAC.setPVValueFromPage( req, res, m_PV );
+        DataManager.setAttribute( session, "m_PV", m_PV );
         // reset vm bean
         VM_Bean VMBean = new VM_Bean();
         // get cd value from the VD bean and make it default for VM
-        VD_Bean VDBean = (VD_Bean) session.getAttribute("m_VD");
-        VMBean.setVM_CD_NAME(VDBean.getVD_CD_NAME());
-        VMBean.setVM_CD_IDSEQ(VDBean.getVD_CD_IDSEQ());
+        VD_Bean VDBean = ( VD_Bean ) session.getAttribute( "m_VD" );
+        VMBean.setVM_CD_NAME( VDBean.getVD_CD_NAME() );
+        VMBean.setVM_CD_IDSEQ( VDBean.getVD_CD_IDSEQ() );
         // store the bean in the session
-        DataManager.setAttribute(session, "m_VM", VMBean);
-        DataManager.setAttribute(session, "creSearchAC", "EVSValueMeaning");
-        if (sOrigin.equals("CreateInSearch"))
-            ForwardJSP(req, res, "/CreateVMSearchPage.jsp");
+        DataManager.setAttribute( session, "m_VM", VMBean );
+        DataManager.setAttribute( session, "creSearchAC", "EVSValueMeaning" );
+        if( sOrigin.equals( "CreateInSearch" ) )
+            ForwardJSP( req, res, "/CreateVMSearchPage.jsp" );
         else
-            ForwardJSP(req, res, "/CreateVMPage.jsp");
+            ForwardJSP( req, res, "/CreateVMPage.jsp" );
     }
 
     /**
@@ -2096,47 +2201,46 @@ public class CurationServlet
      * @param res
      *            HttpServletResponse
      */
-    protected void doEVSSearchActions(String reqType, HttpServletRequest req, HttpServletResponse res)
+    protected void doEVSSearchActions( String reqType, HttpServletRequest req, HttpServletResponse res )
     {
         try
         {
             // System.out.println("evs search " + reqType);
-            EVSSearch evs = new EVSSearch(req, res, this);
-            if (reqType.equals("getSuperConcepts"))
+            EVSSearch evs = new EVSSearch( req, res, this );
+            if( reqType.equals( "getSuperConcepts" ) )
                 evs.doGetSuperConcepts();
-            else if (reqType.equals("getSubConcepts"))
+            else if( reqType.equals( "getSubConcepts" ) )
                 evs.doGetSubConcepts();
-            else if (reqType.equals("treeSearch"))
-                evs.doTreeSearchRequest("", "", "", "");
-            else if (reqType.equals("treeRefresh"))
+            else if( reqType.equals( "treeSearch" ) )
+                evs.doTreeSearchRequest( "", "", "", "" );
+            else if( reqType.equals( "treeRefresh" ) )
                 evs.doTreeRefreshRequest();
-            else if (reqType.equals("treeExpand"))
+            else if( reqType.equals( "treeExpand" ) )
                 evs.doTreeExpandRequest();
-            else if (reqType.equals("treeCollapse"))
+            else if( reqType.equals( "treeCollapse" ) )
                 evs.doTreeCollapseRequest();
-            else if (reqType.equals("OpenTreeToConcept"))
-                evs.openTreeToConcept(reqType);
-            else if (reqType.equals("OpenTreeToParentConcept"))
-                evs.openTreeToConcept(reqType);
-            // else if (reqType.equals("OpenTreeToParentConcept"))
-            // evs.openTreeToParentConcept(reqType);
-            else if (reqType.equals("term") || reqType.equals("tree"))
+            else if( reqType.equals( "OpenTreeToConcept" ) )
+                evs.openTreeToConcept( reqType );
+            else if( reqType.equals( "OpenTreeToParentConcept" ) )
+                evs.openTreeToConcept( reqType );
+                // else if (reqType.equals("OpenTreeToParentConcept"))
+                // evs.openTreeToParentConcept(reqType);
+            else if( reqType.equals( "term" ) || reqType.equals( "tree" ) )
             {
-                String dtsVocab = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml((String) m_classReq.getParameter("listContextFilterVocab"));
-                evs.doCollapseAllNodes(dtsVocab);
-                evs.doTreeSearch(reqType, "Blocks");
+                String dtsVocab = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml( ( String ) m_classReq.getParameter( "listContextFilterVocab" ) );
+                evs.doCollapseAllNodes( dtsVocab );
+                evs.doTreeSearch( reqType, "Blocks" );
             }
-            else if (reqType.equals("defaultBlock"))
+            else if( reqType.equals( "defaultBlock" ) )
             {
-                String dtsVocab = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml((String) m_classReq.getParameter("listContextFilterVocab"));
-                evs.doCollapseAllNodes(dtsVocab);
+                String dtsVocab = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml( ( String ) m_classReq.getParameter( "listContextFilterVocab" ) );
+                evs.doCollapseAllNodes( dtsVocab );
             }
-            else if (reqType.equals("showConceptInTree"))
-                evs.showConceptInTree(reqType);
-        }
-        catch (Exception ex)
+            else if( reqType.equals( "showConceptInTree" ) )
+                evs.showConceptInTree( reqType );
+        } catch( Exception ex )
         {
-             logger.error("doEVSSearchActions : " + ex.toString(), ex);
+            logger.error( "doEVSSearchActions : " + ex.toString(), ex );
             // this.ForwardErrorJSP(req, res, ex.getMessage());
         }
     }
@@ -2154,19 +2258,19 @@ public class CurationServlet
      *
      * @throws Exception
      */
-    public Vector<String> resortDisplayAttributes(Vector<String> vCompAttr, Vector<String> vSelectAttr)
-                    throws Exception
+    public Vector<String> resortDisplayAttributes( Vector<String> vCompAttr, Vector<String> vSelectAttr )
+            throws Exception
     {
         // resort the display attributes
         Vector<String> vReSort = new Vector<String>();
-        if (vCompAttr != null)
+        if( vCompAttr != null )
         {
-            for (int j = 0; j < vCompAttr.size(); j++)
+            for( int j = 0; j < vCompAttr.size(); j++ )
             {
-                String thisAttr = (String) vCompAttr.elementAt(j);
+                String thisAttr = ( String ) vCompAttr.elementAt( j );
                 // add this attr to a vector if it is a selected attr
-                if (vSelectAttr.contains(thisAttr))
-                    vReSort.addElement(thisAttr);
+                if( vSelectAttr.contains( thisAttr ) )
+                    vReSort.addElement( thisAttr );
             }
         }
         return vReSort;
@@ -2183,20 +2287,19 @@ public class CurationServlet
      *
      * @throws Exception
      */
-    private void doSearchEVS(HttpServletRequest req, HttpServletResponse res) throws Exception
+    private void doSearchEVS( HttpServletRequest req, HttpServletResponse res ) throws Exception
     {
         //HttpSession session = req.getSession();
         //Vector vResults = new Vector();
         try
         {
-            GetACSearch getACSearch = new GetACSearch(req, res, this);
-            getACSearch.doSearchEVS(req, res);
-        }
-        catch (Exception e)
+            GetACSearch getACSearch = new GetACSearch( req, res, this );
+            getACSearch.doSearchEVS( req, res );
+        } catch( Exception e )
         {
-            this.logger.error("ERROR - EVS Search : " + e.toString(), e);
+            this.logger.error( "ERROR - EVS Search : " + e.toString(), e );
         }
-        ForwardJSP(req, res, "/EVSSearchPage.jsp");
+        ForwardJSP( req, res, "/EVSSearchPage.jsp" );
         // ForwardJSP(req, res, "/OpenSearchWindow.jsp");
     }
 
@@ -2283,6 +2386,7 @@ public class CurationServlet
         ForwardJSP(req, res, "/CreateDECPage.jsp");
     }
 */
+
     /**
      * contact action from create and edit ac pages to either remove the selected contact or store the modified contact
      * back in the ac bean
@@ -2293,59 +2397,58 @@ public class CurationServlet
      *            String AC contact update action from create and edit pages
      * @return Hashtable of contact name and contact bean object
      */
-    @SuppressWarnings("unchecked")
-    protected Hashtable<String, AC_CONTACT_Bean> doContactACUpdates(HttpServletRequest req, String sAct)
+    @SuppressWarnings( "unchecked" )
+    protected Hashtable<String, AC_CONTACT_Bean> doContactACUpdates( HttpServletRequest req, String sAct )
     {
         HttpSession session = req.getSession();
-        Hashtable<String, AC_CONTACT_Bean> hConts = (Hashtable) session.getAttribute("AllContacts");
-        if (hConts == null)
+        Hashtable<String, AC_CONTACT_Bean> hConts = ( Hashtable ) session.getAttribute( "AllContacts" );
+        if( hConts == null )
             hConts = new Hashtable<String, AC_CONTACT_Bean>();
         try
         {
             String sCont = "";
             AC_CONTACT_Bean accBean = new AC_CONTACT_Bean();
-            if (sAct.equals("removeContact"))
+            if( sAct.equals( "removeContact" ) )
             {
-                sCont = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml((String) m_classReq.getParameter("selContact"));
-                if (sCont != null && !sCont.equals("") && hConts.containsKey(sCont))
-                    accBean = accBean.copyContacts((AC_CONTACT_Bean) hConts.get(sCont));
-                accBean.setACC_SUBMIT_ACTION("DEL");
+                sCont = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml( ( String ) m_classReq.getParameter( "selContact" ) );
+                if( sCont != null && !sCont.equals( "" ) && hConts.containsKey( sCont ) )
+                    accBean = accBean.copyContacts( ( AC_CONTACT_Bean ) hConts.get( sCont ) );
+                accBean.setACC_SUBMIT_ACTION( "DEL" );
             }
             else
             {
-                sCont = (String) session.getAttribute("selContactKey");
-                accBean = accBean.copyContacts((AC_CONTACT_Bean) session.getAttribute("selACContact"));
-                if (accBean == null)
+                sCont = ( String ) session.getAttribute( "selContactKey" );
+                accBean = accBean.copyContacts( ( AC_CONTACT_Bean ) session.getAttribute( "selACContact" ) );
+                if( accBean == null )
                     accBean = new AC_CONTACT_Bean();
                 // new contact
-                if (sCont == null || sCont.equals(""))
+                if( sCont == null || sCont.equals( "" ) )
                 {
-                    Hashtable hOrg = (Hashtable) session.getAttribute("Organizations");
-                    Hashtable hPer = (Hashtable) session.getAttribute("Persons");
+                    Hashtable hOrg = ( Hashtable ) session.getAttribute( "Organizations" );
+                    Hashtable hPer = ( Hashtable ) session.getAttribute( "Persons" );
                     sCont = accBean.getPERSON_IDSEQ();
-                    if (sCont != null && !sCont.equals("") && hPer.containsKey(sCont))
-                        sCont = (String) hPer.get(sCont);
+                    if( sCont != null && !sCont.equals( "" ) && hPer.containsKey( sCont ) )
+                        sCont = ( String ) hPer.get( sCont );
                     else
                     {
                         sCont = accBean.getORG_IDSEQ();
-                        if (sCont != null && !sCont.equals("") && hOrg.containsKey(sCont))
-                            sCont = (String) hOrg.get(sCont);
+                        if( sCont != null && !sCont.equals( "" ) && hOrg.containsKey( sCont ) )
+                            sCont = ( String ) hOrg.get( sCont );
                     }
-                    accBean.setACC_SUBMIT_ACTION("INS");
+                    accBean.setACC_SUBMIT_ACTION( "INS" );
                 }
                 else
-                    accBean.setACC_SUBMIT_ACTION("UPD");
+                    accBean.setACC_SUBMIT_ACTION( "UPD" );
             }
             // put it back in teh hash table
-            if (sCont != null && !sCont.equals(""))
-                hConts.put(sCont, accBean);
-        }
-        catch (Exception e)
+            if( sCont != null && !sCont.equals( "" ) )
+                hConts.put( sCont, accBean );
+        } catch( Exception e )
         {
-            logger.error("Error - doContactACUpdates : " + e.toString(), e);
+            logger.error( "Error - doContactACUpdates : " + e.toString(), e );
         }
-        DataManager.setAttribute(session, "selContactKey", ""); // remove the attributes
-        DataManager.setAttribute(session, "selACContact", null);
+        DataManager.setAttribute( session, "selContactKey", "" ); // remove the attributes
+        DataManager.setAttribute( session, "selACContact", null );
         // session.removeAttribute("selContactKey"); //remove the attributes
         // session.removeAttribute("selACContact");
         return hConts;
@@ -2360,37 +2463,37 @@ public class CurationServlet
      *            HttpServletResponse
      * @throws Exception
      */
-    @SuppressWarnings("unchecked")
-    private void doContactEditActions(HttpServletRequest req, HttpServletResponse res) throws Exception
+    @SuppressWarnings( "unchecked" )
+    private void doContactEditActions( HttpServletRequest req, HttpServletResponse res ) throws Exception
     {
         HttpSession session = req.getSession();
         // get all the contacts from the session attribute set in create/edit page of the ac
-        Hashtable hConts = (Hashtable) session.getAttribute("AllContacts");
-        if (hConts == null)
+        Hashtable hConts = ( Hashtable ) session.getAttribute( "AllContacts" );
+        if( hConts == null )
             hConts = new Hashtable();
         // get the page action
-        String sPgAct = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml((String) m_classReq.getParameter("pageAction"));
-        if (sPgAct != null && !sPgAct.equals(""))
+        String sPgAct = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml( ( String ) m_classReq.getParameter( "pageAction" ) );
+        if( sPgAct != null && !sPgAct.equals( "" ) )
         {
             try
             {
                 // get request and session attributes
-                String sContAct = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml((String) m_classReq.getParameter("contAction"));
-                if (sContAct == null || sContAct.equals(""))
+                String sContAct = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml( ( String ) m_classReq.getParameter( "contAction" ) );
+                if( sContAct == null || sContAct.equals( "" ) )
                     sContAct = "new";
-                AC_CONTACT_Bean accBean = (AC_CONTACT_Bean) session.getAttribute("selACContact");
-                if (accBean == null)
+                AC_CONTACT_Bean accBean = ( AC_CONTACT_Bean ) session.getAttribute( "selACContact" );
+                if( accBean == null )
                     accBean = new AC_CONTACT_Bean();
                 // if page action contact action is edit pull out contact bean from the all contacts for selected contxt
-                if (sPgAct.equals("openPage")) // && sContAct.equals("view"))
+                if( sPgAct.equals( "openPage" ) ) // && sContAct.equals("view"))
                 {
-                    if (sContAct.equals("view")) // edit contact
+                    if( sContAct.equals( "view" ) ) // edit contact
                     {
-                        String selCont = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml((String) m_classReq.getParameter("selContact"));
-                        if (selCont != null && hConts.containsKey(selCont))
+                        String selCont = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml( ( String ) m_classReq.getParameter( "selContact" ) );
+                        if( selCont != null && hConts.containsKey( selCont ) )
                         {
-                            accBean = accBean.copyContacts((AC_CONTACT_Bean) hConts.get(selCont));
-                            DataManager.setAttribute(session, "selContactKey", selCont);
+                            accBean = accBean.copyContacts( ( AC_CONTACT_Bean ) hConts.get( selCont ) );
+                            DataManager.setAttribute( session, "selContactKey", selCont );
                         }
                         // System.out.println(sContAct + " contat sele " + selCont + " contains " +
                         // hConts.containsKey(selCont));
@@ -2399,77 +2502,76 @@ public class CurationServlet
                     // new contact
                     {
                         accBean = new AC_CONTACT_Bean();
-                        DataManager.setAttribute(session, "selContactKey", "");
+                        DataManager.setAttribute( session, "selContactKey", "" );
                     }
                 }
                 else
                 // if (!sPgAct.equals("openPage")) //if not opening the page store the changed data in teh bean
                 {
-                    String conOrder = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml((String) m_classReq.getParameter("rank"));
-                    if (conOrder != null && !conOrder.equals(""))
-                        accBean.setRANK_ORDER(conOrder);
-                    String conPer = /*SECURITYTEAM-299*/StringUtil.cleanJavascriptAndHtml((String) req.getParameter("selPer"));
-                    if (conPer == null)
+                    String conOrder = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml( ( String ) m_classReq.getParameter( "rank" ) );
+                    if( conOrder != null && !conOrder.equals( "" ) )
+                        accBean.setRANK_ORDER( conOrder );
+                    String conPer = /*SECURITYTEAM-299*/StringUtil.cleanJavascriptAndHtml( ( String ) req.getParameter( "selPer" ) );
+                    if( conPer == null )
                         conPer = "";
-                    accBean.setPERSON_IDSEQ(conPer);
-                    String conOrg = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml((String) m_classReq.getParameter("selOrg"));
-                    if (conOrg == null)
+                    accBean.setPERSON_IDSEQ( conPer );
+                    String conOrg = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml( ( String ) m_classReq.getParameter( "selOrg" ) );
+                    if( conOrg == null )
                         conOrg = "";
-                    accBean.setORG_IDSEQ(conOrg);
-                    String conRole = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml((String) m_classReq.getParameter("selRole"));
-                    if (conRole != null && !conRole.equals(""))
-                        accBean.setCONTACT_ROLE(conRole);
+                    accBean.setORG_IDSEQ( conOrg );
+                    String conRole = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml( ( String ) m_classReq.getParameter( "selRole" ) );
+                    if( conRole != null && !conRole.equals( "" ) )
+                        accBean.setCONTACT_ROLE( conRole );
                 }
                 // change the radio button action
-                if (sPgAct.equals("changeType"))
+                if( sPgAct.equals( "changeType" ) )
                 {
-                    String sType = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml((String) m_classReq.getParameter("rType"));
-                    if (sType != null && !sType.equals(""))
-                        req.setAttribute("TypeSelected", sType);
+                    String sType = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml( ( String ) m_classReq.getParameter( "rType" ) );
+                    if( sType != null && !sType.equals( "" ) )
+                        req.setAttribute( "TypeSelected", sType );
                 }
                 // get the comm and addr info for the selected contact
-                else if (sPgAct.equals("changeContact"))
+                else if( sPgAct.equals( "changeContact" ) )
                 {
                     String perID = accBean.getPERSON_IDSEQ();
                     String orgID = accBean.getORG_IDSEQ();
-                    if ((perID != null && !perID.equals("")) || (orgID != null && !orgID.equals("")))
+                    if( ( perID != null && !perID.equals( "" ) ) || ( orgID != null && !orgID.equals( "" ) ) )
                     {
-                        GetACSearch getAC = new GetACSearch(req, res, this);
-                        Vector<AC_COMM_Bean> vComm = getAC.getContactComm("", orgID, perID);
-                        if (vComm == null)
+                        GetACSearch getAC = new GetACSearch( req, res, this );
+                        Vector<AC_COMM_Bean> vComm = getAC.getContactComm( "", orgID, perID );
+                        if( vComm == null )
                             vComm = new Vector<AC_COMM_Bean>();
-                        accBean.setACC_COMM_List(vComm);
-                        Vector<AC_ADDR_Bean> vAddr = getAC.getContactAddr("", orgID, perID);
-                        if (vAddr == null)
+                        accBean.setACC_COMM_List( vComm );
+                        Vector<AC_ADDR_Bean> vAddr = getAC.getContactAddr( "", orgID, perID );
+                        if( vAddr == null )
                             vAddr = new Vector<AC_ADDR_Bean>();
-                        accBean.setACC_ADDR_List(vAddr);
+                        accBean.setACC_ADDR_List( vAddr );
                     }
                 }
                 // adding comm attributes to com bean
-                else if (sPgAct.indexOf("Comm") > -1)
-                    accBean = this.doContCommAction(req, accBean, sPgAct);
-                // adding comm attributes to com bean
-                else if (sPgAct.indexOf("Addr") > -1)
-                    accBean = this.doContAddrAction(req, accBean, sPgAct);
-                // store contact changes with all contacts as new or update
-                else if (sPgAct.equals("updContact"))
+                else if( sPgAct.indexOf( "Comm" ) > -1 )
+                    accBean = this.doContCommAction( req, accBean, sPgAct );
+                    // adding comm attributes to com bean
+                else if( sPgAct.indexOf( "Addr" ) > -1 )
+                    accBean = this.doContAddrAction( req, accBean, sPgAct );
+                    // store contact changes with all contacts as new or update
+                else if( sPgAct.equals( "updContact" ) )
                 {
                     sContAct = "doContactUpd";
                     String sMsg = "Contact Information updated successfully, \\n"
-                                    + "but will not be associated to the Administered Component (AC) \\n"
-                                    + "or written to the database until the AC has been successfully submitted.";
-                    DataManager.setAttribute(session, Session_Data.SESSION_STATUS_MESSAGE, sMsg);
+                            + "but will not be associated to the Administered Component (AC) \\n"
+                            + "or written to the database until the AC has been successfully submitted.";
+                    DataManager.setAttribute( session, Session_Data.SESSION_STATUS_MESSAGE, sMsg );
                 }
                 // store the acc bean in teh request (sends back empty if new action)
-                DataManager.setAttribute(session, "selACContact", accBean);
-                req.setAttribute("ContAction", sContAct);
-            }
-            catch (Exception e)
+                DataManager.setAttribute( session, "selACContact", accBean );
+                req.setAttribute( "ContAction", sContAct );
+            } catch( Exception e )
             {
-                logger.error("Error - doContactEditActions : " + e.toString(), e);
+                logger.error( "Error - doContactEditActions : " + e.toString(), e );
             }
         }
-        ForwardJSP(req, res, "/EditACContact.jsp");
+        ForwardJSP( req, res, "/EditACContact.jsp" );
     }
 
     /**
@@ -2483,107 +2585,106 @@ public class CurationServlet
      *            String communication action
      * @return AC_CONTACT_Bean
      */
-    private AC_CONTACT_Bean doContCommAction(HttpServletRequest req, AC_CONTACT_Bean ACBean, String sAct)
+    private AC_CONTACT_Bean doContCommAction( HttpServletRequest req, AC_CONTACT_Bean ACBean, String sAct )
     {
         try
         {
             Vector<AC_COMM_Bean> vComm = ACBean.getACC_COMM_List();
-            if (vComm == null)
+            if( vComm == null )
                 vComm = new Vector<AC_COMM_Bean>();
             AC_COMM_Bean commB = new AC_COMM_Bean();
             int selInd = -1;
-            for (int j = 0; j < vComm.size(); j++) // loop through existing lists
+            for( int j = 0; j < vComm.size(); j++ ) // loop through existing lists
             {
 //                String rSel = (String) req.getParameter("com" + j);
-                String rSel = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml((String) m_classReq.getParameter("com" + j));
+                String rSel = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml( ( String ) m_classReq.getParameter( "com" + j ) );
                 // check if this id is selected
-                if (rSel != null)
+                if( rSel != null )
                 {
-                    commB = commB.copyComms((AC_COMM_Bean) vComm.elementAt(j));
+                    commB = commB.copyComms( ( AC_COMM_Bean ) vComm.elementAt( j ) );
                     selInd = j;
                     break;
                 }
             }
             // System.out.println(selInd + " commAct " + sAct);
             // if editComm action set comm bean in teh request and return back
-            if (sAct.equals("editComm") && selInd > -1)
+            if( sAct.equals( "editComm" ) && selInd > -1 )
             {
-                req.setAttribute("CommForEdit", commB);
-                req.setAttribute("CommCheckForEdit", "com" + selInd);
+                req.setAttribute( "CommForEdit", commB );
+                req.setAttribute( "CommCheckForEdit", "com" + selInd );
                 return ACBean;
             }
             // handle remove or add selection actions
-            if (commB == null)
+            if( commB == null )
                 commB = new AC_COMM_Bean();
-            if (sAct.equals("removeComm")) // remove the item and exit
-                commB.setCOMM_SUBMIT_ACTION("DEL");
-            else if (sAct.equals("addComm")) // udpate or adding new
+            if( sAct.equals( "removeComm" ) ) // remove the item and exit
+                commB.setCOMM_SUBMIT_ACTION( "DEL" );
+            else if( sAct.equals( "addComm" ) ) // udpate or adding new
             {
                 // get the attributes from the page
-                String cType = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml((String) m_classReq.getParameter("selCommType"));
-                if (cType == null)
+                String cType = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml( ( String ) m_classReq.getParameter( "selCommType" ) );
+                if( cType == null )
                     cType = "";
-                String cOrd = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml((String) m_classReq.getParameter("comOrder"));
-                if (cOrd == null)
+                String cOrd = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml( ( String ) m_classReq.getParameter( "comOrder" ) );
+                if( cOrd == null )
                     cOrd = "";
-                String cCyber = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml((String) m_classReq.getParameter("comCyber"));
-                if (cCyber == null)
+                String cCyber = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml( ( String ) m_classReq.getParameter( "comCyber" ) );
+                if( cCyber == null )
                     cCyber = "";
                 String sCommName = cType + "_" + cOrd + "_" + cCyber;
                 // check these attributes already exist in the list
                 boolean wasDeleted = false;
-                for (int k = 0; k < vComm.size(); k++)
+                for( int k = 0; k < vComm.size(); k++ )
                 {
-                    AC_COMM_Bean exComm = (AC_COMM_Bean) vComm.elementAt(k);
+                    AC_COMM_Bean exComm = ( AC_COMM_Bean ) vComm.elementAt( k );
                     String ct = exComm.getCTL_NAME();
-                    if (ct == null)
+                    if( ct == null )
                         ct = "";
                     String cc = exComm.getCYBER_ADDR();
-                    if (cc == null)
+                    if( cc == null )
                         cc = "";
                     String co = exComm.getRANK_ORDER(); // leave this for now till confirmed
-                    if (co == null)
+                    if( co == null )
                         co = "";
                     String exCommName = cType + "_" + cOrd + "_" + cCyber;
-                    if (sCommName.equals(exCommName))
+                    if( sCommName.equals( exCommName ) )
                     {
                         // allow to create duplicates but undelete if it was deleted
                         String exSubmit = commB.getCOMM_SUBMIT_ACTION();
-                        if (exSubmit != null && exSubmit.equals("DEL"))
+                        if( exSubmit != null && exSubmit.equals( "DEL" ) )
                         {
                             wasDeleted = true;
-                            commB = commB.copyComms((AC_COMM_Bean) vComm.elementAt(k));
-                            if (commB.getAC_COMM_IDSEQ() == null || commB.getAC_COMM_IDSEQ().equals(exCommName))
-                                commB.setCOMM_SUBMIT_ACTION("INS");
+                            commB = commB.copyComms( ( AC_COMM_Bean ) vComm.elementAt( k ) );
+                            if( commB.getAC_COMM_IDSEQ() == null || commB.getAC_COMM_IDSEQ().equals( exCommName ) )
+                                commB.setCOMM_SUBMIT_ACTION( "INS" );
                             else
-                                commB.setCOMM_SUBMIT_ACTION("UPD");
+                                commB.setCOMM_SUBMIT_ACTION( "UPD" );
                             selInd = k; // reset the index
                         }
                         break;
                     }
                 }
                 // update or add new attributes if was not deleted
-                if (!wasDeleted)
+                if( !wasDeleted )
                 {
-                    commB.setCTL_NAME(cType);
-                    commB.setRANK_ORDER(cOrd);
-                    commB.setCYBER_ADDR(cCyber);
-                    if (selInd > -1)
-                        commB.setCOMM_SUBMIT_ACTION("UPD");
+                    commB.setCTL_NAME( cType );
+                    commB.setRANK_ORDER( cOrd );
+                    commB.setCYBER_ADDR( cCyber );
+                    if( selInd > -1 )
+                        commB.setCOMM_SUBMIT_ACTION( "UPD" );
                     else
-                        commB.setCOMM_SUBMIT_ACTION("INS");
+                        commB.setCOMM_SUBMIT_ACTION( "INS" );
                 }
             }
             // set the vector
-            if (selInd > -1)
-                vComm.setElementAt(commB, selInd);
+            if( selInd > -1 )
+                vComm.setElementAt( commB, selInd );
             else
-                vComm.addElement(commB);
-            ACBean.setACC_COMM_List(vComm); // set the bean
-        }
-        catch (Exception e)
+                vComm.addElement( commB );
+            ACBean.setACC_COMM_List( vComm ); // set the bean
+        } catch( Exception e )
         {
-            logger.error("Error - doContCommAction : " + e.toString(), e);
+            logger.error( "Error - doContCommAction : " + e.toString(), e );
         }
         return ACBean;
     }
@@ -2599,150 +2700,149 @@ public class CurationServlet
      *            String address edit action
      * @return AC_CONTACT_Bean
      */
-    private AC_CONTACT_Bean doContAddrAction(HttpServletRequest req, AC_CONTACT_Bean ACBean, String sAct)
+    private AC_CONTACT_Bean doContAddrAction( HttpServletRequest req, AC_CONTACT_Bean ACBean, String sAct )
     {
         try
         {
             Vector<AC_ADDR_Bean> vAddr = ACBean.getACC_ADDR_List();
-            if (vAddr == null)
+            if( vAddr == null )
                 vAddr = new Vector<AC_ADDR_Bean>();
             AC_ADDR_Bean addrB = new AC_ADDR_Bean();
             int selInd = -1;
-            for (int j = 0; j < vAddr.size(); j++) // loop through existing lists
+            for( int j = 0; j < vAddr.size(); j++ ) // loop through existing lists
             {
 //                String rSel = (String) req.getParameter("addr" + j);
-                String rSel = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml((String) m_classReq.getParameter("addr" + j));
+                String rSel = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml( ( String ) m_classReq.getParameter( "addr" + j ) );
                 // check if this id is selected
-                if (rSel != null)
+                if( rSel != null )
                 {
-                    addrB = addrB.copyAddress((AC_ADDR_Bean) vAddr.elementAt(j));
+                    addrB = addrB.copyAddress( ( AC_ADDR_Bean ) vAddr.elementAt( j ) );
                     selInd = j;
                     break;
                 }
             }
             // System.out.println(selInd + " addrAct " + sAct);
             // if editAddr action set addr bean in teh request and return back
-            if (sAct.equals("editAddr") && selInd > -1)
+            if( sAct.equals( "editAddr" ) && selInd > -1 )
             {
-                req.setAttribute("AddrForEdit", addrB);
-                req.setAttribute("AddrCheckForEdit", "addr" + selInd);
+                req.setAttribute( "AddrForEdit", addrB );
+                req.setAttribute( "AddrCheckForEdit", "addr" + selInd );
                 return ACBean;
             }
             // handle remove or add selection actions
-            if (addrB == null)
+            if( addrB == null )
                 addrB = new AC_ADDR_Bean();
-            if (sAct.equals("removeAddr")) // remove the item and exit
-                addrB.setADDR_SUBMIT_ACTION("DEL");
-            else if (sAct.equals("addAddr")) // udpate or adding new
+            if( sAct.equals( "removeAddr" ) ) // remove the item and exit
+                addrB.setADDR_SUBMIT_ACTION( "DEL" );
+            else if( sAct.equals( "addAddr" ) ) // udpate or adding new
             {
                 // get the attributes from the page
-                String aType = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml((String) m_classReq.getParameter("selAddrType"));
-                if (aType == null)
+                String aType = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml( ( String ) m_classReq.getParameter( "selAddrType" ) );
+                if( aType == null )
                     aType = "";
-                String aOrd = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml((String) m_classReq.getParameter("txtPrimOrder"));
-                if (aOrd == null)
+                String aOrd = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml( ( String ) m_classReq.getParameter( "txtPrimOrder" ) );
+                if( aOrd == null )
                     aOrd = "";
-                String aAddr1 = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml((String) m_classReq.getParameter("txtAddr1"));
-                if (aAddr1 == null)
+                String aAddr1 = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml( ( String ) m_classReq.getParameter( "txtAddr1" ) );
+                if( aAddr1 == null )
                     aAddr1 = "";
-                String aAddr2 = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml((String) m_classReq.getParameter("txtAddr2"));
-                if (aAddr2 == null)
+                String aAddr2 = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml( ( String ) m_classReq.getParameter( "txtAddr2" ) );
+                if( aAddr2 == null )
                     aAddr2 = "";
-                String aCity = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml((String) m_classReq.getParameter("txtCity"));
-                if (aCity == null)
+                String aCity = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml( ( String ) m_classReq.getParameter( "txtCity" ) );
+                if( aCity == null )
                     aCity = "";
-                String aState = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml((String) m_classReq.getParameter("txtState"));
-                if (aState == null)
+                String aState = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml( ( String ) m_classReq.getParameter( "txtState" ) );
+                if( aState == null )
                     aState = "";
-                String aCntry = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml((String) m_classReq.getParameter("txtCntry"));
-                if (aCntry == null)
+                String aCntry = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml( ( String ) m_classReq.getParameter( "txtCntry" ) );
+                if( aCntry == null )
                     aCntry = "";
-                String aPost = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml((String) m_classReq.getParameter("txtPost"));
-                if (aPost == null)
+                String aPost = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml( ( String ) m_classReq.getParameter( "txtPost" ) );
+                if( aPost == null )
                     aPost = "";
                 String selAddrName = aType + "_" + aOrd + "_" + aAddr1 + "_" + aAddr2 + "_" + aCity + "_" + aState
-                                + "_" + aCntry + "_" + aPost;
+                        + "_" + aCntry + "_" + aPost;
                 // check these attributes already exist in the list
                 boolean wasDeleted = false;
-                for (int k = 0; k < vAddr.size(); k++)
+                for( int k = 0; k < vAddr.size(); k++ )
                 {
-                    AC_ADDR_Bean exAddr = (AC_ADDR_Bean) vAddr.elementAt(k);
+                    AC_ADDR_Bean exAddr = ( AC_ADDR_Bean ) vAddr.elementAt( k );
                     String at = exAddr.getATL_NAME();
-                    if (at == null)
+                    if( at == null )
                         at = "";
                     String ao = exAddr.getRANK_ORDER();
-                    if (ao == null)
+                    if( ao == null )
                         ao = "";
                     String aA1 = exAddr.getADDR_LINE1();
-                    if (aA1 == null)
+                    if( aA1 == null )
                         aA1 = "";
                     String aA2 = exAddr.getADDR_LINE2();
-                    if (aA2 == null)
+                    if( aA2 == null )
                         aA2 = "";
                     String aCy = exAddr.getCITY();
-                    if (aCy == null)
+                    if( aCy == null )
                         aCy = "";
                     String aS = exAddr.getSTATE_PROV();
-                    if (aS == null)
+                    if( aS == null )
                         aS = "";
                     String aCny = exAddr.getCOUNTRY();
-                    if (aCny == null)
+                    if( aCny == null )
                         aCny = "";
                     String aP = exAddr.getPOSTAL_CODE();
-                    if (aP == null)
+                    if( aP == null )
                         aP = "";
                     String exAddrName = at + "_" + ao + "_" + aA1 + "_" + aA2 + "_" + aCy + "_" + aS + "_" + aCny + "_"
-                                    + aP;
+                            + aP;
                     // compare the two to check if exists
-                    if (selAddrName.equals(exAddrName))
+                    if( selAddrName.equals( exAddrName ) )
                     {
                         // allow to create duplicates but undelete if it was deleted
                         String exSubmit = addrB.getADDR_SUBMIT_ACTION();
-                        if (exSubmit != null && exSubmit.equals("DEL"))
+                        if( exSubmit != null && exSubmit.equals( "DEL" ) )
                         {
                             wasDeleted = true;
-                            addrB = addrB.copyAddress((AC_ADDR_Bean) vAddr.elementAt(k));
-                            if (addrB.getAC_ADDR_IDSEQ() == null || addrB.getAC_ADDR_IDSEQ().equals(exAddrName))
-                                addrB.setADDR_SUBMIT_ACTION("INS");
+                            addrB = addrB.copyAddress( ( AC_ADDR_Bean ) vAddr.elementAt( k ) );
+                            if( addrB.getAC_ADDR_IDSEQ() == null || addrB.getAC_ADDR_IDSEQ().equals( exAddrName ) )
+                                addrB.setADDR_SUBMIT_ACTION( "INS" );
                             else
-                                addrB.setADDR_SUBMIT_ACTION("UPD");
+                                addrB.setADDR_SUBMIT_ACTION( "UPD" );
                             selInd = k; // reset the index
                         }
                         break;
                     }
                 }
                 // update or add new attributes if was not deleted
-                if (!wasDeleted)
+                if( !wasDeleted )
                 {
-                    addrB.setATL_NAME(aType);
-                    addrB.setRANK_ORDER(aOrd);
-                    addrB.setADDR_LINE1(aAddr1);
-                    addrB.setADDR_LINE2(aAddr2);
-                    addrB.setCITY(aCity);
-                    addrB.setSTATE_PROV(aState);
-                    addrB.setCOUNTRY(aCntry);
-                    addrB.setPOSTAL_CODE(aPost);
-                    if (selInd > -1)
-                        addrB.setADDR_SUBMIT_ACTION("UPD");
+                    addrB.setATL_NAME( aType );
+                    addrB.setRANK_ORDER( aOrd );
+                    addrB.setADDR_LINE1( aAddr1 );
+                    addrB.setADDR_LINE2( aAddr2 );
+                    addrB.setCITY( aCity );
+                    addrB.setSTATE_PROV( aState );
+                    addrB.setCOUNTRY( aCntry );
+                    addrB.setPOSTAL_CODE( aPost );
+                    if( selInd > -1 )
+                        addrB.setADDR_SUBMIT_ACTION( "UPD" );
                     else
-                        addrB.setADDR_SUBMIT_ACTION("INS");
+                        addrB.setADDR_SUBMIT_ACTION( "INS" );
                 }
             }
             // set the vector
-            if (selInd > -1)
-                vAddr.setElementAt(addrB, selInd);
+            if( selInd > -1 )
+                vAddr.setElementAt( addrB, selInd );
             else
-                vAddr.addElement(addrB);
-            ACBean.setACC_ADDR_List(vAddr); // set the bean
-        }
-        catch (Exception e)
+                vAddr.addElement( addrB );
+            ACBean.setACC_ADDR_List( vAddr ); // set the bean
+        } catch( Exception e )
         {
-            logger.error("Error - doContAddrAction : " + e.toString(), e);
+            logger.error( "Error - doContAddrAction : " + e.toString(), e );
         }
         return ACBean;
     }
 
-      /**
+    /**
      * Monitor the user selected items with a Sentinel Alert.
      *
      * @param user
@@ -2750,102 +2850,97 @@ public class CurationServlet
      * @param idseqToMonitor
      *            The idseq of item for which alert will be set.
      */
-    public void doMonitor(String user, String idseqToMonitor )
+    public void doMonitor( String user, String idseqToMonitor )
     {
-    	
-    	
-    	String monitor = "";
-    	
-    	//Disable with property.
-    	GetACService getAC = new GetACService(this.m_classReq, this.m_classRes, this);
-    	Vector vList = getAC.getToolOptionData("CURATION", "MONITOR", "");
-        if (vList != null && vList.size()>0)
+
+
+        String monitor = "";
+
+        //Disable with property.
+        GetACService getAC = new GetACService( this.m_classReq, this.m_classRes, this );
+        Vector vList = getAC.getToolOptionData( "CURATION", "MONITOR", "" );
+        if( vList != null && vList.size() > 0 )
         {
-          TOOL_OPTION_Bean tob = (TOOL_OPTION_Bean)vList.elementAt(0);
-          if (tob != null) monitor = tob.getVALUE();
+            TOOL_OPTION_Bean tob = ( TOOL_OPTION_Bean ) vList.elementAt( 0 );
+            if( tob != null ) monitor = tob.getVALUE();
         }
-        
-        if (monitor.length() > 0 && monitor.toUpperCase().equals("FALSE"))
-        	return;
-        
-        System.out.println("Entering doMonitor()");
-        
-            CallableStatement stmt = null;
-            try
+
+        if( monitor.length() > 0 && monitor.toUpperCase().equals( "FALSE" ) )
+            return;
+
+        CallableStatement stmt = null;
+        try
+        {
+            user = user.toUpperCase();
+            // Add the selected items to the CSI
+            String csi_idseq = null;
+            int ndx = 0;
+            stmt = m_conn.prepareCall( "begin SBREXT_CDE_CURATOR_PKG.ADD_TO_SENTINEL_CS(?,?,?); end;" );
+            stmt.registerOutParameter( 3, java.sql.Types.VARCHAR );
+            stmt.setString( 2, user );
+            stmt.setString( 1, idseqToMonitor );
+            stmt.execute();
+            if( stmt.getString( 3 ) != null )
             {
-                user = user.toUpperCase();
-               // Add the selected items to the CSI
-                String csi_idseq = null;
-                int ndx = 0;
-                stmt = m_conn.prepareCall("begin SBREXT_CDE_CURATOR_PKG.ADD_TO_SENTINEL_CS(?,?,?); end;");
-                stmt.registerOutParameter(3, java.sql.Types.VARCHAR);
-                stmt.setString(2, user);
-                stmt.setString(1, idseqToMonitor);
-                stmt.execute();
-                System.out.println("Done with CallableStatement: doMonitor()");
-                if (stmt.getString(3) != null)
+                csi_idseq = stmt.getString( 3 );
+            }
+
+            if( csi_idseq == null )
+            {
+                logger.debug( "None of the selected items can be added to your Reserved CSI." );
+            }
+            else if( csi_idseq.length() == 0 )
+            {
+                logger.debug( "The selected items is not supported for the Monitor feature." );
+            }
+            else
+            {
+                // Have the Sentinel watch the CSI.
+                DSRAlert sentinel = DSRAlertImpl.factory( m_conn );
+                ndx = sentinel.createAlert( user, csi_idseq );
+                switch( ndx )
                 {
-                    csi_idseq = stmt.getString( 3 );
-                }
-             
-                if (csi_idseq == null)
-                {
-                    System.out.println("None of the selected items can be added to your Reserved CSI.");
-                }
-                else if (csi_idseq.length() == 0)
-                {
-                	System.out.println("The selected items is not supported for the Monitor feature.");
-                }
-                else
-                {
-                    // Have the Sentinel watch the CSI.
-                    DSRAlert sentinel = DSRAlertImpl.factory(m_conn);
-                    ndx = sentinel.createAlert(user, csi_idseq);
-                    switch (ndx)
-                    {
                     case DSRAlert.RC_FAILED:
-                        System.out.println("An error occurred attempting to create the Alert Definition.");
+                        logger.debug( "An error occurred attempting to create the Alert Definition." );
                         break;
                     case DSRAlert.RC_INCOMPATIBLE:
-                    	System.out.println( "The Sentinel API server does not support this request.");
+                        logger.debug( "The Sentinel API server does not support this request." );
                         break;
                     case DSRAlert.RC_UNAUTHORIZED:
-                    	System.out.println( user+" is not authorized to create a Sentinel Alert.");
+                        logger.debug( user + " is not authorized to create a Sentinel Alert." );
                         break;
                     default:
                         break;
-                    }
                 }
-           }
-            catch (Exception e)
-            {
-            	System.out.println("An unexpected exception occurred");
-                logger.error("cdecurate: doMonitor(): " + e.toString(), e);
             }
-            finally{
-            	stmt = SQLHelper.closeCallableStatement(stmt);
-              }
-     
+        } catch( Exception e )
+        {
+            logger.error( "cdecurate: doMonitor(): " + e.toString(), e );
+        } finally
+        {
+            stmt = SQLHelper.closeCallableStatement( stmt );
+        }
+
     }
 
-    protected void doMonitor(HttpServletRequest req, HttpServletResponse res)
+    protected void doMonitor( HttpServletRequest req, HttpServletResponse res )
     {
         // Init main variables.
         HttpSession session = req.getSession();
         String msg = null;
         Vector<String> vCheckList = new Vector<String>();
-        while (true)
+        while( true )
         {
             // Be sure something was selected by the user.
-            Vector vSRows = (Vector) session.getAttribute("vSelRows");
+            Vector vSRows = ( Vector ) session.getAttribute( "vSelRows" );
             /*if (vSRows == null || vSRows.size() == 0){
                 msg = "No items were selected from the Search Results.";
                 break;
             }*/
             // Get session information.
             UserBean Userbean = new UserBean();
-            Userbean = (UserBean) session.getAttribute("Userbean");
-            if (Userbean == null)
+            Userbean = ( UserBean ) session.getAttribute( "Userbean" );
+            if( Userbean == null )
             {
                 msg = "User session information is missing.";
                 break;
@@ -2856,101 +2951,105 @@ public class CurationServlet
                 // Get the selected items and associate each with the appropriate CSI
                 String user = Userbean.getUsername();
                 user = user.toUpperCase();
-               // Add the selected items to the CSI
+                // Add the selected items to the CSI
                 String csi_idseq = null;
                 int ndx = 0;
-                stmt = m_conn.prepareCall("begin SBREXT_CDE_CURATOR_PKG.ADD_TO_SENTINEL_CS(?,?,?); end;");
-                stmt.registerOutParameter(3, java.sql.Types.VARCHAR);
-                stmt.setString(2, user);
+                stmt = m_conn.prepareCall( "begin SBREXT_CDE_CURATOR_PKG.ADD_TO_SENTINEL_CS(?,?,?); end;" );
+                stmt.registerOutParameter( 3, java.sql.Types.VARCHAR );
+                stmt.setString( 2, user );
                 try
                 {
                     vCheckList = new Vector<String>();
-                    String unCheckedRowId = StringUtil.cleanJavascriptAndHtml((String) m_classReq.getParameter("unCheckedRowId"));
+                    String unCheckedRowId = StringUtil.cleanJavascriptAndHtml( ( String ) m_classReq.getParameter( "unCheckedRowId" ) );
 //                    if (unCheckedRowId != null && !(unCheckedRowId == "")){
-                  if (!StringUtils.isEmpty(unCheckedRowId)){	//JR1107 nothing to do with the ticket, just fixing NPE
-                        int selectedRowID = new Integer(unCheckedRowId);
-                        AC_Bean bean = (AC_Bean) vSRows.elementAt(selectedRowID);
-                        stmt.setString(1, bean.getIDSEQ());
+                    if( !StringUtils.isEmpty( unCheckedRowId ) )
+                    {    //JR1107 nothing to do with the ticket, just fixing NPE
+                        int selectedRowID = new Integer( unCheckedRowId );
+                        AC_Bean bean = ( AC_Bean ) vSRows.elementAt( selectedRowID );
+                        stmt.setString( 1, bean.getIDSEQ() );
                         stmt.execute();
-                        if (stmt.getString(3) != null)
-                            csi_idseq = stmt.getString(3);
-                        for (int m = 0; m < (vSRows.size()); m++){
-                            String ckName2 = ("CK" + m);
-                            String rSel2 = (String) req.getParameter(ckName2);
-                            if (rSel2 != null)
-                                vCheckList.addElement(ckName2);
+                        if( stmt.getString( 3 ) != null )
+                            csi_idseq = stmt.getString( 3 );
+                        for( int m = 0; m < ( vSRows.size() ); m++ )
+                        {
+                            String ckName2 = ( "CK" + m );
+                            String rSel2 = ( String ) req.getParameter( ckName2 );
+                            if( rSel2 != null )
+                                vCheckList.addElement( ckName2 );
                         }
-                     }else if(vSRows.size() > 0){
-                      for (ndx = 0; ndx < vSRows.size(); ++ndx){
-                         String temp;
-                         String ckName = ("CK" + ndx);
-                         temp = req.getParameter(ckName);
-                         if (temp != null){
-                            AC_Bean bean = (AC_Bean) vSRows.elementAt(ndx);
-                            temp = bean.getIDSEQ();
-                            stmt.setString(1, temp);
-                            stmt.execute();
-                            temp = stmt.getString(3);
-                            vCheckList.addElement(ckName);
-                            if (temp != null)
-                                csi_idseq = temp;
-                         }
-                       }
+                    }
+                    else if( vSRows.size() > 0 )
+                    {
+                        for( ndx = 0; ndx < vSRows.size(); ++ndx )
+                        {
+                            String temp;
+                            String ckName = ( "CK" + ndx );
+                            temp = req.getParameter( ckName );
+                            if( temp != null )
+                            {
+                                AC_Bean bean = ( AC_Bean ) vSRows.elementAt( ndx );
+                                temp = bean.getIDSEQ();
+                                stmt.setString( 1, temp );
+                                stmt.execute();
+                                temp = stmt.getString( 3 );
+                                vCheckList.addElement( ckName );
+                                if( temp != null )
+                                    csi_idseq = temp;
+                            }
+                        }
                     }
 
-                    DataManager.setAttribute(session, "CheckList", vCheckList); // add the check list in the session.
-                }
-                catch (ClassCastException e)
+                    DataManager.setAttribute( session, "CheckList", vCheckList ); // add the check list in the session.
+                } catch( ClassCastException e )
                 {
                     // This happens when the selected element does not extend the AC_Bean abstract class.
                     csi_idseq = "";
                 }
-                if (csi_idseq == null)
+                if( csi_idseq == null )
                 {
                     msg = "None of the selected items can be added to your Reserved CSI.";
                 }
-                else if (csi_idseq.length() == 0)
+                else if( csi_idseq.length() == 0 )
                 {
                     msg = "The selected items are not supported for the Monitor feature.";
                 }
                 else
                 {
                     // Have the Sentinel watch the CSI.
-                    DSRAlert sentinel = DSRAlertImpl.factory(m_conn);
-                    ndx = sentinel.createAlert(user, csi_idseq);
-                    switch (ndx)
+                    DSRAlert sentinel = DSRAlertImpl.factory( m_conn );
+                    ndx = sentinel.createAlert( user, csi_idseq );
+                    switch( ndx )
                     {
-                    case DSRAlert.RC_FAILED:
-                        msg = "An error occurred attempting to create the Alert Definition.";
-                        break;
-                    case DSRAlert.RC_INCOMPATIBLE:
-                        msg = "The Sentinel API server does not support this request.";
-                        break;
-                    case DSRAlert.RC_UNAUTHORIZED:
-                        msg = "You are not authorized to create a Sentinel Alert.";
-                        break;
-                    default:
-                        String itemTxt = (vSRows.size() == 1) ? "item is" : "items are";
-                        msg = "The selected " + itemTxt + " now monitored by the Alert Definition \""
-                                        + sentinel.getAlertName() + "\"";
-                        msg = msg.replaceAll("[\"]", "\\\\\"");
-                        break;
+                        case DSRAlert.RC_FAILED:
+                            msg = "An error occurred attempting to create the Alert Definition.";
+                            break;
+                        case DSRAlert.RC_INCOMPATIBLE:
+                            msg = "The Sentinel API server does not support this request.";
+                            break;
+                        case DSRAlert.RC_UNAUTHORIZED:
+                            msg = "You are not authorized to create a Sentinel Alert.";
+                            break;
+                        default:
+                            String itemTxt = ( vSRows.size() == 1 ) ? "item is" : "items are";
+                            msg = "The selected " + itemTxt + " now monitored by the Alert Definition \""
+                                    + sentinel.getAlertName() + "\"";
+                            msg = msg.replaceAll( "[\"]", "\\\\\"" );
+                            break;
                     }
                 }
-           }
-            catch (Exception e)
+            } catch( Exception e )
             {
                 msg = "An unexpected exception occurred, please notify the Help Desk. Details have been written to the log.";
-                logger.error("cdecurate: doMonitor(): " + e.toString(), e);
-            }
-            finally{
-            	stmt = SQLHelper.closeCallableStatement(stmt);
+                logger.error( "cdecurate: doMonitor(): " + e.toString(), e );
+            } finally
+            {
+                stmt = SQLHelper.closeCallableStatement( stmt );
                 // Send the message back to the user.
-                GetACSearch getACSearch = new GetACSearch(req, res, this);
-                getACSearch.getACShowResult2(req, res, "Monitor");
-                DataManager.setAttribute(session, Session_Data.SESSION_STATUS_MESSAGE, msg);
-                ForwardJSP(req, res, "/SearchResultsPage.jsp");
-              }
+                GetACSearch getACSearch = new GetACSearch( req, res, this );
+                getACSearch.getACShowResult2( req, res, "Monitor" );
+                DataManager.setAttribute( session, Session_Data.SESSION_STATUS_MESSAGE, msg );
+                ForwardJSP( req, res, "/SearchResultsPage.jsp" );
+            }
             break;
         }
         // Send the message back to the user.
@@ -2959,7 +3058,7 @@ public class CurationServlet
 //        DataManager.setAttribute(session, Session_Data.SESSION_STATUS_MESSAGE, msg);
 //        ForwardJSP(req, res, "/SearchResultsPage.jsp");
     }
-    
+
     /**
      * Unmonitor the user selected items with a Sentinel Alert.
      *
@@ -2968,62 +3067,69 @@ public class CurationServlet
      * @param res
      *            The session response.
      */
-    protected void doUnmonitor(HttpServletRequest req, HttpServletResponse res)
+    protected void doUnmonitor( HttpServletRequest req, HttpServletResponse res )
     {
         // Init main variables.
         HttpSession session = req.getSession();
         String msg = null;
         Vector<String> vCheckList = new Vector<String>();
-        while (true)
+        while( true )
         {
             // Be sure something was selected by the user.
-            Vector vSRows = (Vector) session.getAttribute("vSelRows");
+            Vector vSRows = ( Vector ) session.getAttribute( "vSelRows" );
            /* if (vSRows == null || vSRows.size() == 0){
                 msg = "No items were selected from the Search Results.";
                 break;
             }*/
             // Get session information.
             UserBean Userbean = new UserBean();
-            Userbean = (UserBean) session.getAttribute("Userbean");
-            if (Userbean == null){
+            Userbean = ( UserBean ) session.getAttribute( "Userbean" );
+            if( Userbean == null )
+            {
                 msg = "User session information is missing.";
                 break;
             }
             // Get list of selected AC's.
             Vector<String> list = new Vector<String>();
-            String unCheckedRowId = StringUtil.cleanJavascriptAndHtml((String) m_classReq.getParameter("unCheckedRowId"));
+            String unCheckedRowId = StringUtil.cleanJavascriptAndHtml( ( String ) m_classReq.getParameter( "unCheckedRowId" ) );
 //            if (unCheckedRowId != null && !(unCheckedRowId == "")){
-            if (!StringUtils.isEmpty(unCheckedRowId)){	//JR1107 nothing to do with the ticket, just fixing NPE
-                int selectedRowID = new Integer(unCheckedRowId);
-                AC_Bean bean = (AC_Bean) vSRows.elementAt(selectedRowID);
-                list.add(bean.getIDSEQ());
-                for (int m = 0; m < (vSRows.size()); m++)
+            if( !StringUtils.isEmpty( unCheckedRowId ) )
+            {    //JR1107 nothing to do with the ticket, just fixing NPE
+                int selectedRowID = new Integer( unCheckedRowId );
+                AC_Bean bean = ( AC_Bean ) vSRows.elementAt( selectedRowID );
+                list.add( bean.getIDSEQ() );
+                for( int m = 0; m < ( vSRows.size() ); m++ )
                 {
-                    String ckName2 = ("CK" + m);
-                    String rSel2 = (String) req.getParameter(ckName2);
-                    if (rSel2 != null)
-                        vCheckList.addElement(ckName2);
+                    String ckName2 = ( "CK" + m );
+                    String rSel2 = ( String ) req.getParameter( ckName2 );
+                    if( rSel2 != null )
+                        vCheckList.addElement( ckName2 );
                 }
-            }else if(vSRows.size() > 0){
-               for (int ndx = 0; ndx < vSRows.size(); ++ndx){
-                 try{
-                    String temp;
-                    String ckName = ("CK" + ndx);
-                    temp = req.getParameter(ckName);
-                    if (temp != null)
+            }
+            else if( vSRows.size() > 0 )
+            {
+                for( int ndx = 0; ndx < vSRows.size(); ++ndx )
+                {
+                    try
                     {
-                        AC_Bean bean = (AC_Bean) vSRows.elementAt(ndx);
-                        temp = bean.getIDSEQ();
-                        list.add(temp);
-                        vCheckList.addElement(ckName);
+                        String temp;
+                        String ckName = ( "CK" + ndx );
+                        temp = req.getParameter( ckName );
+                        if( temp != null )
+                        {
+                            AC_Bean bean = ( AC_Bean ) vSRows.elementAt( ndx );
+                            temp = bean.getIDSEQ();
+                            list.add( temp );
+                            vCheckList.addElement( ckName );
+                        }
+                    } catch( ClassCastException e )
+                    {
                     }
-                }catch (ClassCastException e){
                 }
-              }
             }
 
-            DataManager.setAttribute(session, "CheckList", vCheckList); // add the check list in the session.
-            if (list.size() == 0)
+            DataManager.setAttribute( session, "CheckList", vCheckList ); // add the check list in the session.
+            if( list.size() == 0 )
             {
                 msg = "None of the selected AC's were previously Monitored.";
                 break;
@@ -3031,29 +3137,29 @@ public class CurationServlet
             // Update the database - remove the CSI association to the AC's.
             String user = Userbean.getUsername();
             user = user.toUpperCase();
-            CallableStatement stmt=null;
-            for (int ndx = 0; ndx < list.size(); ++ndx)
+            CallableStatement stmt = null;
+            for( int ndx = 0; ndx < list.size(); ++ndx )
             {
                 try
                 {
-                    String temp = list.elementAt(ndx);
-                    stmt = m_conn.prepareCall("begin SBREXT_CDE_CURATOR_PKG.REMOVE_FROM_SENTINEL_CS('"
-                                    + temp + "','" + user + "'); END;");
+                    String temp = list.elementAt( ndx );
+                    stmt = m_conn.prepareCall( "begin SBREXT_CDE_CURATOR_PKG.REMOVE_FROM_SENTINEL_CS('"
+                            + temp + "','" + user + "'); END;" );
                     stmt.execute();
-                    stmt = SQLHelper.closeCallableStatement(stmt);
+                    stmt = SQLHelper.closeCallableStatement( stmt );
                     msg = "The selected item is no longer monitored by the Alert Definition";
-                }
-                catch (Exception e)
+                } catch( Exception e )
                 {
                     msg = "An unexpected exception occurred, please notify the Help Desk. Details have been written to the log.";
-                    logger.error("cdecurate: doUnmonitor(): " + e.toString(), e);
-                }finally{
-                	stmt = SQLHelper.closeCallableStatement(stmt);
+                    logger.error( "cdecurate: doUnmonitor(): " + e.toString(), e );
+                } finally
+                {
+                    stmt = SQLHelper.closeCallableStatement( stmt );
                     // Send the message back to the user.
-                    GetACSearch getACSearch = new GetACSearch(req, res, this);
-                    getACSearch.getACShowResult2(req, res, "Monitor");
-                    DataManager.setAttribute(session, Session_Data.SESSION_STATUS_MESSAGE, msg);
-                    ForwardJSP(req, res, "/SearchResultsPage.jsp");
+                    GetACSearch getACSearch = new GetACSearch( req, res, this );
+                    getACSearch.getACShowResult2( req, res, "Monitor" );
+                    DataManager.setAttribute( session, Session_Data.SESSION_STATUS_MESSAGE, msg );
+                    ForwardJSP( req, res, "/SearchResultsPage.jsp" );
                 }
             }
             break;
@@ -3080,64 +3186,64 @@ public class CurationServlet
      *
      * @throws Exception
      */
-    public void doRefreshPVSearchPage(HttpServletRequest req, HttpServletResponse res, PV_Bean m_PV, String Origin)
-                    throws Exception
+    public void doRefreshPVSearchPage( HttpServletRequest req, HttpServletResponse res, PV_Bean m_PV, String Origin )
+            throws Exception
     {
         HttpSession session = req.getSession();
-        if (Origin.equals("CreateNew"))
+        if( Origin.equals( "CreateNew" ) )
         {
-            DataManager.setAttribute(session, Session_Data.SESSION_STATUS_MESSAGE, "Value created and inserted successfully.");
+            DataManager.setAttribute( session, Session_Data.SESSION_STATUS_MESSAGE, "Value created and inserted successfully." );
             Vector<String> vNewPV = new Vector<String>();
-            vNewPV.addElement(m_PV.getPV_PV_IDSEQ());
-            vNewPV.addElement(m_PV.getPV_VALUE());
-            vNewPV.addElement(m_PV.getPV_SHORT_MEANING());
-            req.setAttribute("newPVData", vNewPV);
+            vNewPV.addElement( m_PV.getPV_PV_IDSEQ() );
+            vNewPV.addElement( m_PV.getPV_VALUE() );
+            vNewPV.addElement( m_PV.getPV_SHORT_MEANING() );
+            req.setAttribute( "newPVData", vNewPV );
         }
         // get the selected pv data from the request
         else
         {
             // using designation hidden fields to get the selected value & meanings
-            String sPVID = StringUtil.cleanJavascriptAndHtml((String) req.getParameter("desName"));
-            if (sPVID != null)
-                m_PV.setPV_PV_IDSEQ(sPVID);
-            String sPValue = (String) req.getParameter("desContext");
-            if (sPValue != null)
-                m_PV.setPV_VALUE(sPValue);
-            String sPVMean = (String) req.getParameter("desContextID");
-            if (sPVMean != null)
-                m_PV.setPV_SHORT_MEANING(sPVMean);
+            String sPVID = StringUtil.cleanJavascriptAndHtml( ( String ) req.getParameter( "desName" ) );
+            if( sPVID != null )
+                m_PV.setPV_PV_IDSEQ( sPVID );
+            String sPValue = ( String ) req.getParameter( "desContext" );
+            if( sPValue != null )
+                m_PV.setPV_VALUE( sPValue );
+            String sPVMean = ( String ) req.getParameter( "desContextID" );
+            if( sPVMean != null )
+                m_PV.setPV_SHORT_MEANING( sPVMean );
         }
         // forwards the page to regular pv search if not questions
-        String sMenuAction = (String) session.getAttribute(Session_Data.SESSION_MENU_ACTION);
-        if (Origin.equals("CreateNew") && !sMenuAction.equals("Questions"))
-            ForwardJSP(req, res, "/OpenSearchWindow.jsp");
+        String sMenuAction = ( String ) session.getAttribute( Session_Data.SESSION_MENU_ACTION );
+        if( Origin.equals( "CreateNew" ) && !sMenuAction.equals( "Questions" ) )
+            ForwardJSP( req, res, "/OpenSearchWindow.jsp" );
         else
         {
             // get the selected crf value and update its attribute with the selected/created pvvalue
-            String selCRFValue = (String) session.getAttribute("selCRFValueID");
-            if (selCRFValue != null)
+            String selCRFValue = ( String ) session.getAttribute( "selCRFValueID" );
+            if( selCRFValue != null )
             {
                 // get the crf value vector to update
-                Vector vQuestValue = (Vector) session.getAttribute("vQuestValue");
-                if (vQuestValue != null)
+                Vector vQuestValue = ( Vector ) session.getAttribute( "vQuestValue" );
+                if( vQuestValue != null )
                 {
-                    for (int i = 0; i < (vQuestValue.size()); i++)
+                    for( int i = 0; i < ( vQuestValue.size() ); i++ )
                     {
                         Quest_Value_Bean QuestValueBean = new Quest_Value_Bean();
-                        QuestValueBean = (Quest_Value_Bean) vQuestValue.elementAt(i);
+                        QuestValueBean = ( Quest_Value_Bean ) vQuestValue.elementAt( i );
                         // update the quest bean with the new value meaning
-                        if (QuestValueBean.getQUESTION_VALUE_IDSEQ().equalsIgnoreCase(selCRFValue))
+                        if( QuestValueBean.getQUESTION_VALUE_IDSEQ().equalsIgnoreCase( selCRFValue ) )
                         {
-                            QuestValueBean.setPERM_VALUE_IDSEQ(m_PV.getPV_PV_IDSEQ());
-                            QuestValueBean.setPERMISSIBLE_VALUE(m_PV.getPV_VALUE());
-                            QuestValueBean.setVALUE_MEANING(m_PV.getPV_SHORT_MEANING());
+                            QuestValueBean.setPERM_VALUE_IDSEQ( m_PV.getPV_PV_IDSEQ() );
+                            QuestValueBean.setPERMISSIBLE_VALUE( m_PV.getPV_VALUE() );
+                            QuestValueBean.setVALUE_MEANING( m_PV.getPV_SHORT_MEANING() );
                             break;
                         }
                     }
-                    DataManager.setAttribute(session, "vQuestValue", vQuestValue);
+                    DataManager.setAttribute( session, "vQuestValue", vQuestValue );
                 }
             }
-            ForwardJSP(req, res, "/CRFValueSearchWindow.jsp");
+            ForwardJSP( req, res, "/CRFValueSearchWindow.jsp" );
         }
     }
 
@@ -3154,59 +3260,61 @@ public class CurationServlet
      *
      * @throws Exception
      */
-    protected void doSearchSelectionAction(HttpServletRequest req, HttpServletResponse res) throws Exception
+    protected void doSearchSelectionAction( HttpServletRequest req, HttpServletResponse res ) throws Exception
     {
         HttpSession session = req.getSession();
-        String sMenuAction = (String) session.getAttribute(Session_Data.SESSION_MENU_ACTION);
+        String sMenuAction = ( String ) session.getAttribute( Session_Data.SESSION_MENU_ACTION );
         ServletConfig config;
-        String sSearchAC = (String) session.getAttribute("searchAC"); // get the selected component
-        CurationServlet acServlet = getACServlet(sSearchAC);
+        String sSearchAC = ( String ) session.getAttribute( "searchAC" ); // get the selected component
+        CurationServlet acServlet = getACServlet( sSearchAC );
         // gets the bean for the row selected
-        GetACSearch getACSearch = new GetACSearch(req, res, acServlet);
-        if (getACSearch.getSelRowToEdit(req, res, "") == false){
-          	if (sMenuAction.equals("NewDEVersion") || sMenuAction.equals("NewDECVersion") || sMenuAction.equals("NewVDVersion"))
-          	   ForwardJSP(req, res, "/SearchResultsPage.jsp");
-          	else{
-          	   session.setAttribute("displayErrorMessage", "Yes");
-          	}
-          	String editID = (String)session.getAttribute("editID");
-           	String path = "/NCICurationServlet?reqType=view&idseq=" + editID;
-        	RequestDispatcher rd = m_servletContext.getRequestDispatcher(path);
-		    rd.forward(req, res);
-		    return;
-		}
+        GetACSearch getACSearch = new GetACSearch( req, res, acServlet );
+        if( getACSearch.getSelRowToEdit( req, res, "" ) == false )
+        {
+            if( sMenuAction.equals( "NewDEVersion" ) || sMenuAction.equals( "NewDECVersion" ) || sMenuAction.equals( "NewVDVersion" ) )
+                ForwardJSP( req, res, "/SearchResultsPage.jsp" );
+            else
+            {
+                session.setAttribute( "displayErrorMessage", "Yes" );
+            }
+            String editID = ( String ) session.getAttribute( "editID" );
+            String path = "/NCICurationServlet?reqType=view&idseq=" + editID;
+            RequestDispatcher rd = m_servletContext.getRequestDispatcher( path );
+            rd.forward( req, res );
+            return;
+        }
         else
         {
-           // String sMenuAction = (String) session.getAttribute(Session_Data.SESSION_MENU_ACTION); // get the selected
-                                                                                                    // menu action
-          //  String sButtonPressed = (String) session.getAttribute("LastMenuButtonPressed");
-          //  String sOriginAction = (String) session.getAttribute("sOriginAction");
+            // String sMenuAction = (String) session.getAttribute(Session_Data.SESSION_MENU_ACTION); // get the selected
+            // menu action
+            //  String sButtonPressed = (String) session.getAttribute("LastMenuButtonPressed");
+            //  String sOriginAction = (String) session.getAttribute("sOriginAction");
             // call method to handle DE actions.
-            if (sSearchAC.equals("DataElement"))
-                this.doSerSelectActDE(req, res);
-            else if (sSearchAC.equals("DataElementConcept"))
-                this.doSerSelectActDEC(req, res);
-            else if (sSearchAC.equals("ValueDomain"))
-                this.doSerSelectActVD(req, res);
-            else if (sSearchAC.equals("ValueMeaning"))
-                this.doSerSelectActVM(req, res);
-            else if (sSearchAC.equals("Questions"))
+            if( sSearchAC.equals( "DataElement" ) )
+                this.doSerSelectActDE( req, res );
+            else if( sSearchAC.equals( "DataElementConcept" ) )
+                this.doSerSelectActDEC( req, res );
+            else if( sSearchAC.equals( "ValueDomain" ) )
+                this.doSerSelectActVD( req, res );
+            else if( sSearchAC.equals( "ValueMeaning" ) )
+                this.doSerSelectActVM( req, res );
+            else if( sSearchAC.equals( "Questions" ) )
             {
                 // DataManager.setAttribute(session, Session_Data.SESSION_STATUS_MESSAGE, "");
                 // get status indicatior from the quest bean
-                Quest_Bean QuestBean = (Quest_Bean) session.getAttribute("m_Quest");
+                Quest_Bean QuestBean = ( Quest_Bean ) session.getAttribute( "m_Quest" );
                 String sStatus = QuestBean.getSTATUS_INDICATOR();
                 // forward the page to createDE if new or existing or to edit page if edit
-                if (sStatus.equals("Edit"))
-                    ForwardJSP(req, res, "/EditDEPage.jsp");
+                if( sStatus.equals( "Edit" ) )
+                    ForwardJSP( req, res, "/EditDEPage.jsp" );
                 else
-                    ForwardJSP(req, res, "/CreateDEPage.jsp");
+                    ForwardJSP( req, res, "/CreateDEPage.jsp" );
             }
             else
             {
-                DataManager.setAttribute(session, Session_Data.SESSION_STATUS_MESSAGE, "Unable to open the Create or Edit page.\n"
-                                + "Please try again.");
-                ForwardJSP(req, res, "/SearchResultsPage.jsp");
+                DataManager.setAttribute( session, Session_Data.SESSION_STATUS_MESSAGE, "Unable to open the Create or Edit page.\n"
+                        + "Please try again." );
+                ForwardJSP( req, res, "/SearchResultsPage.jsp" );
             }
         }
     }
@@ -3223,45 +3331,45 @@ public class CurationServlet
     {
         HttpSession session = m_classReq.getSession();
         // gets the bean for the row selected
-        GetACSearch getACSearch = new GetACSearch(m_classReq, m_classRes, this);
-        if (getACSearch.getSelRowToEdit(m_classReq, m_classRes, "BlockEdit") == false)
-            ForwardJSP(m_classReq, m_classRes, "/SearchResultsPage.jsp");
+        GetACSearch getACSearch = new GetACSearch( m_classReq, m_classRes, this );
+        if( getACSearch.getSelRowToEdit( m_classReq, m_classRes, "BlockEdit" ) == false )
+            ForwardJSP( m_classReq, m_classRes, "/SearchResultsPage.jsp" );
         else
         {
-           // String sMenuAction = (String) session.getAttribute(Session_Data.SESSION_MENU_ACTION); // get the selected
-                                                                                                    // menu action
-            String sSearchAC = (String) session.getAttribute("searchAC"); // get the selected component
-          //  String sButtonPressed = (String) session.getAttribute("LastMenuButtonPressed");
-            if (sSearchAC.equals("DataElement"))
+            // String sMenuAction = (String) session.getAttribute(Session_Data.SESSION_MENU_ACTION); // get the selected
+            // menu action
+            String sSearchAC = ( String ) session.getAttribute( "searchAC" ); // get the selected component
+            //  String sButtonPressed = (String) session.getAttribute("LastMenuButtonPressed");
+            if( sSearchAC.equals( "DataElement" ) )
             { // open the edit page
-                DE_Bean DEBean = (DE_Bean) session.getAttribute("m_DE");
-                DEBean.setDE_DEC_IDSEQ("");
-                DEBean.setDE_DEC_NAME("");
-                DEBean.setDE_VD_IDSEQ("");
-                DEBean.setDE_VD_NAME("");
-                DataManager.setAttribute(session, "m_DE", DEBean); // users need cs-csi to view
-                DataManager.setAttribute(session, "originAction", "BlockEditDE");
-                DataManager.setAttribute(session, "DEEditAction", "");
-                ForwardJSP(m_classReq, m_classRes, "/EditDEPage.jsp");
+                DE_Bean DEBean = ( DE_Bean ) session.getAttribute( "m_DE" );
+                DEBean.setDE_DEC_IDSEQ( "" );
+                DEBean.setDE_DEC_NAME( "" );
+                DEBean.setDE_VD_IDSEQ( "" );
+                DEBean.setDE_VD_NAME( "" );
+                DataManager.setAttribute( session, "m_DE", DEBean ); // users need cs-csi to view
+                DataManager.setAttribute( session, "originAction", "BlockEditDE" );
+                DataManager.setAttribute( session, "DEEditAction", "" );
+                ForwardJSP( m_classReq, m_classRes, "/EditDEPage.jsp" );
             }
-            else if (sSearchAC.equals("DataElementConcept"))
+            else if( sSearchAC.equals( "DataElementConcept" ) )
             {
-                DataManager.setAttribute(session, "originAction", "BlockEditDEC");
-                this.clearBuildingBlockSessionAttributes(m_classReq, m_classRes);
-                ForwardJSP(m_classReq, m_classRes, "/EditDECPage.jsp");
+                DataManager.setAttribute( session, "originAction", "BlockEditDEC" );
+                this.clearBuildingBlockSessionAttributes( m_classReq, m_classRes );
+                ForwardJSP( m_classReq, m_classRes, "/EditDECPage.jsp" );
             }
-            else if (sSearchAC.equals("ValueDomain"))
+            else if( sSearchAC.equals( "ValueDomain" ) )
             {
-                DataManager.setAttribute(session, "vRepTerm", null);
-                DataManager.setAttribute(session, "newRepTerm", "");
-                DataManager.setAttribute(session, "originAction", "BlockEditVD");
-                ForwardJSP(m_classReq, m_classRes, "/EditVDPage.jsp");
+                DataManager.setAttribute( session, "vRepTerm", null );
+                DataManager.setAttribute( session, "newRepTerm", "" );
+                DataManager.setAttribute( session, "originAction", "BlockEditVD" );
+                ForwardJSP( m_classReq, m_classRes, "/EditVDPage.jsp" );
             }
             else
             {
-                DataManager.setAttribute(session, Session_Data.SESSION_STATUS_MESSAGE, "Unable to open the Create or Edit page.\\n"
-                                + "Please try again.");
-                ForwardJSP(m_classReq, m_classRes, "/SearchResultsPage.jsp");
+                DataManager.setAttribute( session, Session_Data.SESSION_STATUS_MESSAGE, "Unable to open the Create or Edit page.\\n"
+                        + "Please try again." );
+                ForwardJSP( m_classReq, m_classRes, "/SearchResultsPage.jsp" );
             }
         }
     }
@@ -3273,7 +3381,7 @@ public class CurationServlet
      */
     public String getPropertyDefinition()
     {
-        return NCICurationServlet.m_settings.getProperty("DEDefinition");
+        return NCICurationServlet.m_settings.getProperty( "DEDefinition" );
     }
 
     /**
@@ -3286,46 +3394,46 @@ public class CurationServlet
      *
      * @throws Exception
      */
-    private void doSerSelectActDE(HttpServletRequest req, HttpServletResponse res) throws Exception
+    private void doSerSelectActDE( HttpServletRequest req, HttpServletResponse res ) throws Exception
     {
         HttpSession session = req.getSession();
-        String sMenuAction = (String) session.getAttribute(Session_Data.SESSION_MENU_ACTION); // get the selected menu
-                                                                                                // action
-        String sButtonPressed = (String) session.getAttribute("LastMenuButtonPressed");
+        String sMenuAction = ( String ) session.getAttribute( Session_Data.SESSION_MENU_ACTION ); // get the selected menu
+        // action
+        String sButtonPressed = ( String ) session.getAttribute( "LastMenuButtonPressed" );
         // make sure the menu action is for DE, set it otherwise
-        if (sMenuAction.equalsIgnoreCase("NewDECTemplate") || (sMenuAction.equalsIgnoreCase("NewVDTemplate")))
+        if( sMenuAction.equalsIgnoreCase( "NewDECTemplate" ) || ( sMenuAction.equalsIgnoreCase( "NewVDTemplate" ) ) )
             sMenuAction = "NewDETemplate";
-        else if (sMenuAction.equalsIgnoreCase("NewDECVersion") || (sMenuAction.equalsIgnoreCase("NewVDVersion")))
+        else if( sMenuAction.equalsIgnoreCase( "NewDECVersion" ) || ( sMenuAction.equalsIgnoreCase( "NewVDVersion" ) ) )
             sMenuAction = "NewDEVersion";
-        else if (sMenuAction.equalsIgnoreCase("editDEC") || (sMenuAction.equalsIgnoreCase("editVD")))
+        else if( sMenuAction.equalsIgnoreCase( "editDEC" ) || ( sMenuAction.equalsIgnoreCase( "editVD" ) ) )
             sMenuAction = "editDE";
         // set the menuaction session attribute
-        DataManager.setAttribute(session, Session_Data.SESSION_MENU_ACTION, sMenuAction);
+        DataManager.setAttribute( session, Session_Data.SESSION_MENU_ACTION, sMenuAction );
         // forward to create DE page if template or version
-        if ((sMenuAction.equals("NewDETemplate")) || (sMenuAction.equals("NewDEVersion")))
+        if( ( sMenuAction.equals( "NewDETemplate" ) ) || ( sMenuAction.equals( "NewDEVersion" ) ) )
         {
             // DataManager.setAttribute(session, Session_Data.SESSION_STATUS_MESSAGE, "");
-            DataManager.setAttribute(session, "sCDEAction", "validate");
-            ForwardJSP(req, res, "/CreateDEPage.jsp");
-            DataManager.setAttribute(session, "originAction", "NewDE");
+            DataManager.setAttribute( session, "sCDEAction", "validate" );
+            ForwardJSP( req, res, "/CreateDEPage.jsp" );
+            DataManager.setAttribute( session, "originAction", "NewDE" );
         }
         // forward to edit DE page if editing
-        else if (sMenuAction.equals("editDE") || sMenuAction.equals("nothing"))
+        else if( sMenuAction.equals( "editDE" ) || sMenuAction.equals( "nothing" ) )
         {
-            DataManager.setAttribute(session, "originAction", "EditDE");
-            ForwardJSP(req, res, "/EditDEPage.jsp");
+            DataManager.setAttribute( session, "originAction", "EditDE" );
+            ForwardJSP( req, res, "/EditDEPage.jsp" );
         }
-        else if (sButtonPressed.equals("Search"))
+        else if( sButtonPressed.equals( "Search" ) )
         {
-            DataManager.setAttribute(session, "originAction", "EditDE");
-            ForwardJSP(req, res, "/EditDEPage.jsp");
+            DataManager.setAttribute( session, "originAction", "EditDE" );
+            ForwardJSP( req, res, "/EditDEPage.jsp" );
         }
         else
         {
-            DataManager.setAttribute(session, "originAction", "EditDE");
-            DataManager.setAttribute(session, Session_Data.SESSION_STATUS_MESSAGE, "Unable to open the Create or Edit page.\\n"
-                            + "Please try again.");
-            ForwardJSP(req, res, "/SearchResultsPage.jsp");
+            DataManager.setAttribute( session, "originAction", "EditDE" );
+            DataManager.setAttribute( session, Session_Data.SESSION_STATUS_MESSAGE, "Unable to open the Create or Edit page.\\n"
+                    + "Please try again." );
+            ForwardJSP( req, res, "/SearchResultsPage.jsp" );
         }
     }
 
@@ -3339,45 +3447,45 @@ public class CurationServlet
      *
      * @throws Exception
      */
-    private void doSerSelectActDEC(HttpServletRequest req, HttpServletResponse res) throws Exception
+    private void doSerSelectActDEC( HttpServletRequest req, HttpServletResponse res ) throws Exception
     {
         HttpSession session = req.getSession();
-        String sMenuAction = (String) session.getAttribute(Session_Data.SESSION_MENU_ACTION); // get the selected menu
-                                                                                                // action
-        String sButtonPressed = (String) session.getAttribute("LastMenuButtonPressed");
+        String sMenuAction = ( String ) session.getAttribute( Session_Data.SESSION_MENU_ACTION ); // get the selected menu
+        // action
+        String sButtonPressed = ( String ) session.getAttribute( "LastMenuButtonPressed" );
         // make sure the menu action is for DEC, set it otherwise
-        if (sMenuAction.equalsIgnoreCase("NewDETemplate") || (sMenuAction.equalsIgnoreCase("NewVDTemplate")))
+        if( sMenuAction.equalsIgnoreCase( "NewDETemplate" ) || ( sMenuAction.equalsIgnoreCase( "NewVDTemplate" ) ) )
             sMenuAction = "NewDECTemplate";
-        else if (sMenuAction.equalsIgnoreCase("NewDEVersion") || (sMenuAction.equalsIgnoreCase("NewVDVersion")))
+        else if( sMenuAction.equalsIgnoreCase( "NewDEVersion" ) || ( sMenuAction.equalsIgnoreCase( "NewVDVersion" ) ) )
             sMenuAction = "NewDECVersion";
-        else if (sMenuAction.equalsIgnoreCase("editDE") || (sMenuAction.equalsIgnoreCase("editVD")))
+        else if( sMenuAction.equalsIgnoreCase( "editDE" ) || ( sMenuAction.equalsIgnoreCase( "editVD" ) ) )
             sMenuAction = "editDEC";
         // set the menuaction session attribute
-        DataManager.setAttribute(session, Session_Data.SESSION_MENU_ACTION, sMenuAction);
+        DataManager.setAttribute( session, Session_Data.SESSION_MENU_ACTION, sMenuAction );
         // forward to create DEC page if template or version
-        if ((sMenuAction.equals("NewDECTemplate")) || (sMenuAction.equals("NewDECVersion")))
+        if( ( sMenuAction.equals( "NewDECTemplate" ) ) || ( sMenuAction.equals( "NewDECVersion" ) ) )
         {
-            DataManager.setAttribute(session, "DECPageAction", "validate");
-            ForwardJSP(req, res, "/CreateDECPage.jsp");
+            DataManager.setAttribute( session, "DECPageAction", "validate" );
+            ForwardJSP( req, res, "/CreateDECPage.jsp" );
             // DataManager.setAttribute(session, "originAction", "NewDEC");
         }
         // forward to edit DEC page if editing
-        else if (sMenuAction.equals("editDEC") || sMenuAction.equals("nothing"))
+        else if( sMenuAction.equals( "editDEC" ) || sMenuAction.equals( "nothing" ) )
         {
-            DataManager.setAttribute(session, "originAction", "EditDEC");
-            ForwardJSP(req, res, "/EditDECPage.jsp");
+            DataManager.setAttribute( session, "originAction", "EditDEC" );
+            ForwardJSP( req, res, "/EditDECPage.jsp" );
         }
-        else if (sButtonPressed.equals("Search"))
+        else if( sButtonPressed.equals( "Search" ) )
         {
-            DataManager.setAttribute(session, "originAction", "EditDEC");
-            ForwardJSP(req, res, "/EditDECPage.jsp");
+            DataManager.setAttribute( session, "originAction", "EditDEC" );
+            ForwardJSP( req, res, "/EditDECPage.jsp" );
         }
         else
         {
-            DataManager.setAttribute(session, "originAction", "EditDEC");
-            DataManager.setAttribute(session, Session_Data.SESSION_STATUS_MESSAGE, "Unable to open the Create or Edit page.\\n"
-                            + "Please try again.");
-            ForwardJSP(req, res, "/SearchResultsPage.jsp");
+            DataManager.setAttribute( session, "originAction", "EditDEC" );
+            DataManager.setAttribute( session, Session_Data.SESSION_STATUS_MESSAGE, "Unable to open the Create or Edit page.\\n"
+                    + "Please try again." );
+            ForwardJSP( req, res, "/SearchResultsPage.jsp" );
         }
     }
 
@@ -3391,47 +3499,48 @@ public class CurationServlet
      *
      * @throws Exception
      */
-    private void doSerSelectActVD(HttpServletRequest req, HttpServletResponse res) throws Exception
+    private void doSerSelectActVD( HttpServletRequest req, HttpServletResponse res ) throws Exception
     {
         HttpSession session = req.getSession();
-        String sMenuAction = (String) session.getAttribute(Session_Data.SESSION_MENU_ACTION); // get the selected menu
-                                                                                                // action
-        String sButtonPressed = (String) session.getAttribute("LastMenuButtonPressed");
+        String sMenuAction = ( String ) session.getAttribute( Session_Data.SESSION_MENU_ACTION ); // get the selected menu
+        // action
+        String sButtonPressed = ( String ) session.getAttribute( "LastMenuButtonPressed" );
         // make sure the menu action is for DE, set it otherwise
-        if (sMenuAction.equalsIgnoreCase("NewDETemplate") || (sMenuAction.equalsIgnoreCase("NewDECTemplate")))
+        if( sMenuAction.equalsIgnoreCase( "NewDETemplate" ) || ( sMenuAction.equalsIgnoreCase( "NewDECTemplate" ) ) )
             sMenuAction = "NewVDTemplate";
-        else if (sMenuAction.equalsIgnoreCase("NewDEVersion") || (sMenuAction.equalsIgnoreCase("NewDECVersion")))
+        else if( sMenuAction.equalsIgnoreCase( "NewDEVersion" ) || ( sMenuAction.equalsIgnoreCase( "NewDECVersion" ) ) )
             sMenuAction = "NewVDVersion";
-        else if (sMenuAction.equalsIgnoreCase("editDE") || (sMenuAction.equalsIgnoreCase("editDEC")))
+        else if( sMenuAction.equalsIgnoreCase( "editDE" ) || ( sMenuAction.equalsIgnoreCase( "editDEC" ) ) )
             sMenuAction = "editVD";
         // set the menuaction session attribute
-        DataManager.setAttribute(session, Session_Data.SESSION_MENU_ACTION, sMenuAction);
+        DataManager.setAttribute( session, Session_Data.SESSION_MENU_ACTION, sMenuAction );
         // forward to create VD page if template or version
-        if ((sMenuAction.equals("NewVDTemplate")) || (sMenuAction.equals("NewVDVersion")))
+        if( ( sMenuAction.equals( "NewVDTemplate" ) ) || ( sMenuAction.equals( "NewVDVersion" ) ) )
         {
-            DataManager.setAttribute(session, "VDPageAction", "validate");
-            ForwardJSP(req, res, "/CreateVDPage.jsp");
-            DataManager.setAttribute(session, "originAction", "NewVD");
+            DataManager.setAttribute( session, "VDPageAction", "validate" );
+            ForwardJSP( req, res, "/CreateVDPage.jsp" );
+            DataManager.setAttribute( session, "originAction", "NewVD" );
         }
         // forward to edit VD page if editing
-        else if (sMenuAction.equals("editVD") || sMenuAction.equals("nothing"))
+        else if( sMenuAction.equals( "editVD" ) || sMenuAction.equals( "nothing" ) )
         {
-            DataManager.setAttribute(session, "originAction", "EditVD");
-            ForwardJSP(req, res, "/EditVDPage.jsp");
+            DataManager.setAttribute( session, "originAction", "EditVD" );
+            ForwardJSP( req, res, "/EditVDPage.jsp" );
         }
-        else if (sButtonPressed.equals("Search"))
+        else if( sButtonPressed.equals( "Search" ) )
         {
-            DataManager.setAttribute(session, "originAction", "EditVD");
-            ForwardJSP(req, res, "/EditVDPage.jsp");
+            DataManager.setAttribute( session, "originAction", "EditVD" );
+            ForwardJSP( req, res, "/EditVDPage.jsp" );
         }
         else
         {
-            DataManager.setAttribute(session, "originAction", "EditVD");
-            DataManager.setAttribute(session, Session_Data.SESSION_STATUS_MESSAGE, "Unable to open the Create or Edit page.\\n"
-                            + "Please try again.");
-            ForwardJSP(req, res, "/SearchResultsPage.jsp");
+            DataManager.setAttribute( session, "originAction", "EditVD" );
+            DataManager.setAttribute( session, Session_Data.SESSION_STATUS_MESSAGE, "Unable to open the Create or Edit page.\\n"
+                    + "Please try again." );
+            ForwardJSP( req, res, "/SearchResultsPage.jsp" );
         }
     }
+
     /**
      * does the search selection action for the Value Meaning search forward the page according to the action
      *
@@ -3442,93 +3551,99 @@ public class CurationServlet
      *
      * @throws Exception
      */
-    private void doSerSelectActVM(HttpServletRequest req, HttpServletResponse res) throws Exception
+    private void doSerSelectActVM( HttpServletRequest req, HttpServletResponse res ) throws Exception
     {
         HttpSession session = req.getSession();
-        String sMenuAction = (String) session.getAttribute(Session_Data.SESSION_MENU_ACTION); // get the selected menu
-                                                                                                // action
-        String sButtonPressed = (String) session.getAttribute("LastMenuButtonPressed");
+        String sMenuAction = ( String ) session.getAttribute( Session_Data.SESSION_MENU_ACTION ); // get the selected menu
+        // action
+        String sButtonPressed = ( String ) session.getAttribute( "LastMenuButtonPressed" );
         // make sure the menu action is for DE, set it otherwise
-        if (sMenuAction.equalsIgnoreCase("NewDETemplate") || (sMenuAction.equalsIgnoreCase("NewDECTemplate")))
+        if( sMenuAction.equalsIgnoreCase( "NewDETemplate" ) || ( sMenuAction.equalsIgnoreCase( "NewDECTemplate" ) ) )
             sMenuAction = "NewVMTemplate";
-        else if (sMenuAction.equalsIgnoreCase("NewDEVersion") || (sMenuAction.equalsIgnoreCase("NewDECVersion")))
+        else if( sMenuAction.equalsIgnoreCase( "NewDEVersion" ) || ( sMenuAction.equalsIgnoreCase( "NewDECVersion" ) ) )
             sMenuAction = "NewVMVersion";
-        else if (sMenuAction.equalsIgnoreCase("editDE") || (sMenuAction.equalsIgnoreCase("editDEC")))
+        else if( sMenuAction.equalsIgnoreCase( "editDE" ) || ( sMenuAction.equalsIgnoreCase( "editDEC" ) ) )
             sMenuAction = "editVM";
         // set the menuaction session attribute
-        DataManager.setAttribute(session, Session_Data.SESSION_MENU_ACTION, sMenuAction);
+        DataManager.setAttribute( session, Session_Data.SESSION_MENU_ACTION, sMenuAction );
         // forward to create VM page if template or version
-        if ((sMenuAction.equals("NewVMTemplate")) || (sMenuAction.equals("NewVMVersion")))
+        if( ( sMenuAction.equals( "NewVMTemplate" ) ) || ( sMenuAction.equals( "NewVMVersion" ) ) )
         {
-            DataManager.setAttribute(session, "VMPageAction", "validate");
-            ForwardJSP(req, res, "/CreateVMPage.jsp");
-            DataManager.setAttribute(session, "originAction", "NewVM");
+            DataManager.setAttribute( session, "VMPageAction", "validate" );
+            ForwardJSP( req, res, "/CreateVMPage.jsp" );
+            DataManager.setAttribute( session, "originAction", "NewVM" );
         }
         // forward to edit VM page if editing
-        else if (sMenuAction.equals("editVM") || sMenuAction.equals("nothing"))
+        else if( sMenuAction.equals( "editVM" ) || sMenuAction.equals( "nothing" ) )
         {
-        	DataManager.setAttribute(session, "originAction", "EditVM");
-            ForwardJSP(req, res, "/ValueMeaningDetail.jsp");
+            DataManager.setAttribute( session, "originAction", "EditVM" );
+            ForwardJSP( req, res, "/ValueMeaningDetail.jsp" );
         }
-        else if (sButtonPressed.equals("Search"))
+        else if( sButtonPressed.equals( "Search" ) )
         {
-            DataManager.setAttribute(session, "originAction", "EditVM");
-            ForwardJSP(req, res, "/ValueMeaningDetail.jsp");
+            DataManager.setAttribute( session, "originAction", "EditVM" );
+            ForwardJSP( req, res, "/ValueMeaningDetail.jsp" );
         }
         else
         {
-            DataManager.setAttribute(session, "originAction", "EditVM");
-            DataManager.setAttribute(session, Session_Data.SESSION_STATUS_MESSAGE, "Unable to open the Create or Edit page.\\n"
-                            + "Please try again.");
-            ForwardJSP(req, res, "/SearchResultsPage.jsp");
+            DataManager.setAttribute( session, "originAction", "EditVM" );
+            DataManager.setAttribute( session, Session_Data.SESSION_STATUS_MESSAGE, "Unable to open the Create or Edit page.\\n"
+                    + "Please try again." );
+            ForwardJSP( req, res, "/SearchResultsPage.jsp" );
         }
     }
+
     /**
      * stores status message in the session
      * @param sMsg string message to append to.
      */
-     @SuppressWarnings("unchecked")
-     public void storeStatusMsg(String sMsg)
-     {
-       try
-       {
-         HttpSession session = m_classReq.getSession();
-         UtilService util = new UtilService();
-         Vector<String> vStatMsg = (Vector)session.getAttribute("vStatMsg");
-         String statusMsg = (String)session.getAttribute(Session_Data.SESSION_STATUS_MESSAGE);
-         if (statusMsg == null) statusMsg = "";
-         //parse single  double  quotes and new line char if any
-         String alrtMsg = sMsg;
-         if (!alrtMsg.equalsIgnoreCase("\\n"))
-             alrtMsg = util.parsedStringAlertNewLine(alrtMsg);
-         alrtMsg = util.parsedStringDoubleQuote(alrtMsg);
-         alrtMsg = util.parsedStringSingleQuote(alrtMsg);
-         if (vStatMsg == null) vStatMsg = new Vector<String>();
-         //add message to both to string status message and vector stats message if not too big
-         if (vStatMsg.size() < 35)
-         {
-           if (sMsg.equalsIgnoreCase("\\n"))
-             statusMsg = statusMsg + alrtMsg;
-           else
-             statusMsg = statusMsg + alrtMsg + "\\n";
-           DataManager.setAttribute(session, Session_Data.SESSION_STATUS_MESSAGE, statusMsg);
-         }
-         //remove tab and newline from the msg for vector
-         if (!sMsg.equalsIgnoreCase("\\n") && !sMsg.equalsIgnoreCase("\n"))
-           sMsg = util.parsedStringMsgVectorTabs(sMsg, vStatMsg);
-         if (!sMsg.equals(""))
-             vStatMsg.addElement(sMsg);
+    @SuppressWarnings( "unchecked" )
+    public void storeStatusMsg( String sMsg )
+    {
+        try
+        {
+            HttpSession session = m_classReq.getSession();
+            UtilService util = new UtilService();
+            Vector<String> vStatMsg = ( Vector ) session.getAttribute( "vStatMsg" );
+            String statusMsg = ( String ) session.getAttribute( Session_Data.SESSION_STATUS_MESSAGE );
 
-         DataManager.setAttribute(session, "vStatMsg", vStatMsg);
-         //add this message to the logger
-         logger.info("Log Status Message " + sMsg);
-       }
-       catch(Exception e)
-       {
-         logger.error("ERROR in CurationServlet-storeStatusMsg for exception : " + e.toString(), e);
-        // m_classReq.setAttribute("retcode", "Message Exception");
-       }
-     }
+            // Avoid duplicate messages JIRA 1023
+            if( statusMsg.startsWith( sMsg ) )
+            {
+                sMsg = "";
+            }
+            if( statusMsg == null ) statusMsg = "";
+            //parse single  double  quotes and new line char if any
+            String alrtMsg = sMsg;
+            if( !alrtMsg.equalsIgnoreCase( "\\n" ) )
+                alrtMsg = util.parsedStringAlertNewLine( alrtMsg );
+            alrtMsg = util.parsedStringDoubleQuote( alrtMsg );
+            alrtMsg = util.parsedStringSingleQuote( alrtMsg );
+            if( vStatMsg == null ) vStatMsg = new Vector<String>();
+            //add message to both to string status message and vector stats message if not too big
+            if( vStatMsg.size() < 35 )
+            {
+                if( sMsg.equalsIgnoreCase( "\\n" ) )
+                    statusMsg = statusMsg + alrtMsg;
+                else
+                    statusMsg = statusMsg + alrtMsg + "\\n";
+                DataManager.setAttribute( session, Session_Data.SESSION_STATUS_MESSAGE, statusMsg );
+            }
+            //remove tab and newline from the msg for vector
+            if( !sMsg.equalsIgnoreCase( "\\n" ) && !sMsg.equalsIgnoreCase( "\n" ) )
+                sMsg = util.parsedStringMsgVectorTabs( sMsg, vStatMsg );
+            if( !sMsg.equals( "" ) )
+                vStatMsg.addElement( sMsg );
+
+            DataManager.setAttribute( session, "vStatMsg", vStatMsg );
+            //add this message to the logger
+            logger.info( "Log Status Message " + sMsg );
+        } catch( Exception e )
+        {
+            logger.error( "ERROR in CurationServlet-storeStatusMsg for exception : " + e.toString(), e );
+            // m_classReq.setAttribute("retcode", "Message Exception");
+        }
+    }
 
     /**
      * To clear session attributes when a main Menu button/item is selected.
@@ -3539,64 +3654,64 @@ public class CurationServlet
      *            The HttpServletResponse back to the client
      * @throws Exception
      */
-    protected void clearSessionAttributes(HttpServletRequest req, @SuppressWarnings("unused") HttpServletResponse res) throws Exception
+    protected void clearSessionAttributes( HttpServletRequest req, @SuppressWarnings( "unused" ) HttpServletResponse res ) throws Exception
     {
         HttpSession session = req.getSession();
-        DataManager.setAttribute(session, "vSearchIDStack", null);
-        DataManager.setAttribute(session, "SearchID", null);
-        DataManager.setAttribute(session, "vSearchNameStack", null);
-        DataManager.setAttribute(session, "SearchName", null);
-        DataManager.setAttribute(session, "sSearchACStack", null);
-        DataManager.setAttribute(session, "vACSearchStack", null);
-        DataManager.setAttribute(session, "vSearchASLStack", null);
-        DataManager.setAttribute(session, "vACSearch", null);
-        DataManager.setAttribute(session, "vSelRowsStack", null);
-        DataManager.setAttribute(session, "vResultStack", null);
-        DataManager.setAttribute(session, "vCompAttrStack", null);
-        DataManager.setAttribute(session, "backFromGetAssociated", "");
-        DataManager.setAttribute(session, "GetAssocSearchAC", "");
-        DataManager.setAttribute(session, "results", null);
-        DataManager.setAttribute(session, "vSelRows", null);
-        DataManager.setAttribute(session, "selCS", "");
-        DataManager.setAttribute(session, "serSelectedCD", "");
-        DataManager.setAttribute(session, "labelKeyword", "");
+        DataManager.setAttribute( session, "vSearchIDStack", null );
+        DataManager.setAttribute( session, "SearchID", null );
+        DataManager.setAttribute( session, "vSearchNameStack", null );
+        DataManager.setAttribute( session, "SearchName", null );
+        DataManager.setAttribute( session, "sSearchACStack", null );
+        DataManager.setAttribute( session, "vACSearchStack", null );
+        DataManager.setAttribute( session, "vSearchASLStack", null );
+        DataManager.setAttribute( session, "vACSearch", null );
+        DataManager.setAttribute( session, "vSelRowsStack", null );
+        DataManager.setAttribute( session, "vResultStack", null );
+        DataManager.setAttribute( session, "vCompAttrStack", null );
+        DataManager.setAttribute( session, "backFromGetAssociated", "" );
+        DataManager.setAttribute( session, "GetAssocSearchAC", "" );
+        DataManager.setAttribute( session, "results", null );
+        DataManager.setAttribute( session, "vSelRows", null );
+        DataManager.setAttribute( session, "selCS", "" );
+        DataManager.setAttribute( session, "serSelectedCD", "" );
+        DataManager.setAttribute( session, "labelKeyword", "" );
         // parent concept for the VD
         // DataManager.setAttribute(session, "VDParentConcept", new Vector());
-        DataManager.setAttribute(session, "vParentList", null);
-        DataManager.setAttribute(session, "vParentNames", null);
-        DataManager.setAttribute(session, "vParentCodes", null);
-        DataManager.setAttribute(session, "vParentDB", null);
-        DataManager.setAttribute(session, "vParentMetaSource", null);
-        DataManager.setAttribute(session, "SelectedParentName", "");
-        DataManager.setAttribute(session, "SelectedParentCC", "");
-        DataManager.setAttribute(session, "SelectedParentDB", "");
-        DataManager.setAttribute(session, "ParentMetaSource", null);
+        DataManager.setAttribute( session, "vParentList", null );
+        DataManager.setAttribute( session, "vParentNames", null );
+        DataManager.setAttribute( session, "vParentCodes", null );
+        DataManager.setAttribute( session, "vParentDB", null );
+        DataManager.setAttribute( session, "vParentMetaSource", null );
+        DataManager.setAttribute( session, "SelectedParentName", "" );
+        DataManager.setAttribute( session, "SelectedParentCC", "" );
+        DataManager.setAttribute( session, "SelectedParentDB", "" );
+        DataManager.setAttribute( session, "ParentMetaSource", null );
         // pv list for the vd
         // DataManager.setAttribute(session, "VDPVList", new Vector());
         // DataManager.setAttribute(session, "PVIDList", new Vector());
-        DataManager.setAttribute(session, "m_OC", null);
-        DataManager.setAttribute(session, "selObjRow", null);
-        DataManager.setAttribute(session, "m_PC", null);
-        DataManager.setAttribute(session, "selPropRow", null);
-        DataManager.setAttribute(session, "vObjectClass", null);
-        DataManager.setAttribute(session, "vProperty", null);
-        DataManager.setAttribute(session, "m_DEC", null);
-        DataManager.setAttribute(session, "m_REP", null);
-        DataManager.setAttribute(session, "selRepRow", null);
-        DataManager.setAttribute(session, "m_OCQ", null);
-        DataManager.setAttribute(session, "selObjQRow", null);
-        DataManager.setAttribute(session, "m_PCQ", null);
-        DataManager.setAttribute(session, "selPropQRow", null);
-        DataManager.setAttribute(session, "m_REPQ", null);
-        DataManager.setAttribute(session, "selRepQRow", null);
-        DataManager.setAttribute(session, "creKeyword", "");
-        DataManager.setAttribute(session, "serKeyword", "");	//JR3 rolled back
-        DataManager.setAttribute(session, "EVSresults", null);
-        DataManager.setAttribute(session, "VDEditAction", null);
-        DataManager.setAttribute(session, "DEEditAction", null);
-        DataManager.setAttribute(session, "DECEditAction", null);
-        DataManager.setAttribute(session, "ParentConceptCode", null);
-        DataManager.setAttribute(session, "VMForm.SESSION_RET_PAGE", null);
+        DataManager.setAttribute( session, "m_OC", null );
+        DataManager.setAttribute( session, "selObjRow", null );
+        DataManager.setAttribute( session, "m_PC", null );
+        DataManager.setAttribute( session, "selPropRow", null );
+        DataManager.setAttribute( session, "vObjectClass", null );
+        DataManager.setAttribute( session, "vProperty", null );
+        DataManager.setAttribute( session, "m_DEC", null );
+        DataManager.setAttribute( session, "m_REP", null );
+        DataManager.setAttribute( session, "selRepRow", null );
+        DataManager.setAttribute( session, "m_OCQ", null );
+        DataManager.setAttribute( session, "selObjQRow", null );
+        DataManager.setAttribute( session, "m_PCQ", null );
+        DataManager.setAttribute( session, "selPropQRow", null );
+        DataManager.setAttribute( session, "m_REPQ", null );
+        DataManager.setAttribute( session, "selRepQRow", null );
+        DataManager.setAttribute( session, "creKeyword", "" );
+        DataManager.setAttribute( session, "serKeyword", "" );    //JR3 rolled back
+        DataManager.setAttribute( session, "EVSresults", null );
+        DataManager.setAttribute( session, "VDEditAction", null );
+        DataManager.setAttribute( session, "DEEditAction", null );
+        DataManager.setAttribute( session, "DECEditAction", null );
+        DataManager.setAttribute( session, "ParentConceptCode", null );
+        DataManager.setAttribute( session, "VMForm.SESSION_RET_PAGE", null );
         // DataManager.setAttribute(session, "OpenTreeToConcept", "");
 
 
@@ -3611,56 +3726,56 @@ public class CurationServlet
      *            The HttpServletResponse back to the client
      * @throws Exception
      */
-    public void clearBuildingBlockSessionAttributes(HttpServletRequest req, @SuppressWarnings("unused") HttpServletResponse res) throws Exception
+    public void clearBuildingBlockSessionAttributes( HttpServletRequest req, @SuppressWarnings( "unused" ) HttpServletResponse res ) throws Exception
     {
         HttpSession session = req.getSession();
-        DataManager.setAttribute(session, "m_OC", null);
-        DataManager.setAttribute(session, "selObjRow", null);
-        DataManager.setAttribute(session, "m_PC", null);
-        DataManager.setAttribute(session, "selPropRow", null);
-        DataManager.setAttribute(session, "vObjResults", null);
-        DataManager.setAttribute(session, "vPropResults", null);
-        DataManager.setAttribute(session, "vRepResults", null);
-        DataManager.setAttribute(session, "m_REP", null);
-        DataManager.setAttribute(session, "selRepRow", null);
-        DataManager.setAttribute(session, "vObjQResults", null);
-        DataManager.setAttribute(session, "m_OCQ", null);
-        DataManager.setAttribute(session, "selObjQRow", null);
-        DataManager.setAttribute(session, "vPropQResults", null);
-        DataManager.setAttribute(session, "m_PCQ", null);
-        DataManager.setAttribute(session, "selPropQRow", null);
-        DataManager.setAttribute(session, "vRepQResults", null);
-        DataManager.setAttribute(session, "m_REPQ", null);
-        DataManager.setAttribute(session, "selRepQRow", null);
-        DataManager.setAttribute(session, "vObjectClass", null);
-        DataManager.setAttribute(session, "newObjectClass", "");
-        DataManager.setAttribute(session, "RemoveOCBlock", "");
-        DataManager.setAttribute(session, "vProperty", null);
-        DataManager.setAttribute(session, "newProperty", "");
-        DataManager.setAttribute(session, "RemovePropBlock", "");
-        DataManager.setAttribute(session, "vRepTerm", null);
-        DataManager.setAttribute(session, "newRepTerm", "");
-        DataManager.setAttribute(session, "ConceptLevel", "0");
-        DataManager.setAttribute(session, "creMetaCodeSearch", null);
-        DataManager.setAttribute(session, "creKeyword", "");
-      //DataManager.setAttribute(session, "serKeyword", "");
-        DataManager.setAttribute(session, "EVSresults", null);
-        DataManager.setAttribute(session, "ParentMetaSource", null);
-        DataManager.setAttribute(session, "ParentConceptCode", null);
-        
-        session.removeAttribute("chosenOCCodes");
-		session.removeAttribute("chosenOCDefs");
-		session.removeAttribute("changedOCDefsWarning");
-		
-		session.removeAttribute("chosenPropCodes");
-		session.removeAttribute("chosenPropDefs");
-		session.removeAttribute("changedPropDefsWarning");
-		
-		session.removeAttribute("chosenRepCodes");
-		session.removeAttribute("chosenRepDefs");
-		session.removeAttribute("changedRepDefsWarning");
-		
-       }
+        DataManager.setAttribute( session, "m_OC", null );
+        DataManager.setAttribute( session, "selObjRow", null );
+        DataManager.setAttribute( session, "m_PC", null );
+        DataManager.setAttribute( session, "selPropRow", null );
+        DataManager.setAttribute( session, "vObjResults", null );
+        DataManager.setAttribute( session, "vPropResults", null );
+        DataManager.setAttribute( session, "vRepResults", null );
+        DataManager.setAttribute( session, "m_REP", null );
+        DataManager.setAttribute( session, "selRepRow", null );
+        DataManager.setAttribute( session, "vObjQResults", null );
+        DataManager.setAttribute( session, "m_OCQ", null );
+        DataManager.setAttribute( session, "selObjQRow", null );
+        DataManager.setAttribute( session, "vPropQResults", null );
+        DataManager.setAttribute( session, "m_PCQ", null );
+        DataManager.setAttribute( session, "selPropQRow", null );
+        DataManager.setAttribute( session, "vRepQResults", null );
+        DataManager.setAttribute( session, "m_REPQ", null );
+        DataManager.setAttribute( session, "selRepQRow", null );
+        DataManager.setAttribute( session, "vObjectClass", null );
+        DataManager.setAttribute( session, "newObjectClass", "" );
+        DataManager.setAttribute( session, "RemoveOCBlock", "" );
+        DataManager.setAttribute( session, "vProperty", null );
+        DataManager.setAttribute( session, "newProperty", "" );
+        DataManager.setAttribute( session, "RemovePropBlock", "" );
+        DataManager.setAttribute( session, "vRepTerm", null );
+        DataManager.setAttribute( session, "newRepTerm", "" );
+        DataManager.setAttribute( session, "ConceptLevel", "0" );
+        DataManager.setAttribute( session, "creMetaCodeSearch", null );
+        DataManager.setAttribute( session, "creKeyword", "" );
+        //DataManager.setAttribute(session, "serKeyword", "");
+        DataManager.setAttribute( session, "EVSresults", null );
+        DataManager.setAttribute( session, "ParentMetaSource", null );
+        DataManager.setAttribute( session, "ParentConceptCode", null );
+
+        session.removeAttribute( "chosenOCCodes" );
+        session.removeAttribute( "chosenOCDefs" );
+        session.removeAttribute( "changedOCDefsWarning" );
+
+        session.removeAttribute( "chosenPropCodes" );
+        session.removeAttribute( "chosenPropDefs" );
+        session.removeAttribute( "changedPropDefsWarning" );
+
+        session.removeAttribute( "chosenRepCodes" );
+        session.removeAttribute( "chosenRepDefs" );
+        session.removeAttribute( "changedRepDefsWarning" );
+
+    }
 
     /**
      * To clear session attributes when a main Menu button/item is selected.
@@ -3671,30 +3786,30 @@ public class CurationServlet
      *            The HttpServletResponse back to the client
      * @throws Exception
      */
-    protected void clearCreateSessionAttributes(HttpServletRequest req, @SuppressWarnings("unused") HttpServletResponse res) throws Exception
+    protected void clearCreateSessionAttributes( HttpServletRequest req, @SuppressWarnings( "unused" ) HttpServletResponse res ) throws Exception
     {
         HttpSession session = req.getSession();
         // parent concept for the VD
         // DataManager.setAttribute(session, "VDParentConcept", new Vector());
-        DataManager.setAttribute(session, "SelectedParentName", "");
-        DataManager.setAttribute(session, "SelectedParentCC", "");
-        DataManager.setAttribute(session, "SelectedParentDB", "");
+        DataManager.setAttribute( session, "SelectedParentName", "" );
+        DataManager.setAttribute( session, "SelectedParentCC", "" );
+        DataManager.setAttribute( session, "SelectedParentDB", "" );
         // pv list for the vd
         // DataManager.setAttribute(session, "VDPVList", new Vector());
-        DataManager.setAttribute(session, "PVIDList", new Vector());
-        DataManager.setAttribute(session, "creKeyword", "");
-       //DataManager.setAttribute(session, "serKeyword", "");
-        DataManager.setAttribute(session, "EVSresults", null);
-        DataManager.setAttribute(session, "OpenTreeToConcept", "");
-        DataManager.setAttribute(session, "labelKeyword", "");
+        DataManager.setAttribute( session, "PVIDList", new Vector() );
+        DataManager.setAttribute( session, "creKeyword", "" );
+        //DataManager.setAttribute(session, "serKeyword", "");
+        DataManager.setAttribute( session, "EVSresults", null );
+        DataManager.setAttribute( session, "OpenTreeToConcept", "" );
+        DataManager.setAttribute( session, "labelKeyword", "" );
         // clear altname refdoc attributes after creating, editing, or back
-        DataManager.setAttribute(session, "AllAltNameList", new Vector());
-        DataManager.setAttribute(session, "AllRefDocList", new Vector());
-        DataManager.setAttribute(session, "vACId", new Vector());
-        DataManager.setAttribute(session, "vACName", new Vector());
-        DataManager.setAttribute(session, "TabFocus", "VD");
+        DataManager.setAttribute( session, "AllAltNameList", new Vector() );
+        DataManager.setAttribute( session, "AllRefDocList", new Vector() );
+        DataManager.setAttribute( session, "vACId", new Vector() );
+        DataManager.setAttribute( session, "vACName", new Vector() );
+        DataManager.setAttribute( session, "TabFocus", "VD" );
         // clear vm attribute
-        DataManager.setAttribute(session, VMForm.SESSION_SELECT_VM, new VM_Bean());
+        DataManager.setAttribute( session, VMForm.SESSION_SELECT_VM, new VM_Bean() );
 
     }
 
@@ -3708,25 +3823,23 @@ public class CurationServlet
      *            The HttpServletResponse back to the client
      *
      */
-    public void ErrorLogin(HttpServletRequest req, HttpServletResponse res)
+    public void ErrorLogin( HttpServletRequest req, HttpServletResponse res )
     {
         // capture the stack in logger
         try
         {
-            throw new Exception("Error Login used in various methods");
-        }
-        catch (Exception e)
+            throw new Exception( "Error Login used in various methods" );
+        } catch( Exception e )
         {
-            logger.error("Error Caught : ", e);
+            logger.error( "Error Caught : ", e );
         }
         // forward to error jsp
         try
         {
-            ForwardErrorJSP(req, res, "Session Terminated. Please log in again.");
-        }
-        catch (Exception e)
+            ForwardErrorJSP( req, res, "Session Terminated. Please log in again." );
+        } catch( Exception e )
         {
-            this.logger.error("ERROR - ErrorLogin: " + e.toString(), e);
+            this.logger.error( "ERROR - ErrorLogin: " + e.toString(), e );
         }
     }
 
@@ -3735,7 +3848,7 @@ public class CurationServlet
      */
     public void destroy()
     {
-    	m_conn = SQLHelper.closeConnection(m_conn);
+        m_conn = SQLHelper.closeConnection( m_conn );
     }
 
     /**
@@ -3750,31 +3863,30 @@ public class CurationServlet
      *
      * @throws Exception
      */
-    private void doLogout(HttpServletRequest req, HttpServletResponse res, boolean flag) throws Exception
+    private void doLogout( HttpServletRequest req, HttpServletResponse res, boolean flag ) throws Exception
     {
         try
         {
             HttpSession session = req.getSession();
-            DataManager.setAttribute(session, "Userbean", null);
-          	DataManager.setAttribute(session, "Username", null);
-          	sessionData.UsrBean = null;
-          	session.setAttribute("vWriteContextDE", null);
-          	String prevReq = StringUtil.cleanJavascriptAndHtml(m_classReq.getParameter("previousReqType"));
-          	if (flag)
-          	{
-                RequestDispatcher rd = this.m_servletContext.getRequestDispatcher("/NCICurationServlet?reqType=homePage");
-                rd.forward(req, res);
+            DataManager.setAttribute( session, "Userbean", null );
+            DataManager.setAttribute( session, "Username", null );
+            sessionData.UsrBean = null;
+            session.setAttribute( "vWriteContextDE", null );
+            String prevReq = StringUtil.cleanJavascriptAndHtml( m_classReq.getParameter( "previousReqType" ) );
+            if( flag )
+            {
+                RequestDispatcher rd = this.m_servletContext.getRequestDispatcher( "/NCICurationServlet?reqType=homePage" );
+                rd.forward( req, res );
                 return;
-          	}
-            if (prevReq == null)
+            }
+            if( prevReq == null )
             {
                 prevReq = "/SearchResultsPage.jsp";
             }
-            ForwardJSP(m_classReq, m_classRes, prevReq);
-        }
-        catch (Exception e)
+            ForwardJSP( m_classReq, m_classRes, prevReq );
+        } catch( Exception e )
         {
-            logger.error("ERROR - ErrorLogin: " + e.toString(), e);
+            logger.error( "ERROR - ErrorLogin: " + e.toString(), e );
         }
     }
 
@@ -3788,17 +3900,17 @@ public class CurationServlet
      * @param sJSPPage
      *            The JSP page to which to forward.
      */
-    public void ForwardJSP(HttpServletRequest req, HttpServletResponse res, String sJSPPage)
+    public void ForwardJSP( HttpServletRequest req, HttpServletResponse res, String sJSPPage )
     {
         try
         {
             // forward to the jsp (or htm)
             HttpSession session = req.getSession();
-            String sMsg = (String) session.getAttribute(Session_Data.SESSION_STATUS_MESSAGE);
-            if (sMsg != null && !sMsg.equals(""))
+            String sMsg = ( String ) session.getAttribute( Session_Data.SESSION_STATUS_MESSAGE );
+            if( sMsg != null && !sMsg.equals( "" ) )
             {
-                String userAgent = req.getHeader("User-Agent");
-                if (userAgent.toLowerCase().indexOf("msie") > 0)
+                String userAgent = req.getHeader( "User-Agent" );
+                if( userAgent.toLowerCase().indexOf( "msie" ) > 0 )
                 {
                     // Internet Explorer
                     sMsg += "\\n\\nPlease use Ctrl+C to copy the message to a text file";
@@ -3808,21 +3920,20 @@ public class CurationServlet
                     // Not IE
                     sMsg += "\\n\\nPlease right click, Select All and Copy to paste the message to a text file";
                 }
-                DataManager.setAttribute(session, Session_Data.SESSION_STATUS_MESSAGE, sMsg);
+                DataManager.setAttribute( session, Session_Data.SESSION_STATUS_MESSAGE, sMsg );
             }
             // store the session data object in the session at the end of the request
-            DataManager.setAttribute(session, Session_Data.CURATION_SESSION_ATTR, this.sessionData);
+            DataManager.setAttribute( session, Session_Data.CURATION_SESSION_ATTR, this.sessionData );
             String fullPage = "/jsp" + sJSPPage;
 
-         // ServletContext sc = this.getServletContext();
-            RequestDispatcher rd = this.m_servletContext.getRequestDispatcher(fullPage);
-            rd.forward(req, res);
+            // ServletContext sc = this.getServletContext();
+            RequestDispatcher rd = this.m_servletContext.getRequestDispatcher( fullPage );
+            rd.forward( req, res );
             return;
-        }
-        catch (Exception e)
+        } catch( Exception e )
         {
-           // e.printStackTrace();
-            this.logger.error("Servlet-ForwardJSP : " + e.toString(), e);
+            // e.printStackTrace();
+            this.logger.error( "Servlet-ForwardJSP : " + e.toString(), e );
         }
     }
 
@@ -3837,27 +3948,26 @@ public class CurationServlet
      *            String error message
      * @throws Exception
      */
-    public void ForwardErrorJSP(HttpServletRequest req, HttpServletResponse res, String errMsg) throws Exception
+    public void ForwardErrorJSP( HttpServletRequest req, HttpServletResponse res, String errMsg ) throws Exception
     {
         try
         {
             HttpSession session;
-            session = req.getSession(true);	//JR1107
+            session = req.getSession( true );    //JR1107
 //            session = Security.getSession(m_classReq);	//req.getSession(true);	//JR1107
             String fullPage = "/";
-            String reqMsg = (String) req.getAttribute("ReqErrorMessage");
-            if (reqMsg != null && !reqMsg.equals(""))
+            String reqMsg = ( String ) req.getAttribute( "ReqErrorMessage" );
+            if( reqMsg != null && !reqMsg.equals( "" ) )
                 errMsg = reqMsg;
-            DataManager.setAttribute(session, "ErrorMessage", errMsg);
-            if ((errMsg).equals(ErrorHelper.getLoginMessage()))	//GF32153
-               fullPage = "/jsp/ErrorPage.jsp";
+            DataManager.setAttribute( session, "ErrorMessage", errMsg );
+            if( ( errMsg ).equals( ErrorHelper.getLoginMessage() ) )    //GF32153
+                fullPage = "/jsp/ErrorPage.jsp";
             //ServletContext sc = this.getServletContext();
-            RequestDispatcher rd = m_servletContext.getRequestDispatcher(fullPage);
-            rd.forward(req, res);
-        }
-        catch (Exception e)
+            RequestDispatcher rd = m_servletContext.getRequestDispatcher( fullPage );
+            rd.forward( req, res );
+        } catch( Exception e )
         {
-            logger.error("Servlet-ForwardErrorJSP : " + e.toString(), e);
+            logger.error( "Servlet-ForwardErrorJSP : " + e.toString(), e );
         }
     }
 
@@ -3871,15 +3981,15 @@ public class CurationServlet
      * @param sOrigin
      *            The String controling weather this is a open action or other request type action
      */
-    protected void doRefDocumentUpload(HttpServletRequest req, HttpServletResponse res, String sOrigin)
+    protected void doRefDocumentUpload( HttpServletRequest req, HttpServletResponse res, String sOrigin )
     {
         String sAction;
         String msg = null;
-      //  HttpSession session = req.getSession();
-        RefDocAttachment refDocAt = new RefDocAttachment(req, res, this);
+        //  HttpSession session = req.getSession();
+        RefDocAttachment refDocAt = new RefDocAttachment( req, res, this );
         msg = req.getContentType();
         // upload file into the database as blob
-        if (msg.startsWith("multipart/form-data"))
+        if( msg.startsWith( "multipart/form-data" ) )
         {
             // file upload
             refDocAt.doFileUpload();
@@ -3887,29 +3997,29 @@ public class CurationServlet
         else
         {
             // get action type
-            if (StringUtil.cleanJavascriptAndHtml((String) req.getParameter("newRefDocPageAction")) != null)
+            if( StringUtil.cleanJavascriptAndHtml( ( String ) req.getParameter( "newRefDocPageAction" ) ) != null )
             {
-                sAction = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml((String) m_classReq.getParameter("newRefDocPageAction"));
+                sAction = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml( ( String ) m_classReq.getParameter( "newRefDocPageAction" ) );
             }
             else
             {
                 sAction = "nothing";
             }
             // Open the upload ref doc page
-            if (sOrigin.equals("Open"))
+            if( sOrigin.equals( "Open" ) )
             {
                 refDocAt.doOpen();
             }
             // Request from page to preform actions
-            else if (sOrigin.equals("Request"))
+            else if( sOrigin.equals( "Request" ) )
             {
                 // return to search results from upload page
-                if (sAction.equals("backToSearch"))
+                if( sAction.equals( "backToSearch" ) )
                 {
                     refDocAt.doBack();
                 }
                 // Delete ref doc attachment
-                else if (sAction.equals("DeleteAttachment"))
+                else if( sAction.equals( "DeleteAttachment" ) )
                 {
                     refDocAt.doDeleteAttachment();
                 }
@@ -3918,12 +4028,11 @@ public class CurationServlet
                 {
                     try
                     {
-                        logger.error("Reference Document Attachments Upload: Unknown Request Type.");
-                        ForwardErrorJSP(req, res, "Unexpected Request. Session Terminated. Please login again.");
-                    }
-                    catch (Exception e)
+                        logger.error( "Reference Document Attachments Upload: Unknown Request Type." );
+                        ForwardErrorJSP( req, res, "Unexpected Request. Session Terminated. Please login again." );
+                    } catch( Exception e )
                     {
-                        logger.error("ERROR - ErrorLogin: " + e.toString(), e);
+                        logger.error( "ERROR - ErrorLogin: " + e.toString(), e );
                     }
                 }
             }
@@ -3932,306 +4041,389 @@ public class CurationServlet
             {
                 try
                 {
-                    ForwardErrorJSP(req, res, "Unexpected Request. Session Terminated. Please login again.");
-                    logger.error("Reference Document Attachments Upload: Unknown Origin Type.");
-                }
-                catch (Exception e)
+                    ForwardErrorJSP( req, res, "Unexpected Request. Session Terminated. Please login again." );
+                    logger.error( "Reference Document Attachments Upload: Unknown Origin Type." );
+                } catch( Exception e )
                 {
-                    logger.error("ERROR - ErrorLogin: " + e.toString(), e);
+                    logger.error( "ERROR - ErrorLogin: " + e.toString(), e );
                 }
             }
         }
     }
 
-	/**
-	 * @return the m_conn
-	 */
-	public Connection getConn() {
-		 return this.m_conn;
+    /**
+     * @return the m_conn
+     */
+    public Connection getConn()
+    {
+        return this.m_conn;
 
-	}
+    }
 
-	/**
-	 * @param conn the m_conn to set
-	 */
-	public void setConn(Connection conn) {
-		this.m_conn = conn;
-	}
+    /**
+     * @param conn the m_conn to set
+     */
+    public void setConn( Connection conn )
+    {
+        this.m_conn = conn;
+    }
 
     public void doOpenViewPage() throws Exception
     {
-    	HttpSession session = m_classReq.getSession();
-    	session.setAttribute("originAction", "");
-    	Admin_Components_Mgr acMgr = new Admin_Components_Mgr();
-    	GetACService serviceAC = new GetACService(m_classReq, m_classRes, this);
-    	String errMsg = "";
-    	ArrayList<String> ac = null;
-    	//read the parameters idseq, public id and version from the request
-    	long publicID =  0;
-    	double version = 0;
-    	String sPublicId = null;
-    	String sVersion =null;
-    	String actlReq = null;
-    	boolean  flag = false;
-		String acIDSEQ = StringUtil.cleanJavascriptAndHtml(m_classReq.getParameter("idseq"));
-		try {
-			//input validation for appscan
-			if(acIDSEQ!=null){
-				if(!StringUtil.validateElementIdSequence(acIDSEQ))
-					throw new Exception("idseq contains characters or combinations of characters that are not allowed because of security concerns.");
-			}
-			if (acIDSEQ == null) {
-                sPublicId = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml((String) m_classReq.getParameter("publicId"));
-                for (int i=0; i<sPublicId.length(); i++){
-					if (Character.isLetter(sPublicId.charAt(i))){
-						flag = true;
-						break;
-					}
-				}
-                sVersion = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml((String) m_classReq.getParameter("Version"));
-                for (int i=0; i<sVersion.length(); i++){
-					if (Character.isLetter(sVersion.charAt(i))){
-						flag = true;
-						break;
-					}
-				}
-			    if(flag){
-			    	forwardErrorViewJSP(sPublicId, sVersion);
-			    }
-				if ((sPublicId != null) && (!sPublicId.equals("")))
-					publicID = Long.parseLong(sPublicId);
-				if ((sVersion != null) && (!sVersion.equals("")))
-					version = Double.parseDouble(sVersion);
-				acIDSEQ = acMgr.getACIdseq(publicID, version, m_conn);
-			}
-			boolean isExists = acMgr.isAcExists(acIDSEQ, m_conn);
-			if (!isExists) {
-				forwardErrorViewJSP(sPublicId, sVersion);
-			}
-			// query the ac table to get the actl name
-			ac = acMgr.getActlName(acIDSEQ, publicID, version, m_conn);
-			// get the details for the selected AC
-			if (ac != null) {
-				String actlName = ac.get(0); //"DATAELEMENT";  //DE_CONCEPT ;  VALUEDOMAIN  ;  VALUEMEANING
-				if ( !(actlName.equals("DATAELEMENT")) && !(actlName.equals("DE_CONCEPT")) && !(actlName.equals("VALUEDOMAIN")) && !(actlName.equals("VALUEMEANING"))){
-					ArrayList actlName1 = getUserFriendlyActlName(actlName);
-					String longName = acMgr.getACLongName(publicID, version, m_conn);
-					errMsg = "<b>View " + actlName1.get(0) + " - " + longName + "[" + publicID + "v" + version +"]</b></br></br> Is not supported at this time.";
-					String title = "CDE Curation View "+actlName1.get(1)+" "+longName+ " [" + publicID + "v" + version +"]";
-					m_classReq.setAttribute("title", title);
-					m_classReq.setAttribute("publicID", sPublicId);
-					m_classReq.setAttribute("version", sVersion);
-					m_classReq.setAttribute("errMsg", errMsg);
-					m_classReq.setAttribute("showCloseBtn", "yes");
-					ForwardJSP(m_classReq, m_classRes, "/ViewPage.jsp");
-				}
-				actlReq = "view"+ actlName;
-				acIDSEQ = ac.get(1);
-			}
-		} catch (DBException e) {
-			logger.error("ac query", e);
-			errMsg = e.getMessage();
-		}
-		if (acIDSEQ != null || !acIDSEQ.equals("")) {
-			m_classReq.setAttribute("acIdseq", acIDSEQ);
-			if ((actlReq).equals("viewVALUEMEANING")){
-				if (session.getAttribute(Session_Data.SESSION_ASL_FILTER) == null)
-			    	 serviceAC.getASLFilterListForView(session);
-				VMServlet vmServlet = new VMServlet(m_classReq, m_classRes, this);
-			    vmServlet.doOpenViewPage();
-			 }else{
-				  if (session.getAttribute("Organizations") == null)
-			    	  serviceAC.getOrganizeListforView();
-				  if ( ((actlReq).equals("viewDE_CONCEPT")) || ((actlReq).equals("viewVALUEDOMAIN"))){
-					  String evsConceptUrl = (String)session.getAttribute("evsBrowserConceptURL");
-				  	  if (evsConceptUrl == null){
-				  		Vector vList = new Vector();
-				        vList = serviceAC.getToolOptionData("EVSBrowser", "CONCEPT.DETAILS.URL", "");
-				        String aURL = null;
-				        if (vList != null && vList.size() > 0)
-				        {
-				            TOOL_OPTION_Bean tob = (TOOL_OPTION_Bean) vList.elementAt(0);
-				            if (tob != null)
-				                aURL = tob.getVALUE();
-				        }
-				        ToolURL.setEVSBrowserConceptUrl(session, aURL);
-				        session.setAttribute("evsBrowserConceptURL", aURL);
-				  	  }
-				  }
-				  if ((actlReq).equals("viewVALUEDOMAIN")){
-					  Vector dataTypes = (Vector)session.getAttribute("vDataType");
-					  if (session.getAttribute("vDataType") == null){
-						  serviceAC.getDataTypesList();
-		                }
-				  }
-				  CurationServlet servObj = getACServlet(actlReq);
-				  servObj.execute(getACType(actlReq));
-			}
-		} else {
-			errMsg = "Unable to determine the administered components used to view the data";
-			logger.error(errMsg);
-		}
-		m_classReq.setAttribute("errMsg", errMsg);
-     	ForwardJSP(m_classReq, m_classRes, "/ViewPage.jsp");
+        HttpSession session = m_classReq.getSession();
+        boolean hasSuspectPerameter = false;
+        session.setAttribute( "originAction", "" );
+        Admin_Components_Mgr acMgr = new Admin_Components_Mgr();
+        GetACService serviceAC = new GetACService( m_classReq, m_classRes, this );
+        String errMsg = "";
+        ArrayList<String> ac = null;
+        //read the parameters idseq, public id and version from the request
+        long publicID = 0;
+        double version = 0;
+        String sPublicId = null;
+        String sVersion = null;
+        String actlReq = null;
+        boolean flag = false;
+        String acIDSEQ = StringUtil.cleanJavascriptAndHtml( m_classReq.getParameter( "idseq" ) );
+
+
+        // CURATNTOOL-1107
+        if( ! StringUtil.isValidParmeter(  m_classReq, acIDSEQ))
+        {
+            hasSuspectPerameter = true;
+        }
+        if( ! StringUtil.isValidParmeter(  m_classReq, "publicId"))
+        {
+            hasSuspectPerameter = true;
+        }
+        if( ! StringUtil.isValidParmeter(  m_classReq, "Version"))
+        {
+            hasSuspectPerameter = true;
+        }
+        if( hasSuspectPerameter )
+        {
+            throw new Exception( "Input from client contains characters or combinations of characters that are not allowed because of security concerns." );
+        }
+
+        try
+        {
+            //input validation for appscan
+            if( acIDSEQ != null )
+            {
+                if( !StringUtil.validateElementIdSequence( acIDSEQ ) )
+                    throw new Exception( "idseq contains characters or combinations of characters that are not allowed because of security concerns." );
+            }
+
+            if( acIDSEQ == null )
+            {
+                sPublicId = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml( ( String ) m_classReq.getParameter( "publicId" ) );
+                for( int i = 0; i < sPublicId.length(); i++ )
+                {
+                    if( Character.isLetter( sPublicId.charAt( i ) ) )
+                    {
+                        flag = true;
+                        break;
+                    }
+                }
+                sVersion = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml( ( String ) m_classReq.getParameter( "Version" ) );
+                for( int i = 0; i < sVersion.length(); i++ )
+                {
+                    if( Character.isLetter( sVersion.charAt( i ) ) )
+                    {
+                        flag = true;
+                        break;
+                    }
+                }
+                if( flag )
+                {
+                    forwardErrorViewJSP( sPublicId, sVersion );
+                }
+                if( ( sPublicId != null ) && ( !sPublicId.equals( "" ) ) )
+                    publicID = Long.parseLong( sPublicId );
+                if( ( sVersion != null ) && ( !sVersion.equals( "" ) ) )
+                    version = Double.parseDouble( sVersion );
+                acIDSEQ = acMgr.getACIdseq( publicID, version, m_conn );
+            }
+            boolean isExists = acMgr.isAcExists( acIDSEQ, m_conn );
+            if( !isExists )
+            {
+                forwardErrorViewJSP( sPublicId, sVersion );
+            }
+            // query the ac table to get the actl name
+            ac = acMgr.getActlName( acIDSEQ, publicID, version, m_conn );
+            // get the details for the selected AC
+            if( ac != null )
+            {
+                String actlName = ac.get( 0 ); //"DATAELEMENT";  //DE_CONCEPT ;  VALUEDOMAIN  ;  VALUEMEANING
+                if( !( actlName.equals( "DATAELEMENT" ) ) && !( actlName.equals( "DE_CONCEPT" ) ) && !( actlName.equals( "VALUEDOMAIN" ) ) && !( actlName.equals( "VALUEMEANING" ) ) )
+                {
+                    ArrayList actlName1 = getUserFriendlyActlName( actlName );
+                    String longName = acMgr.getACLongName( publicID, version, m_conn );
+                    errMsg = "<b>View " + actlName1.get( 0 ) + " - " + longName + "[" + publicID + "v" + version + "]</b></br></br> Is not supported at this time.";
+                    String title = "CDE Curation View " + actlName1.get( 1 ) + " " + longName + " [" + publicID + "v" + version + "]";
+                    m_classReq.setAttribute( "title", title );
+                    m_classReq.setAttribute( "publicID", sPublicId );
+                    m_classReq.setAttribute( "version", sVersion );
+                    m_classReq.setAttribute( "errMsg", errMsg );
+                    m_classReq.setAttribute( "showCloseBtn", "yes" );
+                    ForwardJSP( m_classReq, m_classRes, "/ViewPage.jsp" );
+                }
+                actlReq = "view" + actlName;
+                acIDSEQ = ac.get( 1 );
+            }
+        } catch( DBException e )
+        {
+            logger.error( "ac query", e );
+            errMsg = e.getMessage();
+        }
+        if( acIDSEQ != null || !acIDSEQ.equals( "" ) )
+        {
+            m_classReq.setAttribute( "acIdseq", acIDSEQ );
+            if( ( actlReq ).equals( "viewVALUEMEANING" ) )
+            {
+                if( session.getAttribute( Session_Data.SESSION_ASL_FILTER ) == null )
+                    serviceAC.getASLFilterListForView( session );
+                VMServlet vmServlet = new VMServlet( m_classReq, m_classRes, this );
+                vmServlet.doOpenViewPage();
+            }
+            else
+            {
+                if( session.getAttribute( "Organizations" ) == null )
+                    serviceAC.getOrganizeListforView();
+                if( ( ( actlReq ).equals( "viewDE_CONCEPT" ) ) || ( ( actlReq ).equals( "viewVALUEDOMAIN" ) ) )
+                {
+                    String evsConceptUrl = ( String ) session.getAttribute( "evsBrowserConceptURL" );
+                    if( evsConceptUrl == null )
+                    {
+                        Vector vList = new Vector();
+                        vList = serviceAC.getToolOptionData( "EVSBrowser", "CONCEPT.DETAILS.URL", "" );
+                        String aURL = null;
+                        if( vList != null && vList.size() > 0 )
+                        {
+                            TOOL_OPTION_Bean tob = ( TOOL_OPTION_Bean ) vList.elementAt( 0 );
+                            if( tob != null )
+                                aURL = tob.getVALUE();
+                        }
+                        ToolURL.setEVSBrowserConceptUrl( session, aURL );
+                        session.setAttribute( "evsBrowserConceptURL", aURL );
+                    }
+                }
+                if( ( actlReq ).equals( "viewVALUEDOMAIN" ) )
+                {
+                    Vector dataTypes = ( Vector ) session.getAttribute( "vDataType" );
+                    if( session.getAttribute( "vDataType" ) == null )
+                    {
+                        serviceAC.getDataTypesList();
+                    }
+                }
+                CurationServlet servObj = getACServlet( actlReq );
+                servObj.execute( getACType( actlReq ) );
+            }
+        }
+        else
+        {
+            errMsg = "Unable to determine the administered components used to view the data";
+            logger.error( errMsg );
+        }
+        m_classReq.setAttribute( "errMsg", errMsg );
+        ForwardJSP( m_classReq, m_classRes, "/ViewPage.jsp" );
     }
 
 
-	public void execute(ACRequestTypes reqType) throws Exception {
-		//System.out.println("curation servlet");
-		switch (reqType){
-			case view:
-				doOpenViewPage();
-				break;
-		}
-	}
+    public void execute( ACRequestTypes reqType ) throws Exception
+    {
+        //System.out.println("curation servlet");
+        switch( reqType )
+        {
+            case view:
+                doOpenViewPage();
+                break;
+        }
+    }
 
-	public AC_Bean getACNames(EVS_Bean newBean, String nameAct, AC_Bean pageAC) {
-		logger.debug("get name " + nameAct);
-		return pageAC;
-	}
-	public AC_Bean getACNames(String nameAct, String origin, AC_Bean bean) {
-		logger.debug("get name " + nameAct);
-		return bean;
-	}
+    public AC_Bean getACNames( EVS_Bean newBean, String nameAct, AC_Bean pageAC )
+    {
+        logger.debug( "get name " + nameAct );
+        return pageAC;
+    }
 
-	public AC_Bean getSystemName(AC_Bean ac, Vector<EVS_Bean> vParent) {
-		logger.debug("get name ");
-		return ac;
-	}
+    public AC_Bean getACNames( String nameAct, String origin, AC_Bean bean )
+    {
+        logger.debug( "get name " + nameAct );
+        return bean;
+    }
 
-	public ACRequestTypes getACType(String ac) {
-		ACRequestTypes acrt = ACRequestTypes.valueOf(ac);
-		return acrt;
-	}
+    public AC_Bean getSystemName( AC_Bean ac, Vector<EVS_Bean> vParent )
+    {
+        logger.debug( "get name " );
+        return ac;
+    }
 
-	public CurationServlet getACServlet(String ac)
-	{
-		CurationServlet servObj = this;
-    	try {
-    		ACRequestTypes acrt = getACType(ac);
-			if (acrt != null)
-			{
-			   String className = acrt.getClassName();
-			   servObj = (CurationServlet) Class.forName(className).newInstance();
-			   servObj.init(m_classReq, m_classRes, this.m_servletContext);
-			   servObj.setConn(this.m_conn);
-			   servObj.sessionData = this.sessionData;
-			}
-		} catch (Exception e) {
-			logger.error("Which AC " + e.toString());
-		}
-		return servObj;
-	}
-	private void doViewVMActions(HttpServletRequest req, HttpServletResponse res) throws Exception{
-        VMServlet vmSer = new VMServlet(req, res, this);
+    public ACRequestTypes getACType( String ac )
+    {
+        ACRequestTypes acrt = ACRequestTypes.valueOf( ac );
+        return acrt;
+    }
+
+    public CurationServlet getACServlet( String ac )
+    {
+        CurationServlet servObj = this;
+        try
+        {
+            ACRequestTypes acrt = getACType( ac );
+            if( acrt != null )
+            {
+                String className = acrt.getClassName();
+                servObj = ( CurationServlet ) Class.forName( className ).newInstance();
+                servObj.init( m_classReq, m_classRes, this.m_servletContext );
+                servObj.setConn( this.m_conn );
+                servObj.sessionData = this.sessionData;
+            }
+        } catch( Exception e )
+        {
+            logger.error( "Which AC " + e.toString() );
+        }
+        return servObj;
+    }
+
+    private void doViewVMActions( HttpServletRequest req, HttpServletResponse res ) throws Exception
+    {
+        VMServlet vmSer = new VMServlet( req, res, this );
         vmSer.doViewVMActions();
-        ForwardJSP(req, res, "/ViewPage.jsp");
+        ForwardJSP( req, res, "/ViewPage.jsp" );
     }
-	private void doViewPVActions(HttpServletRequest req, HttpServletResponse res) throws Exception{
-	    	ValueDomainServlet vdServ = (ValueDomainServlet) this.getACServlet("ValueDomain");
-	        PVServlet pvSer = new PVServlet(req, res, vdServ);
-	        String path = pvSer.doViewPVActions();
-	        RequestDispatcher rd = this.m_servletContext.getRequestDispatcher(path);
-            rd.forward(req, res);
-            return;
-   }
-   private ArrayList getUserFriendlyActlName(String name){
-	   ArrayList<String> actlName= new ArrayList();
-	   if (name.equals("CLASSIFICATION")){
-		   actlName.add("Class Scheme Item");
-		   actlName.add("CSI");
-	   }else if (name.equals("CONCEPT")){
-		   actlName.add("Concept Class");
-		   actlName.add("CC");
-	   }else if (name.equals("CONCEPTUALDOMAIN")){
-		   actlName.add("Conceptual Domain");
-		   actlName.add("CD");
-	   }else if (name.equals("OBJECTCLASS")){
-		   actlName.add("Object Class");
-		   actlName.add("OC");
-	   }else if (name.equals("PROPERTY")){
-		   actlName.add("Property");
-		   actlName.add("PROP");
-	   }
-	   return actlName;
-   }
-  private void forwardErrorViewJSP(String id, String version){
-	    String errMsg = "The Administered Item with Public Id [" +id + "] and Version [" + version +"] can not be found.";
-		String title = "CDE Curation View AC [" + id + "v" + version +"]";
-		m_classReq.setAttribute("title", title);
-		m_classReq.setAttribute("publicID", id);
-		m_classReq.setAttribute("version", version);
-		m_classReq.setAttribute("errMsg", errMsg);
-		ForwardJSP(m_classReq, m_classRes, "/ViewPage.jsp");
 
-  }
-  private void getEVSInfo(){
-	  // get EVS info
-      try
-      {
-          HttpSession session = m_classReq.getSession();
-    	  EVS_UserBean eUser = new EVS_UserBean();
-          eUser.getEVSInfoFromDSR(m_classReq, m_classRes, this);
-          session.setAttribute("EvsUserBean", this.sessionData.EvsUsrBean);
-          EVSSearch evs = new EVSSearch(m_classReq, m_classRes, this);
-          evs.getMetaSources();
-          session.setAttribute("preferredVocab", eUser.getPrefVocab());
-          // m_EVS_CONNECT = euBean.getEVSConURL();
-          // getVocabHandles(m_classReq, m_classRes);
-          // DoHomepageThread thread = new DoHomepageThread(m_classReq, m_classRes, this);
-          // thread.start();
-      }
-      catch (Exception ee)
-      {
-          logger.error("Servlet-Login-evsthread : " + ee.toString(), ee);
-      }
-  }
-  private void setEffectiveUser(String userName){
-	  CallableStatement cstmt=null;
-	  try{
-		  cstmt = this.m_conn.prepareCall("{call admin_security_util.seteffectiveuser(?)}");
-		  cstmt.setString(1, userName);
-		  cstmt.execute();
-	  }catch (SQLException e){
-		     logger.error("ERROR in setEffectiveUser: " + e.toString(), e);
-	  }finally{
-	       	cstmt = SQLHelper.closeCallableStatement(cstmt);
-	  }
-  }
+    private void doViewPVActions( HttpServletRequest req, HttpServletResponse res ) throws Exception
+    {
+        ValueDomainServlet vdServ = ( ValueDomainServlet ) this.getACServlet( "ValueDomain" );
+        PVServlet pvSer = new PVServlet( req, res, vdServ );
+        String path = pvSer.doViewPVActions();
+        RequestDispatcher rd = this.m_servletContext.getRequestDispatcher( path );
+        rd.forward( req, res );
+        return;
+    }
 
-  private void getDefaultContext(){
-	  HttpSession session =  m_classReq.getSession();
-	  try{
-		  Tool_Options_View_Ext_Mgr mgr = new Tool_Options_View_Ext_Mgr();
-		  HashMap<String, String> defaultContext = mgr.getDefaultContext(this.m_conn);
-		  session.setAttribute("defaultContext", defaultContext);
-	  }catch (DBException e) {
-			logger.error("Error in getDefaultContext() in CurationServlet", e);
-	  }
-  }
+    private ArrayList getUserFriendlyActlName( String name )
+    {
+        ArrayList<String> actlName = new ArrayList();
+        if( name.equals( "CLASSIFICATION" ) )
+        {
+            actlName.add( "Class Scheme Item" );
+            actlName.add( "CSI" );
+        }
+        else if( name.equals( "CONCEPT" ) )
+        {
+            actlName.add( "Concept Class" );
+            actlName.add( "CC" );
+        }
+        else if( name.equals( "CONCEPTUALDOMAIN" ) )
+        {
+            actlName.add( "Conceptual Domain" );
+            actlName.add( "CD" );
+        }
+        else if( name.equals( "OBJECTCLASS" ) )
+        {
+            actlName.add( "Object Class" );
+            actlName.add( "OC" );
+        }
+        else if( name.equals( "PROPERTY" ) )
+        {
+            actlName.add( "Property" );
+            actlName.add( "PROP" );
+        }
+        return actlName;
+    }
 
-  public Vector getMatchingThesarusconcept(Vector beanList, String type){
-	  System.out.println("CurationServlet:getMatchingThesarusconcept type is " + type);
-	  HttpSession session = m_classReq.getSession();
-	  InsACService ins = new InsACService(m_classReq, m_classRes, this);
-	  EVSSearch evs = new EVSSearch(m_classReq, m_classRes, this);
-      HashMap<String, String> defaultContext = (HashMap)session.getAttribute("defaultContext");
-      ValidationStatusBean ocStatusBean  = null;
-     try{
-    	 ocStatusBean = ins.evsBeanCheckDB(beanList, defaultContext, "", type);
-        // get its matching thesaurus concept
-         if (ocStatusBean != null 
-        		 //&& !ocStatusBean.isEvsBeanExists()	//GF32723 not sure why do we need to check this, skipped the check for now to activate context switching check
-            ){
-    	  	System.out.println("CurationServlet:getMatchingThesarusconcept ocStatusBean populated");        	 
-    	    beanList = evs.getThesaurusConceptBean(beanList);
-    	  	System.out.println("CurationServlet:getMatchingThesarusconcept beanList retrieved after calling evs.getThesaurusConceptBean");        	 
-         } else {
-       	  	System.out.println("CurationServlet:getMatchingThesarusconcept ocStatusBean is null");        	 
-         }
-     }catch(Exception e){
-    	 logger.error("Error in getMatchingThesarusconcept" + e);
-     }
-	  return beanList;
-  }
+    private void forwardErrorViewJSP( String id, String version )
+    {
+        String errMsg = "The Administered Item with Public Id [" + id + "] and Version [" + version + "] can not be found.";
+        String title = "CDE Curation View AC [" + id + "v" + version + "]";
+        m_classReq.setAttribute( "title", title );
+        m_classReq.setAttribute( "publicID", id );
+        m_classReq.setAttribute( "version", version );
+        m_classReq.setAttribute( "errMsg", errMsg );
+        ForwardJSP( m_classReq, m_classRes, "/ViewPage.jsp" );
+
+    }
+
+    private void getEVSInfo()
+    {
+        // get EVS info
+        try
+        {
+            HttpSession session = m_classReq.getSession();
+            EVS_UserBean eUser = new EVS_UserBean();
+            eUser.getEVSInfoFromDSR( m_classReq, m_classRes, this );
+            session.setAttribute( "EvsUserBean", this.sessionData.EvsUsrBean );
+            EVSSearch evs = new EVSSearch( m_classReq, m_classRes, this );
+            evs.getMetaSources();
+            session.setAttribute( "preferredVocab", eUser.getPrefVocab() );
+            // m_EVS_CONNECT = euBean.getEVSConURL();
+            // getVocabHandles(m_classReq, m_classRes);
+            // DoHomepageThread thread = new DoHomepageThread(m_classReq, m_classRes, this);
+            // thread.start();
+        } catch( Exception ee )
+        {
+            logger.error( "Servlet-Login-evsthread : " + ee.toString(), ee );
+        }
+    }
+
+    private void setEffectiveUser( String userName )
+    {
+        CallableStatement cstmt = null;
+        try
+        {
+            cstmt = this.m_conn.prepareCall( "{call admin_security_util.seteffectiveuser(?)}" );
+            cstmt.setString( 1, userName );
+            cstmt.execute();
+        } catch( SQLException e )
+        {
+            logger.error( "ERROR in setEffectiveUser: " + e.toString(), e );
+        } finally
+        {
+            cstmt = SQLHelper.closeCallableStatement( cstmt );
+        }
+    }
+
+    private void getDefaultContext()
+    {
+        HttpSession session = m_classReq.getSession();
+        try
+        {
+            Tool_Options_View_Ext_Mgr mgr = new Tool_Options_View_Ext_Mgr();
+            HashMap<String, String> defaultContext = mgr.getDefaultContext( this.m_conn );
+            session.setAttribute( "defaultContext", defaultContext );
+        } catch( DBException e )
+        {
+            logger.error( "Error in getDefaultContext() in CurationServlet", e );
+        }
+    }
+
+    public Vector getMatchingThesarusconcept( Vector beanList, String type )
+    {
+        HttpSession session = m_classReq.getSession();
+        InsACService ins = new InsACService( m_classReq, m_classRes, this );
+        EVSSearch evs = new EVSSearch( m_classReq, m_classRes, this );
+        HashMap<String, String> defaultContext = ( HashMap ) session.getAttribute( "defaultContext" );
+        ValidationStatusBean ocStatusBean = null;
+        try
+        {
+            ocStatusBean = ins.evsBeanCheckDB( beanList, defaultContext, "", type );
+            // get its matching thesaurus concept
+            if( ocStatusBean != null
+                //&& !ocStatusBean.isEvsBeanExists()	//GF32723 not sure why do we need to check this, skipped the check for now to activate context switching check
+                    )
+            {
+                beanList = evs.getThesaurusConceptBean( beanList );
+            }
+            else
+            {
+                logger.debug( "CurationServlet:getMatchingThesarusconcept ocStatusBean is null" );
+            }
+        } catch( Exception e )
+        {
+            logger.error( "Error in getMatchingThesarusconcept" + e );
+        }
+        return beanList;
+    }
 } // end of class
