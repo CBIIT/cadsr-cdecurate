@@ -365,12 +365,12 @@ public class DataElementConceptServlet extends CurationServlet
     private void doChangeDECNameType() throws Exception
     {
 
-        boolean hasSuspectPerameter = false;
+        boolean hasSuspectPeramater = false;
         // CURATNTOOL-1107
         if( ( m_classReq.getParameter( "txtPreferredName" ) != null ) && ( !StringUtil.isHtmlAndScriptClean( m_classReq.getParameter( "txtPreferredName" ) ) ) )
         {
-            logger.error( "Bad value for txtPreferredName[" + m_classReq.getParameter( "txtPreferredName" ) + "]" );
-            hasSuspectPerameter = true;
+            logger.warn( "Bad value for txtPreferredName[" + m_classReq.getParameter( "txtPreferredName" ) + "]" );
+            hasSuspectPeramater = true;
         }
 
 
@@ -389,7 +389,7 @@ public class DataElementConceptServlet extends CurationServlet
         // get the existing preferred name to make sure earlier typed one is saved in the user
         String sPrefName = null;
         // CURATNTOOL-1107
-        if( !hasSuspectPerameter )
+        if( !hasSuspectPeramater )
         {
             sPrefName = StringUtil.cleanJavascriptAndHtml( ( String ) m_classReq.getParameter( "txtPreferredName" ) );
         }
@@ -659,14 +659,7 @@ public class DataElementConceptServlet extends CurationServlet
             String sCondr = m_Bean.getCONDR_IDSEQ();
             String sLongName = m_Bean.getLONG_NAME();
             String sIDSEQ = m_Bean.getIDSEQ();
-            for( int i = 0; i < vObjectClass.size(); i++ )
-            {
-                EVS_Bean eBean = ( EVS_Bean ) vObjectClass.get( i );
-            }
-            for( int i = 0; i < vProperty.size(); i++ )
-            {
-                EVS_Bean eBean = ( EVS_Bean ) vProperty.get( i );
-            }
+
             if( sIDSEQ == null )
                 sIDSEQ = "";
             if( sComp.equals( "ObjectClass" ) || sComp.equals( "ObjectQualifier" ) )
@@ -755,47 +748,12 @@ public class DataElementConceptServlet extends CurationServlet
         Vector vObjectClass = ( Vector ) session.getAttribute( "vObjectClass" );
         Vector vProperty = ( Vector ) session.getAttribute( "vProperty" );
 
-        if( newBean != null )
-        {
-            if( sComp.startsWith( "Object" ) )
-            {
-                if( !( newBean.getEVS_DATABASE().equals( "caDSR" ) ) )
-                {
-                    String conIdseq = ins.getConcept( "", newBean, false );
-                    if( conIdseq == null || conIdseq.equals( "" ) )
-                    {
-                        logger.debug( "at Line 707 of DEC.java" + newBean.getPREFERRED_DEFINITION() + "**" + newBean.getLONG_NAME() );
-                    }
-                    else
-                    {
-                        logger.debug( "at Line 709 of DEC.java" + newBean.getPREFERRED_DEFINITION() + "**" + newBean.getLONG_NAME() );
-                    }
 
-                }
-            }
-            else if( sComp.startsWith( "Prop" ) )
-            {
-                if( !( newBean.getEVS_DATABASE().equals( "caDSR" ) ) )
-                {
-                    String conIdseq = ins.getConcept( "", newBean, false );
-                    if( conIdseq == null || conIdseq.equals( "" ) )
-                    {
-                        logger.debug( "at Line 718 of DEC.java" + newBean.getPREFERRED_DEFINITION() + "**" + newBean.getLONG_NAME() );
-                    }
-                    else
-                    {
-                        logger.debug( "at Line 720 of DEC.java" + newBean.getPREFERRED_DEFINITION() + "**" + newBean.getLONG_NAME() );
-                    }
-                }
-            }
-        }
         //======================GF30798==============END
         // get the existing one if not restructuring the name but appending it
         if( newBean != null )
         {
-            // JIRA 1149
             sLongName = pageDEC.getDEC_LONG_NAME();
-
             if( sLongName == null )
             {
                 sLongName = "";
@@ -805,7 +763,6 @@ public class DataElementConceptServlet extends CurationServlet
             {
                 sDef = "";
             }
-
         }
         // get the typed text on to user name
         String selNameType = "";
@@ -836,7 +793,6 @@ public class DataElementConceptServlet extends CurationServlet
             EVS_Bean eCon = ( EVS_Bean ) vObjectClass.elementAt( i );
             if( eCon == null )
                 eCon = new EVS_Bean();
-
             String conName = eCon.getLONG_NAME();
             if( conName == null )
                 conName = "";
@@ -850,14 +806,10 @@ public class DataElementConceptServlet extends CurationServlet
                 if( newBean == null )
                 {
                     if( !sLongName.equals( "" ) )
-                    {
                         sLongName += " ";
-                    }
                     sLongName += conName + nvpValue;
                     if( !sDef.equals( "" ) )
-                    {
                         sDef += "_"; // add definition
-                    }
                     sDef += eCon.getPREFERRED_DEFINITION() + nvpValue;
 
                 }
@@ -870,20 +822,10 @@ public class DataElementConceptServlet extends CurationServlet
                 // add object qualifiers to object class name
                 if( !sOCName.equals( "" ) )
                     sOCName += " ";
-
-                if( ( sComp != null ) && ( sComp.equals( "ObjectQualifier" ) ) && ( pageDEC.getDEC_LONG_NAME().startsWith( pageDEC.getAC_CONCEPT_NAME() ) ) )
-                {
-                    sOCName += conName + nvpValue;
-                }
-                else
-                {
-                    sOCName += ((EVS_Bean)vObjectClass.get(i)).getCONCEPT_NAME() + nvpValue;
-                }
-
+                sOCName += conName + nvpValue;
                 logger.debug( "At line 805 of DECServlet.java" + conName + "**" + nvpValue + "**" + sLongName + "**" + sDef + "**" + sOCName );
             }
         }
-
         // add the Object Class primary
         if( vObjectClass != null && vObjectClass.size() > 0 )
         {
@@ -924,7 +866,6 @@ public class DataElementConceptServlet extends CurationServlet
                 logger.debug( "At line 778 of DECServlet.java" + sPrimary + "**" + nvpValue + "**" + sLongName + "**" + sDef + "**" + sOCName );
             }
         }
-
         // get the Property into the long name and abbr name
         //Vector vProperty = (Vector) session.getAttribute("vProperty");	//GF30798
         if( vProperty == null )
@@ -976,7 +917,6 @@ public class DataElementConceptServlet extends CurationServlet
                 logger.debug( "At line 895 of DECServlet.java" + conName + "**" + nvpValue + "**" + sLongName + "**" + sDef + "**" + sOCName );
             }
         }
-
         // add the property primary
         if( vProperty != null && vProperty.size() > 0 )
         {
@@ -998,9 +938,7 @@ public class DataElementConceptServlet extends CurationServlet
                 {
                     if( !sLongName.equals( "" ) )
                         sLongName += " ";
-
                     sLongName += sPrimary + nvpValue;
-
                     if( !sDef.equals( "" ) )
                         sDef += "_"; // add definition
                     sDef += eCon.getPREFERRED_DEFINITION() + nvpValue;
@@ -1030,26 +968,10 @@ public class DataElementConceptServlet extends CurationServlet
         // appending to the existing;
         if( newBean != null )
         {
-            String sSelectName = newBean.getLONG_NAME().substring( 0, 1 ).toUpperCase() + newBean.getLONG_NAME().substring( 1 );
-
+            String sSelectName = newBean.getLONG_NAME();
             if( !sLongName.equals( "" ) )
                 sLongName += " ";
-
-            // JIRA 1149
-            if( ( sLongName != null ) && ( sLongName.startsWith( pageDEC.getAC_CONCEPT_NAME() ) ) )
-            {
-                sLongName += sSelectName;
-            }
-            else if( ( sComp != null ) && ( sComp.equals( "ObjectQualifier" ) ) )
-            {
-                sLongName += ((EVS_Bean)vObjectClass.get(vObjectClass.size()-1)).getCONCEPT_NAME();
-            }
-            else
-            {
-                sLongName += sSelectName;
-            }
-
-
+            sLongName += sSelectName;
             if( !sDef.equals( "" ) )
                 sDef += "_"; // add definition
             sDef += newBean.getPREFERRED_DEFINITION();
@@ -1059,11 +981,8 @@ public class DataElementConceptServlet extends CurationServlet
         if( nameAct.equals( "Search" ) || nameAct.equals( "Remove" ) ) // GF30798 - added to call when name act is remove
         {
             pageDEC.setDEC_LONG_NAME( AdministeredItemUtil.handleLongName( sLongName ) );    //GF32004;
-
-
             pageDEC.setDEC_PREFERRED_DEFINITION( sDef );
             logger.debug( "DEC_LONG_NAME at Line 963 of DECServlet.java" + pageDEC.getDEC_LONG_NAME() + "**" + pageDEC.getDEC_PREFERRED_DEFINITION() );
-
         }
         if( !nameAct.equals( "OpenDEC" ) )
         {
@@ -1077,13 +996,6 @@ public class DataElementConceptServlet extends CurationServlet
             if( selNameType != null && selNameType.equals( "SYS" ) )
                 pageDEC.setDEC_PREFERRED_NAME( pageDEC.getAC_SYS_PREF_NAME() );
         }
-
-
-        if( nameAct.equals( "Search" ) ) // JIRA 1023
-        {
-            sDef = sDef.replaceAll( "_[^_]*$", "_" + ( ( EVS_Bean ) this.getMatchingThesarusconcept( vProperty, "Property" ).firstElement() ).getPREFERRED_DEFINITION() );
-            pageDEC.setDEC_PREFERRED_DEFINITION( sDef );
-        }
         return pageDEC;
     }
 
@@ -1093,9 +1005,6 @@ public class DataElementConceptServlet extends CurationServlet
     @SuppressWarnings( "unchecked" )
     private void doDECUseSelection( String nameAction )
     {
-        // JIRA 1023 (more "work around" than fix)
-        String tempPropPreferredDefinition = "";
-        String tempObjPreferredDefinition = "";
 
         try
         {
@@ -1330,8 +1239,6 @@ public class DataElementConceptServlet extends CurationServlet
                 }
                 m_DEC.setDEC_OCL_IDSEQ( "" );
 
-                // JIRA 1023 (more "work around" than fix)
-                tempObjPreferredDefinition = m_DEC.getDEC_PREFERRED_DEFINITION();
                 m_DEC = this.addOCConcepts( nameAction, m_DEC, blockBean, "Qualifier" );
             }
             else if( sComp.equals( "PropertyQualifier" ) )
@@ -1344,8 +1251,6 @@ public class DataElementConceptServlet extends CurationServlet
                     vProperty.addElement( PCBean );
                     DataManager.setAttribute( session, "vProperty", vProperty );
                 }
-                // JIRA 1023 (more "work around" than fix)
-                tempPropPreferredDefinition = m_DEC.getDEC_PREFERRED_DEFINITION();
 
                 m_DEC.setDEC_PROPL_IDSEQ( "" );
                 m_DEC = this.addPropConcepts( nameAction, m_DEC, blockBean, "Qualifier" ); //GF30798 #3
@@ -1476,16 +1381,6 @@ public class DataElementConceptServlet extends CurationServlet
                 //logger.debug( "At line 1158 of DECServlet.java" + Arrays.asList( vProperty ) );
             }
 
-            // JIRA 1023 (more "work around" than fix)
-            if( !tempPropPreferredDefinition.isEmpty() )
-            {
-                m_DEC.setDEC_PREFERRED_DEFINITION( tempPropPreferredDefinition + "_" + vProperty.get( vProperty.size() - 1 ).getPREFERRED_DEFINITION() );
-            }
-            else if( !tempObjPreferredDefinition.isEmpty() )
-            {
-                m_DEC.setDEC_PREFERRED_DEFINITION( tempObjPreferredDefinition + "_" + vObjectClass.get( vObjectClass.size() - 1 ).getPREFERRED_DEFINITION() );
-            }
-
             // rebuild new name if not appending
             EVS_Bean nullEVS = null;
             if( nameAction.equals( "newName" ) )
@@ -1589,6 +1484,7 @@ public class DataElementConceptServlet extends CurationServlet
 //			session.removeAttribute("changed"+type+"DefsWarning");
     }
 
+
     /**
      * adds the selected concept to the vector of concepts for property
      *
@@ -1605,6 +1501,9 @@ public class DataElementConceptServlet extends CurationServlet
             DEC_Bean decBean, EVS_Bean eBean, String ocType ) throws Exception
     {
         HttpSession session = m_classReq.getSession();
+        EVS_Bean switchedBean = null;
+        boolean isPrimary;
+
         // add the concept bean to the OC vector and store it in the vector
         Vector<EVS_Bean> vObjectClass = ( Vector ) session.getAttribute( "vObjectClass" );
         if( vObjectClass == null )
@@ -1636,11 +1535,42 @@ public class DataElementConceptServlet extends CurationServlet
 
         // add to the vector and store it in the session, reset if primary and alredy existed, add otehrwise
         if( ocType.equals( "Primary" ) && vObjectClass.size() > 0 )
+        {
             vObjectClass.setElementAt( eBean, 0 );    //GF32723 if NCIt code like C12434 (Blood) is found
+            isPrimary = true;
+        }
         else
+        {
             vObjectClass.addElement( eBean );
+            isPrimary = false;
+        }
+
         for( int i = 0; i < vObjectClass.size(); i++ )
         {
+            if( eBean.getCONCEPT_IDENTIFIER().equals( vObjectClass.get( i ).getCONCEPT_IDENTIFIER() ) )
+            {
+                if( ( vObjectClass.get( i ) != null ) && ( vObjectClass.get( i ).getEVS_ORIGIN() != null ) && ( !vObjectClass.get( i ).getEVS_ORIGIN().equals( "NCI Thesaurus" ) ) )
+                {
+                    Vector<EVS_Bean> vTempObjectClass0 = new Vector<EVS_Bean>();
+                    Vector<EVS_Bean> vTempObjectClass1;
+                    vTempObjectClass0.addElement( vObjectClass.get( i ) );
+                    vTempObjectClass1 = this.getMatchingThesarusconcept( vTempObjectClass0, "Object Class" );
+
+                    switchedBean = ( ( EVS_Bean ) vTempObjectClass1.get( 0 ) );
+                    // If it still not NCI Thesaurus, don't do anything
+                    if( switchedBean.getEVS_ORIGIN().equals( "NCI Thesaurus" ) )
+                    {
+                        vObjectClass.set( i, switchedBean );
+
+                        // Only do this for the eBean. eBean should be the first one if it is a Primary, last one if it is not a Primary.
+                        if( ( isPrimary && ( i == 0 ) ) || ( !isPrimary && ( i == ( vObjectClass.size() - 1 ) ) ) )
+                        {
+                            eBean = switchedBean;
+                        }
+                    }
+                }
+            }
+
             EVS_Bean Bean = ( EVS_Bean ) vObjectClass.get( i );    //GF32723
             logger.debug( "At line 1394 of DECServlet.java " + Bean.getPREFERRED_DEFINITION() + "**" + eBean.getLONG_NAME() + "**" + eBean.getCONCEPT_IDENTIFIER() );
         }
@@ -1649,7 +1579,9 @@ public class DataElementConceptServlet extends CurationServlet
         // DataManager.setAttribute(session, "selObjQRow", sSelRow);
         // add to name if appending
         if( nameAction.equals( "appendName" ) )
+        {
             decBean = ( DEC_Bean ) this.getACNames( eBean, "Search", decBean );        //GF32723 skipped!
+        }
         return decBean;
     } // end addOCConcepts
 
@@ -1669,6 +1601,9 @@ public class DataElementConceptServlet extends CurationServlet
             DEC_Bean decBean, EVS_Bean eBean, String propType ) throws Exception
     {
         HttpSession session = m_classReq.getSession();
+        EVS_Bean switchedBean = null;
+        boolean isPrimary;
+
         // add the concept bean to the OC vector and store it in the vector
         Vector<EVS_Bean> vProperty = ( Vector ) session.getAttribute( "vProperty" );
         if( vProperty == null )
@@ -1695,9 +1630,45 @@ public class DataElementConceptServlet extends CurationServlet
         //eBean = evs.getThesaurusConcept(eBean);
         // add to the vector and store it in the session, reset if primary and alredy existed, add otehrwise
         if( propType.equals( "Primary" ) && vProperty.size() > 0 )
+        {
             vProperty.setElementAt( eBean, 0 );
+            isPrimary = true;
+        }
         else
+        {
             vProperty.addElement( eBean );
+            isPrimary = false;
+        }
+        for( int i = 0; i < vProperty.size(); i++ )
+        {
+
+            // Do we need to switch?
+            if( ( vProperty.get( i ) != null ) && ( vProperty.get( i ).getEVS_ORIGIN() != null ) && ( !vProperty.get( i ).getEVS_ORIGIN().equals( "NCI Thesaurus" ) ) )
+            {
+                Vector<EVS_Bean> vTempPoperty0 = new Vector<EVS_Bean>();
+                Vector<EVS_Bean> vTempProperty1;
+                vTempPoperty0.addElement( vProperty.get( i ) );
+
+                // Store the current "Switched" Property element in vTempProperty1
+                vTempProperty1 = this.getMatchingThesarusconcept( vTempPoperty0, "Property" );
+
+                ////////////////////////////////////////////////////////////////////////////////////
+                // If the EVS_ORIGIN still is not "NCI Thesaurus" then don't do anything
+                switchedBean = ( ( EVS_Bean ) vTempProperty1.get( 0 ) );
+                if( switchedBean.getEVS_ORIGIN().equals( "NCI Thesaurus" ) )
+                {
+                    // Do the switch
+                    vProperty.set( i, switchedBean );
+
+                    // Only do this for the eBean. eBean should be the first one if it is a Primary, last one if it is not
+                    if( ( isPrimary && ( i == 0 ) ) || ( !isPrimary && ( i == ( vProperty.size() - 1 ) ) ) )
+                    {
+                        eBean = switchedBean;
+                    }
+                }
+            }
+        }
+
         DataManager.setAttribute( session, "vProperty", vProperty );
         DataManager.setAttribute( session, "newProperty", "true" );
         logger.debug( "At line 1354 of DECServlet.java**" + Arrays.asList( vProperty ) );

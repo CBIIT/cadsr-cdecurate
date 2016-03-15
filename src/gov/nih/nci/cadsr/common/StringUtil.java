@@ -338,7 +338,7 @@ public class StringUtil {
 
 	/**
 	 *  Return false if s contains > or < or %
-	 *  This used to catch attempts to sneak JavaScript or HTML int server call parameters.
+	 *  This used to catch attempts to sneak JavaScript, HTML, or  into server call parameters.
 	 * @param s string to be checked
 	 * @return
 	 */

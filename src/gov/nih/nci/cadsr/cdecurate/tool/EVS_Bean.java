@@ -968,4 +968,44 @@ public class EVS_Bean implements Serializable
     else
       curBean.setNAME_VALUE_PAIR_IND(0);
   }
+
+    @Override
+    public String toString()
+    {
+        return "EVS_Bean{" +
+                "RETURN_CODE='" + RETURN_CODE + '\'' +
+                ", IDSEQ='" + IDSEQ + '\'' +
+                ", CONCEPT_NAME='" + CONCEPT_NAME + '\'' +
+                ", LONG_NAME='" + LONG_NAME + '\'' +
+                ", CONTE_IDSEQ='" + CONTE_IDSEQ + '\'' +
+                ", CONTEXT_NAME='" + CONTEXT_NAME + '\'' +
+                ", VERSION='" + VERSION + '\'' +
+                ", PREFERRED_DEFINITION='" + PREFERRED_DEFINITION + '\'' +
+                ", ASL_NAME='" + ASL_NAME + '\'' +
+                ", NCI_CC_TYPE='" + NCI_CC_TYPE + '\'' +
+                ", NCI_CC_VAL='" + NCI_CC_VAL + '\'' +
+                ", META_CODE_TYPE='" + META_CODE_TYPE + '\'' +
+                ", META_CODE_VAL='" + META_CODE_VAL + '\'' +
+                ", TEMP_CUI_TYPE='" + TEMP_CUI_TYPE + '\'' +
+                ", EVS_SEMANTIC='" + EVS_SEMANTIC + '\'' +
+                ", EVS_DEF_SOURCE='" + EVS_DEF_SOURCE + '\'' +
+                ", EVS_CONCEPT_SOURCE='" + EVS_CONCEPT_SOURCE + '\'' +
+                ", EVS_DATABASE='" + EVS_DATABASE + '\'' +
+                ", EVS_ORIGIN='" + EVS_ORIGIN + '\'' +
+                ", caDSR_COMPONENT='" + caDSR_COMPONENT + '\'' +
+                ", ID='" + ID + '\'' +
+                ", CHECKED=" + CHECKED +
+                ", COMMENTS='" + COMMENTS + '\'' +
+                ", DEC_USING='" + DEC_USING + '\'' +
+                ", LEVEL=" + LEVEL +
+                ", CONDR_IDSEQ='" + CONDR_IDSEQ + '\'' +
+                ", DISPLAY_ORDER='" + DISPLAY_ORDER + '\'' +
+                ", PRIMARY_FLAG='" + PRIMARY_FLAG + '\'' +
+                ", CON_AC_SUBMIT_ACTION='" + CON_AC_SUBMIT_ACTION + '\'' +
+                ", PREF_VOCAB_CODE='" + PREF_VOCAB_CODE + '\'' +
+                ", NAME_VALUE_PAIR_IND=" + NAME_VALUE_PAIR_IND +
+                ", NVP_CONCEPT_VALUE='" + NVP_CONCEPT_VALUE + '\'' +
+                ", CONCEPT_IDENTIFIER='" + CONCEPT_IDENTIFIER + '\'' +
+                '}';
+    }
 }

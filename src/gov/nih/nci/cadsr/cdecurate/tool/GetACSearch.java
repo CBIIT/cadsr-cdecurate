@@ -4671,7 +4671,7 @@ public class GetACSearch implements Serializable
         if( DECBean.getDEC_LONG_NAME() != null && !DECBean.getDEC_LONG_NAME().equals( "" ) )
             acName = DECBean.getDEC_LONG_NAME();
         else
-            acName = DECBean.getDEC_PREFERRED_NAME();
+            acName = "MHL NNN "+ DECBean.getDEC_PREFERRED_NAME();
         vACName.addElement( acName );
         if( !sAction.equalsIgnoreCase( "BlockEdit" ) )
         {
@@ -4816,9 +4816,9 @@ public class GetACSearch implements Serializable
         vACid.addElement( DEBean.getDE_DE_IDSEQ() );
         String acName = "";
         if( DEBean.getDE_LONG_NAME() != null && !DEBean.getDE_LONG_NAME().equals( "" ) )
-            acName = DEBean.getDE_LONG_NAME();
+            acName = "MHL OOO "+ DEBean.getDE_LONG_NAME();
         else
-            acName = DEBean.getDE_PREFERRED_NAME();
+            acName = "MHL PPP "+ DEBean.getDE_PREFERRED_NAME();
         vACName.addElement( acName );
         // get contexts selected so far
         Vector selContext = ( Vector ) m_classReq.getAttribute( "SelectedContext" );
