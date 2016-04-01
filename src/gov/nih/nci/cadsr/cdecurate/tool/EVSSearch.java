@@ -4125,6 +4125,7 @@ public class EVSSearch implements Serializable
     //=== GF32723 is totally new and is the cause of the duplicated warning!!!
     public EVS_Bean getThesaurusConceptForNonNCItNonNCIm( EVS_Bean eBean )
     {
+        System.out.println( "getThesaurusConceptForNonNCItNonNCIm eBean: [" + eBean + "]" );
         try
         {
             HttpSession session = m_classReq.getSession();
@@ -4301,6 +4302,8 @@ public class EVSSearch implements Serializable
      */
     public EVS_Bean getThesaurusConcept( EVS_Bean eBean )
     {
+        System.out.println( "getThesaurusConcept eBean: [" + eBean + "]" );
+
         try
         {
             HttpSession session = m_classReq.getSession();
@@ -4623,7 +4626,7 @@ public class EVSSearch implements Serializable
 
     public Vector<EVS_Bean> getThesaurusConceptBean( Vector vEvsBean )
     {
-        System.out.println( "getThesaurusConceptBean: called" );
+        System.out.println( "MHL getThesaurusConceptBean: called: " + vEvsBean );
         Vector<EVS_Bean> vEvsBeann = new Vector<EVS_Bean>();
         if( vEvsBean != null )
         {

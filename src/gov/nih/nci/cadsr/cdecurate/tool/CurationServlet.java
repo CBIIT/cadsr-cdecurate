@@ -4401,6 +4401,8 @@ public class CurationServlet
 
     public Vector getMatchingThesarusconcept( Vector beanList, String type )
     {
+        System.out.println( "MHL getMatchingThesarusconcept: " + beanList );
+
         HttpSession session = m_classReq.getSession();
         InsACService ins = new InsACService( m_classReq, m_classRes, this );
         EVSSearch evs = new EVSSearch( m_classReq, m_classRes, this );

@@ -1326,6 +1326,8 @@ public class DataElementConceptServlet extends CurationServlet
             if( sComp.equals( "Property" ) || sComp.equals( "PropertyClass" ) || sComp.equals( "PropertyQualifier" ) )
             {
                 vProperty = ( Vector ) session.getAttribute( "vProperty" );
+                System.out.println("MHL xx00P: " + vProperty);
+
                 for( int i = 0; i < vProperty.size(); i++ )
                 {
                     EVS_Bean eBean = ( EVS_Bean ) vProperty.get( i );
@@ -1339,9 +1341,14 @@ public class DataElementConceptServlet extends CurationServlet
 
                 if( vProperty != null && vProperty.size() > 0 )
                 {
+                    System.out.println("MHL xx01P: " + vProperty);
+
                     vProperty = this.getMatchingThesarusconcept( vProperty, "Property" );
+                    System.out.println("MHL xx02P: " + vProperty);
+
                     //logger.debug( "At line 1127 of DECServlet.java " + Arrays.asList( vProperty ) );
                     m_DEC = this.updatePropAttribues( vProperty, m_DEC );
+                    System.out.println("MHL xx03P: " + vProperty);
 
                     boolean warning = false;
 
@@ -1554,6 +1561,7 @@ public class DataElementConceptServlet extends CurationServlet
                     Vector<EVS_Bean> vTempObjectClass0 = new Vector<EVS_Bean>();
                     Vector<EVS_Bean> vTempObjectClass1;
                     vTempObjectClass0.addElement( vObjectClass.get( i ) );
+
                     vTempObjectClass1 = this.getMatchingThesarusconcept( vTempObjectClass0, "Object Class" );
 
                     switchedBean = ( ( EVS_Bean ) vTempObjectClass1.get( 0 ) );
