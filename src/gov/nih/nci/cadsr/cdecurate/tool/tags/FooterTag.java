@@ -31,7 +31,7 @@ public class FooterTag extends TagSupport {
 	public int doEndTag() throws JspException{
 		HttpServletRequest request = (HttpServletRequest) pageContext.getRequest();
 		JspWriter NCIFooter = this.pageContext.getOut();
-		String jbossVersion = Version.getInstance().getMajor() + "." + Version.getInstance().getMinor() + "." + Version.getInstance().getRevision();
+		String jbossVersion = "8.2";//Version.getInstance().getMajor() + "." + Version.getInstance().getMinor() + "." + Version.getInstance().getRevision();
 		String helpLink = "window.open('" + ToolURL.getCurationToolHelpURL(this.pageContext) +"', '_blank')";
 		try {
 			NCIFooter.println("<div class=\"xyz\">"
