@@ -61,7 +61,7 @@
 		<mkdir dir="${classes.dir}" />
 		<mkdir dir="${package.download.dir}" />
 		<mkdir dir="${dist.dir}" />
-		<mkdir dir="${dist.dir}/jboss" />
+		<mkdir dir="${dist.dir}" />
 		<mkdir dir="${package.download.dir}/gforge" />
 	</target>
 
@@ -99,6 +99,14 @@
 	<target name="dist" depends="compile,-cjsp" description="Assembles the deployment artifacts into the dist folders.">
 		<echo>Assembling artifacts ...</echo>
 
+		<filter token="connectionUrl" value="${CADSR.DS.URL}"/>		
+		<echo>connectionUrl = ${connectionUrl}</echo>		
+		<filter token="cdeCurateUser" value="${CADSR.DS.USER}"/>
+		<echo>cdeCurateUser = ${cdeCurateUser}</echo>
+		<filter token="cdeCuratePassword" value="${CADSR.DS.PSWD}"/>
+		<echo>cdeCuratePassword not echoed</echo>
+		<filter token="logLevel" value="INFO"/>				
+		
 		<copy tofile="${root.dir}/WEB-INF/classes/application-config-client.xml" filtering="false">
 			<fileset file="conf/application-config-client.xml" />
 		</copy>
@@ -110,29 +118,18 @@
 		<copy tofile="${web.dir}/web.xml" filtering="true">
 			<fileset file="conf/template.web.xml" />
 		</copy>
-		
-		<copy tofile="${dist.dir}/jboss/cdecurate-oracle-ds.xml" filtering="true">
-			<fileset file="conf/template.cdecurate-oracle-ds.xml" />
-		</copy>
-		<!--
-		<copy tofile="${dist.dir}/jboss/cdecurate-log4j-appender.xml" filtering="true">
-			<fileset file="conf/template.cdecurate-log4j-appender.xml" />
-		</copy>
-		
-		<copy tofile="${dist.dir}/jboss/cdecurate-log4j-category.xml" filtering="true">
-			<fileset file="conf/template.cdecurate-log4j-category.xml" />
-		</copy>
-		-->
-		<copy tofile="${dist.dir}/jboss/jboss-log4j.xml" filtering="true">
-			<fileset file="conf/template.cdecurate-jboss-log4j.xml" />
-		</copy>
-
 		<copy todir="${classes.dir}/gov/nih/nci/cadsr/cdecurate/tool" filtering="true">
 			<fileset file="${src.dir}/gov/nih/nci/cadsr/cdecurate/tool/NCICuration.properties" />
 		</copy>
 
-		<copy todir="${dist.dir}/jboss">
+		<copy todir="${dist.dir}">
 		   	<fileset file="${basedir}/lib/ojdbc6.jar"/>
+		</copy>
+		<copy todir="${dist.dir}" filtering="true" overwrite="true">
+		   	<fileset file="conf/cdecurate_modules.cli"/>
+		</copy>
+		<copy todir="${dist.dir}" filtering="true" overwrite="true">
+		   	<fileset file="conf/cdecurate_deploy.cli"/>
 		</copy>
 
 		<fixcrlf srcdir="${dist.dir}" eol="lf" includes="**/*.sh, **/*.xml, **/*.properties" />
@@ -158,7 +155,7 @@
 		</unwar>
  -->
  		<!-- GF32649/CADSRAPI-32 -->
-		<copy todir="${dist.dir}/jboss" filtering="false" verbose="true">
+		<copy todir="${dist.dir}" filtering="false" verbose="true">
 			<fileset dir="conf">
 				<include name="cadsrutil.properties" />
 				<include name="properties-service.xml" />
@@ -257,7 +254,7 @@
 		<delete dir="${doc.dir}" />
 	</target>
 
-	<target name="deploy" depends="dist" description="Deploys the war file and conf files to app server.">
+<!--	<target name="deploy" depends="dist" description="Deploys the war file and conf files to app server.">
 		<echo>Deploying war to jboss ...</echo>
 
 		<copy todir="${JBOSS.DEPLOY.DIR}">
@@ -279,7 +276,7 @@
 			<fileset file="${dist.dir}/cdecurate.war" />
 		</copy>
 		<move file="${JBOSS.DEPLOY.DIR}/cdecurate.waz" tofile="${JBOSS.DEPLOY.DIR}/cdecurate.war" />
-	</target>
+	</target> -->
 
 	<target name="update-vocabs" description="Updates the EVS Vocabs.">
 		<echo> Filter EVS Vocab properties ...</echo>
