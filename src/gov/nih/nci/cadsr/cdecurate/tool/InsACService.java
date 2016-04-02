@@ -5787,18 +5787,35 @@ public class InsACService implements Serializable
                 // code
                 // Now we are ready to call the stored procedure
                 cstmt.setString( 22, PropertyHelper.getDefaultContextName() );    //GF32649
-                cstmt.execute();
+                System.out.println( "InsACService.java IDSEQ: " + evsBean.getIDSEQ() + "   CONCEPT_IDENTIFIER: " + evsBean.getCONCEPT_IDENTIFIER() +
+                        "  DefaultContextName: " + PropertyHelper.getDefaultContextName());
+
+
+                try
+                {
+                    cstmt.execute();
+
+                } catch( SQLException e )
+                {
+                    e.printStackTrace();
+                }
+                 catch( Exception e )
+                {
+                    e.printStackTrace();
+                }
+
                 sCON_IDSEQ = ( String ) cstmt.getObject( 2 );
                 evsBean.setIDSEQ( sCON_IDSEQ );
                 sReturn = ( String ) cstmt.getObject( 1 );
 
                 ///////////////////////////////////////////////////////////////
                 //MHL TESTING ONLY
-                for( int f = 1; f < 21; f++)
+                for( int f = 1; f < 22; f++)
                 {
-                    System.out.println( "MHL cstmt.getObject(" + f + "): "+ cstmt.getObject( f ));
+                    System.out.println( "MHL B cstmt.getObject(" + f + "): "+ cstmt.getObject( f ));
                 }
                 ///////////////////////////////////////////////////////////////
+
                 if( sReturn == null || sReturn.equals( "" ) )
                 {
                     // Sometimes we use this method to validate a concept code
