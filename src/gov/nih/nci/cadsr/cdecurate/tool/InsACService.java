@@ -5794,7 +5794,7 @@ public class InsACService implements Serializable
 
                 ///////////////////////////////////////////////////////////////
                 //MHL TESTING ONLY
-                for( int f = 1; f < 23; f++)
+                for( int f = 1; f < 21; f++)
                 {
                     System.out.println( "MHL cstmt.getObject(" + f + "): "+ cstmt.getObject( f ));
                 }
