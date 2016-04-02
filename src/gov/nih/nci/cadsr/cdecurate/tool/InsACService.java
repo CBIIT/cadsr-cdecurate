@@ -5783,7 +5783,7 @@ public class InsACService implements Serializable
 
                 cstmt.setString( 2, evsBean.getIDSEQ() ); // con idseq
                 cstmt.setString( 3, evsBean.getCONCEPT_IDENTIFIER() ); // concept
-                System.out.println( "InsACService.java IDSEQ" + evsBean.getIDSEQ() + "CONCEPT_IDENTIFIER" + evsBean.getCONCEPT_IDENTIFIER() );
+                //System.out.println( "InsACService.java IDSEQ" + evsBean.getIDSEQ() + "CONCEPT_IDENTIFIER" + evsBean.getCONCEPT_IDENTIFIER() );
                 // code
                 // Now we are ready to call the stored procedure
 
