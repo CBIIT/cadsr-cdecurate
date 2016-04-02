@@ -7,14 +7,8 @@
 
 package gov.nih.nci.cadsr.cdecurate.tool;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.Vector;
 
 import gov.nih.nci.cadsr.cdecurate.ui.AltNamesDefsSession;
 import gov.nih.nci.cadsr.cdecurate.ui.AltNamesDefsSessionHelper;
@@ -26,6 +20,7 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.servlet.http.HttpSessionContext;
 
 import gov.nih.nci.cadsr.common.Constants;
 import gov.nih.nci.cadsr.common.StringUtil;
@@ -1005,12 +1000,37 @@ public class DataElementConceptServlet extends CurationServlet
     @SuppressWarnings( "unchecked" )
     private void doDECUseSelection( String nameAction )
     {
+        System.out.println("MHL xx000: " + m_classReq.getSession());
 
         try
         {
             HttpSession session = m_classReq.getSession();
+
+
+
+            //FIXME testing/debug only
+
+            HttpSessionContext sessionContext = session.getSessionContext();
+            Enumeration enumeration =  session.getAttributeNames();
+            int n=0;
+            while(enumeration.hasMoreElements()){
+
+                //System.out.println(enumeration.nextElement());
+                String param = (String) enumeration.nextElement();
+                System.out.println("MHL xx001  Param["+(n++) + "]: " + param  + "   " + session.getAttribute( param ));
+            }
+
+            ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
             //begin of GF30798
             String isAConcept = ( String ) m_classReq.getParameter( "isAConcept" );
+
+            // FIXME testing only
+            System.out.println("MHL xx002  Param: " + isAConcept );
+
+
+
             session.setAttribute( isAConcept, isAConcept );
             //System.out.println( "*************** isAConcept set to " + isAConcept + " ***************" );
             String userSelectedDef = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml( ( String ) m_classReq.getParameter( "userSelectedDef" ) );
