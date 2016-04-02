@@ -4401,7 +4401,6 @@ public class CurationServlet
 
     public Vector getMatchingThesarusconcept( Vector beanList, String type )
     {
-        System.out.println( "MHL getMatchingThesarusconcept: " + beanList );
 
         HttpSession session = m_classReq.getSession();
         InsACService ins = new InsACService( m_classReq, m_classRes, this );
@@ -4416,7 +4415,9 @@ public class CurationServlet
                 //&& !ocStatusBean.isEvsBeanExists()	//GF32723 not sure why do we need to check this, skipped the check for now to activate context switching check
                     )
             {
+                System.out.println( "MHL getMatchingThesarusconcept BEFORE beanList = evs.getThesaurusConceptBean( beanList ): " + beanList );
                 beanList = evs.getThesaurusConceptBean( beanList );
+                System.out.println( "MHL getMatchingThesarusconcept AFTER beanList = evs.getThesaurusConceptBean( beanList ): " + beanList );
             }
             else
             {
