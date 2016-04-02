@@ -4409,6 +4409,8 @@ public class CurationServlet
         ValidationStatusBean ocStatusBean = null;
         try
         {
+            System.out.println( "MHL getMatchingThesarusconcept BEFORE ins.evsBeanCheckDB: " + beanList );
+
             ocStatusBean = ins.evsBeanCheckDB( beanList, defaultContext, "", type );
             // get its matching thesaurus concept
             if( ocStatusBean != null
@@ -4421,6 +4423,8 @@ public class CurationServlet
             }
             else
             {
+                System.out.println( "MHL CurationServlet:getMatchingThesarusconcept ocStatusBean is null" );
+
                 logger.debug( "CurationServlet:getMatchingThesarusconcept ocStatusBean is null" );
             }
         } catch( Exception e )
