@@ -4634,6 +4634,8 @@ public class EVSSearch implements Serializable
             for( int i = 0; i < vEvsBean.size(); i++ )
             {
                 EVS_Bean eBean = ( EVS_Bean ) vEvsBean.elementAt( i );
+                System.out.println( "eBean BEFORE getThesaurusConcept: " + eBean );
+
                 //begin GF32723
                 if( LexEVSHelper.isOtherVocabulary( vocabName ) )
                 {
