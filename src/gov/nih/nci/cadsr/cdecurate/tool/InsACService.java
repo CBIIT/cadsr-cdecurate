@@ -5720,6 +5720,8 @@ public class InsACService implements Serializable
             String sReturn, EVS_Bean evsBean,
             boolean bValidateConceptCodeUnique )
     {
+        System.out.println( "MHL IN getConcept evsBean: "+ evsBean);
+
         ResultSet rs = null;
         String sCON_IDSEQ = "";
         CallableStatement cstmt = null;
@@ -5789,6 +5791,14 @@ public class InsACService implements Serializable
                 sCON_IDSEQ = ( String ) cstmt.getObject( 2 );
                 evsBean.setIDSEQ( sCON_IDSEQ );
                 sReturn = ( String ) cstmt.getObject( 1 );
+
+                ///////////////////////////////////////////////////////////////
+                //MHL TESTING ONLY
+                for( int f = 1; f < 23; f++)
+                {
+                    System.out.println( "MHL cstmt.getObject(" + f + "): "+ cstmt.getObject( f ));
+                }
+                ///////////////////////////////////////////////////////////////
                 if( sReturn == null || sReturn.equals( "" ) )
                 {
                     // Sometimes we use this method to validate a concept code
@@ -6980,11 +6990,14 @@ public class InsACService implements Serializable
             String conIdseq = this.getConcept( "", conceptBean, false );
             if( conIdseq == null || conIdseq.equals( "" ) )
             {
+                System.out.println("MHL IN evsBeanCheckDB if( conIdseq == null || conIdseq.equals( \"\" ) )");
                 statusBean.setAllConceptsExists( false );    //GF30681
                 break;
             }
             else
             {
+                System.out.println("MHL IN evsBeanCheckDB CONCEPT FOUND! conIdseq at Line 6204 of InsACService.java" + conIdseq );
+
                 logger.debug( "InsACService.java evsBeanCheckDB() CONCEPT FOUND! conIdseq at Line 6204 of InsACService.java" + conIdseq );
             }
         }
