@@ -5786,9 +5786,14 @@ public class InsACService implements Serializable
                 System.out.println( "InsACService.java IDSEQ" + evsBean.getIDSEQ() + "CONCEPT_IDENTIFIER" + evsBean.getCONCEPT_IDENTIFIER() );
                 // code
                 // Now we are ready to call the stored procedure
-                cstmt.setString( 22, PropertyHelper.getDefaultContextName() );    //GF32649
+
+                // MHL  FIXME
+                //cstmt.setString( 22, PropertyHelper.getDefaultContextName() );    //GF32649
+                cstmt.setString( 22, "caBIG" );    //GF32649
+
                 System.out.println( "InsACService.java IDSEQ: " + evsBean.getIDSEQ() + "   CONCEPT_IDENTIFIER: " + evsBean.getCONCEPT_IDENTIFIER() +
                         "  DefaultContextName: " + PropertyHelper.getDefaultContextName());
+
 
 
                 try
