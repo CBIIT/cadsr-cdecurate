@@ -861,7 +861,6 @@ public class DataElementServlet extends CurationServlet
         if( sMenuAction.equals( "NewDEVersion" ) )
         {
             // udpate the status message with DE name and ID only for version and updates
-            // FIXME ORIG storeStatusMsg( "Data Element Name : " + DEBean.getDE_LONG_NAME() );
             storeStatusMsg( "Data Element Name : " + DEBean.getDE_LONG_NAME() );
             storeStatusMsg( "Public ID : " + DEBean.getDE_MIN_CDE_ID() );
             // call stored procedure to version and update attributes

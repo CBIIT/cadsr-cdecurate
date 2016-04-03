@@ -4336,26 +4336,6 @@ public class GetACSearch implements Serializable
             String unCheckedRowId = StringUtil.cleanJavascriptAndHtml( ( String ) m_classReq.getParameter( "unCheckedRowId" ) );
 
 
-            // ORIG if (unCheckedRowId != null && !(unCheckedRowId == ""))
-            if( !( unCheckedRowId == "" ) )
-            {
-                System.out.println( "!(unCheckedRowId == \"\")" );
-            }
-            else
-            {
-                System.out.println( " NOT  !(unCheckedRowId == \"\")" );
-            }
-
-            if( unCheckedRowId != null )
-            {
-                System.out.println( "unCheckedRowId != null" );
-            }
-            else
-            {
-                System.out.println( " NOT  unCheckedRowId != null" );
-            }
-
-
             if( ( unCheckedRowId != null ) && ( !( unCheckedRowId.isEmpty() ) ) )
             {
                 int selectedRowID = new Integer( unCheckedRowId );
@@ -4671,7 +4651,7 @@ public class GetACSearch implements Serializable
         if( DECBean.getDEC_LONG_NAME() != null && !DECBean.getDEC_LONG_NAME().equals( "" ) )
             acName = DECBean.getDEC_LONG_NAME();
         else
-            acName = "MHL NNN "+ DECBean.getDEC_PREFERRED_NAME();
+            acName = DECBean.getDEC_PREFERRED_NAME();
         vACName.addElement( acName );
         if( !sAction.equalsIgnoreCase( "BlockEdit" ) )
         {
@@ -4816,9 +4796,9 @@ public class GetACSearch implements Serializable
         vACid.addElement( DEBean.getDE_DE_IDSEQ() );
         String acName = "";
         if( DEBean.getDE_LONG_NAME() != null && !DEBean.getDE_LONG_NAME().equals( "" ) )
-            acName = "MHL OOO "+ DEBean.getDE_LONG_NAME();
+            acName = DEBean.getDE_LONG_NAME();
         else
-            acName = "MHL PPP "+ DEBean.getDE_PREFERRED_NAME();
+            acName = DEBean.getDE_PREFERRED_NAME();
         vACName.addElement( acName );
         // get contexts selected so far
         Vector selContext = ( Vector ) m_classReq.getAttribute( "SelectedContext" );

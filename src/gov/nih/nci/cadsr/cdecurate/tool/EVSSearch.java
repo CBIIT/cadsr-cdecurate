@@ -155,7 +155,6 @@ public class EVSSearch implements Serializable
             if( m_eUser.getEVSConURL() != null
                     && !m_eUser.getEVSConURL().equals( "" ) )
                 evsService = ( LexBIGService ) ApplicationServiceProvider.getApplicationServiceFromUrl( m_eUser.getEVSConURL(), "EvsServiceInfo" );
-            System.out.println( "EVSSearch:initialize() EVS URL initialized = [" + m_eUser.getEVSConURL() + "]" );
         } catch( Exception e )
         {
             e.printStackTrace();
@@ -870,8 +869,6 @@ public class EVSSearch implements Serializable
                     {
                         try
                         {
-                            System.out.println( "asking for subconcepts using concept Name" );
-
                             LexBIGServiceConvenienceMethods lbscm =
                                     ( LexBIGServiceConvenienceMethods ) evsService.getGenericExtension( "LexBIGServiceConvenienceMethods" );
 
@@ -3157,11 +3154,12 @@ public class EVSSearch implements Serializable
         return sSemantic;
     }
 
+
     /**
      * to get the NCI thesaurus code from the atom collection
      *
-     * @param mtcCon MetaThesaurusConcept object
-     * @return sCode
+     * @param presentations
+     * @return
      */
     private String getPrefMetaCode( Presentation[] presentations )
     {
@@ -4125,7 +4123,6 @@ public class EVSSearch implements Serializable
     //=== GF32723 is totally new and is the cause of the duplicated warning!!!
     public EVS_Bean getThesaurusConceptForNonNCItNonNCIm( EVS_Bean eBean )
     {
-        System.out.println( "getThesaurusConceptForNonNCItNonNCIm eBean: [" + eBean + "]" );
         try
         {
             HttpSession session = m_classReq.getSession();
@@ -4302,8 +4299,6 @@ public class EVSSearch implements Serializable
      */
     public EVS_Bean getThesaurusConcept( EVS_Bean eBean )
     {
-        System.out.println( "getThesaurusConcept eBean: [" + eBean + "]" );
-
         try
         {
             HttpSession session = m_classReq.getSession();
@@ -4626,7 +4621,6 @@ public class EVSSearch implements Serializable
 
     public Vector<EVS_Bean> getThesaurusConceptBean( Vector vEvsBean )
     {
-        System.out.println( "MHL getThesaurusConceptBean: called: " + vEvsBean );
         Vector<EVS_Bean> vEvsBeann = new Vector<EVS_Bean>();
         if( vEvsBean != null )
         {
@@ -4634,20 +4628,14 @@ public class EVSSearch implements Serializable
             for( int i = 0; i < vEvsBean.size(); i++ )
             {
                 EVS_Bean eBean = ( EVS_Bean ) vEvsBean.elementAt( i );
-                System.out.println( "eBean BEFORE getThesaurusConcept: " + eBean );
-
                 //begin GF32723
                 if( LexEVSHelper.isOtherVocabulary( vocabName ) )
                 {
-                    System.out.println( "getThesaurusConceptBean: is other vocab = [" + vocabName + "]" );
                     eBean = this.getThesaurusConceptForNonNCItNonNCIm( eBean );
-                    System.out.println( "getThesaurusConceptBean: for other vocab done, eBean [" + eBean + "]" );
                 }
                 else
                 {
-                    System.out.println( "getThesaurusConceptBean: is not other vocab = [" + vocabName + "]" );
                     eBean = this.getThesaurusConcept( eBean );
-                    System.out.println( "getThesaurusConceptBean: for NCIt/NCIm vocab done, eBean [" + eBean + "]" );
                 }
                 //end GF32723
                 vEvsBeann.addElement( eBean );

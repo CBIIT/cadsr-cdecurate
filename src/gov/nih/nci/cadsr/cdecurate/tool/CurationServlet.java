@@ -4409,22 +4409,16 @@ public class CurationServlet
         ValidationStatusBean ocStatusBean = null;
         try
         {
-            System.out.println( "MHL getMatchingThesarusconcept BEFORE ins.evsBeanCheckDB: " + beanList );
-
             ocStatusBean = ins.evsBeanCheckDB( beanList, defaultContext, "", type );
             // get its matching thesaurus concept
             if( ocStatusBean != null
                 //&& !ocStatusBean.isEvsBeanExists()	//GF32723 not sure why do we need to check this, skipped the check for now to activate context switching check
                     )
             {
-                System.out.println( "MHL getMatchingThesarusconcept BEFORE beanList = evs.getThesaurusConceptBean( beanList ): " + beanList );
                 beanList = evs.getThesaurusConceptBean( beanList );
-                System.out.println( "MHL getMatchingThesarusconcept AFTER beanList = evs.getThesaurusConceptBean( beanList ): " + beanList );
             }
             else
             {
-                System.out.println( "MHL CurationServlet:getMatchingThesarusconcept ocStatusBean is null" );
-
                 logger.debug( "CurationServlet:getMatchingThesarusconcept ocStatusBean is null" );
             }
         } catch( Exception e )

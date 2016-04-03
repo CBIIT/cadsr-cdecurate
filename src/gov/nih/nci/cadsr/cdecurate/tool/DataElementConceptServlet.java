@@ -1000,39 +1000,13 @@ public class DataElementConceptServlet extends CurationServlet
     @SuppressWarnings( "unchecked" )
     private void doDECUseSelection( String nameAction )
     {
-        System.out.println("MHL xx000: " + m_classReq.getSession());
-
         try
         {
             HttpSession session = m_classReq.getSession();
 
-
-
-            //FIXME testing/debug only
-
-            HttpSessionContext sessionContext = session.getSessionContext();
-            Enumeration enumeration =  session.getAttributeNames();
-            int n=0;
-            while(enumeration.hasMoreElements()){
-
-                //System.out.println(enumeration.nextElement());
-                String param = (String) enumeration.nextElement();
-                System.out.println("MHL xx001  Param["+(n++) + "]: " + param  + "   " + session.getAttribute( param ));
-            }
-
-            ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
             //begin of GF30798
             String isAConcept = ( String ) m_classReq.getParameter( "isAConcept" );
-
-            // FIXME testing only
-            System.out.println("MHL xx002  Param: " + isAConcept );
-
-
-
             session.setAttribute( isAConcept, isAConcept );
-            //System.out.println( "*************** isAConcept set to " + isAConcept + " ***************" );
             String userSelectedDef = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml( ( String ) m_classReq.getParameter( "userSelectedDef" ) );
             session.setAttribute( userSelectedDef, userSelectedDef );
             //(isAConcept != null && isAConcept.trim().equals("false"))	//GF30798
@@ -1282,7 +1256,6 @@ public class DataElementConceptServlet extends CurationServlet
                 for( int i = 0; i < vObjectClass.size(); i++ )
                 {
                     EVS_Bean eBean = ( EVS_Bean ) vObjectClass.get( i );
-                    //System.out.println( "testing OC Bean" + eBean.getEVS_DATABASE() + "and the OC_CON_CODE is" + eBean.getCONCEPT_IDENTIFIER() );//GF32723 2
 
                     String user_selected_vocab = eBean.getEVS_DATABASE();
                     session.setAttribute( "userSelectedVocabOC", user_selected_vocab );
@@ -1346,12 +1319,10 @@ public class DataElementConceptServlet extends CurationServlet
             if( sComp.equals( "Property" ) || sComp.equals( "PropertyClass" ) || sComp.equals( "PropertyQualifier" ) )
             {
                 vProperty = ( Vector ) session.getAttribute( "vProperty" );
-                System.out.println("MHL xx00P: " + vProperty);
 
                 for( int i = 0; i < vProperty.size(); i++ )
                 {
                     EVS_Bean eBean = ( EVS_Bean ) vProperty.get( i );
-                    //System.out.println( "testing OC Bean" + eBean.getEVS_DATABASE() + "and the OC_CON_CODE is" + eBean.getCONCEPT_IDENTIFIER() );//GF32723 2
 
                     String user_selected_vocab_prop = eBean.getEVS_DATABASE();
                     session.setAttribute( "userSelectedVocabPROP", user_selected_vocab_prop );
@@ -1361,14 +1332,10 @@ public class DataElementConceptServlet extends CurationServlet
 
                 if( vProperty != null && vProperty.size() > 0 )
                 {
-                    System.out.println("MHL xx01P: " + vProperty);
-
                     vProperty = this.getMatchingThesarusconcept( vProperty, "Property" );
-                    System.out.println("MHL xx02P: " + vProperty);
 
                     //logger.debug( "At line 1127 of DECServlet.java " + Arrays.asList( vProperty ) );
                     m_DEC = this.updatePropAttribues( vProperty, m_DEC );
-                    System.out.println("MHL xx03P: " + vProperty);
 
                     boolean warning = false;
 

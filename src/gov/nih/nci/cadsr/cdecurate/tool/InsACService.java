@@ -5720,8 +5720,6 @@ public class InsACService implements Serializable
             String sReturn, EVS_Bean evsBean,
             boolean bValidateConceptCodeUnique )
     {
-        System.out.println( "MHL IN getConcept evsBean: "+ evsBean);
-
         ResultSet rs = null;
         String sCON_IDSEQ = "";
         CallableStatement cstmt = null;
@@ -5783,43 +5781,14 @@ public class InsACService implements Serializable
 
                 cstmt.setString( 2, evsBean.getIDSEQ() ); // con idseq
                 cstmt.setString( 3, evsBean.getCONCEPT_IDENTIFIER() ); // concept
-                //System.out.println( "InsACService.java IDSEQ" + evsBean.getIDSEQ() + "CONCEPT_IDENTIFIER" + evsBean.getCONCEPT_IDENTIFIER() );
+                System.out.println( "InsACService.java IDSEQ" + evsBean.getIDSEQ() + "CONCEPT_IDENTIFIER" + evsBean.getCONCEPT_IDENTIFIER() );
                 // code
                 // Now we are ready to call the stored procedure
-
-                // MHL
                 cstmt.setString( 22, PropertyHelper.getDefaultContextName() );    //GF32649
-
-                System.out.println( "InsACService.java IDSEQ: " + evsBean.getIDSEQ() + "   CONCEPT_IDENTIFIER: " + evsBean.getCONCEPT_IDENTIFIER() +
-                        "  DefaultContextName: " + PropertyHelper.getDefaultContextName());
-
-
-
-                try
-                {
-                    cstmt.execute();
-
-                } catch( SQLException e )
-                {
-                    e.printStackTrace();
-                }
-                 catch( Exception e )
-                {
-                    e.printStackTrace();
-                }
-
+                cstmt.execute();
                 sCON_IDSEQ = ( String ) cstmt.getObject( 2 );
                 evsBean.setIDSEQ( sCON_IDSEQ );
                 sReturn = ( String ) cstmt.getObject( 1 );
-
-                ///////////////////////////////////////////////////////////////
-                //MHL TESTING ONLY
-                for( int f = 1; f < 22; f++)
-                {
-                    System.out.println( "MHL B cstmt.getObject(" + f + "): "+ cstmt.getObject( f ));
-                }
-                ///////////////////////////////////////////////////////////////
-
                 if( sReturn == null || sReturn.equals( "" ) )
                 {
                     // Sometimes we use this method to validate a concept code
@@ -7011,14 +6980,11 @@ public class InsACService implements Serializable
             String conIdseq = this.getConcept( "", conceptBean, false );
             if( conIdseq == null || conIdseq.equals( "" ) )
             {
-                System.out.println("MHL IN evsBeanCheckDB if( conIdseq == null || conIdseq.equals( \"\" ) )");
                 statusBean.setAllConceptsExists( false );    //GF30681
                 break;
             }
             else
             {
-                System.out.println("MHL IN evsBeanCheckDB CONCEPT FOUND! conIdseq at Line 6204 of InsACService.java" + conIdseq );
-
                 logger.debug( "InsACService.java evsBeanCheckDB() CONCEPT FOUND! conIdseq at Line 6204 of InsACService.java" + conIdseq );
             }
         }
