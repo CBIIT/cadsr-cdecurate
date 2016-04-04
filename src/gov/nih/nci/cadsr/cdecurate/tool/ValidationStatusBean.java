@@ -6,9 +6,11 @@
  */
 
 /**
- * 
+ *
  */
 package gov.nih.nci.cadsr.cdecurate.tool;
+
+import aspects.SystemOutHighlight;
 
 /**
  * @author hveerla
@@ -22,7 +24,7 @@ public class ValidationStatusBean {
 	String evsBeanIDSEQ = "";
 	boolean newVersion = false;
 	boolean allConceptsExists = false;
-	
+
 	public ValidationStatusBean(){
 	}
 	/**
@@ -101,14 +103,17 @@ public class ValidationStatusBean {
 	 * @return the allConceptsExists
 	 */
 	public boolean isAllConceptsExists() {
+		System.out.println("MHL IN isAllConceptsExists");
+
 		return allConceptsExists;
 	}
 	/**
 	 * @param allConceptsExists the allConceptsExists to set
 	 */
 	public void setAllConceptsExists(boolean allConceptsExists) {
+		System.out.println("MHL IN setAllConceptsExists");
 		this.allConceptsExists = allConceptsExists;
 	}
-	
+
 
 }

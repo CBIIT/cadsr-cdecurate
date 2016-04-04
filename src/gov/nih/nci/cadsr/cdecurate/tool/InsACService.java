@@ -49,6 +49,7 @@ import javax.servlet.http.HttpSession;
 //import oracle.jdbc.driver.OracleTypes;
 import oracle.jdbc.OracleTypes;        //GF30779
 
+import org.apache.commons.lang.SystemUtils;
 import org.apache.commons.lang.math.NumberUtils;
 import org.apache.log4j.Logger;
 //import org.joda.time.DateTimeUtils;
@@ -7175,6 +7176,7 @@ public class InsACService implements Serializable
         }
         else
         {//if all the concepts does not exist
+            System.out.println("MHL ELSE all the concepts does not exist   Creating a new " + type + " in " + PropertyHelper.getDefaultContextName() );
             statusBean.setStatusMessage( "**  Creating a new " + type + " in " + PropertyHelper.getDefaultContextName() );    //GF32649
         }
 
