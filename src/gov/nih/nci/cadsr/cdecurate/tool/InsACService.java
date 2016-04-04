@@ -5846,7 +5846,10 @@ public class InsACService implements Serializable
             cstmt = SQLHelper.closeCallableStatement( cstmt );
             System.out.println( "-------------------------- InsACService: 5 ---------------------------" );
             mon.show();
+            System.out.println( "-------------------------- InsACService: 6 ---------------------------" );
         }
+        System.out.println( "-------------------------- InsACService: 7 ---------------------------" );
+
         return sCON_IDSEQ; // TODO check what is parent concept id
     } // end get concept
 
