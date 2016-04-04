@@ -5783,13 +5783,21 @@ public class InsACService implements Serializable
                 System.out.println( "InsACService.java IDSEQ" + evsBean.getIDSEQ() + "CONCEPT_IDENTIFIER" + evsBean.getCONCEPT_IDENTIFIER() );
                 // code
                 // Now we are ready to call the stored procedure
+                System.out.println("MHL 0020 getDefaultContextName ");
                 cstmt.setString( 22, PropertyHelper.getDefaultContextName() );    //GF32649
+                System.out.println("MHL 0021 getDefaultContextName ");
                 cstmt.execute();
+                System.out.println("MHL 0022 getDefaultContextName ");
                 sCON_IDSEQ = ( String ) cstmt.getObject( 2 );
+                System.out.println("MHL 0023 getDefaultContextName ");
                 evsBean.setIDSEQ( sCON_IDSEQ );
+                System.out.println("MHL 0024 getDefaultContextName ");
                 sReturn = ( String ) cstmt.getObject( 1 );
+                System.out.println("MHL 0025 getDefaultContextName ");
                 if( sReturn == null || sReturn.equals( "" ) )
                 {
+                    System.out.println("MHL 0026 getDefaultContextName ");
+
                     // Sometimes we use this method to validate a concept code
                     // is unique across databases
                     if( bValidateConceptCodeUnique == true )
