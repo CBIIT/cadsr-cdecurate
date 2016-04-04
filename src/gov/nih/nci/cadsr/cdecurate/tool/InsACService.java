@@ -5794,6 +5794,18 @@ public class InsACService implements Serializable
                 System.out.println("MHL 0024 getDefaultContextName ");
                 sReturn = ( String ) cstmt.getObject( 1 );
                 System.out.println("MHL 0025 getDefaultContextName ");
+
+
+                ///////////////////////////////////////////////////////////////
+                //MHL TESTING ONLY
+                for( int f = 1; f < 22; f++)
+                {
+                    System.out.println( "MHL B cstmt.getObject(" + f + "): "+ cstmt.getObject( f ));
+                }
+                ///////////////////////////////////////////////////////////////
+
+
+
                 if( sReturn == null || sReturn.equals( "" ) )
                 {
                     System.out.println("MHL 0026 getDefaultContextName ");
