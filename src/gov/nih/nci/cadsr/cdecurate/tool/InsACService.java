@@ -5789,7 +5789,7 @@ public class InsACService implements Serializable
                 cstmt.execute();
                 System.out.println("MHL 0022 getDefaultContextName ");
                 sCON_IDSEQ = ( String ) cstmt.getObject( 2 );
-                System.out.println("MHL 0023 getDefaultContextName ");
+                System.out.println("MHL 0023 getDefaultContextName sCON_IDSEQ: " + sCON_IDSEQ);
                 evsBean.setIDSEQ( sCON_IDSEQ );
                 System.out.println("MHL 0024 getDefaultContextName ");
                 sReturn = ( String ) cstmt.getObject( 1 );
