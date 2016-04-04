@@ -5785,7 +5785,7 @@ public class InsACService implements Serializable
                 // Now we are ready to call the stored procedure
                 System.out.println("MHL 0020 getDefaultContextName ");
                 cstmt.setString( 22, PropertyHelper.getDefaultContextName() );    //GF32649
-                System.out.println("MHL 0021 getDefaultContextName ");
+                System.out.println("MHL 0021 getDefaultContextName getDefaultContextName: " + PropertyHelper.getDefaultContextName() );
                 cstmt.execute();
                 System.out.println("MHL 0022 getDefaultContextName ");
                 sCON_IDSEQ = ( String ) cstmt.getObject( 2 );
@@ -5857,7 +5857,7 @@ public class InsACService implements Serializable
             mon.show();
             System.out.println( "-------------------------- InsACService: 6 ---------------------------" );
         }
-        System.out.println( "-------------------------- InsACService: 7: " + sCON_IDSEQ );
+        System.out.println( "-------------------------- InsACService: 7: " + sCON_IDSEQ );// FIXME MHL - this is NULL on QA
 
         return sCON_IDSEQ; // TODO check what is parent concept id
     } // end get concept
