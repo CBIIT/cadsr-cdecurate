@@ -310,7 +310,7 @@ public class InsACService implements Serializable
                         "{call SBREXT_SET_ROW.SET_VD(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}" );
 
 /*
-				cstmt = m_servlet
+                cstmt = m_servlet
 						.getConn()
 						.prepareCall(
 								"{call SBREXT_SET_ROW.SET_VD(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}" );
@@ -814,8 +814,8 @@ public class InsACService implements Serializable
                     .storeStatusMsg( "\\t Exception : Unable to update Value Domain attributes." );
         } finally
         {
- rs = SQLHelper.closeResultSet( rs );
- cstmt = SQLHelper.closeCallableStatement( cstmt );
+            rs = SQLHelper.closeResultSet( rs );
+            cstmt = SQLHelper.closeCallableStatement( cstmt );
 //SQLHelper.closeConnection( m_servlet.getConn() );        //GF32398 not related to the ticket, but found the leak and fix it
         }
         return sReturnCode;
@@ -2451,9 +2451,7 @@ public class InsACService implements Serializable
      * to created object class, property and qualifier value from EVS into cadsr. Retrieves the session bean m_DEC.
      * calls 'insAC.setDECQualifier' to insert the database.
      *
-     * @param m_classReq The HttpServletRequest from the client
-     * @param response   The HttpServletResponse back to the client
-     * @param DECBeanSR  dec attribute bean.
+     * @param DECBeanSR dec attribute bean.
      * @return DEC_Bean return the bean with the changed attributes
      * @throws Exception
      */
@@ -6977,16 +6975,16 @@ public class InsACService implements Serializable
         for( int i = 0; i < evsBeanList.size(); i++ )
         {
             EVS_Bean conceptBean = ( EVS_Bean ) evsBeanList.elementAt( i );
-            System.out.println("BEFORE this.getConcept( \"\", conceptBean, false )");
+            System.out.println( "BEFORE this.getConcept( \"\", conceptBean, false )" );
             String conIdseq = this.getConcept( "", conceptBean, false );
-            System.out.println("AFTER this.getConcept( \"\", conceptBean, false )");
+            System.out.println( "AFTER this.getConcept( \"\", conceptBean, false )" );
 
             if( conIdseq == null || conIdseq.equals( "" ) )
             {
-                System.out.println("BEFORE statusBean.setAllConceptsExists( false );    //GF30681");
+                System.out.println( "BEFORE statusBean.setAllConceptsExists( false );    //GF30681" );
 
                 statusBean.setAllConceptsExists( false );    //GF30681
-                System.out.println("AFTER statusBean.setAllConceptsExists( false );    //GF30681");
+                System.out.println( "AFTER statusBean.setAllConceptsExists( false );    //GF30681" );
 
                 break;
             }
@@ -6995,31 +6993,43 @@ public class InsACService implements Serializable
                 logger.debug( "InsACService.java evsBeanCheckDB() CONCEPT FOUND! conIdseq at Line 6204 of InsACService.java" + conIdseq );
             }
         }
-        System.out.println("BEFORE statusBean.isAllConceptsExists()");
+        System.out.println( "BEFORE statusBean.isAllConceptsExists()" );
 
 
         //if all the concepts exists
         if( statusBean.isAllConceptsExists() )
         {
+            System.out.println( "MHL 001 IN statusBean.isAllConceptsExists" );
             ArrayList<ConBean> conBeanList = this.getConBeanList( evsBeanList, statusBean.isAllConceptsExists() );
             try
             {
+                System.out.println( "MHL 002 IN statusBean.isAllConceptsExists" );
+
                 resultList = mgr.isCondrExists( conBeanList, m_servlet.getConn() );
+                System.out.println( "MHL 003 IN statusBean.isAllConceptsExists" );
+
             } catch( DBException e )
             {
                 logger.error( "ERROR in InsACService-evsBeanCheck : " + e.toString(), e );
                 throw new Exception( e );
             }
+            System.out.println( "MHL 004 IN statusBean.isAllConceptsExists" );
+
             //if nothing found, create new oc or prop or rep term
             if( resultList == null || resultList.size() < 1 )
             {
+                System.out.println( "MHL 005 IN statusBean.isAllConceptsExists" );
+
                 statusBean.setStatusMessage( "**  Creating a new " + type + " in " + PropertyHelper.getDefaultContextName() );    //GF32649
                 statusBean.setCondrExists( false );
                 statusBean.setEvsBeanExists( false );
                 logger.info( "At Line 6222 of InsACService.java" );
+                System.out.println( "MHL 006 IN statusBean.isAllConceptsExists" );
+
             }
             else
             {
+                System.out.println( "MHL 007 IN statusBean.isAllConceptsExists" );
 
                 String idseq = null;
                 String condrIDSEQ = null;
@@ -7036,6 +7046,8 @@ public class InsACService implements Serializable
                 //select all which are owned by the default(NCI) Context
                 for( int i = 0; i < resultList.size(); i++ )
                 {
+                    System.out.println( "MHL 008[" + i + "] IN statusBean.isAllConceptsExists" );
+
                     ResultVO vo = resultList.get( i );
                     if( vo.getContext() != null )
                     {
@@ -7045,9 +7057,13 @@ public class InsACService implements Serializable
                         }
                     }
                 }
+                System.out.println( "MHL 009 IN statusBean.isAllConceptsExists" );
+
                 //If none are found owned by the default(NCI) Context
                 if( foundBeanList == null || foundBeanList.size() < 1 )
                 {
+                    System.out.println( "MHL 010 IN statusBean.isAllConceptsExists" );
+
                     for( int i = 0; i < resultList.size(); i++ )
                     {
                         ResultVO vo = resultList.get( i );
