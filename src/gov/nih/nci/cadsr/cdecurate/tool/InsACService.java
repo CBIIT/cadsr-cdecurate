@@ -6977,10 +6977,17 @@ public class InsACService implements Serializable
         for( int i = 0; i < evsBeanList.size(); i++ )
         {
             EVS_Bean conceptBean = ( EVS_Bean ) evsBeanList.elementAt( i );
+            System.out.println("BEFORE this.getConcept( \"\", conceptBean, false )");
             String conIdseq = this.getConcept( "", conceptBean, false );
+            System.out.println("AFTER this.getConcept( \"\", conceptBean, false )");
+
             if( conIdseq == null || conIdseq.equals( "" ) )
             {
+                System.out.println("BEFORE statusBean.setAllConceptsExists( false );    //GF30681");
+
                 statusBean.setAllConceptsExists( false );    //GF30681
+                System.out.println("AFTER statusBean.setAllConceptsExists( false );    //GF30681");
+
                 break;
             }
             else
@@ -6988,6 +6995,7 @@ public class InsACService implements Serializable
                 logger.debug( "InsACService.java evsBeanCheckDB() CONCEPT FOUND! conIdseq at Line 6204 of InsACService.java" + conIdseq );
             }
         }
+        System.out.println("BEFORE statusBean.isAllConceptsExists()");
 
 
         //if all the concepts exists
