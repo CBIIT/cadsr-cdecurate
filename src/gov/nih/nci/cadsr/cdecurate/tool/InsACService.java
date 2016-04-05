@@ -5780,12 +5780,19 @@ public class InsACService implements Serializable
 
                 cstmt.setString( 2, evsBean.getIDSEQ() ); // con idseq
                 cstmt.setString( 3, evsBean.getCONCEPT_IDENTIFIER() ); // concept
-                System.out.println( "InsACService.java IDSEQ" + evsBean.getIDSEQ() + "CONCEPT_IDENTIFIER" + evsBean.getCONCEPT_IDENTIFIER() );
+                System.out.println( "InsACService.java IDSEQ: " + evsBean.getIDSEQ() + "     CONCEPT_IDENTIFIER: " + evsBean.getCONCEPT_IDENTIFIER() );
                 // code
                 // Now we are ready to call the stored procedure
+
+
                 System.out.println("MHL 0020 getDefaultContextName ");
-                cstmt.setString( 22, PropertyHelper.getDefaultContextName() );    //GF32649
-                System.out.println("MHL 0021 getDefaultContextName getDefaultContextName: " + PropertyHelper.getDefaultContextName() );
+                String tempDefaultContextName = PropertyHelper.getDefaultContextName();
+                // FIXME MHL put back to ORIG
+                cstmt.setString( 22, tempDefaultContextName );    //GF32649
+                // FIXME MHL ORIG cstmt.setString( 22, PropertyHelper.getDefaultContextName() );    //GF32649
+
+
+                System.out.println("MHL 0021 getDefaultContextName getDefaultContextName: " + tempDefaultContextName );
                 cstmt.execute();
                 System.out.println("MHL 0022 getDefaultContextName ");
                 sCON_IDSEQ = ( String ) cstmt.getObject( 2 );
@@ -6978,6 +6985,7 @@ public class InsACService implements Serializable
 
     public ValidationStatusBean evsBeanCheckDB( Vector evsBeanList, HashMap<String, String> defaultContext, String lName, String type ) throws Exception
     {
+        System.out.println( "MHL IN  evsBeanCheckDB");
         ValidationStatusBean statusBean = new ValidationStatusBean();
         ArrayList<ResultVO> resultList = new ArrayList();
         Evs_Mgr mgr = null;
