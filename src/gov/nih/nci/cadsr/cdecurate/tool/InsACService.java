@@ -5591,7 +5591,7 @@ public class InsACService implements Serializable
                 }
                 else
                 {
-                    System.out.println( "MHL b  m_servlet.getConn() != null" );
+                    System.out.println( "MHL b0  m_servlet.getConn() != null" );
 
                     // cstmt = conn.prepareCall("{call
                     // SBREXT_SET_ROW.SET_CONCEPT(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}");
@@ -5639,6 +5639,7 @@ public class InsACService implements Serializable
                     // by
                     cstmt.registerOutParameter( 22, java.sql.Types.VARCHAR ); // deleted
                     // ind
+                    System.out.println( "MHL b1  m_servlet.getConn() != null" );
 
                     // truncate the definition to be 2000 long.
                     String sDef = evsBean.getPREFERRED_DEFINITION();
@@ -5672,13 +5673,17 @@ public class InsACService implements Serializable
                     // Now we are ready to call the stored procedure
                     // logger.info("setConcept " +
                     // evsBean.getCONCEPT_IDENTIFIER());
+                    System.out.println( "MHL b2  m_servlet.getConn() != null" );
                     cstmt.setString( 23, PropertyHelper.getDefaultContextName() );    //GF32649
+                    System.out.println( "MHL b3  m_servlet.getConn() != null" );
                     cstmt.execute();
                     sReturnCode = cstmt.getString( 2 );
                     conIdseq = cstmt.getString( 4 );
                     evsBean.setIDSEQ( conIdseq );
                     if( sReturnCode != null )
                     {
+                        System.out.println( "MHL b4  sReturnCode != null" );
+
                         this.storeStatusMsg( "\\t " + sReturnCode
                                 + " : Unable to update Concept attributes - "
                                 + evsBean.getCONCEPT_IDENTIFIER() + ": "
@@ -5695,7 +5700,15 @@ public class InsACService implements Serializable
                         // this
                         // request
                     }
+                    else
+                    {
+                        System.out.println( "MHL b5  sReturnCode == null" );
+                    }
+                    System.out.println( "MHL b6  m_servlet.getConn() != null" );
+
                 }
+                System.out.println( "MHL b7  m_servlet.getConn() != null" );
+
             }
             else
             {
