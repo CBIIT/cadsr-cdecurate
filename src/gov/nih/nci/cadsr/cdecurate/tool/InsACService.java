@@ -5554,6 +5554,7 @@ public class InsACService implements Serializable
             String sAction, String sReturnCode,
             EVS_Bean evsBean )
     {
+        System.out.println("MHL IN setConcept");
         ResultSet rs = null;
         CallableStatement cstmt = null;
         Database mon = new Database();
@@ -5575,15 +5576,23 @@ public class InsACService implements Serializable
 			 * evsBean.getCONCEPT_IDENTIFIER()); } }
 			 */
             // return the concept id if the concept alredy exists in caDSR.
-            System.out.println( "MHL b BEFORE this.getConcept( \"\", conceptBean, false )" );
+            System.out.println( "MHL b BEFORE this.getConcept( "+ sReturnCode +", " + evsBean + ", false )" );
             conIdseq = this.getConcept( sReturnCode, evsBean, false );
-            System.out.println( "MHL b AFTER this.getConcept( \"\", conceptBean, false )" );
+            System.out.println( "MHL b AFTER this.getConcept( "+ sReturnCode +", " + evsBean + ", false )" );
             if( conIdseq == null || conIdseq.equals( "" ) )
             {
+                System.out.println( "MHL b  conIdseq == null || conIdseq.equals( \"\" )" );
+
                 if( m_servlet.getConn() == null )
+                {
+                    System.out.println( "MHL b  m_servlet.getConn() == null" );
+
                     m_servlet.ErrorLogin( m_classReq, m_classRes );
+                }
                 else
                 {
+                    System.out.println( "MHL b  m_servlet.getConn() != null" );
+
                     // cstmt = conn.prepareCall("{call
                     // SBREXT_SET_ROW.SET_CONCEPT(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}");
                     cstmt = m_servlet
@@ -5688,6 +5697,10 @@ public class InsACService implements Serializable
                     }
                 }
             }
+            else
+            {
+                System.out.println( "MHL b  NOT   conIdseq == null || conIdseq.equals( \"\" )" );
+            }
         } catch( Exception e )
         {
             logger.error( "ERROR in InsACService-setConcept for other : "
@@ -5702,6 +5715,7 @@ public class InsACService implements Serializable
         }
         System.out.println( "-------------------------- InsACService: 4 ---------------------------" );
         mon.show();
+        System.out.println("MHL leaving setConcept,  conIdseq: " + conIdseq);
 
         return conIdseq;
     } // end concept
