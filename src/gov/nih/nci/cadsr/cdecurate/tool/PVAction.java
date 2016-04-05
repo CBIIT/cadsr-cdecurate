@@ -160,7 +160,7 @@ public class PVAction implements Serializable {
 			selPV.setPV_VDPVS_IDSEQ("");
 			vdpvs.setElementAt(selPV, pvInd);
 			vd.setVD_PV_List(vdpvs);
-			
+
 		} catch (RuntimeException e) {
 			logger.error("ERROR at changePVQCAttributes: ", e);
 		}
@@ -182,7 +182,7 @@ public class PVAction implements Serializable {
 		PreparedStatement pstmt = null;
 		boolean isValid = false;
 		long totalCount = 0, validCount = 0;
-		
+
 		try {
 			if ((vpIDseq != null && !vpIDseq.equals(""))
 					|| (vdIDseq != null && !vdIDseq.equals(""))) {
@@ -223,8 +223,8 @@ public class PVAction implements Serializable {
 		return isValid;
 	} //end checkPVQCExists
 
-	
-	
+
+
 	/**
 	 * checks if removed pvs are associated with the form
 	 * send back the validation message for pv vds data.
@@ -268,7 +268,7 @@ public class PVAction implements Serializable {
 						/*&& thisVM.getVM_SHORT_MEANING() != null
 						&& !thisVM.getVM_SHORT_MEANING().equals(""))
 					sPVMean += thisVM.getVM_SHORT_MEANING(); // thisPV.getPV_SHORT_MEANING();
-					
+
 */					if (thisVM != null && thisVM.getVM_LONG_NAME() != null
 								&& !thisVM.getVM_LONG_NAME().equals(""))
 							sPVMean += thisVM.getVM_LONG_NAME(); // thisPV.getPV_SHORT_MEANING();
@@ -384,7 +384,7 @@ public class PVAction implements Serializable {
 
 		vd.setValidateList(vValidate);
 	}
-	
+
 	//GF7680   CURATNTOOL-1064
 	/**
 	 * Method to get workflow of the form referring to the PV/VM. It will just returns either "RELEASED" or "NON RELEASED".
@@ -476,7 +476,7 @@ public class PVAction implements Serializable {
 						pvBean.setPV_PV_IDSEQ(rs.getString("pv_idseq"));
 						pvBean.setPV_VALUE(rs.getString("value"));
 						pvBean.setPV_SHORT_MEANING(rs.getString("short_meaning"));
-												 
+
 						if (sAction.equals(NEW_USING)) {
                             pvBean.setPV_VDPVS_IDSEQ("");
                         } else {
@@ -538,22 +538,22 @@ public class PVAction implements Serializable {
 			System.out.println("-------------------------- PVAction: 2 doPVACSearch() ---------------------------");
 			mon.show();
 		}
-		
+
 		vList = populateFormInfo(vList, data);
 		return vList;
 	} //doPVACSearch search
 
-	
+
 	public Vector<PV_Bean> populateFormInfo(Vector<PV_Bean> vList, PVForm data) {
-		
+
 		Vector<PV_Bean> newList = new Vector<PV_Bean>();
-		
+
 		for (int i = 0; i < vList.size(); i++) {
 			PV_Bean temp = vList.get(i);
 			temp.setPV_IN_FORM(this.checkPVQCExists("", temp.getPV_VDPVS_IDSEQ(), data));
 			newList.add(temp);
 		}
-		
+
 		return newList;
 	}
 	/** reset the version value domain with pv idseqs
@@ -620,7 +620,9 @@ public class PVAction implements Serializable {
 			InsACService insAC = new InsACService(data.getRequest(), data
 					.getResponse(), data.getCurationServlet());
 			String sRet = "";
+			System.out.println( "MHL c BEFORE this.getConcept( \"\", conceptBean, false )" );
 			conIDseq = insAC.getConcept(sRet, parConcept, false);
+			System.out.println( "MHL c AFTER this.getConcept( \"\", conceptBean, false )" );
 		}
 		pvBean.setPARENT_CONCEPT(parConcept);
 	}
@@ -647,7 +649,7 @@ public class PVAction implements Serializable {
 		ResultSet rs = null;
 		CallableStatement cstmt = null;
 		Vector<PV_Bean> vList = new Vector<PV_Bean>();
-		
+
 		try {
 			if (data.getCurationServlet().getConn() != null) {	//TODO might cause NPE
 				cstmt = data
@@ -705,10 +707,10 @@ public class PVAction implements Serializable {
 					if (g == recordsDisplayed){
                     	int totalRecords = getResultSetSize(rs);
                     	DataManager.setAttribute(data.getRequest().getSession(), "pvTotalRecords", Integer.toString(totalRecords));
-                    } else 
+                    } else
                     	DataManager.setAttribute(data.getRequest().getSession(), "pvTotalRecords", Integer.toString(g));
-                    
-					
+
+
 				} //END IF
 			}
 		} catch (Exception e) {
@@ -842,7 +844,7 @@ public class PVAction implements Serializable {
 	 *  @return String existing pv_idseq from the stored procedure call.
 	 */
 	public String getExistingPV(PVForm data, String sValue, String sMeaning,String vmidseq) {
-		
+
 		String sPV_IDSEQ = "";
 		CallableStatement cstmt = null;
 		try {
@@ -975,7 +977,7 @@ public class PVAction implements Serializable {
 				temp += "[" + pvBean.getPV_BEGIN_DATE() + "]";
 				temp += "[" + pvBean.getPV_END_DATE() + "]";
 				logger.info("PVAction.java: " + temp);
-				
+
 				//execute the qury
 				cstmt.execute();
 				String retCode = cstmt.getString(2);
@@ -999,14 +1001,14 @@ public class PVAction implements Serializable {
 								+ " : Unable to remove permissible value "
 								+ sPValue + ".";
 
-					
+
 					data.setRetErrorCode(retCode);
 				} else {
 					retCode = "";
 					pvBean.setPV_VDPVS_IDSEQ(cstmt.getString(4));
 				}
 			}
-			
+
 		} catch (Exception e) {
 			logger.error("ERROR in setVD_PVS for other : " + e.toString(), e);
 			data.setRetErrorCode("Exception");
@@ -1374,14 +1376,14 @@ public class PVAction implements Serializable {
 					vNames = setName(vmHash, vmName, vNames, i);
 				}
 			}
-		
+
 			if (!(vNames.equals(""))){
 			  int index = vNames.lastIndexOf(",") ;
 			  if (index>0){
 			    vNames = vNames.substring(0,index);
-			  }  
-			}  
-		
+			  }
+			}
+
 			Vector<VM_Bean> vVMs = new Vector<VM_Bean>();
 			//query the database
 			if (!vNames.equals("")) {
@@ -1427,7 +1429,7 @@ public class PVAction implements Serializable {
 		if (vmName.equals(multiName)) {
 			vmHash.put(vmName, ind);
 			vNames +=  vmName + ",";
-					
+
 		} else
 			vmHash.put(multiName, ind);
 
@@ -1471,13 +1473,13 @@ public class PVAction implements Serializable {
 		//return chagnged names to display
 		return vNames;
 	}
-	
+
     private int getResultSetSize(ResultSet rs) throws SQLException {
     	int size = 0;
     	size = rs.getRow();
     	while(rs.next())
     		size++;
-    	
+
     	return size;
     }
 

@@ -3176,7 +3176,9 @@ public class SetACService implements Serializable
                     EVS_Bean evsBean = ( EVS_Bean ) vAC.elementAt( m );
                     if( evsBean != null && evsBean.getCON_AC_SUBMIT_ACTION() != null && !evsBean.getCON_AC_SUBMIT_ACTION().equals( "DEL" ) )
                     {
+                        System.out.println( "MHL d BEFORE this.getConcept( \"\", conceptBean, false )" );
                         strInValid = insAC.getConcept( sRet, evsBean, true );
+                        System.out.println( "MHL d AFTER this.getConcept( \"\", conceptBean, false )" );
                         if( strInValid == null )
                             strInValid = "";
                         if( strInValid.length() > 2 )
@@ -3194,7 +3196,9 @@ public class SetACService implements Serializable
                 EVS_Bean evsBean = m_VM.getVM_CONCEPT();
                 if( evsBean != null )
                 {
+                    System.out.println( "MHL e BEFORE this.getConcept( \"\", conceptBean, false )" );
                     strInValid = insAC.getConcept( sRet, evsBean, true );
+                    System.out.println( "MHL e BEFORE this.getConcept( \"\", conceptBean, false )" );
                     if( strInValid == null )
                         strInValid = "";
                     if( strInValid.length() > 2 )

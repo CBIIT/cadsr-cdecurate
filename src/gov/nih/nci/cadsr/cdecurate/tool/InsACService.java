@@ -5575,7 +5575,9 @@ public class InsACService implements Serializable
 			 * evsBean.getCONCEPT_IDENTIFIER()); } }
 			 */
             // return the concept id if the concept alredy exists in caDSR.
+            System.out.println( "MHL b BEFORE this.getConcept( \"\", conceptBean, false )" );
             conIdseq = this.getConcept( sReturnCode, evsBean, false );
+            System.out.println( "MHL b AFTER this.getConcept( \"\", conceptBean, false )" );
             if( conIdseq == null || conIdseq.equals( "" ) )
             {
                 if( m_servlet.getConn() == null )
@@ -5729,9 +5731,12 @@ public class InsACService implements Serializable
         {
             HttpSession session = ( HttpSession ) m_classReq.getSession();
             if( m_servlet.getConn() == null )
+            {
                 m_servlet.ErrorLogin( m_classReq, m_classRes );
+            }
             else
             {
+                System.out.println("MHL m_servlet.getConn() != NULL " );
                 cstmt = m_servlet
                         .getConn()
                         .prepareCall(
@@ -5861,6 +5866,10 @@ public class InsACService implements Serializable
                         // value
                         // pair
                     }
+                }
+                else
+                {
+                    System.out.println("MHL sReturn: " + sReturn);
                 }
             }
         } catch( Exception e )
@@ -7007,9 +7016,9 @@ public class InsACService implements Serializable
         for( int i = 0; i < evsBeanList.size(); i++ )
         {
             EVS_Bean conceptBean = ( EVS_Bean ) evsBeanList.elementAt( i );
-            System.out.println( "BEFORE this.getConcept( \"\", conceptBean, false )" );
+            System.out.println( "MHL a BEFORE this.getConcept( \"\", conceptBean, false )" );
             String conIdseq = this.getConcept( "", conceptBean, false );
-            System.out.println( "AFTER this.getConcept( \"\", conceptBean, false )" );
+            System.out.println( "MHL a AFTER this.getConcept( \"\", conceptBean, false )" );
 
             if( conIdseq == null || conIdseq.equals( "" ) )
             {
