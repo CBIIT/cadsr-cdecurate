@@ -5748,6 +5748,7 @@ public class InsACService implements Serializable
             String sReturn, EVS_Bean evsBean,
             boolean bValidateConceptCodeUnique )
     {
+        System.out.println("MHL evsBean.getIDSEQ(): " + evsBean.getIDSEQ()  );
         ResultSet rs = null;
         String sCON_IDSEQ = "";
         CallableStatement cstmt = null;
