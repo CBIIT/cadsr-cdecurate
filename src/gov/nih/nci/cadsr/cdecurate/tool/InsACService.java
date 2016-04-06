@@ -5811,7 +5811,10 @@ public class InsACService implements Serializable
                 cstmt.registerOutParameter( 21, java.sql.Types.VARCHAR ); // deleted
                 // ind
 
+                System.out.println( "MHL InsACService.java setting cstmt(2): " + evsBean.getIDSEQ());
                 cstmt.setString( 2, evsBean.getIDSEQ() ); // con idseq
+
+                System.out.println( "MHL InsACService.java setting cstmt(3): " + evsBean.getCONCEPT_IDENTIFIER());
                 cstmt.setString( 3, evsBean.getCONCEPT_IDENTIFIER() ); // concept
                 System.out.println( "InsACService.java IDSEQ: " + evsBean.getIDSEQ() + "     CONCEPT_IDENTIFIER: " + evsBean.getCONCEPT_IDENTIFIER() );
                 // code
@@ -5822,6 +5825,8 @@ public class InsACService implements Serializable
                 String tempDefaultContextName = PropertyHelper.getDefaultContextName();
                 // FIXME MHL put back to ORIG
                 cstmt.setString( 22, tempDefaultContextName );    //GF32649
+                System.out.println( "MHL InsACService.java setting cstmt(22): " + tempDefaultContextName);
+
                 // FIXME MHL ORIG cstmt.setString( 22, PropertyHelper.getDefaultContextName() );    //GF32649
 
 
@@ -5848,7 +5853,7 @@ public class InsACService implements Serializable
                 evsBean.setIDSEQ( sCON_IDSEQ );
                 System.out.println("MHL 0024 getDefaultContextName ");
                 sReturn = ( String ) cstmt.getObject( 1 );
-                System.out.println("MHL 0025 getDefaultContextName ");
+                System.out.println("MHL 0025 cstmt.getObject( 1 ) sReturn: " + sReturn);
 
 
                 ///////////////////////////////////////////////////////////////
