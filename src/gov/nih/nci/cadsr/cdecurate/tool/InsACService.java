@@ -5825,6 +5825,14 @@ public class InsACService implements Serializable
 
 
                 System.out.println("MHL 0021 getDefaultContextName getDefaultContextName: " + tempDefaultContextName );
+
+                ///////////////////////////////////////////////////////////////
+                //MHL TESTING ONLY
+                for( int f = 1; f < 22; f++)
+                {
+                    System.out.println( "MHL B0 cstmt.getString(" + f + "): "+ cstmt.getString( f ));
+                }
+                ///////////////////////////////////////////////////////////////
                 cstmt.execute();
                 System.out.println("MHL 0022 getDefaultContextName ");
                 sCON_IDSEQ = ( String ) cstmt.getObject( 2 );
