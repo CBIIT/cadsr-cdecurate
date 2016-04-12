@@ -101,15 +101,12 @@ public class ValidationStatusBean {
 	 * @return the allConceptsExists
 	 */
 	public boolean isAllConceptsExists() {
-        System.out.println("MHL isAllConceptsExists");
 		return allConceptsExists;
 	}
 	/**
 	 * @param allConceptsExists the allConceptsExists to set
 	 */
 	public void setAllConceptsExists(boolean allConceptsExists) {
-        System.out.println("MHL setAllConceptsExists");
-
         this.allConceptsExists = allConceptsExists;
 	}
 

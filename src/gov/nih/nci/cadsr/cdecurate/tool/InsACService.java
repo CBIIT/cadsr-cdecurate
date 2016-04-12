@@ -1854,7 +1854,6 @@ public class InsACService implements Serializable
             rs = SQLHelper.closeResultSet( rs );
             cstmt = SQLHelper.closeCallableStatement( cstmt );
         }
-        System.out.println( "-------------------------- InsACService: 1 ---------------------------" );
         mon.show();
 
         return dec;
@@ -2056,7 +2055,6 @@ public class InsACService implements Serializable
             rs = SQLHelper.closeResultSet( rs );
             cstmt = SQLHelper.closeCallableStatement( cstmt );
         }
-        System.out.println( "-------------------------- InsACService: 2 ---------------------------" );
         mon.show();
 
         return dec;
@@ -2259,7 +2257,6 @@ public class InsACService implements Serializable
             rs = SQLHelper.closeResultSet( rs );
             cstmt = SQLHelper.closeCallableStatement( cstmt );
         }
-        System.out.println( "-------------------------- InsACService: 3 ---------------------------" );
         mon.show();
 
         return sReturnCode;
@@ -5554,7 +5551,6 @@ public class InsACService implements Serializable
             String sAction, String sReturnCode,
             EVS_Bean evsBean )
     {
-        System.out.println("MHL IN setConcept");
         ResultSet rs = null;
         CallableStatement cstmt = null;
         Database mon = new Database();
@@ -5576,23 +5572,13 @@ public class InsACService implements Serializable
 			 * evsBean.getCONCEPT_IDENTIFIER()); } }
 			 */
             // return the concept id if the concept alredy exists in caDSR.
-            System.out.println( "MHL b BEFORE this.getConcept( "+ sReturnCode +", " + evsBean + ", false )" );
             conIdseq = this.getConcept( sReturnCode, evsBean, false );
-            System.out.println( "MHL b AFTER this.getConcept( "+ sReturnCode +", " + evsBean + ", false )" );
             if( conIdseq == null || conIdseq.equals( "" ) )
             {
-                System.out.println( "MHL b  conIdseq == null || conIdseq.equals( \"\" )" );
-
                 if( m_servlet.getConn() == null )
-                {
-                    System.out.println( "MHL b  m_servlet.getConn() == null" );
-
                     m_servlet.ErrorLogin( m_classReq, m_classRes );
-                }
                 else
                 {
-                    System.out.println( "MHL b0  m_servlet.getConn() != null" );
-
                     // cstmt = conn.prepareCall("{call
                     // SBREXT_SET_ROW.SET_CONCEPT(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}");
                     cstmt = m_servlet
@@ -5639,7 +5625,6 @@ public class InsACService implements Serializable
                     // by
                     cstmt.registerOutParameter( 22, java.sql.Types.VARCHAR ); // deleted
                     // ind
-                    System.out.println( "MHL b1  m_servlet.getConn() != null" );
 
                     // truncate the definition to be 2000 long.
                     String sDef = evsBean.getPREFERRED_DEFINITION();
@@ -5673,17 +5658,13 @@ public class InsACService implements Serializable
                     // Now we are ready to call the stored procedure
                     // logger.info("setConcept " +
                     // evsBean.getCONCEPT_IDENTIFIER());
-                    System.out.println( "MHL b2  m_servlet.getConn() != null" );
                     cstmt.setString( 23, PropertyHelper.getDefaultContextName() );    //GF32649
-                    System.out.println( "MHL b3  m_servlet.getConn() != null" );
                     cstmt.execute();
                     sReturnCode = cstmt.getString( 2 );
                     conIdseq = cstmt.getString( 4 );
                     evsBean.setIDSEQ( conIdseq );
                     if( sReturnCode != null )
                     {
-                        System.out.println( "MHL b4  sReturnCode != null" );
-
                         this.storeStatusMsg( "\\t " + sReturnCode
                                 + " : Unable to update Concept attributes - "
                                 + evsBean.getCONCEPT_IDENTIFIER() + ": "
@@ -5700,19 +5681,7 @@ public class InsACService implements Serializable
                         // this
                         // request
                     }
-                    else
-                    {
-                        System.out.println( "MHL b5  sReturnCode == null" );
-                    }
-                    System.out.println( "MHL b6  m_servlet.getConn() != null" );
-
                 }
-                System.out.println( "MHL b7  m_servlet.getConn() != null" );
-
-            }
-            else
-            {
-                System.out.println( "MHL b  NOT   conIdseq == null || conIdseq.equals( \"\" )" );
             }
         } catch( Exception e )
         {
@@ -5726,9 +5695,7 @@ public class InsACService implements Serializable
             rs = SQLHelper.closeResultSet( rs );
             cstmt = SQLHelper.closeCallableStatement( cstmt );
         }
-        System.out.println( "-------------------------- InsACService: 4 ---------------------------" );
         mon.show();
-        System.out.println("MHL leaving setConcept,  conIdseq: " + conIdseq);
 
         return conIdseq;
     } // end concept
@@ -5748,7 +5715,6 @@ public class InsACService implements Serializable
             String sReturn, EVS_Bean evsBean,
             boolean bValidateConceptCodeUnique )
     {
-        System.out.println("MHL evsBean.getIDSEQ(): " + evsBean.getIDSEQ()  );
         ResultSet rs = null;
         String sCON_IDSEQ = "";
         CallableStatement cstmt = null;
@@ -5759,12 +5725,9 @@ public class InsACService implements Serializable
         {
             HttpSession session = ( HttpSession ) m_classReq.getSession();
             if( m_servlet.getConn() == null )
-            {
                 m_servlet.ErrorLogin( m_classReq, m_classRes );
-            }
             else
             {
-                System.out.println("MHL m_servlet.getConn() != NULL " );
                 cstmt = m_servlet
                         .getConn()
                         .prepareCall(
@@ -5811,65 +5774,22 @@ public class InsACService implements Serializable
                 cstmt.registerOutParameter( 21, java.sql.Types.VARCHAR ); // deleted
                 // ind
 
-                System.out.println( "MHL InsACService.java setting cstmt(2): " + evsBean.getIDSEQ());
                 cstmt.setString( 2, evsBean.getIDSEQ() ); // con idseq
-
-                System.out.println( "MHL InsACService.java setting cstmt(3): " + evsBean.getCONCEPT_IDENTIFIER());
                 cstmt.setString( 3, evsBean.getCONCEPT_IDENTIFIER() ); // concept
-                System.out.println( "InsACService.java IDSEQ: " + evsBean.getIDSEQ() + "     CONCEPT_IDENTIFIER: " + evsBean.getCONCEPT_IDENTIFIER() );
+
+                System.out.println( "InsACService.java IDSEQ" + evsBean.getIDSEQ() + "CONCEPT_IDENTIFIER" + evsBean.getCONCEPT_IDENTIFIER() );
                 // code
                 // Now we are ready to call the stored procedure
-
-
-                System.out.println("MHL 0020 getDefaultContextName ");
-                String tempDefaultContextName = PropertyHelper.getDefaultContextName();
-                // FIXME MHL put back to ORIG
-                cstmt.setString( 22, tempDefaultContextName );    //GF32649
-                System.out.println( "MHL InsACService.java setting cstmt(22): " + tempDefaultContextName);
-
-                // FIXME MHL ORIG cstmt.setString( 22, PropertyHelper.getDefaultContextName() );    //GF32649
-
-
-                System.out.println("MHL 0021 getDefaultContextName getDefaultContextName: " + tempDefaultContextName );
-
-                ///////////////////////////////////////////////////////////////
-                //MHL TESTING ONLY
-                for( int f = 1; f < 22; f++)
-                {
-
-                    try
-                    {
-                        System.out.println( "MHL B0 cstmt.getString(" + f + "): "+ cstmt.getString( f ));
-                    } catch( SQLException e )
-                    {
-                        System.out.println( "MHL B0 cstmt.getString(" + f + "): "+ e.getMessage());
-                    }
-                }
-                ///////////////////////////////////////////////////////////////
+                cstmt.setString( 22, PropertyHelper.getDefaultContextName() );    //GF32649
                 cstmt.execute();
-                System.out.println("MHL 0022 getDefaultContextName ");
+                // FIXME MHL
+                // After execute,check for missing values. There may time when missing values are okay
                 sCON_IDSEQ = ( String ) cstmt.getObject( 2 );
-                System.out.println("MHL 0023 getDefaultContextName sCON_IDSEQ: " + sCON_IDSEQ);
                 evsBean.setIDSEQ( sCON_IDSEQ );
-                System.out.println("MHL 0024 getDefaultContextName ");
                 sReturn = ( String ) cstmt.getObject( 1 );
-                System.out.println("MHL 0025 cstmt.getObject( 1 ) sReturn: " + sReturn);
-
-
-                ///////////////////////////////////////////////////////////////
-                //MHL TESTING ONLY
-                for( int f = 1; f < 22; f++)
-                {
-                    System.out.println( "MHL B cstmt.getObject(" + f + "): "+ cstmt.getObject( f ));
-                }
-                ///////////////////////////////////////////////////////////////
-
-
 
                 if( sReturn == null || sReturn.equals( "" ) )
                 {
-                    System.out.println("MHL 0026 getDefaultContextName ");
-
                     // Sometimes we use this method to validate a concept code
                     // is unique across databases
                     if( bValidateConceptCodeUnique == true )
@@ -5915,25 +5835,17 @@ public class InsACService implements Serializable
                         // pair
                     }
                 }
-                else
-                {
-                    System.out.println("MHL sReturn: " + sReturn);
-                }
             }
         } catch( Exception e )
         {
-            System.out.println( "InsACSevice getConcept error: " + e );
             logger.error( "ERROR in InsACService- getConcept for exception : "
                     + e.toString(), e );
         } finally
         {
             rs = SQLHelper.closeResultSet( rs );
             cstmt = SQLHelper.closeCallableStatement( cstmt );
-            System.out.println( "-------------------------- InsACService: 5 ---------------------------" );
             mon.show();
-            System.out.println( "-------------------------- InsACService: 6 ---------------------------" );
         }
-        System.out.println( "-------------------------- InsACService: 7: " + sCON_IDSEQ );// FIXME MHL - this is NULL on QA
 
         return sCON_IDSEQ; // TODO check what is parent concept id
     } // end get concept
@@ -6961,7 +6873,6 @@ public class InsACService implements Serializable
             logger.error(
                     "ERROR in InsACService-setDEC for other : " + e.toString(),
                     e );
-            System.out.println( "InsACService doSetDEC() exception: " + e );
             m_classReq.setAttribute( "retcode", "Exception" );
             this.storeStatusMsg( "\\t Exception : Unable to update Data Element Concept attributes." ); // GF33182
             // tagged
@@ -7042,7 +6953,6 @@ public class InsACService implements Serializable
 
     public ValidationStatusBean evsBeanCheckDB( Vector evsBeanList, HashMap<String, String> defaultContext, String lName, String type ) throws Exception
     {
-        System.out.println( "MHL IN  evsBeanCheckDB");
         ValidationStatusBean statusBean = new ValidationStatusBean();
         ArrayList<ResultVO> resultList = new ArrayList();
         Evs_Mgr mgr = null;
@@ -7064,16 +6974,12 @@ public class InsACService implements Serializable
         for( int i = 0; i < evsBeanList.size(); i++ )
         {
             EVS_Bean conceptBean = ( EVS_Bean ) evsBeanList.elementAt( i );
-            System.out.println( "MHL a BEFORE this.getConcept( \"\", conceptBean, false )" );
             String conIdseq = this.getConcept( "", conceptBean, false );
-            System.out.println( "MHL a AFTER this.getConcept( \"\", conceptBean, false )" );
 
             if( conIdseq == null || conIdseq.equals( "" ) )
             {
-                System.out.println( "BEFORE statusBean.setAllConceptsExists( false );    //GF30681" );
 
                 statusBean.setAllConceptsExists( false );    //GF30681
-                System.out.println( "AFTER statusBean.setAllConceptsExists( false );    //GF30681" );
 
                 break;
             }
@@ -7082,44 +6988,32 @@ public class InsACService implements Serializable
                 logger.debug( "InsACService.java evsBeanCheckDB() CONCEPT FOUND! conIdseq at Line 6204 of InsACService.java" + conIdseq );
             }
         }
-        System.out.println( "BEFORE statusBean.isAllConceptsExists()" );
 
 
         //if all the concepts exists
         if( statusBean.isAllConceptsExists() )
         {
-            System.out.println( "MHL 001 IN statusBean.isAllConceptsExists" );
             ArrayList<ConBean> conBeanList = this.getConBeanList( evsBeanList, statusBean.isAllConceptsExists() );
             try
             {
-                System.out.println( "MHL 002 IN statusBean.isAllConceptsExists" );
-
                 resultList = mgr.isCondrExists( conBeanList, m_servlet.getConn() );
-                System.out.println( "MHL 003 IN statusBean.isAllConceptsExists" );
 
             } catch( DBException e )
             {
                 logger.error( "ERROR in InsACService-evsBeanCheck : " + e.toString(), e );
                 throw new Exception( e );
             }
-            System.out.println( "MHL 004 IN statusBean.isAllConceptsExists" );
 
             //if nothing found, create new oc or prop or rep term
             if( resultList == null || resultList.size() < 1 )
             {
-                System.out.println( "MHL 005 IN statusBean.isAllConceptsExists" );
-
                 statusBean.setStatusMessage( "**  Creating a new " + type + " in " + PropertyHelper.getDefaultContextName() );    //GF32649
                 statusBean.setCondrExists( false );
                 statusBean.setEvsBeanExists( false );
                 logger.info( "At Line 6222 of InsACService.java" );
-                System.out.println( "MHL 006 IN statusBean.isAllConceptsExists" );
-
             }
             else
             {
-                System.out.println( "MHL 007 IN statusBean.isAllConceptsExists" );
-
                 String idseq = null;
                 String condrIDSEQ = null;
                 String longName = null;
@@ -7135,8 +7029,6 @@ public class InsACService implements Serializable
                 //select all which are owned by the default(NCI) Context
                 for( int i = 0; i < resultList.size(); i++ )
                 {
-                    System.out.println( "MHL 008[" + i + "] IN statusBean.isAllConceptsExists" );
-
                     ResultVO vo = resultList.get( i );
                     if( vo.getContext() != null )
                     {
@@ -7146,13 +7038,10 @@ public class InsACService implements Serializable
                         }
                     }
                 }
-                System.out.println( "MHL 009 IN statusBean.isAllConceptsExists" );
 
                 //If none are found owned by the default(NCI) Context
                 if( foundBeanList == null || foundBeanList.size() < 1 )
                 {
-                    System.out.println( "MHL 010 IN statusBean.isAllConceptsExists" );
-
                     for( int i = 0; i < resultList.size(); i++ )
                     {
                         ResultVO vo = resultList.get( i );
@@ -7261,7 +7150,6 @@ public class InsACService implements Serializable
         }
         else
         {//if all the concepts does not exist
-            System.out.println("MHL ELSE all the concepts does not exist   Creating a new " + type + " in " + PropertyHelper.getDefaultContextName() );
             statusBean.setStatusMessage( "**  Creating a new " + type + " in " + PropertyHelper.getDefaultContextName() );    //GF32649
         }
 

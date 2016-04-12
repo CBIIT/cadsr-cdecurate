@@ -535,7 +535,6 @@ public class PVAction implements Serializable {
 		finally{
 			rs = SQLHelper.closeResultSet(rs);
 			cstmt = SQLHelper.closeCallableStatement(cstmt);
-			System.out.println("-------------------------- PVAction: 2 doPVACSearch() ---------------------------");
 			mon.show();
 		}
 
@@ -620,9 +619,7 @@ public class PVAction implements Serializable {
 			InsACService insAC = new InsACService(data.getRequest(), data
 					.getResponse(), data.getCurationServlet());
 			String sRet = "";
-			System.out.println( "MHL c BEFORE this.getConcept( \"\", conceptBean, false )" );
 			conIDseq = insAC.getConcept(sRet, parConcept, false);
-			System.out.println( "MHL c AFTER this.getConcept( \"\", conceptBean, false )" );
 		}
 		pvBean.setPARENT_CONCEPT(parConcept);
 	}
