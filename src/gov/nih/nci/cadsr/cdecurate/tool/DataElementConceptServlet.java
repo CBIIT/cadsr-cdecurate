@@ -1636,6 +1636,12 @@ public class DataElementConceptServlet extends CurationServlet
         }
         for( int i = 0; i < vProperty.size(); i++ )
         {
+            // MHL FIXME testing only
+            if( ( vProperty.get( i ) != null ) && ( vProperty.get( i ).getEVS_ORIGIN() == null ) )
+            {
+                System.out.println( "MHLx5b Prop NULL getEVS_ORIGIN: " + vProperty.get( i ).getLONG_NAME() );
+                System.out.println( "MHLx5b Prop NULL getEVS_ORIGIN: " + vProperty.get( i ).getPREFERRED_DEFINITION() );
+            }
 
             // Do we need to switch?
             if( ( vProperty.get( i ) != null ) && ( vProperty.get( i ).getEVS_ORIGIN() != null ) && ( !vProperty.get( i ).getEVS_ORIGIN().equals( "NCI Thesaurus" ) ) )
