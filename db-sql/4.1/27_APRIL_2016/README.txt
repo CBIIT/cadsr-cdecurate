@@ -1,0 +1,28 @@
+Run in this order:
+
+1   gf30681_alter_grant_dec_table.sql (SBR)
+2   customDownload.sql(SBREXT)
+3   gf30681_update_existing_DEC_CDR_no_oc.sql (SBR)
+4   gf30681_update_existing_DEC_CDR_no_prop.sql  (SBR)
+5   gf30681_update_ac_exists.sql (SBREXT)
+6   gf30681_update_existing_DEC_CDR.sql (SBR)
+7   gf30681_update_SBR_data_element_concepts_view.sql  (SBREXT)
+8   SBREXT_CDE_CURATOR_PKG_SPEC.sql  (SBREXT)
+9   SBREXT_CDE_CURATOR_PKG_BODY.sql  (SBREXT)
+10  JR1074_SBREXT_SET_ROW_SPEC.sql  (SBREXT)
+11  JR1074_SBREXT_SET_ROW_BODY.sql  (SBREXT)
+12  gf32649_SBREXT_GET_ROW_BODY.sql  (SBREXT)
+13  gf32649_CADSR_XLS_LOADER_PKG_WORK3_SPEC.sql   (SBREXT)
+14  gf32649_CADSR_XLS_LOADER_PKG_WORK3_BODY.sql  (SBREXT)
+15  gf32649_MAINTAIN_CONCEPTS_BODY.sql  (SBREXT)
+16  gf32649_MAINTAIN_CONCEPTS_SPEC.sql   (SBREXT)
+17  update_evs_url.sql   (SBREXT)
+18  GF32724_update_Concept_begin_date_SBREXT.CON_BIU_ROW_ASSIGN.sql  (SBREXT)
+19  GF32723_insert_alt_name_lov.sql  (SBR)
+20  GF32723_update_vocabnames.sql  (SBREXT)
+21  JR1074_CG_VD_PVS_VIEW.sql  (SBR)
+22  gf30681_update_SBR_INS_UPD_SPEC.sql (SBR)
+23  gf30681_update_SBREXT_Set_Row_SET_DEC_SPEC.sql (SBREXT)
+24  gf30681_update_SBREXT_Set_Row_SET_DEC_BODY.sql  (SBREXT)
+
+
