@@ -233,28 +233,19 @@ function linkNCICB()
           String Username = (String)session.getAttribute("Username");
   		  //String Context = (String)session.getAttribute("sDefaultContext");
 		%>
-		<table width="100%" border="0">
-			<col style="width: 1px" />
-			<col />
-			<tr bgcolor="#A90101">
-				<td align="left">
-					<a href="http://www.cancer.gov" target=_blank>
-						<img src="images/brandtype.gif" border="0" alt="NCI Logo">
-					</a>
-				</td>
-				<td align="right">
-					<a href="http://www.cancer.gov" target=_blank>
-						<img src="images/tagline_nologo.gif" border="0" alt="no logo">
-					</a>
-				</td>
-			</tr>
-			<tr>
+			<table width="100%" border="0" cellspacing="0" cellpadding="0">
+				              <tr>
+				              <td width="25%" valign="center" align="left"><a href="http://www.cancer.gov" target="_blank" alt="NCI Logo">
+				              <img src="images/CBIIT-36px-Logo-COLOR_contrast.png" border="0" alt="Brand Type"></a></td>
+				              <td align="center"><img style="border: 0px solid black" title="CDE Curation" src="images/curation_banner3.gif" alt="CDE Curation Banner"></td>
+				              <td align="right"><a target="_blank" href="http://www.nih.gov">U.S. National Institutes of Health</a></td></tr>
+			<!-- <tr>
 				<td colspan="2" style="padding:0 0 0 0">
 					<a target="_blank" href="http://ncicb.nci.nih.gov/NCICB/infrastructure/cacore_overview/cadsr">
-						<img src="images/curation_banner2.gif" border="0" alt="caDSR Logo">
+						<img src="images/curation_banner3.gif" border="0" alt="caDSR Logo">
 					</a>
 				</td>
-			</tr>
+			</tr> -->
 		</table>
 		<table style="border-collapse: collapse; width: 100%;">
 			<col style="width: 2.3in" />
