@@ -59,7 +59,14 @@ public class HeaderTag extends TagSupport {
 			  NCIHeader.println("<form name=\"LogoutForm\" method=\"post\" action=\"../../cdecurate/NCICurationServlet?reqType=logout\"></form>");
 			} 
 			NCIHeader.println("<div class=\"xyz\">"
-					        +"<table class=\"tight\" cellspacing=\"0\" cellpadding=\"0\">"
+					        //+"<table class=\"tight\" cellspacing=\"0\" cellpadding=\"0\">"
+				              +"<table width=\"100%\" border=\"0\" cellspacing=\"0\" cellpadding=\"0\">\n"
+				              + "<tr>\n"
+				              + "<td width=\"25%\" valign=\"center\" align=\"left\"><a href=\"http://www.cancer.gov\" target=\"_blank\" alt=\"NCI Logo\">\n"
+				              + "<img src=\""+ request.getContextPath() +"/images/CBIIT-36px-Logo-COLOR_contrast.png\" border=\"0\" alt=\"Brand Type\"></a></td>"
+				              + "<td align=\"center\"><img style=\"border: 0px solid black\" title=\"CDE Curation\" src=\""+ request.getContextPath() +"/images/curation_banner3.gif\" alt=\"CDE Curation Banner\"></td>\n"
+				              + "<td align=\"right\"><a target=\"_blank\" href=\"http://www.nih.gov\">U.S. National Institutes of Health</a></td></tr><tr>\n"
+				             /* + "<td valign=\"center\" align=\"right\"><a href=\"http://www.cancer.gov\" target=\"_blank\" alt=\"NCI Logo\">\n"              					
 							+ "<col width=\"1px\" />  <col />"
 							+ "<tr bgcolor=\"#A90101\"> "
 							+ "<td align=\"left\"> "
@@ -67,19 +74,20 @@ public class HeaderTag extends TagSupport {
 							+ "<td align=\"right\" >"
 							+ "<a href=\"http://www.cancer.gov\" target=_blank><img src=\""+ request.getContextPath() +"/images/tagline_nologo.gif\" border=\"0\" alt=\"No Logo\"/></a> </td>"
 							+ "</tr> <tr> <td valign=\"top\"> "
-							+ "<a href=\"http://ncicb.nci.nih.gov/NCICB/infrastructure/cacore_overview/cadsr\" target=\"_blank\"><img src=\""+ request.getContextPath() +"/images/curation_banner2.gif\" border=\"0\" alt=\"caDSR Logo\"/></a></td> "
+							+ "<a href=\"http://ncicb.nci.nih.gov/NCICB/infrastructure/cacore_overview/cadsr\" target=\"_blank\"><img src=\""+ request.getContextPath() +"/images/caDSR_logo2_contrast.png\" border=\"0\" alt=\"caDSR Logo\"/></a></td> "*/
 							+ "");
 			if (displayUser) {
-    			NCIHeader.println("<td align=\"right\"> ");
+    			NCIHeader.println("<td align=\"left\"> "
+    					+ "<a target=\"_blank\" href=\"http://cbiit.nci.nih.gov/ncip/biomedical-informatics-resources/interoperability-and-semantics/metadata-and-models\"><img style=\"border: 0px solid black\" title=\"NCICB caDSR\" src=\""+ request.getContextPath() +"/images/caDSR_logo2_contrast.png\" alt=\"caDSR Logo\"></a></td><td></td>");
 				if (userBean != null) {
-					NCIHeader.println("<a href=\"javascript:callLogout();\">Logout</a><br/><br/><span>User&nbsp;Name&nbsp;:&nbsp;</span>"
+					NCIHeader.println("<td align=\"right\"><a href=\"javascript:callLogout();\">Logout</a><br/><br/><span>User&nbsp;Name&nbsp;:&nbsp;</span>"
 									+ userBean.getUserFullName());
 					if (userBean.isSuperuser()){
 						NCIHeader.println(" [Admin]");
 					}
 					NCIHeader.println("</td>");
 				} else {
-					NCIHeader.println("<a href=\"" + request.getContextPath()
+					NCIHeader.println("<td align=\"right\"><a href=\"" + request.getContextPath()
 							+ "/jsp/Login.jsp\">Login</a></td>");
 				}
 			} else {

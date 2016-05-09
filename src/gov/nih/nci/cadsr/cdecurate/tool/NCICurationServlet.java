@@ -153,8 +153,8 @@ public class NCICurationServlet extends HttpServlet
         try
         {
             logger.info( "initOracleConnect - accessing data source pool" );
-            _dataSourceName = "java:/" + getServletConfig().getInitParameter( "jbossDataSource" );
-            _authenticateDSName = "java:/" + getServletConfig().getInitParameter( "jbossAuthenticate" );
+            _dataSourceName = "java:" + getServletConfig().getInitParameter( "jbossDataSource" );
+            _authenticateDSName = "java:" + getServletConfig().getInitParameter( "jbossAuthenticate" );
             _userName = getServletConfig().getInitParameter( "username" );
             _password = getServletConfig().getInitParameter( "password" );
 
