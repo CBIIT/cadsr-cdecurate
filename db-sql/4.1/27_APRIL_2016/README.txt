@@ -24,5 +24,6 @@ Run in this order:
 22  gf30681_update_SBR_INS_UPD_SPEC.sql (SBR)
 23  gf30681_update_SBREXT_Set_Row_SET_DEC_SPEC.sql (SBREXT)
 24  gf30681_update_SBREXT_Set_Row_SET_DEC_BODY.sql  (SBREXT)
+25  toolOptionsExtFix.sql (SBR)
 
 
