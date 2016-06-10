@@ -552,8 +552,9 @@ public class CustomDownloadServlet extends CurationServlet
                     Datum[] valueDatum = null;
                     try
                     {
-                        valueStruct = ( STRUCT ) nestedRs.getObject( 2 );  //GF30779 cause ORA-01403: no data found exception (if no data), thus catch it without doing anything
-                        valueDatum = valueStruct.getOracleAttributes(); //GF30779
+                    	// The two lines below have been commented as a possible work around for the download error issue // VS on Jun 9th 2016 
+                        //valueStruct = ( STRUCT ) nestedRs.getObject( 2 );  //GF30779 cause ORA-01403: no data found exception (if no data), thus catch it without doing anything
+                        //valueDatum = valueStruct.getOracleAttributes(); //GF30779
                     } catch( Exception e )
                     {
                         logger.info( e.getMessage() );    //TBD performance impact here
