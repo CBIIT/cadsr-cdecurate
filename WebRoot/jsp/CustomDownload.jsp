@@ -11,12 +11,13 @@ L--%>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
   <head>
-    <title>Customizable Download</title>
+	<title>CDE Curation: Customizable Download</title>
 	<!-- GF30779 -->
 	<meta http-equiv="pragma" content="no-cache">
 	<meta http-equiv="cache-control" content="no-cache">
 	<meta http-equiv="expires" content="0">    
 	<link rel="stylesheet" type="text/css" href="js/dojo/dijit/themes/claro/claro.css"/>
+	<link href="css/style.css" rel="stylesheet" type="text/css">	
         <style type="text/css">
             body, html { font-family:helvetica,arial,sans-serif; font-size:90%; }
         </style>
@@ -26,6 +27,7 @@ L--%>
 	        .dojoxGrid table { margin: 0; } html, body { width: 100%; height: 100%;
 	        margin: 0; }
 	    </style>
+	 <script language="JavaScript" src="js/menu.js"></script>
 	<!-- begin of ng init -->
   	<!--
   	<script src="jsp/app.js"></script>
@@ -36,6 +38,26 @@ L--%>
   <body class=" claro "> <!-- GF30779 PERF remove onLoad toggleView -->
           <!-- Header -->
             <curate:header displayUser = "false"/>
+
+             <table style="border-collapse: collapse; width: 100%" border="0" cellspacing="0" cellpadding="0">
+                <col style="width: 2in"/>
+                <col />
+                <tr>
+                    <td class="menuItemBlank" align="left">&nbsp;</td>
+                    <td>
+                        <table class="footerBanner1" cellspacing="0" cellpadding="0">
+                            <col />
+                            <col style="width: 1px"/>
+
+                            <tr>
+                                <td class="menuItemBlank">&nbsp;</td>
+                                <td class="menuItemBlank"/>
+                            </tr>
+                        </table>
+                    </td>
+               </tr>
+              </table>    
+			<br/>        
         <!-- Main Area -->
  	<%ArrayList<String> headers = (ArrayList<String>) session.getAttribute("headers");
  	  ArrayList<String> allExpandedHeaders = (ArrayList<String>) session.getAttribute("allExpandedHeaders");
@@ -57,7 +79,7 @@ L--%>
 	      	<input type="checkbox" name="fillIn" value="true"/> Check to fill in all values.
       </form>
       <% ArrayList<String> rows = (ArrayList<String>) session.getAttribute("downloadIDs"); %>
-      <font size="4"><%=rows.size()%> elements selected for download.</font>  
+      <font size="4"><%=rows.size()%> element(s) selected for download.</font>  
 	       
       <div id="simpleViewContainer" style="width: 100%; display: block">
       <form>  

@@ -14,13 +14,13 @@ String downloadLimit = (String) request.getSession().getAttribute("downloadLimit
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
   <head>
-    <title>Customizable Download</title>
+	<title>CDE Curation: Customizable Download</title>
     
 	<meta http-equiv="pragma" content="no-cache">
 	<meta http-equiv="cache-control" content="no-cache">
 	<meta http-equiv="expires" content="0">    
-	<link rel="stylesheet" type="text/css" href="js/dojo/dijit/themes/claro/claro.css"
-        />
+	<link rel="stylesheet" type="text/css" href="js/dojo/dijit/themes/claro/claro.css"   />
+	<link href="css/style.css" rel="stylesheet" type="text/css">	
         <style type="text/css">
             body, html { font-family:helvetica,arial,sans-serif; font-size:90%; }
         </style>
@@ -46,6 +46,6 @@ String downloadLimit = (String) request.getSession().getAttribute("downloadLimit
       	<br>Your download cannot be completed. <u>Please select a smaller set of items</u>.</font><br>
       <%} %></div>
           
-        <curate:footer/>
+        <%-- <curate:footer/> --%>
   </body>
 </html>
