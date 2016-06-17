@@ -78,7 +78,6 @@ public class DownloadHelper {
 
 		String sheetName = "Custom Download";
 		int sheetNum = 1;
-
 		String[] columns = null;
 		if (colString != null && !colString.trim().equals("")) {
 			columns = colString.split(",");
@@ -97,7 +96,7 @@ public class DownloadHelper {
 			columns = defaultHeaders.toArray(new String[defaultHeaders.size()]);	
 	
 		}
-		logger.info("DownloadHelper.java JR1062 1: columns headers splitted into ["+ columns.length + "] parts");
+		logger.debug("DownloadHelper.java JR1062 1: columns headers splitted into ["+ columns.length + "] parts");
 
 		int[] dbColumnIndices = mapUserSelectedColumnsWithDatabaseColumns(arrayColumnTypes, columns, allTypes, allHeaders);	//new int[columns.length];
 //		for (int i=0; i < columns.length; i++) {
@@ -117,7 +116,7 @@ public class DownloadHelper {
 //				colIndices[i]=temp;
 //			}
 //		}
-
+		
 		Workbook wb =  new HSSFWorkbook();
 
 		Sheet sheet = wb.createSheet(sheetName);
@@ -134,7 +133,7 @@ public class DownloadHelper {
 			Cell cell = headerRow.createCell(i);
 			temp = columns[i];
 			cell.setCellValue(temp);	//JR1047 just setting column headers
-			logger.info("DownloadHelper.java JR1047 1: cell header set to ["+ temp + "]");
+			logger.debug("DownloadHelper.java JR1047 1: cell header set to ["+ temp + "]");
 			cell.setCellStyle(boldCellStyle); //GF30779
 		}
 
@@ -149,13 +148,13 @@ public class DownloadHelper {
 		int i = 0;
 		long startTime = System.currentTimeMillis();
 		try {
-			System.out.println("Total CDEs to download ["+allRows.size()+"]");
+			logger.debug("Total CDEs to download ["+allRows.size()+"]");
 			for (i = 0; i < allRows.size(); i++, rownum++) {	//JR625 all rows still good!
-				logger.debug("DownloadHelper.java JR625: rownum ["+ rownum + "]");
+				logger.info("DownloadHelper.java JR625: rownum ["+ rownum + "]");
 
 				//Check if row already exists
 				int maxBump = 0;
-				if (sheet.getRow(rownum+bump) == null) {
+				if (sheet.getRow(rownum+bump) == null) {					
 					row = sheet.createRow(rownum+bump);	
 				}
 
@@ -206,7 +205,12 @@ public class DownloadHelper {
 										
 										
 								}else 
-									data = nestedData[originalColumnIndex];
+									
+								{
+									if (nestedData.length <= originalColumnIndex) continue;
+									else
+										data = nestedData[originalColumnIndex];
+								}
 								logger.debug("DownloadHelper.java*****"+ data + currentType);	//JR1047 this data is good
 								if (currentType.contains("VALID_VALUE") && /* JR1047 */ !currentType.contains("VALID_VALUE_LIST_T")) {
 									data = AdministeredItemUtil.truncateTime(data);	//GF30779
@@ -239,7 +243,7 @@ public class DownloadHelper {
 								}
 							}
 						}
-					} else {
+					} else {						
 						temp = allRows.get(i)[dbColumnIndices[j]];	//JR1000 JR1053 etc if crashes here, check your colString (user selected columns)!
 						if (currentType.equalsIgnoreCase("Date")) { //GF30779
 							temp = AdministeredItemUtil.truncateTime(temp);
@@ -259,6 +263,7 @@ public class DownloadHelper {
 				}
 			}
 		} catch (Exception e){
+			logger.debug("******   Error in Excel: "+e.getMessage());
 			e.printStackTrace();
 		}
 
@@ -407,7 +412,7 @@ public class DownloadHelper {
 			int numColumns = rsmd.getColumnCount();
 			String columnType = null;
 			boolean headerIsValid = false;
-			logger.info("DownloadHelper.java Total columns based on the database view is " + numColumns + ". SQL was [" + qry + "]");
+			logger.debug("DownloadHelper.java Total columns based on the database view is " + numColumns + ". SQL was [" + qry + "]");
 			// Get the column names and types; column indices start from 1
 			for (int i=1; i<numColumns+1; i++) {
 				String columnName = rsmd.getColumnName(i);
@@ -443,6 +448,7 @@ public class DownloadHelper {
 				}
 			}
 		} catch (Exception e) {
+			logger.debug("******   Error in Excel: "+e.getMessage());		
 			e.printStackTrace();
 		} finally {
 			if (rs!=null) try{rs.close();}catch(Exception e) {}
@@ -513,6 +519,7 @@ public class DownloadHelper {
 			rs.close();
 			ps.close();
 		} catch (Exception e) {
+			logger.debug("******   Error in Excel: "+e.getMessage());		
 			e.printStackTrace();
 		}
 		String[] attrNames = new String[attrName.size()];
@@ -594,6 +601,7 @@ public class DownloadHelper {
 			rs.close();
 			ps.close();
 		} catch (Exception e) {
+			logger.debug("******   Error in Excel: "+e.getMessage());
 			e.printStackTrace();
 		}
 		String[] attrNames = new String[attrName.size()];
