@@ -44,18 +44,17 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.log4j.Logger;
-import org.apache.poi.hssf.usermodel.HSSFCellStyle;
-import org.apache.poi.hssf.usermodel.HSSFFont;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.CellStyle;
-import org.apache.poi.ss.usermodel.Font;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
+//import org.apache.poi.hssf.usermodel.HSSFCellStyle;
+//import org.apache.poi.hssf.usermodel.HSSFFont;
+//import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+//import org.apache.poi.ss.usermodel.Cell;
+//import org.apache.poi.ss.usermodel.CellStyle;
+//import org.apache.poi.ss.usermodel.Font;
+//import org.apache.poi.ss.usermodel.Row;
+//import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
-import org.w3c.dom.Text;
 
 import com.sun.org.apache.xml.internal.serialize.OutputFormat;
 import com.sun.org.apache.xml.internal.serialize.XMLSerializer;
@@ -487,7 +486,7 @@ public class CustomDownloadServlet extends CurationServlet
                             if( valueStruct[z] != null && (valueStruct[z].toString()).getBytes() != null )
                             { //JR1047
                                 derivationInfo[z] = AdministeredItemUtil.handleSpecialCharacters( (valueStruct[z].toString()).getBytes());
-                                logger.info( "CustomDownloadServlet.java 1: derivationInfo[" + z + "] = b4 [" + (valueStruct[z].toString()).getBytes() + " aft [" + derivationInfo[z] + "]" );
+                                //logger.debug( "CustomDownloadServlet.java 1: derivationInfo[" + z + "] = b4 [" + (valueStruct[z].toString()).getBytes() + " aft [" + derivationInfo[z] + "]" );
                             }
                         }
 //						derivationInfo[z] =(valueStruct[z] != null)? valueStruct[z].toString(): "";
@@ -524,7 +523,7 @@ public class CustomDownloadServlet extends CurationServlet
                                 if( valueDatum[a] != null && (valueDatum[a].toString()).getBytes() != null )
                                 {    //JR1047
                                     values[a] = AdministeredItemUtil.handleSpecialCharacters( (valueDatum[a].toString()).getBytes() );
-                                    logger.info( "CustomDownloadServlet.java 2: values[" + a + "] = b4 [" + (valueDatum[a].toString()).getBytes() + " aft [" + values[a] + "]" );
+                                    //logger.debug( "CustomDownloadServlet.java 2: values[" + a + "] = b4 [" + (valueDatum[a].toString()).getBytes() + " aft [" + values[a] + "]" );
                                 }
                             }
 //								values[a]= valueDatum[a].toString();	
@@ -567,7 +566,7 @@ public class CustomDownloadServlet extends CurationServlet
                                 String s = c.getName();
                                 String truncatedTimeStamp = null; //GF30799
 
-                                if( c.getName().toUpperCase().contains( "Struct" ) )
+                                if( c.getName().toUpperCase().contains( "STRUCT" ) )
                                 {
                                     Struct str = ( Struct ) valueDatum[a]; //GF30779
                                     Object[] strValues = str.getAttributes(); //GF30779
@@ -596,11 +595,11 @@ public class CustomDownloadServlet extends CurationServlet
                                                 if( strValues[b] != null && (strValues[b].toString()).getBytes() != null )
                                                 { //JR1047
                                                     truncatedTimeStamp = AdministeredItemUtil.handleSpecialCharacters( (strValues[b].toString()).getBytes() );
-                                                    logger.info( "CustomDownloadServlet.java 3: strValues[" + b + "] = b4 [" + (strValues[b].toString()).getBytes() + " aft [" + truncatedTimeStamp + "]" );
+                                                    //logger.debug( "CustomDownloadServlet.java 3: strValues[" + b + "] = b4 [" + (strValues[b].toString()).getBytes() + " aft [" + truncatedTimeStamp + "]" );
                                                 }
                                             }//GF30779=============END
 //											truncatedTimeStamp = AdministeredItemUtil.handleSpecialCharacters(strValues[b].getBytes()); // GF30779
-                                            logger.debug( "At line 316 of CustomDownloadServlet.java" + "***" + truncatedTimeStamp + "***" + className + "***" + valueDatum[a] + "***" + strValues[b] );
+                                            //logger.debug( "At line 316 of CustomDownloadServlet.java" + "***" + truncatedTimeStamp + "***" + className + "***" + valueDatum[a] + "***" + strValues[b] );
 //											if (columnType.contains("VALID_VALUE") && truncatedTimeStamp != null && truncatedTimeStamp.contains(":")) {
 //												truncatedTimeStamp = AdministeredItemUtil.truncateTime(truncatedTimeStamp);
 //												logger.debug("At line 304 of CustomDownloadServlet.java" + truncatedTimeStamp);
@@ -626,11 +625,11 @@ public class CustomDownloadServlet extends CurationServlet
                                         if( valueDatum[a] != null && (valueDatum[a].toString()).getBytes() != null )
                                         {    //JR1047
                                             truncatedTimeStamp = AdministeredItemUtil.handleSpecialCharacters( (valueDatum[a].toString()).getBytes() );
-                                            logger.info( "CustomDownloadServlet.java 4: valueDatum[" + a + "] = b4 [" + (valueDatum[a].toString()).getBytes() + " aft [" + truncatedTimeStamp + "]" );
+                                            //logger.debug( "CustomDownloadServlet.java 4: valueDatum[" + a + "] = b4 [" + (valueDatum[a].toString()).getBytes() + " aft [" + truncatedTimeStamp + "]" );
                                         }
                                     }//GF30779=============END
 //									truncatedTimeStamp = valueDatum[a].toString(); //begin GF30779
-                                    logger.debug( "At line 335 of CustomDownloadServlet.java" + "****" + truncatedTimeStamp + "*****" + s );
+//									logger.debug( "At line 633 of CustomDownloadServlet.java" + "****" + truncatedTimeStamp + "*****" + s );
 //									truncatedTimeStamp = AdministeredItemUtil.toASCIICode(truncatedTimeStamp); // GF30779
 //									logger.debug("At line 313 of CustomDownloadServlet.java" + truncatedTimeStamp + s + valueDatum[a]);
 //									if (columnType.contains("VALID_VALUE") && truncatedTimeStamp != null && truncatedTimeStamp.contains(":")) {

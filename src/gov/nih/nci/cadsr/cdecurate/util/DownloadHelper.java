@@ -2,15 +2,11 @@ package gov.nih.nci.cadsr.cdecurate.util;
 
 import gov.nih.nci.cadsr.cdecurate.database.SQL;
 import gov.nih.nci.cadsr.cdecurate.tool.CurationServlet;
-import gov.nih.nci.cadsr.cdecurate.tool.CustomDownloadServlet;
 import gov.nih.nci.cadsr.cdecurate.tool.GetACService;
 import gov.nih.nci.cadsr.cdecurate.tool.TOOL_OPTION_Bean;
 import gov.nih.nci.cadsr.common.Constants;
 import gov.nih.nci.cadsr.common.StringUtil;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.OutputStream;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -89,7 +85,6 @@ public class DownloadHelper {
 				if (cName.endsWith("IDSEQ") || cName.startsWith("CD ") || cName.startsWith("Conceptual Domain"))
 					{ /*skip*/ }
 				else {
-					System.out.println("cName = " + cName);
 					defaultHeaders.add(cName);
 				}
 			}
@@ -150,7 +145,7 @@ public class DownloadHelper {
 		try {
 			logger.debug("Total CDEs to download ["+allRows.size()+"]");
 			for (i = 0; i < allRows.size(); i++, rownum++) {	//JR625 all rows still good!
-				logger.info("DownloadHelper.java JR625: rownum ["+ rownum + "]");
+				logger.debug("DownloadHelper.java JR625: rownum ["+ rownum + "]");
 
 				//Check if row already exists
 				int maxBump = 0;
@@ -202,12 +197,13 @@ public class DownloadHelper {
 											data = rowArrayData.get(nestedRowIndex+1)[originalColumnIndex-5];
 										}
 									}
-										
-										
-								}else 
-									
+								}
+								else
 								{
-									if (nestedData.length <= originalColumnIndex) continue;
+									if (nestedData.length <= originalColumnIndex) {
+										logger.error("........Array out of bound getting from nestedData. Skipping the step; currentType=" + currentType + ", nestedData.length=" + nestedData.length + ", originalColumnIndex=" + originalColumnIndex + ", currentType = " + currentType);
+										continue;
+									}
 									else
 										data = nestedData[originalColumnIndex];
 								}
@@ -417,7 +413,7 @@ public class DownloadHelper {
 			for (int i=1; i<numColumns+1; i++) {
 				String columnName = rsmd.getColumnName(i);
 				columnName = prettyName(columnName);
-				logger.debug("DownloadHelper.java included col = [" + columnName + "]");
+				//logger.debug("DownloadHelper.java included col = [" + columnName + "]");
 				headerIsValid = handleCDEHeaders(type, columnHeaders, columnName);	//JR987 columnHeaders.add(columnName);
 
 				if(headerIsValid) {
