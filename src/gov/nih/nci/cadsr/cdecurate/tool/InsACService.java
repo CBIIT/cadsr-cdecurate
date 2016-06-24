@@ -5782,7 +5782,7 @@ public class InsACService implements Serializable
                 // Now we are ready to call the stored procedure
                 cstmt.setString( 22, PropertyHelper.getDefaultContextName() );    //GF32649
                 cstmt.execute();
-                // FIXME MHL
+
                 // After execute,check for missing values. There may time when missing values are okay
                 sCON_IDSEQ = ( String ) cstmt.getObject( 2 );
                 evsBean.setIDSEQ( sCON_IDSEQ );

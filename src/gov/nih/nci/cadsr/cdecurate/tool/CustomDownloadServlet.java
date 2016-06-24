@@ -192,10 +192,10 @@ public class CustomDownloadServlet extends CurationServlet
 //		ValueHolder vh = getRecords(flag1, flag2, downloadedData, downloadedMeta);
 //		List data = (ArrayList) vh.getValue();
 //		ArrayList<String[]> rows = (ArrayList<String[]>)data.get(DownloadRowsArrayDataLoader.ROWS_INDEX);
-//		
+//
 //		return rows;
 //	}
-//	
+//
 //	public static ArrayList<HashMap<String,ArrayList<String[]>>> getArrayDataFromValueHolder(ValueHolder vh) {
 //		List data = (ArrayList) vh.getValue();
 //		return (ArrayList<HashMap<String,ArrayList<String[]>>>) data.get(DownloadRowsArrayDataLoader.ARRAY_DATA_INDEX);
@@ -256,7 +256,7 @@ public class CustomDownloadServlet extends CurationServlet
         {
             //JR1000
             Set<String> paramNames = this.m_classReq.getParameterMap().keySet();    //e.g. [orgCompID, selectedRowId, serRecCount, count, actSelected, serMenuAct, AppendAction, show, hidMenuAction, allCK, desID, hidaction, pageAction, CK0, hiddenSelectedRow, desContextID, SelectAll, numAttSelected, selectAll, selRowID, hiddenName, flag, desName, desContext, unCheckedRowId, sortType, reqType, numSelected, hiddenDefSource, AttChecked, hiddenSearch, isValid, hiddenName2, searchComp]
-//			Set<String> paramNames = (Set<String>) this.m_classReq.getSession().getAttribute(Constants.USER_SELECTED_DOWNLOAD_REQUEST);	
+//			Set<String> paramNames = (Set<String>) this.m_classReq.getSession().getAttribute(Constants.USER_SELECTED_DOWNLOAD_REQUEST);
 //			if(paramNames == null) paramNames = this.m_classReq.getParameterMap().keySet();
             Vector<String> searchID = ( Vector<String> ) this.m_classReq.getSession().getAttribute( "SearchID" );    //could be bunch of them like [F6FEB251-3020-4594-E034-0003BA3F9857]
 
@@ -531,7 +531,7 @@ public class CustomDownloadServlet extends CurationServlet
                                     logger.info( "CustomDownloadServlet.java 2: values[" + a + "] = b4 [" + valueDatum[a].getBytes() + " aft [" + values[a] + "]" );
                                 }
                             }
-//								values[a]= valueDatum[a].toString();	
+//								values[a]= valueDatum[a].toString();
                         }
                     }
                     logger.debug( "At line 297 of CustomDownloadServlet.java" + "****" + Arrays.asList( values ) );
