@@ -1636,14 +1636,7 @@ public class DataElementConceptServlet extends CurationServlet
         }
         for( int i = 0; i < vProperty.size(); i++ )
         {
-            // MHL FIXME testing only
-            if( ( vProperty.get( i ) != null ) && ( vProperty.get( i ).getEVS_ORIGIN() == null ) )
-            {
-                System.out.println( "MHLx5b Prop NULL getEVS_ORIGIN: " + vProperty.get( i ).getLONG_NAME() );
-                System.out.println( "MHLx5b Prop NULL getEVS_ORIGIN: " + vProperty.get( i ).getPREFERRED_DEFINITION() );
-            }
-
-            // Do we need to switch?
+             // Do we need to switch?
             if( ( vProperty.get( i ) != null ) && ( vProperty.get( i ).getEVS_ORIGIN() != null ) && ( !vProperty.get( i ).getEVS_ORIGIN().equals( "NCI Thesaurus" ) ) )
             {
                 Vector<EVS_Bean> vTempPoperty0 = new Vector<EVS_Bean>();
@@ -1651,7 +1644,7 @@ public class DataElementConceptServlet extends CurationServlet
                 vTempPoperty0.addElement( vProperty.get( i ) );
 
                 // Store the current "Switched" Property element in vTempProperty1
-                vTempProperty1 = this.getMatchingThesarusconcept( vTempPoperty0, "Property" );
+                vTempProperty1 = this.getMatchingThesarusconcept( vTempPoperty0, "Property" );  //FIXME This does not work for 4.1.2 (This one)  Concept_name and Long_name are null !
 
                 ////////////////////////////////////////////////////////////////////////////////////
                 // If the EVS_ORIGIN still is not "NCI Thesaurus" then don't do anything

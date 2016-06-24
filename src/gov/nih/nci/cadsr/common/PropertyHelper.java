@@ -143,7 +143,6 @@ public class PropertyHelper
 
             } catch( IOException e )
             {
-                // MHL FIXME  - just a quick fix
                 if( e.getMessage().contains( "gov.nih.nci.cadsrutil.properties" ) )
                 {
                     DEFAULT_CONTEXT_NAME = "NCIP";

@@ -302,23 +302,24 @@ public class StringUtil {
 	}
 
 
-    public static String resolveHex( String s )
-    {
-        String retVal = "";
-        for( int f = 0; f < s.length() - 1; f++ )
-        {
-            //System.out.println( "sub(" + f + ",  " + f + "): " + s.substring( f, f + 1 ) );
-            if( s.substring( f, f + 1 ).compareTo( "%" ) == 0 )
-            {
-                retVal += convertHexToString( s.substring( f + 1, f + 3 ) );
-                f += 2;
-            } else
-            {
-                retVal += s.substring( f, f + 1 );
-            }
-        }
-        return retVal;
-    }
+	public static String resolveHex( String s )
+	{
+		String retVal = "";
+		for( int f = 0; f < s.length() - 1; f++ )
+		{
+			if( ( s.length() >= ( f + 3 ) ) && ( s.substring( f, f + 3 ).matches( "%[0-9a-fA-F]{2}" ) ) )
+			{
+				retVal += convertHexToString( s.substring( f + 1, f + 3 ) );
+				f += 2;
+			}
+			else
+			{
+				retVal += s.substring( f, f + 1 );
+			}
+		}
+		return retVal;
+	}
+
     public static String convertHexToString( String hex )
     {
 
