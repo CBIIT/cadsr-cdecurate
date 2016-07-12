@@ -1761,7 +1761,7 @@ function openEVSConceptsWindow(){
 						</td>
 						<td>
 							<input type="text" name="tfLowValue" value="<%=sLowValue%>" size="20" maxlength=255 	<% if (isView) { %>readonly<%} %> 
-								<% if (!sDataType.equalsIgnoreCase("NUMBER")) { %> disabled <% } %> 
+								<% if ((!sDataType.equalsIgnoreCase("Integer")) && (!sDataType.equalsIgnoreCase("NUMBER"))) { %> disabled <% } %> 
 								onHelp="showHelp('html/Help_CreateVD.html#createVDForm_tfLowValue',helpUrl); return false">
 						</td>
 					</tr>
@@ -1785,7 +1785,7 @@ function openEVSConceptsWindow(){
 						</td>
 						<td>
 							<input type="text" name="tfHighValue" value="<%=sHighValue%>" size="20" maxlength=255 <% if (isView) { %>readonly<%} %> 
-								<% if (!sDataType.equalsIgnoreCase("NUMBER")) { %> disabled <% } %> 
+								<% if ((!sDataType.equalsIgnoreCase("Integer")) && (!sDataType.equalsIgnoreCase("NUMBER"))) { %> disabled <% } %> 
 								onHelp="showHelp('html/Help_CreateVD.html#createVDForm_tfHighValue',helpUrl); return false">
 						</td>
 					</tr>
