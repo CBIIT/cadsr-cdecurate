@@ -15,7 +15,9 @@ L--%>
 <curate:checkLogon name="Userbean" page="/ErrorPageWindow.jsp" />
 <%
 String path = request.getContextPath();
-String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
+//String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
+//I try to use https to avoid http:// URL on the page
+String basePath = "https://"+request.getServerName()+":"+request.getServerPort()+path+"/";
 %>
 <html>
 	<head>
