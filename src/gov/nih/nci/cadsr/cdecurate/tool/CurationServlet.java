@@ -3904,32 +3904,44 @@ public class CurationServlet
     {
         try
         {
-            // forward to the jsp (or htm)
-            HttpSession session = req.getSession();
-            String sMsg = ( String ) session.getAttribute( Session_Data.SESSION_STATUS_MESSAGE );
-            if( sMsg != null && !sMsg.equals( "" ) )
-            {
-                String userAgent = req.getHeader( "User-Agent" );
-                if( userAgent.toLowerCase().indexOf( "msie" ) > 0 )
-                {
-                    // Internet Explorer
-                    sMsg += "\\n\\nPlease use Ctrl+C to copy the message to a text file";
-                }
-                else
-                {
-                    // Not IE
-                    sMsg += "\\n\\nPlease right click, Select All and Copy to paste the message to a text file";
-                }
-                DataManager.setAttribute( session, Session_Data.SESSION_STATUS_MESSAGE, sMsg );
+            if ((sJSPPage == null) || (sJSPPage.trim().isEmpty())){
+            	logger.error("ForwardJSP received empty URL and cannot forward");
+            	return;
             }
-            // store the session data object in the session at the end of the request
-            DataManager.setAttribute( session, Session_Data.CURATION_SESSION_ATTR, this.sessionData );
-            String fullPage = "/jsp" + sJSPPage;
-
-            // ServletContext sc = this.getServletContext();
-            RequestDispatcher rd = this.m_servletContext.getRequestDispatcher( fullPage );
-            rd.forward( req, res );
-            return;
+            if ((sJSPPage.contains(".jsp")) || (sJSPPage.contains(".html")) || (sJSPPage.contains(".js"))) {//we forward to jsp pages only to avoid parametr manipulation
+	        	// forward to the jsp (or htm)
+	            HttpSession session = req.getSession();
+	            String sMsg = ( String ) session.getAttribute( Session_Data.SESSION_STATUS_MESSAGE );
+	            if( sMsg != null && !sMsg.equals( "" ) )
+	            {
+	                String userAgent = req.getHeader( "User-Agent" );
+	                if( userAgent.toLowerCase().indexOf( "msie" ) > 0 )
+	                {
+	                    // Internet Explorer
+	                    sMsg += "\\n\\nPlease use Ctrl+C to copy the message to a text file";
+	                }
+	                else
+	                {
+	                    // Not IE
+	                    sMsg += "\\n\\nPlease right click, Select All and Copy to paste the message to a text file";
+	                }
+	                DataManager.setAttribute( session, Session_Data.SESSION_STATUS_MESSAGE, sMsg );
+	            }
+	            // store the session data object in the session at the end of the request
+	            DataManager.setAttribute( session, Session_Data.CURATION_SESSION_ATTR, this.sessionData );
+	            String fullPage = "/jsp" + sJSPPage;
+	
+	            // ServletContext sc = this.getServletContext();
+	            RequestDispatcher rd = this.m_servletContext.getRequestDispatcher( fullPage );
+	            rd.forward( req, res );
+	            return;
+            }
+            else {
+            	logger.error("ForwardJSP received is not a JSP page; we forward it to error JSP");
+                RequestDispatcher rd = this.m_servletContext.getRequestDispatcher("/");
+                rd.forward( req, res );
+                return;
+            }
         } catch( Exception e )
         {
             // e.printStackTrace();

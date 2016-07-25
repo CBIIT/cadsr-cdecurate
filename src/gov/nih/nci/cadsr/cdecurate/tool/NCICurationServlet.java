@@ -264,18 +264,18 @@ public class NCICurationServlet extends HttpServlet
             HttpSession session = req.getSession();
             String menuAction = ( String ) session.getAttribute( Session_Data.SESSION_MENU_ACTION );
             if( ( menuAction == null )
-                    && !( reqType.equals( "homePage" ) )
-                    && !( reqType.equals( "login" ) )
-                    && !( reqType.equals( "view" ) )
-                    && !( reqType.equals( "viewVDPVSTab" ) )
-                    && !( reqType.equals( "viewVMAction" ) )
-                    && !( reqType.equals( "viewPVAction" ) )
-                    && !( reqType.equals( "getAltNames" ) )
-                    && !( reqType.equals( "getRefDocument" ) )
-                    && !( reqType.equals( "jsonRequest" ) )
-                    && !( reqType.equals( "dlExcelColumns" ) )
-                    && !( reqType.equals( "dlXMLColumns" ) )
-                    && !( reqType.equals( "showDEfromOutside" ) ) )
+                    && !( "homePage".equals(reqType) )
+                    && !( "login".equals(reqType) )
+                    && !( "view".equals(reqType) )
+                    && !( "viewVDPVSTab".equals(reqType) )
+                    && !( "viewVMAction".equals(reqType) )
+                    && !( "viewPVAction" .equals(reqType) )
+                    && !( "getAltNames".equals(reqType) )
+                    && !( "getRefDocument".equals(reqType) )
+                    && !( "jsonRequest".equals(reqType) )
+                    && !( "dlExcelColumns".equals(reqType) )
+                    && !( "dlXMLColumns".equals(reqType) )
+                    && !( "showDEfromOutside".equals(reqType) ) )
             {
                 RequestDispatcher rd = this.getServletContext().getRequestDispatcher( "/" );
                 rd.forward( req, res );
