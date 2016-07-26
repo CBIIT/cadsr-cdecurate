@@ -3906,6 +3906,8 @@ public class CurationServlet
         {
             if ((sJSPPage == null) || (sJSPPage.trim().isEmpty())){
             	logger.error("ForwardJSP received empty URL and cannot forward");
+                RequestDispatcher rd = this.m_servletContext.getRequestDispatcher("/");
+                rd.forward( req, res );            	
             	return;
             }
             if ((sJSPPage.contains(".jsp")) || (sJSPPage.contains(".html")) || (sJSPPage.contains(".js"))) {//we forward to jsp pages only to avoid parametr manipulation
