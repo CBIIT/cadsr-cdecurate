@@ -21,7 +21,16 @@ L--%>
 
 <%
 String path = request.getContextPath();
-String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
+String serverName = request.getServerName();
+//String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
+//I try to use https to avoid http:// URL on the page
+String basePath;
+if (!(serverName.contains("localhost"))) {
+	basePath = "https://"+serverName+path+"/";
+}
+else {
+	basePath = request.getScheme()+"://"+serverName+":"+request.getServerPort()+path+"/";
+}
 %>
 
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
