@@ -281,7 +281,7 @@ else {
 							<span class="prompt">
 								Filter Text:
 							</span>
-							<input type="text" name="<%=AltNamesDefsServlet._parmFilterText%>" value="<%=text%>" style="width: 3in" onkeyup="filterCSI(this);" />
+							<input type="text" name="<%=AltNamesDefsServlet._parmFilterText%>" value="<%=text%>" style="width: 3in" onkeydown="filterCSI(this);" onpaste="filterCSI(this);" oninput="filterCSI(this);" />
 						</td>
 					</tr>
 				</table>
