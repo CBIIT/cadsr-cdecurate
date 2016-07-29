@@ -64,10 +64,10 @@ function loaded()
     // Set focus to the Name/Definition field
     eobj = document.getElementsByName(parmNameDef);
     eobj[0].focus();
-    
+
     // Filter the CSI tree using the previous text
     eobj = document.getElementsByName(parmFilterText);
-    filterCSI(eobj[0]);
+    //filterCSI(eobj[0]);
 }
 
 // Utility function to find the root of the tree displayed as an HTML Table
@@ -83,7 +83,7 @@ function findRoot(eobj)
         if (xobj != null)
             return xobj;
     }
-    
+
     return null;
 }
 
@@ -96,9 +96,10 @@ function filterCSI(tobj)
       // Go through all the rows in the table (nodes in the tree)
     for (var i = 0; i < eobj.rows.length; ++i)
     {
+
         // If the text entered by the user appears in the row.
-        var tt = eobj.rows[i]; 
-        var text = (tt.innerText) ? tt.innerText: tt.textContent;          
+        var tt = eobj.rows[i];
+        var text = (tt.innerText) ? tt.innerText: tt.textContent;
         if ((text.toLowerCase().indexOf(tlow) > -1))
         {
             // Make the row visible as well as its ancetors and
@@ -107,8 +108,10 @@ function filterCSI(tobj)
             tt.style.display = "block";
             var level = parseInt(tt.getAttribute(nodeLevel));
             var compLevel = level;
+
             for (b = i - 1; b >= 0; --b)
             {
+              //  console.log("b: " + b  +"   i: " + i);
                 var prev = eobj.rows[b];
                 var prevLevel = parseInt(prev.getAttribute(nodeLevel));
                 if (prevLevel < compLevel)
@@ -119,6 +122,7 @@ function filterCSI(tobj)
                 if (prevLevel == 1)
                     break;
             }
+
             for (b = i + 1; b < eobj.rows.length; ++b)
             {
                 var prev = eobj.rows[b];
@@ -129,7 +133,7 @@ function filterCSI(tobj)
             }
             i = b - 1;
         }
-        
+
         // If the text doesn't appear, hide the row.
         else
         {
@@ -201,7 +205,7 @@ function doClassify()
             return;
         }
     }
-    
+
     var rsrvd = eobj.getAttribute(nodeCsiType);
     if (rsrvd != null && rsrvd == parmReserved)
     {
@@ -226,7 +230,7 @@ function getNodeValue(aobj)
         last = last.parentNode;
         idseq = last.getAttribute(nodeValue);
     }
-    
+
     return idseq;
 }
 
@@ -241,7 +245,7 @@ function getNodeName(aobj)
         last = last.parentNode;
         name = last.getAttribute(nodeName);
     }
-    
+
     return name;
 }
 
@@ -250,7 +254,7 @@ function getNodeName(aobj)
 function removeAssoc(aobj)
 {
     var idseq = getNodeValue(aobj);
-    
+
     var eobj = document.getElementsByName(parmIdseq);
     eobj[0].value = idseq;
     doActionDirect(actionRemoveAssoc);
@@ -261,7 +265,7 @@ function removeAssoc(aobj)
 function restoreAssoc(aobj)
 {
     var idseq = getNodeValue(aobj);
-    
+
     var eobj = document.getElementsByName(parmIdseq);
     eobj[0].value = idseq;
     doActionDirect(actionRestoreAssoc);
@@ -272,7 +276,7 @@ function restoreAssoc(aobj)
 function doEdit(aobj)
 {
     var idseq = getNodeValue(aobj);
-    
+
     var eobj = document.getElementsByName(parmIdseq);
     eobj[0].value = idseq;
     doAction(actionEditNameDef);
@@ -287,7 +291,7 @@ function doDelete(aobj)
     if (confirm("Are you sure you want to delete " + idseq + "?"))
     {
 	    idseq = getNodeValue(aobj);
-	    
+
 	    var eobj = document.getElementsByName(parmIdseq);
 	    eobj[0].value = idseq;
 	    doAction(actionDelNameDef);
@@ -299,7 +303,7 @@ function doDelete(aobj)
 function doRestore(aobj)
 {
     var idseq = getNodeValue(aobj);
-    
+
     var eobj = document.getElementsByName(parmIdseq);
     eobj[0].value = idseq;
     doAction(actionRestoreNameDef);
@@ -311,16 +315,16 @@ function findTable(){
         var div = document.getElementById("csiList");
         if (div.childNodes[1]!= null)
            tobj = div.childNodes[1];
-         
+
     }else{
        eobj = findRoot(document.getElementById("csiList"));
        tobj = eobj.parentNode;
-    }        
-  return tobj;    
+    }
+  return tobj;
 }
 
 function getAlreadySelCSI(tobj){
- for (var i=0; i<tobj.rows.length; i++){	
+ for (var i=0; i<tobj.rows.length; i++){
 	       var robj = tobj.rows[i];
 	       if (robj.getAttribute("selected") == "selected")
 	         return robj;
