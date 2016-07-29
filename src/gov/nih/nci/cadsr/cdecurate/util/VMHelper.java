@@ -440,10 +440,15 @@ public class VMHelper {
 		String vmPublicIdVersion = (String) data.getRequest().getAttribute(Constants.USER_SELECTED_VM);
 		
 		String ret = "-1";
-		if(vmPublicIdVersion != null) {
+		if((vmPublicIdVersion != null) && (vmPublicIdVersion.length() > 0)) {
 			char targetSeparator = 'v';
 			int index = vmPublicIdVersion.indexOf(targetSeparator);
-			ret = vmPublicIdVersion.substring(0, index);
+			if ((index > 0) && (index < vmPublicIdVersion.length())) {
+				ret = vmPublicIdVersion.substring(0, index);
+			}
+			else {
+				logger.error("Unexpected value received when expected format <publicId>v<Version>: " + vmPublicIdVersion) ;
+			}
 		}
 		return ret;
 	}
