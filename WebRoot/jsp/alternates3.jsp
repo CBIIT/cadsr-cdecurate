@@ -291,10 +291,10 @@ $Name: not supported by cvs2svn $
 							<span class="prompt">
 								Filter Text:
 							</span>
---%>                    <%--
+
                             <input type="text" name="<%=AltNamesDefsServlet._parmFilterText%>" value="<%=text%>" style="width: 3in" onkeyup="filterCSI(this);" />
-                    --%>
- <%--                   <input type="text" name="<%=AltNamesDefsServlet._parmFilterText%>" value="<%=text%>" style="width: 3in"  />
+
+                        <input type="text" name="<%=AltNamesDefsServlet._parmFilterText%>" value="<%=text%>" style="width: 3in"  />
                     <input type="button" onclick="filterCSI(this);"
                            value="Run Filter"/>
                 </td>
