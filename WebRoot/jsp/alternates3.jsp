@@ -284,17 +284,21 @@ $Name: not supported by cvs2svn $
                 <%
                     text = ( String ) req.getAttribute( AltNamesDefsServlet._parmFilterText );
                 %>
-                <td style="padding-left: 0.2in">
+<%--
+                JIRA 1202  The filtering is not working right, so it is being commented out for now.
+
+               <td style="padding-left: 0.2in">
 							<span class="prompt">
 								Filter Text:
 							</span>
-                    <%--
+--%>                    <%--
                             <input type="text" name="<%=AltNamesDefsServlet._parmFilterText%>" value="<%=text%>" style="width: 3in" onkeyup="filterCSI(this);" />
                     --%>
-                    <input type="text" name="<%=AltNamesDefsServlet._parmFilterText%>" value="<%=text%>" style="width: 3in"  />
-                    <input type="button" onclick="filterCSI(this);console.log('Calling filterCSI1')"
+ <%--                   <input type="text" name="<%=AltNamesDefsServlet._parmFilterText%>" value="<%=text%>" style="width: 3in"  />
+                    <input type="button" onclick="filterCSI(this);"
                            value="Run Filter"/>
                 </td>
+--%>
             </tr>
         </table>
         <div id="csiList" class="list" style="height: 3in">
