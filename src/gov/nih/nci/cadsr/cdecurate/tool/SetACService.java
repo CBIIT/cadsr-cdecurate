@@ -5,10 +5,27 @@
 
 package gov.nih.nci.cadsr.cdecurate.tool;
 
-import gov.nih.nci.cadsr.cdecurate.database.Alternates;
-import gov.nih.nci.cadsr.cdecurate.database.COMP_TYPE;
+import java.io.IOException;
+import java.io.Serializable;
+import java.sql.CallableStatement;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.Statement;
+import java.util.Calendar;
+import java.util.Collection;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Hashtable;
+import java.util.Vector;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import org.apache.log4j.Logger;
+
 import gov.nih.nci.cadsr.cdecurate.database.SQLHelper;
-import gov.nih.nci.cadsr.cdecurate.ui.AltNamesDefsServlet;
 import gov.nih.nci.cadsr.cdecurate.ui.AltNamesDefsSession;
 import gov.nih.nci.cadsr.cdecurate.ui.AltNamesDefsSessionHelper;
 import gov.nih.nci.cadsr.cdecurate.util.AdministeredItemUtil;
@@ -16,23 +33,6 @@ import gov.nih.nci.cadsr.cdecurate.util.DataManager;
 import gov.nih.nci.cadsr.common.Constants;
 import gov.nih.nci.cadsr.common.StringUtil;
 import gov.nih.nci.cadsr.persist.common.DBConstants;
-
-import java.io.Serializable;
-import java.sql.CallableStatement;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.Statement;
-import java.util.Calendar;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.Hashtable;
-import java.util.Vector;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-
-import org.apache.log4j.Logger;
 
 /**
  * This utility class is used during the validation of the create/edit action of the tool.
@@ -4514,6 +4514,7 @@ public class SetACService implements Serializable
     public void setVDValueFromPage( HttpServletRequest req, HttpServletResponse res, VD_Bean m_VD )
     {
         boolean hasSuspectPerameter = false;
+        HttpSession session = req.getSession();
         // CURATNTOOL-1107  don't "if else", we want a log entry for each bad one.
         if( !StringUtil.isValidParmeter( req, "txtPreferredName" ) )
         {
@@ -4563,13 +4564,19 @@ public class SetACService implements Serializable
         {
             hasSuspectPerameter = true;
         }
-        if( !StringUtil.isValidParmeter( req, "selUOM" ) )
+        String param = req.getParameter("selUOM");
+    	Collection <String> vColl = (Collection <String>)session.getAttribute("vUOM");//this attribute is always set up by GetACService
+        if( !StringUtil.isValidListParmeter(vColl, param) )
         {
-            hasSuspectPerameter = true;
+        	hasSuspectPerameter = true;
+        	logger.error("setVDValueFromPage selUOM is not validated");
         }
-        if( !StringUtil.isValidParmeter( req, "selUOMFormat" ) )
+        param = req.getParameter("selUOMFormat");
+        vColl = (Collection <String>)session.getAttribute("vUOMFormat");//this attribute is always set up by GetACService
+        if( !StringUtil.isValidListParmeter(vColl, param) )
         {
             hasSuspectPerameter = true;
+            logger.error("setVDValueFromPage vUOMFormat is not validated");
         }
         if( !StringUtil.isValidParmeter( req, "selVDText" ) )
         {
@@ -4599,13 +4606,15 @@ public class SetACService implements Serializable
         {
             hasSuspectPerameter = true;
         }
+        
         if( hasSuspectPerameter)
         {
-            return;
+            logger.error("setVDValueFromPage found suspected parameter");
+        	return;
         }
+        
         try
         {
-            HttpSession session = req.getSession();
             String sOriginAction = ( String ) session.getAttribute( "originAction" );
             if( sOriginAction == null ) sOriginAction.equals( "" );
 
@@ -4786,11 +4795,15 @@ public class SetACService implements Serializable
                 m_VD.setVD_BEGIN_DATE( sName );
 
             //set VD_UOML_NAME
+            sName = ( String ) req.getParameter( "selUOM" );
+            logger.debug("setVDValueFromPage selUOM= " + sName);
             sName = StringUtil.cleanJavascriptAndHtml( ( String ) req.getParameter( "selUOM" ) );
             if( sName != null )
                 m_VD.setVD_UOML_NAME( sName );
 
             //set VD_FORML_NAME
+            sName = ( String ) req.getParameter( "selUOMFormat" );
+            logger.debug("setVDValueFromPage selUOMFormat= " + sName);
             sName = StringUtil.cleanJavascriptAndHtml( ( String ) req.getParameter( "selUOMFormat" ) );
             if( sName != null )
                 m_VD.setVD_FORML_NAME( sName );

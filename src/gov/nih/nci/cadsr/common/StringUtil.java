@@ -1,20 +1,20 @@
 package gov.nih.nci.cadsr.common;
 
-import gov.nih.nci.cadsr.cdecurate.tool.PVAction;
-
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.text.CharacterIterator;
 import java.text.StringCharacterIterator;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import java.util.regex.Pattern;
 
+import javax.servlet.http.HttpServletRequest;
+
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.owasp.html.PolicyFactory;
 import org.owasp.html.Sanitizers;
-
-import javax.servlet.http.HttpServletRequest;
 
 public class StringUtil {
 
@@ -373,5 +373,14 @@ public class StringUtil {
            isValid = false;
        }
         return isValid;
+   }
+   public static boolean isValidListParmeter(Collection<String> vList, String parameterValue )
+   {
+       if ((StringUtils.isNotEmpty(parameterValue)) && (vList != null)) {
+    	   return vList.contains(parameterValue);
+       }
+       else {
+    	   return true;
+       }
    }
 }

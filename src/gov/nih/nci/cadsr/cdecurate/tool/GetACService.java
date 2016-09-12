@@ -11,28 +11,35 @@
 
 package gov.nih.nci.cadsr.cdecurate.tool;
 
+import java.io.IOException;
+import java.io.Serializable;
+import java.sql.CallableStatement;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.Vector;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import org.apache.log4j.Logger;
+
 import gov.nih.nci.cadsr.cdecurate.common.NO_SQL_CHECK;
 import gov.nih.nci.cadsr.cdecurate.database.SQLHelper;
 import gov.nih.nci.cadsr.cdecurate.util.AddOns;
-import gov.nih.nci.cadsr.cdecurate.util.AdministeredItemUtil;
 import gov.nih.nci.cadsr.cdecurate.util.DataManager;
 import gov.nih.nci.cadsr.persist.ac.DataTypeVO;
 import gov.nih.nci.cadsr.persist.ac.DataTypes_Lov_Mgr;
 import gov.nih.nci.cadsr.persist.exception.DBException;
-
-import java.io.Serializable;
-import java.util.*;
-import java.sql.*;
-
-import oracle.jdbc.driver.*;
 import oracle.jdbc.OracleTypes;
-
-import javax.servlet.*;
-import javax.servlet.http.*;
-
-import java.io.*;
-
-import org.apache.log4j.*;
 
 /**
  * GetACService class retrieves list from the db and stores them in session vectors
@@ -59,6 +66,8 @@ public class GetACService implements Serializable
     private HttpServletResponse     m_classRes       = null;
 
     private static final Logger         logger           = Logger.getLogger(GetACService.class.getName());
+    
+    
 
     /**
      * Constructor
@@ -737,10 +746,10 @@ public class GetACService implements Serializable
      * procedure: SBREXT_CDE_CURATOR_PKG.get_unit_of_measures_list(?)
      * 
      * @param vList
-     *            A Vector of UOM names.
+     *            A Collection of UOM names.
      * 
      */
-    private void getUOMList(Vector<String> vList)
+    private void getUOMList(Collection<String> vList)
     {
         try
         {
@@ -759,10 +768,10 @@ public class GetACService implements Serializable
      * stored procedure: SBREXT_CDE_CURATOR_PKG.get_formats_list(?)
      * 
      * @param vList
-     *            A Vector of UOM Format names.
+     *            A Collection of UOM Format names.
      * 
      */
-    private void getUOMFormatList(Vector<String> vList)
+    private void getUOMFormatList(Collection<String> vList)
     {
         try
         {
@@ -955,7 +964,7 @@ public class GetACService implements Serializable
      *            Parameter ID.
      * 
      */
-    private void getDataListStoreProcedure(Vector<String> vList1, Vector<String> vList2, Vector<String> vList3,
+    private void getDataListStoreProcedure(Collection <String> vList1, Collection<String> vList2, Vector<String> vList3,
                     Vector<String> vList4, String sAPI, String setString1, String setString2, int iParmIdx)
     {
         /*
@@ -1003,8 +1012,8 @@ public class GetACService implements Serializable
                 {
                     while (rs.next())
                     {
-                        vList1.addElement(rs.getString(1));
-                        vList2.addElement(rs.getString(2));
+                        vList1.add(rs.getString(1));
+                        vList2.add(rs.getString(2));
                         sName = rs.getString(3);
                         if (sName == null)
                             sName = "";
@@ -1019,8 +1028,8 @@ public class GetACService implements Serializable
                 {
                     while (rs.next())
                     {
-                        vList1.addElement(rs.getString(1));
-                        vList2.addElement(rs.getString(2));
+                        vList1.add(rs.getString(1));
+                        vList2.add(rs.getString(2));
                         sName = rs.getString(3);
                         if (sName == null)
                             sName = "";
@@ -1034,7 +1043,7 @@ public class GetACService implements Serializable
                 {
                     while (rs.next())
                     {
-                        vList1.addElement(rs.getString(1));
+                        vList1.add(rs.getString(1));
                         sName = rs.getString(2);
                         if (sName == null)
                             sName = "";
@@ -1045,7 +1054,7 @@ public class GetACService implements Serializable
                         // }
                         // else
                         // sName = "";
-                        vList2.addElement(sName);
+                        vList2.add(sName);
                         //logger.debug("At line 1032 of GetACService.java**"+rs.getString(1)+"**"+rs.getString(2));
                     }
                 }
@@ -1056,7 +1065,7 @@ public class GetACService implements Serializable
                         sName = rs.getString(1);	//JR1035 this should be not null e.g. APPRVD FOR TRIAL USE, DRAFT NEW, RELEASED etc
                         if (sName == null)
                             sName = "";
-                        vList1.addElement(sName);
+                        vList1.add(sName);
                         //logger.debug("At line 1043 of GetACService.java"+rs.getString(1));
                     }
                 }
