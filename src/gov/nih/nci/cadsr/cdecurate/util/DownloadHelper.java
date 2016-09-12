@@ -211,6 +211,9 @@ public class DownloadHelper {
 								if (currentType.contains("VALID_VALUE") && /* JR1047 */ !currentType.contains("VALID_VALUE_LIST_T")) {
 									data = AdministeredItemUtil.truncateTime(data);	//GF30779
 								}
+								else {
+									data = AdministeredItemUtil.updateDataForSpecialCharacters(data);
+								}
 								cell.setCellValue(data);
 								logger.debug("DownloadHelper.java JR1047 2: cell value set to ["+ data + "] based on type [" + currentType + "]");
 
@@ -243,6 +246,9 @@ public class DownloadHelper {
 						temp = allRows.get(i)[dbColumnIndices[j]];	//JR1000 JR1053 etc if crashes here, check your colString (user selected columns)!
 						if (currentType.equalsIgnoreCase("Date")) { //GF30779
 							temp = AdministeredItemUtil.truncateTime(temp);
+						}
+						else {
+							temp = AdministeredItemUtil.updateDataForSpecialCharacters(temp);
 						}
 						cell.setCellValue(temp);
 						logger.debug("DownloadHelper.java JR1047 3: cell value set to ["+ temp + "] based on type [" + currentType + "]");
@@ -321,6 +327,9 @@ public class DownloadHelper {
 					logger.debug("DownloadHelper.java*****"+ temp + currentType);
 					if (currentType.equalsIgnoreCase("Date")) { //GF30779
 						temp = AdministeredItemUtil.truncateTime(temp);
+					}
+					else {
+						temp = AdministeredItemUtil.updateDataForSpecialCharacters(temp);
 					}
 					cell.setCellValue(temp);
 					logger.debug("DownloadHelper.java JR1047 4: cell value set to ["+ temp + "] based on type [" + currentType + "]");
