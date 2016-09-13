@@ -1093,9 +1093,9 @@ String temp =
             //JR705
             //System.out.println("EditDEC.jsp sStatus = [" + sStatus + "]");
             String editStatus = "";
-            //if(sStatus != null && sStatus.equals("RELEASED")) {
+            if(sStatus != null && sStatus.equals("RELEASED")) {
                 editStatus = "readonly=\"readonly\"";
-            //}
+            }
             if(sOriginAction.equals("BlockEditDEC") || isView){%>
         <textarea name="CreateDefinition" style="width:80%" rows=6 <%=editStatus%> onHelp="showHelp('html/Help_CreateDEC.html#newDECForm_CreateDefinition'); return false"><%=sDefinition%></textarea>
             <% } else { %>

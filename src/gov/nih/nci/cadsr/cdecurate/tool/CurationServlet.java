@@ -3907,7 +3907,7 @@ public class CurationServlet
             if ((sJSPPage == null) || (sJSPPage.trim().isEmpty())){
             	logger.error("ForwardJSP received empty URL and cannot forward");
                 RequestDispatcher rd = this.m_servletContext.getRequestDispatcher("/");
-                rd.forward( req, res );            	
+                rd.forward( req, res );
             	return;
             }
             if ((sJSPPage.contains(".jsp")) || (sJSPPage.contains(".html")) || (sJSPPage.contains(".js"))) {//we forward to jsp pages only to avoid parametr manipulation
@@ -3932,7 +3932,7 @@ public class CurationServlet
 	            // store the session data object in the session at the end of the request
 	            DataManager.setAttribute( session, Session_Data.CURATION_SESSION_ATTR, this.sessionData );
 	            String fullPage = "/jsp" + sJSPPage;
-	
+
 	            // ServletContext sc = this.getServletContext();
 	            RequestDispatcher rd = this.m_servletContext.getRequestDispatcher( fullPage );
 	            rd.forward( req, res );

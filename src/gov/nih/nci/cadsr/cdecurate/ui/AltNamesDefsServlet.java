@@ -26,13 +26,13 @@ import org.apache.log4j.Logger;
 
 /**
  * This is the processing logic for the Alternate Names and Definitions.
- * 
+ *
  * @author lhebel
  *
  */
 public class AltNamesDefsServlet
 {
-    
+
     private UserBean _ub;
     private CurationServlet _servlet;
 
@@ -40,7 +40,7 @@ public class AltNamesDefsServlet
     private static final String _jspCSI = "/alternates2.jsp";
     private static final String _jspEdit = "/alternates3.jsp";
     private static final String _jspError = "/LoginE.jsp";
-    
+
     public static final String _errors = "errors";
     public static final String _actionTag = "alternatesAction";
     public static final String _prevActionTag = "prevAlternatesAction";
@@ -61,13 +61,13 @@ public class AltNamesDefsServlet
     public static final String _actionAddCSI = "addCSI";
     public static final String _sortName = AltNamesDefsSession._sortName;
     public static final String _sortType = "Type";
-    
+
     public static final String _modeFlag = "mode";
     public static final String _modeName = "Name";
     public static final String _modeDef = "Def";
-    
+
     public static final String _dbTextMax = "dbTextMax";
-    
+
     public static final String _reqType = "AltNamesDefs";
     public static final String _reqAttribute = "alternatesHTML";
     public static final String _reqTitle = "alternatesTitle";
@@ -77,14 +77,14 @@ public class AltNamesDefsServlet
     public static final String _reqSortTitle = "alternatesSortTitle";
     public static final String _reqSortTitleType = "Sort By Type";
     public static final String _reqSortTitleName = "Sort By Name";
-    
+
     public static final String _parmNameDef = "nameDef";
     public static final String _parmContext = "altContext";
     public static final String _parmType = "altType";
     public static final String _parmLang = "altLang";
     public static final String _parmIdseq = "parmIdseq";
     public static final String _parmFilterText = "parmFilterText";
-    
+
     public static final String _tabViewName = "View&nbsp;by&nbsp;Name/Definition";
     public static final String _tabViewCSI = "View&nbsp;by&nbsp;Classifications";
     public static final String _tabNameDef = "tabNameDef";
@@ -92,12 +92,12 @@ public class AltNamesDefsServlet
     public static final String _tab3EditName = "Edit&nbsp;Name";
     public static final String _tabAddDef = "Add&nbsp;Definition";
     public static final String _tab3EditDef = "Edit&nbsp;Definition";
-    
+
     public static final int _classTypeDef = -1;
     public static final int _classTypeAlt = 0;
     public static final int _classTypeCS = 1;
     public static final int _classTypeCSI = 2;
-    
+
     public static final String _formatHTMLcsiFull = "<tr onclick=\"selCSI(this);\" "
         + TreeNode._nodeLevel + "=\"{[NODELEVEL]}\" "
         + TreeNode._nodeValue + "=\"{[NODEVALUE]}\" "
@@ -107,14 +107,14 @@ public class AltNamesDefsServlet
         + "<td class=\"csi1\" title=\"Public Id & Version\">{[VERSION]}</td>\n"
         + "<td class=\"csi1\" title=\"Class Scheme Item Type\">{[TYPE]}</td>\n"
         + "</tr>\n";
-    
+
     public static final String _formatHTMLcsiEdit = "<tr " + TreeNode._nodeLevel + "=\"{[NODELEVEL]}\" " + TreeNode._nodeValue + "=\"{[NODEVALUE]}\">\n"
         + "<td title=\"Class Scheme Item\"><div class=\"ind{[MARGIN]}\">{[BREAK]}<span style=\"{[DELFLAG]}\">{[NAME]}</span></div></td>\n"
         + "<td>&nbsp;</td>\n"
         + "<td class=\"csi1\" title=\"Public Id & Version\">{[VERSION]}</td>\n"
         + "<td class=\"csi1\" title=\"Class Scheme Item Type\">{[TYPE]}</td>\n"
         + "</tr>\n";
-    
+
     public static final String _formatHTMLcsiView = "<tr " + TreeNode._nodeLevel + "=\"{[NODELEVEL]}\" " + TreeNode._nodeValue + "=\"{[NODEVALUE]}\">\n"
         + "<td title=\"Class Scheme Item\"><div class=\"ind{[MARGIN]}\"><span style=\"{[DELFLAG]}\">{[NAME]}</span></div></td>\n"
         + "<td>&nbsp;</td>\n"
@@ -160,7 +160,7 @@ public class AltNamesDefsServlet
 
     /**
      * Constructor
-     * 
+     *
      * @param servlet_ the application servlet
      * @param ub_ the user specific information
      */
@@ -172,7 +172,7 @@ public class AltNamesDefsServlet
 
     /**
      * Setup page content for the "View by Name/Definition" page.
-     * 
+     *
      * @param form_ the request form
      * @param db_ the database access object
      * @return the JSP to display to the user.
@@ -206,7 +206,7 @@ public class AltNamesDefsServlet
 
     /**
      * Setup page content for the "View by CS/CSI" page.
-     * 
+     *
      * @param form_ the request form
      * @param db_ the database access object
      * @return the JSP to display to the user.
@@ -229,7 +229,7 @@ public class AltNamesDefsServlet
 
     /**
      * Setup page content for the "Add/Edit Name/Definition" page.
-     * 
+     *
      * @param form_ the request form
      * @param db_ the database access object
      * @return the JSP to display to the user.
@@ -256,7 +256,7 @@ public class AltNamesDefsServlet
 
     /**
      * From the "Add/Edit" page, add a CS/CSI to an Alternate.
-     * 
+     *
      * @param form_ the request form
      * @param db_ the database access object
      * @return the JSP to display to the user.
@@ -281,7 +281,7 @@ public class AltNamesDefsServlet
 
     /**
      * From the "Add/Edit" page, remove a CS/CSI from an Alternate.
-     * 
+     *
      * @param form_ the request form
      * @param db_ the database access object
      * @return the JSP to display to the user.
@@ -304,7 +304,7 @@ public class AltNamesDefsServlet
 
     /**
      * From the "Add/Edit" page, restore a removed  CS/CSI to an Alternate.
-     * 
+     *
      * @param form_ the request form
      * @param db_ the database access object
      * @return the JSP to display to the user.
@@ -319,7 +319,7 @@ public class AltNamesDefsServlet
 
     /**
      * From the "View ..." pages, edit an Alternate
-     * 
+     *
      * @param form_ the request form
      * @param db_ the database access object
      * @return the JSP to display to the user.
@@ -334,7 +334,7 @@ public class AltNamesDefsServlet
 
     /**
      * From the "View ..." pages, delete an Alternate
-     * 
+     *
      * @param form_ the request form
      * @param db_ the database access object
      * @return the JSP to display to the user.
@@ -352,7 +352,7 @@ public class AltNamesDefsServlet
 
     /**
      * From the "View ..." pages, restore a deleted Alternate
-     * 
+     *
      * @param form_ the request form
      * @param db_ the database access object
      * @return the JSP to display to the user.
@@ -361,21 +361,21 @@ public class AltNamesDefsServlet
     {
         // Find the target
         Alternates del = form_._sess.getAltWithIdseq(form_._targetIdseq);
-        
+
         // Keep it
         if (del.isDeleted())
             del.markToKeep();
-        
+
         // Return to the same page.
         if (form_._sess._jsp.equals(_jspName))
             return doAlternates1(form_, db_);
         return doAlternates2(form_, db_);
     }
-    
+
     /**
      * From the "Add/Edit ..." page, save the user entries to the intenal buffer. Can't write to the database
      * until the AC Validate/Save is done.
-     * 
+     *
      * @param form_ the request form
      * @param db_ the database access object
      * @return the JSP to display to the user.
@@ -384,7 +384,7 @@ public class AltNamesDefsServlet
     {
         // Be sure to grab data from the form and put it in the internal edit buffer.
         form_.save();
-        
+
         // Validate the AC/Name/Context/Type combination.
         Alternates alt = form_._sess.getEdit();	//JR1099 at this point, the changed alt name should be reflected correctly here
         String msg = form_._sess.check(alt);
@@ -401,16 +401,16 @@ public class AltNamesDefsServlet
 
         // Put the Alternate into the session buffer.
         form_._sess.updateAlternatesList(alt, form_._sess._cacheSort.equals(_sortName));
-        
+
         // Return to the page prior to the Add/Edit
         if (form_._sess._viewJsp.equals(_jspName))
             return doAlternates1(form_, db_);
         return doAlternates2(form_, db_);
     }
-    
+
     /**
      * From the "View by Name/Def" page, sort the list.
-     * 
+     *
      * @param form_ the request form
      * @param db_ the database access object
      * @return the JSP to display to the user.
@@ -423,10 +423,10 @@ public class AltNamesDefsServlet
             form_._sort = _sortName;
         return doAlternates1(form_, db_);
     }
-    
+
     /**
      * From the "View by ..." page, clear the internal buffer and revert to the database.
-     * 
+     *
      * @param form_ the request form
      * @param db_ the database access object
      * @return the JSP to display to the user.
@@ -434,7 +434,7 @@ public class AltNamesDefsServlet
     private String doClear(AltNamesDefsForm form_, DBAccess db_) throws ToolException
     {
         form_._sess.clearAlts();
-        
+
         return doAlternates1(form_, db_);
     }
 
@@ -442,12 +442,12 @@ public class AltNamesDefsServlet
      * The doDesignateDEActions method handles DesignatedDE actions of the request. Called from 'service' method where
      * reqType is 'DesignatedDE' Calls 'ValidateDEC' if the action is Validate or submit. Calls 'doSuggestionDEC' if the
      * action is open EVS Window.
-     * 
+     *
      * @param req_
      *            The HttpServletRequest from the client
      * @param res_
      *            The HttpServletResponse back to the client
-     * 
+     *
      * @throws Exception
      */
     public void doAction(HttpServletRequest req_, HttpServletResponse res_) throws Exception
@@ -460,23 +460,23 @@ public class AltNamesDefsServlet
         {
             // Get the database connection.
            DBAccess db = new DBAccess(_servlet.getConn());
-    
+
             // Default the JSP for the response
             jsp = _jspError;
-    
+
             // Haven't opened this page before.
             if (form._action == null)
             {
                 form._sess.cleanBuffers();
                 jsp = doAlternates1(form, db);
             }
-            
+
             // Returning to this page so handle it.
             else
             {
                 if (form._action.equals(_actionCancel))
                     form._action = form._prevAction;
-    
+
                 if (form._action.equals(_actionViewName))
                     jsp = doAlternates1(form, db);
                 else if (form._action.equals(_actionViewCSI))
@@ -525,7 +525,7 @@ public class AltNamesDefsServlet
 
     /**
      * Get the manually curated definition for this AC
-     * 
+     *
      * @param req_ the request
      * @param launch_ the source of the request
      * @return the manually curated Alternate Definition or null if it doesn't exist
@@ -537,14 +537,14 @@ public class AltNamesDefsServlet
         try
         {
             DBAccess db = new DBAccess(_servlet.getConn());
-            
+
             // Get the session buffer for the AC
             AltNamesDefsSession buffer = AltNamesDefsSession.getAlternates(req_, launch_);
-            
+
             // Load the AC alternate names and definitions but if they've already been loaded this does not
             // refresh the session buffers.
             buffer.loadAlternates(db, AltNamesDefsServlet._sortName);
-            
+
             alt = buffer.findAltWithType(Alternates._INSTANCEDEF, DBAccess._manuallyCuratedDef);
         }
         catch (ToolException e)
@@ -560,7 +560,7 @@ public class AltNamesDefsServlet
 
     /**
      * Update the manually curated definition with a new value
-     * 
+     *
      * @param req_ the request
      * @param launch_ the source of the request
      * @param def_ the new definition
@@ -571,7 +571,7 @@ public class AltNamesDefsServlet
         {
             // Get the AC session buffer
             AltNamesDefsSession buffer = AltNamesDefsSession.getAlternates(req_, launch_);
-            
+
             // Find the manually curated definition
             Alternates alt = buffer.findAltWithType(Alternates._INSTANCEDEF, DBAccess._manuallyCuratedDef);
 
