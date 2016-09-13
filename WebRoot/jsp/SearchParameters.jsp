@@ -1331,10 +1331,10 @@ function LoadKeyHandler()
 							<option value="AllStatus"
 								<%if (vStatus == null || vStatus.size()==0 || sAssocSearch.equals("true")){
 								//GF30681 need to default for others not DEC search
-								if (!(vStatusDEC != null && sSearchAC.equals("DataElementConcept"))) {
+								//if (!(vStatusDEC != null && sSearchAC.equals("DataElementConcept"))) {
 								%>
 								selected 
-								<%}}%>
+								<%}//}%>
 							>
 								All Statuses
 							</option>
@@ -1358,11 +1358,11 @@ function LoadKeyHandler()
 									String sStatusName = (String) vStatusDEC.elementAt(i);
 							%>
 							<option value="<%=sStatusName%>"
-								<%-- <%if((vStatus != null) && (vStatus.contains(sStatusName))){%>
-								selected <%}%>> --%>
+								 <%if((vStatus != null) && (vStatus.contains(sStatusName))){%>
+								selected <%}%>> 
 								<%-- To show default workflow status as "RELEASED GF30681"--%>
-							<%if(sStatusName.equals("RELEASED")){%>
-								selected <%}%>>
+							<%-- <%if(sStatusName.equals("RELEASED")){%>
+								selected <%}%>>  --%>
 								<%=sStatusName%>
 							</option>
 							<%
