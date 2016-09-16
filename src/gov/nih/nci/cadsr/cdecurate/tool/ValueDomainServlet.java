@@ -1509,8 +1509,8 @@ public class ValueDomainServlet extends CurationServlet
         storeStatusMsg( "Public ID : " + VDBean.getVD_VD_ID() );
         // call stored procedure to update attributes
         String ret = insAC.setVD( "UPD", VDBean, "Edit", oldVDBean );        //GF30800 tagged JR1025 tagged
-        System.out.println( "JR1024 old VD [" + oldVDBean.toString() + "]" );
-        System.out.println( "JR1024 new VD [" + VDBean.toString() + "]" );
+        logger.debug( "JR1024 oldVDBean old VD [" + oldVDBean.toString() + "]" );
+        logger.debug( "JR1024 VDBean new VD [" + VDBean.toString() + "]" );
         // forward to search page with refreshed list after successful update
         if( ( ret == null ) || ret.equals( "" ) )
         {

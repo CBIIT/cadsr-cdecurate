@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.owasp.html.HtmlPolicyBuilder;
 import org.owasp.html.PolicyFactory;
 import org.owasp.html.Sanitizers;
 
@@ -208,12 +209,12 @@ public class StringUtil {
 
 
 
-	private static String sanitizeHTML(String untrustedHTML) {
+	protected static String sanitizeHTML(String untrustedHTML) {
         String ret = resolveHex( untrustedHTML );
 
 		try {
 			if(untrustedHTML != null) {
-				PolicyFactory policy = Sanitizers.FORMATTING.and(Sanitizers.LINKS);
+				PolicyFactory policy = new HtmlPolicyBuilder().toFactory();;
 				ret = policy.sanitize(untrustedHTML);
 			}
 		} catch (Exception e) {
@@ -301,7 +302,6 @@ public class StringUtil {
 		return false;
 	}
 
-
 	public static String resolveHex( String s )
 	{
 		String retVal = "";
@@ -312,8 +312,13 @@ public class StringUtil {
 				retVal += convertHexToString( s.substring( f + 1, f + 3 ) );
 				f += 2;
 			}
-			else
+			else if(s.length() < ( f + 3 ))
 			{
+				retVal += s.substring(f);
+				break;//we are at the end of the string no space left for URL-encoded characters 
+			}
+			else
+			{//move one character
 				retVal += s.substring( f, f + 1 );
 			}
 		}
@@ -351,7 +356,7 @@ public class StringUtil {
 		}
         return true;
 	}
-
+	
 	public static boolean isHtmlAndScriptClean( List<String> s)
 	{
 		for( String str: s )

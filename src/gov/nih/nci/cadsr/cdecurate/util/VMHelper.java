@@ -72,7 +72,7 @@ public class VMHelper {
 				for (int k = 0; k < nameList2.size(); k++)
 				{
 					VM_Bean existVM = nameList2.get(k);
-					System.out.println("VM_ID [" + existVM.getVM_ID() + " description [" + existVM.toString() + "]");
+					logger.debug("VM_ID [" + existVM.getVM_ID() + " description [" + existVM.toString() + "]");
 					if (existVM != null && existVM.getVM_ID() != null && existVM.getVM_ID().equals(userVMPublicId))
 					{
 						data.setVMBean(existVM);
@@ -422,7 +422,7 @@ public class VMHelper {
 	//JR1024 begin - pick only the original VM if it is only date changes!
 	public static void restoreOriginalVM(VMForm data) throws Exception {
 		String vmPublicIdVersion = (String) data.getRequest().getAttribute(Constants.USER_SELECTED_VM);
-		System.out.println("user selected VM = [" + vmPublicIdVersion + "]");
+		logger.debug("user selected VM = [" + vmPublicIdVersion + "]");
 		Vector<VM_Bean> vmList = data.getVMList();
 		try {
 			data.setVMList(VMHelper.restoreVM(vmPublicIdVersion, vmList));

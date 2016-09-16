@@ -867,15 +867,15 @@ public class CustomDownloadServlet extends CurationServlet
         } catch( ParserConfigurationException pce )
         {
             //dump it
-            System.out.println( "Error while trying to instantiate DocumentBuilder " + pce );
+            logger.error( "Error while trying to instantiate DocumentBuilder ", pce );
             pce.printStackTrace();
         } catch( IOException ioe )
         {
-            System.out.println( "Error while trying to serialize  " + ioe );
+        	logger.error( "Error while trying to serialize  ", ioe );
             ioe.printStackTrace();
         } catch( Exception e )
         {
-            System.out.println( "Error  " + e );
+        	logger.error( "Error  ", e );
             e.printStackTrace();
 
         }

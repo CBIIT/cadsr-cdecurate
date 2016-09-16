@@ -712,7 +712,7 @@ public class SetACService implements Serializable
             }
 
             //Check Definition against (constructed) chosen definition, add to Alt Def if not same, add Warning in vValidate vector.
-            System.out.println( "req [" + req + "] req.getSession() [" + req.getSession() + "] noldDef [" + oldDef + "] " );
+            logger.debug( "req [" + req + "] req.getSession() [" + req.getSession() + "] noldDef [" + oldDef + "] " );
             String chosenDef = ( String ) session.getAttribute( Constants.FINAL_ALT_DEF_STRING );
             //GF30798 constructChosenDefinition(req.getSession(), "DEC", oldDef);
 
@@ -743,16 +743,16 @@ public class SetACService implements Serializable
             {
                 if( type == null || type.equals( "" ) ) type = "NCI Thesaurus";
                 String name = m_OC.getCONCEPT_IDENTIFIER();
-                System.out.println( "conType = " + m_OC.getCONCEPT_IDENTIFIER() );
-                System.out.println( "conType = " + m_OC.getEVS_DATABASE() );
-                System.out.println( "conType = " + m_OC.getCONCEPT_NAME() );
-                System.out.println( "conType = " + m_OC.getIDSEQ() );
+                logger.debug( "m_OC.getCONCEPT_IDENTIFIER() = " + m_OC.getCONCEPT_IDENTIFIER() );
+                logger.debug( "m_OC.getEVS_DATABASE() = " + m_OC.getEVS_DATABASE() );
+                logger.debug( "m_OC.getCONCEPT_NAME() = " + m_OC.getCONCEPT_NAME() );
+                logger.debug( "m_OC.getIDSEQ() = " + m_OC.getIDSEQ() );
 
                 String detl_type = ( String ) session.getAttribute( "userSelectedVocabOC" );
                 if( detl_type != null && detl_type.equals( "RADLEX" ) ) detl_type = "RadLex";
                 String detl_name = ( String ) session.getAttribute( "userSelectedConCodeOC" );
-                System.out.println( "detl_type=" + req.getParameter( "userSelectedVocabOC" ) );
-                System.out.println( "detl_name=" + req.getParameter( "userSelectedConCodeOC" ) );
+                logger.debug( "userSelectedVocabOC detl_type=" + req.getParameter( "userSelectedVocabOC" ) );
+                logger.debug( "userSelectedConCodeOC detl_name=" + req.getParameter( "userSelectedConCodeOC" ) );
 
 
                 String sReturnCode = "";
@@ -761,17 +761,17 @@ public class SetACService implements Serializable
                 {
 //					if(!altSession.addAlternateName(detl_type,detl_name,m_DEC,m_servlet.getConn())) {	//GF32723
                     sReturnCode = ins.setDES( "INS", m_DEC.getDEC_OCL_IDSEQ(), m_DEC.getContextIDSEQ(), m_DEC.getContextName(), detl_type, detl_name, "ENGLISH", desIDSEQ );
-                    System.out.println( "************************ DEC SetACService: AC [" + m_DEC.getDEC_LONG_NAME() + "] not able to add alternate name type[" + type + "] name[" + name + "] ************************" );
+                    logger.debug( "************************ DEC SetACService: AC [" + m_DEC.getDEC_LONG_NAME() + "] not able to add alternate name type[" + type + "] name[" + name + "] ************************" );
                 }
                 String prop_detl_type = ( String ) session.getAttribute( "userSelectedVocabPROP" );
                 String prop_detl_name = ( String ) session.getAttribute( "userSelectedConCodePROP" );
-                System.out.println( "detl_type=" + req.getParameter( "userSelectedVocabOC" ) );
-                System.out.println( "detl_name=" + req.getParameter( "userSelectedConCodeOC" ) );
+                logger.debug( "userSelectedVocabPROP detl_type=" + req.getParameter( "userSelectedVocabOC" ) );
+                logger.debug( "userSelectedConCodePROP detl_name=" + req.getParameter( "userSelectedConCodeOC" ) );
                 if(/* begin GF33139 */ prop_detl_name != null && !prop_detl_name.trim().equals( "" ) /* end GF33139 */ && !AdministeredItemUtil.isAlternateDesignationExists( m_DEC.getContextName(), prop_detl_type, prop_detl_name, altSession ) /** JR1099 added context name param */ )
                 {
 //					if(!altSession.addAlternateName(detl_type,detl_name,m_DEC,m_servlet.getConn())) {	//GF32723
                     sReturnCode = ins.setDES( "INS", m_DEC.getDEC_PROPL_IDSEQ(), m_DEC.getContextIDSEQ(), m_DEC.getContextName(), prop_detl_type, prop_detl_name, "ENGLISH", desIDSEQ );
-                    System.out.println( "************************ DEC SetACService: AC [" + m_DEC.getDEC_LONG_NAME() + "] not able to add alternate name type[" + type + "] name[" + name + "] ************************" );
+                    logger.debug( "************************ DEC SetACService: AC [" + m_DEC.getDEC_LONG_NAME() + "] not able to add alternate name type[" + type + "] name[" + name + "] ************************" );
                 }
                 //	altSession.addAlternateName(type,name,m_DEC,m_servlet.getConn());
             }
@@ -1256,8 +1256,8 @@ public class SetACService implements Serializable
                 String sContext = m_VD.getContextName();
                 String conte_idseq = m_VD.getContextIDSEQ();
 
-                System.out.println( "Alternate type" + type );
-                System.out.println( "Alternate name is " + name );
+                logger.debug( "Alternate type" + type );
+                logger.debug( "Alternate name is " + name );
 
                 //altSession.addAlternateName(type,name,m_REP,sContext,conte_idseq,m_servlet.getConn());
                 String desIDSEQ = "";
@@ -3724,6 +3724,7 @@ public class SetACService implements Serializable
     public void setDEValueFromPage( HttpServletRequest req, HttpServletResponse res, DE_Bean m_DE )
     {
         boolean hasSuspectPerameter = false;
+        boolean isPredefinedSuspected = false;
         // CURATNTOOL-1107  don't "if else", we want a log entry for each bad one.
         if( !StringUtil.isValidParmeter( req, "txtPreferredName" ) )
         {
@@ -3737,9 +3738,9 @@ public class SetACService implements Serializable
         {
             hasSuspectPerameter = true;
         }
-        if( !StringUtil.isValidParmeter( req, "selSource" ) )
+        if( !StringUtil.isValidParmeter( req, "selSource" ) )//FIXME check from the list of allowed
         {
-            hasSuspectPerameter = true;
+        	isPredefinedSuspected = true;
         }
         if( !StringUtil.isValidParmeter( req, "CreateChangeNote" ) )
         {
@@ -3749,39 +3750,45 @@ public class SetACService implements Serializable
         {
             hasSuspectPerameter = true;
         }
-        if( !StringUtil.isValidParmeter( req, "selRegStatus" ) )
+        if( !StringUtil.isValidParmeter( req, "selRegStatus" ) )//FIXME check from the list of allowed
         {
-            hasSuspectPerameter = true;
+        	isPredefinedSuspected = true;
         }
-        if( !StringUtil.isValidParmeter( req, "selStatus" ) )
+        if( !StringUtil.isValidParmeter( req, "selStatus" ) )//check from the list of allowed
         {
-            hasSuspectPerameter = true;
+        	isPredefinedSuspected = true;
         }
         if( !StringUtil.isValidParmeter( req, "BeginDate" ) )
         {
-            hasSuspectPerameter = true;
+        	isPredefinedSuspected = true;
         }
         if( !StringUtil.isValidParmeter( req, "EndDate" ) )
         {
-            hasSuspectPerameter = true;
+        	isPredefinedSuspected = true;
         }
-        if( !StringUtil.isValidParmeter( req, "selDECText" ) )
+        if( !StringUtil.isValidParmeter( req, "selDECText" ) )//FIXME ?
         {
             hasSuspectPerameter = true;
         }
-        if( !StringUtil.isValidParmeter( req, "selVDText" ) )
+        if( !StringUtil.isValidParmeter( req, "selVDText" ) )//FIXME ?
         {
             hasSuspectPerameter = true;
         }
-        if( !StringUtil.isValidParmeter( req, "Version" ) )
+        if( !StringUtil.isValidParmeter( req, "Version" ) )//check Number
         {
-            hasSuspectPerameter = true;
+        	isPredefinedSuspected = true;
         }
         if( hasSuspectPerameter )
         {
-            return;
+        	logger.error("Suspected parameter values are found in DE");
+        	return;
         }
-
+        if( isPredefinedSuspected )
+        {
+        	logger.error("Suspected parameter values are found in DE; DE new values will not be saved");
+        	return;
+        }
+        
         try
         {
             HttpSession session = req.getSession();
@@ -4514,6 +4521,7 @@ public class SetACService implements Serializable
     public void setVDValueFromPage( HttpServletRequest req, HttpServletResponse res, VD_Bean m_VD )
     {
         boolean hasSuspectPerameter = false;
+        boolean isPredefinedSuspected = false;
         HttpSession session = req.getSession();
         // CURATNTOOL-1107  don't "if else", we want a log entry for each bad one.
         if( !StringUtil.isValidParmeter( req, "txtPreferredName" ) )
@@ -4530,7 +4538,8 @@ public class SetACService implements Serializable
         }
         if( !StringUtil.isValidParmeter( req, "selSource" ) )
         {
-            hasSuspectPerameter = true;
+        	isPredefinedSuspected = true;
+        	hasSuspectPerameter = true;
         }
         if( !StringUtil.isValidParmeter( req, "CreateChangeNote" ) )
         {
@@ -4538,14 +4547,17 @@ public class SetACService implements Serializable
         }
         if( !StringUtil.isValidParmeter( req, "selRegStatus" ) )
         {
+        	isPredefinedSuspected = true;
             hasSuspectPerameter = true;
         }
         if( !StringUtil.isValidParmeter( req, "selStatus" ) )
         {
+        	isPredefinedSuspected = true;
             hasSuspectPerameter = true;
         }
         if( !StringUtil.isValidParmeter( req, "BeginDate" ) )
         {
+        	isPredefinedSuspected = true;
             hasSuspectPerameter = true;
         }
         if( !StringUtil.isValidParmeter( req, "EndDate" ) )
@@ -4554,6 +4566,7 @@ public class SetACService implements Serializable
         }
         if( !StringUtil.isValidParmeter( req, "listVDType" ) )
         {
+        	isPredefinedSuspected = true;
             hasSuspectPerameter = true;
         }
         if( !StringUtil.isValidParmeter( req, "selConceptualDomainText" ) )
@@ -4562,20 +4575,21 @@ public class SetACService implements Serializable
         }
         if( !StringUtil.isValidParmeter( req, "selDataType" ) )
         {
+        	isPredefinedSuspected = true;
             hasSuspectPerameter = true;
         }
         String param = req.getParameter("selUOM");
     	Collection <String> vColl = (Collection <String>)session.getAttribute("vUOM");//this attribute is always set up by GetACService
         if( !StringUtil.isValidListParmeter(vColl, param) )
         {
-        	hasSuspectPerameter = true;
+        	isPredefinedSuspected = true;
         	logger.error("setVDValueFromPage selUOM is not validated");
         }
         param = req.getParameter("selUOMFormat");
         vColl = (Collection <String>)session.getAttribute("vUOMFormat");//this attribute is always set up by GetACService
         if( !StringUtil.isValidListParmeter(vColl, param) )
         {
-            hasSuspectPerameter = true;
+        	isPredefinedSuspected = true;
             logger.error("setVDValueFromPage vUOMFormat is not validated");
         }
         if( !StringUtil.isValidParmeter( req, "selVDText" ) )
@@ -4584,22 +4598,27 @@ public class SetACService implements Serializable
         }
         if( !StringUtil.isValidParmeter( req, "tfDecimal" ) )
         {
+        	isPredefinedSuspected = true;
             hasSuspectPerameter = true;
         }
         if( !StringUtil.isValidParmeter( req, "tfHighValue" ) )
         {
+        	isPredefinedSuspected = true;
             hasSuspectPerameter = true;
         }
         if( !StringUtil.isValidParmeter( req, "tfLowValue" ) )
         {
+        	isPredefinedSuspected = true;
             hasSuspectPerameter = true;
         }
         if( !StringUtil.isValidParmeter( req, "tfMaxLength" ) )
         {
+        	isPredefinedSuspected = true;
             hasSuspectPerameter = true;
         }
         if( !StringUtil.isValidParmeter( req, "tfMinLength" ) )
         {
+        	isPredefinedSuspected = true;
             hasSuspectPerameter = true;
         }
         if( !StringUtil.isValidParmeter( req, "txtRepTerm" ) )
@@ -4610,9 +4629,12 @@ public class SetACService implements Serializable
         if( hasSuspectPerameter)
         {
             logger.error("setVDValueFromPage found suspected parameter");
-        	return;
         }
-        
+        if( isPredefinedSuspected)
+        {
+            logger.error("setVDValueFromPage found suspected parameter, the new data is discarded");
+            return;
+        }
         try
         {
             String sOriginAction = ( String ) session.getAttribute( "originAction" );

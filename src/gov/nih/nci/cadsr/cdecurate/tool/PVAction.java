@@ -930,39 +930,39 @@ public class PVAction implements Serializable {
 				//			Get the username from the session.
 				String userName = (String) session.getAttribute("Username");
 				cstmt.setString(1, userName); //set ua_name
-				System.out.println("1 [" + userName + "]");
+				logger.debug("from setVD_PVS: 1 userName [" + userName + "]");
 				if (sAction.equals("UPD") && (vpID == null || vpID.equals("")))
 					sAction = "INS";
 
 				cstmt.setString(3, sAction); //ACTION - INS, UPD  or DEL
-				System.out.println("3 [" + sAction + "]");
+				logger.debug("3 sAction [" + sAction + "]");
 				cstmt.setString(4, pvBean.getPV_VDPVS_IDSEQ()); //VPid);       //vd_pvs ideq - not null
-				System.out.println("4 [" + pvBean.getPV_VDPVS_IDSEQ() + "]");
+				logger.debug("4 pvBean.getPV_VDPVS_IDSEQ [" + pvBean.getPV_VDPVS_IDSEQ() + "]");
 				cstmt.setString(5, vdBean.getVD_VD_IDSEQ()); // sVDid);       //value domain id - not null
-				System.out.println("5 [" + vdBean.getVD_VD_IDSEQ() + "]");
+				logger.debug("5 vdBean.getVD_VD_IDSEQ() [" + vdBean.getVD_VD_IDSEQ() + "]");
 				cstmt.setString(6, pvBean.getPV_PV_IDSEQ()); // sPVid);       //permissible value id - not null
-				System.out.println("6 [" + pvBean.getPV_PV_IDSEQ() + "]");
+				logger.debug("6 pvBean.getPV_PV_IDSEQ() [" + pvBean.getPV_PV_IDSEQ() + "]");
 				String pvOrigin = pvBean.getPV_VALUE_ORIGIN();
 				cstmt.setString(7, vdBean.getVD_CONTE_IDSEQ()); // sContextID);       //context id - not null for INS, must be null for UPD
-				System.out.println("7 [" + vdBean.getVD_CONTE_IDSEQ() + "]");
+				logger.debug("7 getVD_CONTE_IDSEQ() [" + vdBean.getVD_CONTE_IDSEQ() + "]");
 				//believe that it is defaulted to vd's origin
 				//if (pvOrigin == null || pvOrigin.equals(""))
 				//   pvOrigin = vdBean.getVD_SOURCE();
 				cstmt.setString(12, pvOrigin); // sOrigin);
-				System.out.println("12 [" + pvOrigin + "]");
+				logger.debug("12 pvOrigin [" + pvOrigin + "]");
 				String sDate = pvBean.getPV_BEGIN_DATE();
 				if (sDate != null && !sDate.equals(""))
 					sDate = data.getUtil().getOracleDate(sDate);
 				cstmt.setString(13, sDate); // begin date);
-				System.out.println("13 [" + sDate + "]");
+				logger.debug("13 pvBean.getPV_BEGIN_DATE [" + sDate + "]");
 				sDate = pvBean.getPV_END_DATE();
 				if (sDate != null && !sDate.equals(""))
 					sDate = data.getUtil().getOracleDate(sDate);
 				cstmt.setString(14, sDate); // end date);
-				System.out.println("14 [" + sDate + "]");
+				logger.debug("14 pvBean.getPV_END_DATE() [" + sDate + "]");
 				cstmt.setString(15, parIdseq);
-				System.out.println("15 [" + parIdseq + "]");
-				System.out.println("2 4 5 6 7 8 9 10 11 are (also) an OUT parameter!)");
+				logger.debug("15 parIdseq [" + parIdseq + "]");
+				logger.debug("2 4 5 6 7 8 9 10 11 are (also) an OUT parameter!)");
 
 				//JR1025 needs to print out all values of VDPVS here!!!
 				String temp = "";
@@ -1012,10 +1012,10 @@ public class PVAction implements Serializable {
 			sMsg += "\\t Exception : Unable to update or remove PV of VD.";
 		}finally{
 		  cstmt = SQLHelper.closeCallableStatement(cstmt);
-			System.out.println("-------------------------- PVAction: 1 setVD_PVS() ---------------------------");
+			logger.debug("-------------------------- PVAction: 1 setVD_PVS() ---------------------------");
 			mon.show();
 		}
-		System.out.println(sMsg);
+		logger.debug(sMsg);
 		return sMsg;
 	} //END setVD_PVS
 

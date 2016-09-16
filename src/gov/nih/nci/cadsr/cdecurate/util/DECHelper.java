@@ -13,8 +13,10 @@ import java.util.regex.MatchResult;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-public class DECHelper {
+import org.apache.log4j.Logger;
 
+public class DECHelper {
+    private static final Logger logger = Logger.getLogger(DECHelper.class);
 	//GF30798
 	/**
 	 * userSelectedDef matters only if it is adding AC; regeneration does not require it
@@ -154,7 +156,7 @@ public class DECHelper {
 	public static void clearAlternateDefinitionForPropQualifier(HttpServletRequest request) {
 		String sSelRow = (String) request.getParameter("selPropQRow");
 		if(sSelRow == null || sSelRow.trim().equals("")) {
-			System.out.println("clearAlternateDefinitionForPropQualifier: sSelRow is NULL or empty (no row is selected), assumed the first row");
+			logger.debug("clearAlternateDefinitionForPropQualifier: sSelRow is NULL or empty (no row is selected), assumed the first row");
 			sSelRow = "0";
 		}
 		Integer selectedIndex = new Integer(sSelRow);
@@ -253,7 +255,7 @@ public class DECHelper {
 			try {
 				for (int a=0; a<count1; a++) {
 					def = s.next();
-				    System.out.println("comp1="+ def);
+				    logger.debug("comp1="+ def);
 				    objectQualifierMap.add(def);
 				}
 				retVal[0] = objectQualifierMap;
@@ -277,7 +279,7 @@ public class DECHelper {
 			try {
 				for (int c=0; c<count3; c++) {
 					def = s.next();
-				    System.out.println("comp3="+ def);
+				    logger.debug("comp3="+ def);
 				    propQualifierMap.add(def);
 				}
 				retVal[2] = propQualifierMap;
@@ -289,7 +291,7 @@ public class DECHelper {
 			try {
 				if(count4 > 0) {
 					def = s.next();
-				    System.out.println("comp4="+ def);
+				    logger.debug("comp4="+ def);
 				    prop = def;
 					retVal[3] = prop;
 				}

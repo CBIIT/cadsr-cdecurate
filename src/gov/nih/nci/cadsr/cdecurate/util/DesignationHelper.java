@@ -1,14 +1,17 @@
 package gov.nih.nci.cadsr.cdecurate.util;
 
 import gov.nih.nci.cadsr.cdecurate.database.Alternates;
+import gov.nih.nci.cadsr.cdecurate.ui.AltNamesDefsSession;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class DesignationHelper {
+import org.apache.log4j.Logger;
 
+public class DesignationHelper {
+    private static final Logger logger = Logger.getLogger(DesignationHelper.class);
 	//begin GF32723
 	public static boolean isAlternateNameExists(Alternates alt_, Connection conn) throws Exception {
 		int rc = 0;
@@ -22,8 +25,8 @@ public class DesignationHelper {
 		}
 		type = alt_.getType();
 		name = alt_.getName();
-		System.out.println(name);
-		System.out.println(type);
+		logger.debug(name);
+		logger.debug(type);
 
 		PreparedStatement stmt = null;
 		try {
@@ -45,12 +48,12 @@ public class DesignationHelper {
 					stmt.close();
 
 				} catch (SQLException e1) {
-					System.out.println("Exception is" + e1);
+					logger.debug("Exception is" + e1);
 					stmt = null;
 				}
 			}
 		}
-		System.out.println("DesignationHelper:isAlternateNameExists() retVal = " + retVal);
+		logger.debug("DesignationHelper:isAlternateNameExists() retVal = " + retVal);
 
 		return retVal;
 	}

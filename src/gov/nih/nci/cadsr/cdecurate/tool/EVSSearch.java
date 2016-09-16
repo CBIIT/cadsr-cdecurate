@@ -111,7 +111,7 @@ public class EVSSearch implements Serializable
     LexBIGService evsService = null;
     EVS_UserBean m_eUser = null;
     EVS_Bean m_eBean = null;
-    Logger logger = Logger.getLogger( EVSSearch.class.getName() );
+    private static Logger logger = Logger.getLogger( EVSSearch.class.getName() );
 
     /**
      * Constructs a new instance.
@@ -2969,7 +2969,7 @@ public class EVSSearch implements Serializable
 //        String termStr = "MTHU029981";
 //        String sMetaSource = "LNC";
         HttpSession session = m_classReq.getSession();
-        System.out.println( "$$$$$$$$$$ EVS URL = [" + m_eUser.getEVSConURL() + "] $$$$$$$$$$$" );
+        logger.debug( "$$$$$$$$$$ doMetaSearchForNonNCItNonNCIm EVS URL = [" + m_eUser.getEVSConURL() + "] $$$$$$$$$$$" );
         //=== get it from the UI instead
         String lookupVocabName = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml( ( String ) m_classReq.getParameter( "userSelectedVocab" ) );
         if( lookupVocabName == null ) lookupVocabName = ( String ) session.getAttribute( "userSelectedVocab" );
@@ -3065,11 +3065,11 @@ public class EVSSearch implements Serializable
         if( concepts != null && concepts.getResolvedConceptReferenceCount() > 1 )
         {
             //GF32723 consider only 1-to-1 mapping, otherwise ignore it (user selected concept will prevail)
-            System.out.println( "doMetaSearchForNonNCItNonNCIm: EVS match ignored due to > 1 results count. User selection prevails " + suffix );
+            logger.info( "doMetaSearchForNonNCItNonNCIm: EVS match ignored due to > 1 results count. User selection prevails " + suffix );
         }
         else
         {
-            System.out.println( "doMetaSearchForNonNCItNonNCIm: EVS does not return any match " + suffix );
+        	logger.info( "doMetaSearchForNonNCItNonNCIm: EVS does not return any match " + suffix );
         }
 
         return vList;
@@ -3140,7 +3140,7 @@ public class EVSSearch implements Serializable
         for( Property prop : properties )
         {
             String name = prop.getPropertyName();
-            System.out.println( new StringBuffer().append( "\tProperty name: " ).append( prop.getPropertyName() )
+            logger.debug( new StringBuffer().append( "getMetaSemantics\tProperty name: " ).append( prop.getPropertyName() )
                     .append( " Text: " ).append( prop.getValue().getContent() ).toString() );
             if( name != null && name.equals( "Semantic_Type" ) )
             {
@@ -3177,7 +3177,7 @@ public class EVSSearch implements Serializable
                     if( src != null && !sConSrc.equals( "" ) )
                     {
                         if( sConSrc.contains( prefSrc ) )
-                            System.out.println( "GOT THE PREFSRC" );
+                            logger.debug( "getPrefMetaCode GOT THE PREFSRC" );
                         if( sCode == null )
                             sCode = "";
                     }
@@ -4168,7 +4168,7 @@ public class EVSSearch implements Serializable
                     //conType = eBean.getMETA_CODE_TYPE();
                     conType = eBean.getCONCEPT_IDENTIFIER();
 
-                    System.out.println( "comes here if user selects vocabulary other than NCI metathesaurus" );
+                    logger.debug( "getThesaurusConceptForNonNCItNonNCIm comes here if user selects vocabulary other than NCI metathesaurus" );
                     logger.debug( conType + " evs " + eBean.getMETA_CODE_VAL()
                             + " con " + eBean.getLONG_NAME() );
                     //check if can be searched by meta type properlty (UMLS or NCI_META)
@@ -4191,7 +4191,7 @@ public class EVSSearch implements Serializable
                         //begin GF32723
                         if( LexEVSHelper.isOtherVocabulary( dtsVocab ) )
                         {   //e.g. RadLex vocab for instance
-                            System.out.println( "calling doMetaSearchForNonNCItNonNCIm() eDB = [" + eDB + "]" );
+                            logger.debug( "calling doMetaSearchForNonNCItNonNCIm() eDB = [" + eDB + "]" );
                             vList = this.doMetaSearchForNonNCItNonNCIm( vList, conID, "MetaCode", eDB, 10, metaName );
                             logger.info( "getThesaurusConcept:doMetaSearchForNonNCItNonNCIm() called for dtsVocab [" + dtsVocab + "] eDB [" + eDB + "] metaName [" + metaName + "]" );
                         }
@@ -4606,15 +4606,15 @@ public class EVSSearch implements Serializable
             retval = lexevsService.registerSecurityToken( codingScheme, securityToken );
             if( retval != null && retval.equals( Boolean.TRUE ) )
             {
-                System.out.println( "Registration of SecurityToken was successful." );
+                logger.debug( "Registration of SecurityToken was successful." );
             }
             else
             {
-                System.out.println( "WARNING: Registration of SecurityToken failed." );
+                logger.warn( "WARNING: Registration of SecurityToken failed." );
             }
         } catch( Exception e )
         {
-            System.out.println( "WARNING: Registration of SecurityToken failed." );
+            logger.error( "WARNING: Registration of SecurityToken failed.", e );
         }
         return lexevsService;
     }
@@ -4639,13 +4639,13 @@ public class EVSSearch implements Serializable
                 }
                 //end GF32723
                 vEvsBeann.addElement( eBean );
-                System.out.println( "getThesaurusConceptBean: add bean " + i );
+                logger.debug( "getThesaurusConceptBean: add bean " + i );
             }
-            System.out.println( "getThesaurusConceptBean: vEvsBeann size is " + vEvsBeann.size() + " " );
+            logger.debug( "getThesaurusConceptBean: vEvsBeann size is " + vEvsBeann.size() + " " );
         }
         else
         {
-            System.out.println( "getThesaurusConceptBean: vEvsBeann is empty!" );
+            logger.debug( "getThesaurusConceptBean: vEvsBeann is empty!" );
         }
 
         return vEvsBeann;
@@ -4877,8 +4877,7 @@ public class EVSSearch implements Serializable
         } catch( Exception ex )
         {
             //ex.printStackTrace();
-            System.out.println( "Error searchPrefTerm: " +
-                    ex.toString() );
+            logger.error( "Error searchPrefTerm: ", ex);
         }
 
         return concepts;
@@ -4915,13 +4914,13 @@ public class EVSSearch implements Serializable
 
             for( String def : definitions )
             {
-                System.out.println( def );
+            	logger.debug( def );
             }
             return crl.getResolvedConceptReferenceCount();
         } catch( Exception ex )
         {
-            System.out.println( "searchConcepts_name " + vocabName + " and "
-                    + vocabVersion + " throws Exception = " + ex );
+        	logger.error( "searchConcepts_name " + vocabName + " and "
+                    + vocabVersion + " throws Exception = ", ex );
         }
         return 0;
     }

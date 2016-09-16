@@ -1064,9 +1064,9 @@ public class PVServlet implements Serializable
              
              //JR1074 begin - just for FB to display the new PV-VM pair
 //             pvBean = data.getSelectPV();
-             System.out.println("PVServlet.java#submitPV pvBean in form [" + pvBean.getPV_IN_FORM() + "] pvBean [" + pvBean.toString() + "]");
+             logger.debug("PVServlet.java#submitPV pvBean in form [" + pvBean.getPV_IN_FORM() + "] pvBean [" + pvBean.toString() + "]");
              if(pvBean.getPV_IN_FORM()) {
-            	 System.out.println("PV is used in form(s).");
+            	 logger.debug("PV is used in form(s).");
             	 FormBuilderUtil fb = new FormBuilderUtil();
             	 if(data.getCurationServlet().getConn() == null) {
             		 System.err.println("Database connection is null or empty.");
@@ -1088,14 +1088,14 @@ public class PVServlet implements Serializable
 
 	     			 //QR_IDSEQ = "14F6E5D0-72F1-46CA-E050-BB89A7B43891";	//ac.getNewAC_IDSEQ(conn);
 //	    			 PV_Bean pvBean = new PV_Bean();
-	    			 System.out.println("PVServlet.java#submitPV QR_IDSEQ = " + QC_IDSEQ);
+	    			 logger.debug("PVServlet.java#submitPV QR_IDSEQ = " + QC_IDSEQ);
 
 	    			String QR_IDSEQ = null;
 					try {
 		            	 //create a new relationship
 //		    			 pvBean.setQUESTION_VALUE_IDSEQ("B387CBBD-A53C-50E5-E040-BB89AD4350CE");
 //		    			 questBean.setQC_IDSEQ("14B849C8-9711-24F5-E050-BB89A7B41326");	//existing question id! TODO: will it work with a new question?
-		    			 System.out.println("pvBean QUESTION_VALUE_IDSEQ [" + pvBean.getQUESTION_VALUE_IDSEQ() + "] questBean QC_IDSEQ [" + questBean.getQC_IDSEQ() + "]");	//both can not be empty or null
+		    			 logger.debug("pvBean QUESTION_VALUE_IDSEQ [" + pvBean.getQUESTION_VALUE_IDSEQ() + "] questBean QC_IDSEQ [" + questBean.getQC_IDSEQ() + "]");	//both can not be empty or null
 		    			 QR_IDSEQ = fb.createQuestionRelationWithPV(data.getCurationServlet().getConn(), displayOrder, questBean, pvBean);
 					} catch (Exception e) {
 						e.printStackTrace();
@@ -1114,7 +1114,7 @@ public class PVServlet implements Serializable
 //						FormCleaner.formCleanup2(data.getCurationServlet().getConn(), fb, QR_IDSEQ);
 //						FormCleaner.formCleanup3(data.getCurationServlet().getConn(), fb, questBean);
 
-	            	 System.out.println("PV is used in form(s).");
+	            	 logger.debug("PV is used in form(s).");
 	     			 pvBean.setPV_IN_FORM(false);
 	                 //update pv to vd 
 	                 data.setSelectPV(pvBean);
@@ -1128,12 +1128,13 @@ public class PVServlet implements Serializable
 		               continue;	//TODO JR1074 it came here :(
 		             }
      			 } catch (Exception e) {
+     				 logger.error("in submitPV exception", e);
 					e.printStackTrace();
 				}
 
 
              } else {
-            	 System.out.println("PV is not used in any form.");
+            	 logger.debug("PV is not used in any form.");
                  //update pv to vd 
                  data.setSelectPV(pvBean);
                  data.setVD(vd);

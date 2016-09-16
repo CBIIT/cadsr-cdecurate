@@ -40,6 +40,8 @@ import java.util.Vector;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.apache.log4j.Logger;
+
 /**
  * This class maps and manges the session data needed for processing Alternate Names and Definitions.
  * 
@@ -130,6 +132,8 @@ public class AltNamesDefsSession implements Serializable
     private boolean _blockVersion;
 
     private boolean _showMC;
+    
+    private static final Logger logger = Logger.getLogger(AltNamesDefsSession.class);
 
     /**
      * Constructor
@@ -492,7 +496,7 @@ public class AltNamesDefsSession implements Serializable
 //        if(ac != null && ac.getAlternates() != null && ac.getAlternates()._alts != null && ac.getAlternates()._alts[0] != null) {
 //        	String altDef = ac.getAlternates()._alts[0].getName();
 //        	session_.setAttribute(Constants.FINAL_ALT_DEF_STRING, altDef);
-//        	System.out.println("AltNamesDefsSession: getSessionDataAC() altDef = >>>" + altDef + "<<<");
+//        	logger.debug("AltNamesDefsSession: getSessionDataAC() altDef = >>>" + altDef + "<<<");
 //        }
         
         // Need to reset visible manually curated definitions.
@@ -1184,7 +1188,7 @@ public class AltNamesDefsSession implements Serializable
 			String cDef = null;
 			while (scanner.hasNext()) {
 				cDef = scanner.next();
-				System.out.println("AltNamesDefsSession.java alt[" + count++ + "] = " + cDef);
+				logger.debug("AltNamesDefsSession.java alt[" + count++ + "] = " + cDef);
 		    	
 	    		Alternates newAlt = new Alternates(Alternates._INSTANCEDEF, cDef, "System-generated", "ENGLISH", acb.getIDSEQ(), this.newIdseq(), acb.getContextIDSEQ(), acb.getContextName());
 	            
@@ -1389,9 +1393,9 @@ public class AltNamesDefsSession implements Serializable
     {
         for (Alternates temp : _alts)
         {
-        	System.out.println(temp.getConteName() + " " + alt_.getConteName());
-        	System.out.println(temp.getType() + " " + alt_.getType());
-        	System.out.println(temp.getName() + " " + alt_.getName());
+        	logger.debug(temp.getConteName() + " " + alt_.getConteName());
+        	logger.debug(temp.getType() + " " + alt_.getType());
+        	logger.debug(temp.getName() + " " + alt_.getName());
             if (temp.getConteName().equals(alt_.getConteName()) && temp.getType().equals(alt_.getType()) && temp.getName().equals(alt_.getName()))	//JR1099 if (temp.equals(alt_))
                 return EXISTS_MSG;
             if (!temp.isName()
@@ -1409,9 +1413,9 @@ public class AltNamesDefsSession implements Serializable
     public String checkDB(Connection conn, Alternates alt_)
     {
     	String ret = null;
-    	System.out.println("alt_.getConteName() " + alt_.getConteName());
-    	System.out.println("alt_.getType() " + alt_.getType());
-    	System.out.println("alt_.getName() " + alt_.getName());
+    	logger.debug("alt_.getConteName() " + alt_.getConteName());
+    	logger.debug("alt_.getType() " + alt_.getType());
+    	logger.debug("alt_.getName() " + alt_.getName());
 
     	try {
 			if(AltNamesDefsDB.exists(conn, alt_.getConteName(), alt_.getType(), alt_.getName()))
@@ -1497,14 +1501,14 @@ public class AltNamesDefsSession implements Serializable
     	
     	if (!exists) {
     	    		
-    		System.out.println("REP term concept code is "+name);
-    		System.out.println("Rep term evs origin is "+detl_type);
-    		System.out.println("Rep ID is "+m_DEC.getDEC_OCL_IDSEQ());
-    		System.out.println("REp condr ideq is" +m_DEC.getDEC_OC_CONDR_IDSEQ());
-    		System.out.println("DEC Property ID is"+m_DEC.getDEC_PROPL_IDSEQ());
-    	    System.out.println("designation m_REPQ repterm is "+this.newIdseq());
-    	    System.out.println("context id is"+ m_DEC.getContextIDSEQ());
-    	    System.out.println("context is " + m_DEC.getContextName());
+    		logger.debug("REP term concept code is "+name);
+    		logger.debug("Rep term evs origin is "+detl_type);
+    		logger.debug("Rep ID is "+m_DEC.getDEC_OCL_IDSEQ());
+    		logger.debug("REp condr ideq is" +m_DEC.getDEC_OC_CONDR_IDSEQ());
+    		logger.debug("DEC Property ID is"+m_DEC.getDEC_PROPL_IDSEQ());
+    	    logger.debug("designation m_REPQ repterm is "+this.newIdseq());
+    	    logger.debug("context id is"+ m_DEC.getContextIDSEQ());
+    	    logger.debug("context is " + m_DEC.getContextName());
     	    String context=m_DEC.getContextName();
     	    if((context==null)||(context=="")) context="NCIP"; 
 //    		Alternates newAlt = new Alternates(Alternates._INSTANCENAME, name, "Prior Preferred Name", "ENGLISH", acb.getIDSEQ(), this.newIdseq(), acb.getContextIDSEQ(), acb.getContextName());
@@ -1539,11 +1543,11 @@ public class AltNamesDefsSession implements Serializable
     	if (!exists) {
     		
     		
-    		System.out.println("REP term concept code is "+name);
-    		System.out.println("Rep term evs origin is "+detl_type);
-    		System.out.println("Rep ID is "+m_REP.getIDSEQ());
+    		logger.debug("REP term concept code is "+name);
+    		logger.debug("Rep term evs origin is "+detl_type);
+    		logger.debug("Rep ID is "+m_REP.getIDSEQ());
     		
-    	    System.out.println("designation m_REPQ repterm is "+this.newIdseq());
+    	    logger.debug("designation m_REPQ repterm is "+this.newIdseq());
     	    
 //    		
     		Alternates newAlt = new Alternates(Alternates._INSTANCENAME, name, detl_type, "ENGLISH", m_REP.getIDSEQ(), this.newIdseq(), sConte_idseq, sContext);

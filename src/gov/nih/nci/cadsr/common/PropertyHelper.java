@@ -139,15 +139,12 @@ public class PropertyHelper
             {
                 DEFAULT_CONTEXT_NAME = CaDSRUtil.getDefaultContextNameNoCache();
                 _logger.debug( "****** DEFAULT_CONTEXT_NAME = [" + DEFAULT_CONTEXT_NAME + "] from cadsrutil.properties ******" );
-                System.out.println( "****** DEFAULT_CONTEXT_NAME = [" + DEFAULT_CONTEXT_NAME + "] from cadsrutil.properties ******" );
-
             } catch( IOException e )
             {
                 if( e.getMessage().contains( "gov.nih.nci.cadsrutil.properties" ) )
                 {
                     DEFAULT_CONTEXT_NAME = "NCIP";
                     _logger.debug( "****** DEFAULT_CONTEXT_NAME = [" + DEFAULT_CONTEXT_NAME + "] from internal default ******" );
-                    System.out.println( "****** DEFAULT_CONTEXT_NAME = [" + DEFAULT_CONTEXT_NAME + "] from internal default ******" );
                 }
                 else
                 {

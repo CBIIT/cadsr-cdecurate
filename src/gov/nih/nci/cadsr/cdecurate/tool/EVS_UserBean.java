@@ -168,7 +168,7 @@ public final class EVS_UserBean implements Serializable
   /**
    * initialize the logger for the class
    */
-  Logger logger = Logger.getLogger(EVS_UserBean.class.getName());
+  private static Logger logger = Logger.getLogger(EVS_UserBean.class.getName());
 
   /**
    * Constructor
@@ -851,12 +851,12 @@ public final class EVS_UserBean implements Serializable
 		try {
 			LexBIGService lbSvc = (LexBIGService) ApplicationServiceProvider.getApplicationServiceFromUrl(eURL, "EvsServiceInfo");
 			if (lbSvc == null) {
-				System.out.println("WARNING: Unable to connect to instantiate LexBIGService ???");
+				logger.error("WARNING: Unable to connect to instantiate LexBIGService ???");
 				return null;
 			}
 			CodingSchemeRenderingList csrl = lbSvc.getSupportedCodingSchemes();
 			int count = csrl.getCodingSchemeRenderingCount();
-			System.out.println("CodingSchemeRenderingList count: " + count);
+			logger.debug("CodingSchemeRenderingList count: " + count);
 			for (int i = 0; i < count; i++) {
 				int j = i + 1;
 				CodingSchemeRendering csr = csrl.getCodingSchemeRendering(i);
@@ -875,7 +875,7 @@ public final class EVS_UserBean implements Serializable
 								//map.put(css.getFormalName(), cs.getCodingSchemeName() + " (URI: " + css.getCodingSchemeURI() + ")");
 								//vocabList = new ArrayList<String>();	//JR1067 just avoid NPE, not a real fix
 								vocabList.add(css.getFormalName());
-								System.out.println(css.getFormalName() + " --> " + cs.getCodingSchemeName() + " (URI: " + css.getCodingSchemeURI() + ")");
+								logger.debug(css.getFormalName() + " --> " + cs.getCodingSchemeName() + " (URI: " + css.getCodingSchemeURI() + ")");
 							}
 						}
 					} catch (Exception ex) {
@@ -888,7 +888,7 @@ public final class EVS_UserBean implements Serializable
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		System.out.println("Run time (ms): " + (System.currentTimeMillis() - ms));
+		logger.info("Run time (ms): " + (System.currentTimeMillis() - ms));
 		return vocabList;
 	}
 
@@ -1028,11 +1028,10 @@ public final class EVS_UserBean implements Serializable
 		if (hmap == null)
 			return;
 		int k = 0;
-		System.out.println("\n");
 		Set<Map.Entry<String, String>> set = hmap.entrySet();
 		for (Map.Entry<String, String> me : set) {
 			k = k + 1;
-			System.out.println("$$$$$$$$$ dumpHasMap $$$$$$$$$ (" + k + ")" + me.getKey() + ": " + me.getValue());
+			logger.debug("$$$$$$$$$ EVS_UserBean.dumpHasMap $$$$$$$$$ (" + k + ")" + me.getKey() + ": " + me.getValue());
 		}
 	}
 
