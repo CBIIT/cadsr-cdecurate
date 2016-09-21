@@ -4,10 +4,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Vector;
+
+import org.apache.log4j.Logger;
 
 import gov.nih.nci.cadsr.cdecurate.tool.PVAction;
 import gov.nih.nci.cadsr.cdecurate.tool.PVForm;
@@ -16,12 +14,13 @@ import gov.nih.nci.cadsr.cdecurate.tool.Quest_Bean;
 import gov.nih.nci.cadsr.cdecurate.tool.UtilService;
 import gov.nih.nci.cadsr.cdecurate.tool.VD_Bean;
 import gov.nih.nci.cadsr.cdecurate.tool.VMAction;
-import gov.nih.nci.cadsr.common.Constants;
+import gov.nih.nci.cadsr.common.StringUtil;
 
 /**
  * Anything that is affecting the form builder is implemented in this class.
  */
 public class FormBuilderUtil {
+	public static final Logger logger = Logger.getLogger(FormBuilderUtil.class.getName());
 	private  boolean autoCleanup = false;
 
 	public boolean isAutoCleanup() {
@@ -63,10 +62,10 @@ public class FormBuilderUtil {
 
 		String newVVSQL = "Insert into VALID_VALUES_ATT_EXT (QC_IDSEQ,MEANING_TEXT,DATE_CREATED,CREATED_BY,DATE_MODIFIED,MODIFIED_BY,DESCRIPTION_TEXT) ";
 		newVVSQL += "values (" + "'" + questBean.getQC_IDSEQ() + "',";	//e.g. 14B849C8-9711-24F5-E050-BB89A7B41326
-		newVVSQL += "'" + pvBean.getPV_VALUE() + "',to_date('07-DEC-11','DD-MON-RR'),'MEDIDATA_LEEW',null,null,'"+ pvBean.getPV_MEANING_DESCRIPTION() + "')";
+		newVVSQL += "'" + StringUtil.unescapeHtmlEncodedValue(pvBean.getPV_VALUE()) + "',to_date('07-DEC-11','DD-MON-RR'),'MEDIDATA_LEEW',null,null,'"+ StringUtil.unescapeHtmlEncodedValue(pvBean.getPV_MEANING_DESCRIPTION()) + "')";
 
 		boolean ret = false;
-		System.out.println("FormBuilderUtil.java#createPVValidValue SQL = " + newVVSQL);
+		logger.debug("FormBuilderUtil.java#createPVValidValue SQL = " + newVVSQL);
 		if(executeUpdate(conn, newVVSQL) == 1) ret = true;
 
         return ret;
@@ -75,7 +74,7 @@ public class FormBuilderUtil {
 	public  final boolean updatePVValidValue(Connection conn, Quest_Bean questBean, PV_Bean pvBean) throws Exception {
 		if(conn == null) throw new Exception("Database connection is null or empty!");
 
-		String newVVSQL = "update VALID_VALUES_ATT_EXT set MEANING_TEXT = '" + pvBean.getPV_VALUE() + "', DESCRIPTION_TEXT = '"+ pvBean.getPV_MEANING_DESCRIPTION() + "' ";
+		String newVVSQL = "update VALID_VALUES_ATT_EXT set MEANING_TEXT = '" + StringUtil.unescapeHtmlEncodedValue(pvBean.getPV_VALUE()) + "', DESCRIPTION_TEXT = '"+ StringUtil.unescapeHtmlEncodedValue(pvBean.getPV_MEANING_DESCRIPTION()) + "' ";
 		newVVSQL += " where ";
 		newVVSQL += " QC_IDSEQ = '"+ questBean.getQC_IDSEQ() + "'";
 

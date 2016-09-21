@@ -4,8 +4,8 @@ import org.apache.log4j.Logger;
 
 public class LogUtil {
 
-//	private static boolean directConsoleOutput = false;
-	private static boolean directConsoleOutput = true;
+	private static boolean directConsoleOutput = false;
+//	private static boolean directConsoleOutput = true;
 	private static Logger logger = null;
 	
 	public static Logger getLogger() {
@@ -20,8 +20,8 @@ public class LogUtil {
 		return directConsoleOutput;
 	}
 
-	public static void setDirectConsoleOutput(boolean directConsoleOutput) {
-		directConsoleOutput = directConsoleOutput;
+	public static void setDirectConsoleOutput(boolean _directConsoleOutput) {
+		directConsoleOutput = _directConsoleOutput;
 	}
 	
 	public static void log(String message) {

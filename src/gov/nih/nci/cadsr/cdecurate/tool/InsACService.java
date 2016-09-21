@@ -262,7 +262,7 @@ public class InsACService implements Serializable
                 sName = "";
             String pageVDType = vd.getVD_TYPE_FLAG();
             String sContextID = vd.getVD_CONTE_IDSEQ();
-            String sLongName = vd.getVD_LONG_NAME();
+            String sLongName = StringUtil.unescapeHtmlEncodedValue(vd.getVD_LONG_NAME());
             String oldASLName = oldVD.getVD_ASL_NAME();
             if( oldASLName == null )
                 oldASLName = "";
@@ -463,7 +463,7 @@ public class InsACService implements Serializable
 
                 cstmt.setDouble( 8, dVersion ); // version - test says must have
                 // a value
-                cstmt.setString( 9, sDefinition ); // preferred definition -
+                cstmt.setString( 9, StringUtil.unescapeHtmlEncodedValue(sDefinition )); // preferred definition -
                 // not null for INS
                 cstmt.setString( 10, sCD_ID ); // cd id - not null for INS
                 cstmt.setString( 11, sAslName );
@@ -911,9 +911,9 @@ public class InsACService implements Serializable
             String sContext = dec.getDEC_CONTEXT_NAME();
             Double DVersion = new Double( dec.getDEC_VERSION() );
             double dVersion = DVersion.doubleValue();
-            String sDefinition = dec.getDEC_PREFERRED_DEFINITION();
+            String sDefinition = StringUtil.unescapeHtmlEncodedValue(dec.getDEC_PREFERRED_DEFINITION());
             String sCD_ID = dec.getDEC_CD_IDSEQ();
-            String sLongName = dec.getDEC_LONG_NAME();
+            String sLongName = StringUtil.unescapeHtmlEncodedValue(dec.getDEC_LONG_NAME());
             String sBeginDate = m_util.getOracleDate( dec.getDEC_BEGIN_DATE() );
             String sEndDate = m_util.getOracleDate( dec.getDEC_END_DATE() );
             // String sLanguage = dec.getDEC_LANGUAGE();
@@ -2672,11 +2672,11 @@ public class InsACService implements Serializable
             String sContext = de.getDE_CONTEXT_NAME();
             Double DVersion = new Double( de.getDE_VERSION() );
             double dVersion = DVersion.doubleValue();
-            String sDefinition = de.getDE_PREFERRED_DEFINITION();
+            String sDefinition = StringUtil.unescapeHtmlEncodedValue(de.getDE_PREFERRED_DEFINITION());
             String sDEC_ID = de.getDE_DEC_IDSEQ();
             String sVD_ID = de.getDE_VD_IDSEQ();
-            String sLongName = de.getDE_LONG_NAME();
-            String sDocText = de.getDOC_TEXT_PREFERRED_QUESTION();
+            String sLongName = StringUtil.unescapeHtmlEncodedValue(de.getDE_LONG_NAME());
+            String sDocText = StringUtil.unescapeHtmlEncodedValue(de.getDOC_TEXT_PREFERRED_QUESTION());
             String sBeginDate = m_util.getOracleDate( de.getDE_BEGIN_DATE() );
             String sEndDate = m_util.getOracleDate( de.getDE_END_DATE() );
             String sChangeNote = de.getDE_CHANGE_NOTE();
@@ -2778,12 +2778,13 @@ public class InsACService implements Serializable
                     deVO.setPrefferred_name( sName ); // preferred name-not null for INS, must be null for UPD
                 }
                 deVO.setVersion( dVersion ); // version-test says must have a value
-                deVO.setPrefferred_def( sDefinition ); // preferred definition-not null for INS
+                deVO.setPrefferred_def(StringUtil.unescapeHtmlEncodedValue( sDefinition )); // preferred definition-not null for INS
                 deVO.setDec_IDSEQ( sDEC_ID ); // dec id-not null for INS
                 deVO.setVd_IDSEQ( sVD_ID ); // vd id-not null for INS
                 deVO.setAsl_name( de.getDE_ASL_NAME() ); // status
                 if( sAction.equals( "INS" ) )
                     deVO.setLastest_version_ind( "Yes" ); // latest version indicator
+                sLongName = StringUtil.unescapeHtmlEncodedValue( sLongName );
                 deVO.setLong_name( sLongName ); // long name-can be null
                 deVO.setBegin_date( m_util.getSQLTimestamp( de.getDE_BEGIN_DATE() ) ); // sBeginDate-can be null
                 deVO.setEnd_date( m_util.getSQLTimestamp( de.getDE_END_DATE() ) ); // sEndDate-can be null
@@ -2939,14 +2940,14 @@ public class InsACService implements Serializable
                         if( de.getDOC_TEXT_PREFERRED_QUESTION_IDSEQ() == null
                                 || de.getDOC_TEXT_PREFERRED_QUESTION_IDSEQ()
                                 .equals( "" ) )
-                            sReturn = setRD( "INS", sDocText, sDE_ID, de
-                                            .getDOC_TEXT_PREFERRED_QUESTION(),
+                            sReturn = setRD( "INS", sDocText, sDE_ID, 
+                            		StringUtil.unescapeHtmlEncodedValue(de.getDOC_TEXT_PREFERRED_QUESTION()),
                                     "Preferred Question Text", "", sContextID,
                                     de.getDOC_TEXT_PREFERRED_QUESTION_IDSEQ(),
                                     sLang ); // ?????
                         else
-                            sReturn = setRD( "UPD", sDocText, sDE_ID, de
-                                            .getDOC_TEXT_PREFERRED_QUESTION(),
+                            sReturn = setRD( "UPD", sDocText, sDE_ID, 
+                            		StringUtil.unescapeHtmlEncodedValue(de.getDOC_TEXT_PREFERRED_QUESTION()),
                                     "Preferred Question Text", "", sContextID,
                                     de.getDOC_TEXT_PREFERRED_QUESTION_IDSEQ(),
                                     sLang ); // ?????
@@ -3800,13 +3801,13 @@ public class InsACService implements Serializable
                         sAction = "INS"; // insert new one if not existed
                 }
                 cstmt.setString( 3, sAction ); // ACTION - INS, UPD or DEL
-                cstmt.setString( 5, sRDName ); // rd name - cannot be null
+                cstmt.setString( 5, StringUtil.unescapeHtmlEncodedValue(sRDName )); // rd name - cannot be null
                 cstmt.setString( 6, sRDType ); // dCtl name - long name for
                 // refrence document
                 if( sAction.equals( "INS" ) )
                     cstmt.setString( 7, sDE_ID ); // ac id - must be NULL FOR
                 // UPDATE
-                cstmt.setString( 10, sDocText ); // doc text -
+                cstmt.setString( 10, StringUtil.unescapeHtmlEncodedValue(sDocText )); // doc text -
                 cstmt.setString( 12, sRDURL ); // URL -
                 cstmt.setString( 17, sLang ); // URL -
                 cstmt.setString( 18, sRDCont ); // context -

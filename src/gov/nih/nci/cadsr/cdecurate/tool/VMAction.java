@@ -14,18 +14,6 @@
 
 package gov.nih.nci.cadsr.cdecurate.tool;
 
-import gov.nih.nci.cadsr.cdecurate.database.Alternates;
-import gov.nih.nci.cadsr.cdecurate.database.DBAccess;
-import gov.nih.nci.cadsr.cdecurate.database.SQLHelper;
-import gov.nih.nci.cadsr.cdecurate.util.AdministeredItemUtil;
-import gov.nih.nci.cadsr.cdecurate.util.DataManager;
-import gov.nih.nci.cadsr.cdecurate.util.ModelHelper;
-import gov.nih.nci.cadsr.cdecurate.util.PVHelper;
-import gov.nih.nci.cadsr.cdecurate.util.ToolException;
-import gov.nih.nci.cadsr.cdecurate.util.VMHelper;
-import gov.nih.nci.cadsr.common.TestUtil;
-import gov.nih.nci.cadsr.domain.PermissibleValues;
-
 import java.io.Serializable;
 import java.sql.CallableStatement;
 import java.sql.Connection;
@@ -39,17 +27,21 @@ import java.util.Vector;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.log4j.Logger;
 
-
-
-
-
-
-
+import gov.nih.nci.cadsr.cdecurate.database.Alternates;
+import gov.nih.nci.cadsr.cdecurate.database.DBAccess;
+import gov.nih.nci.cadsr.cdecurate.database.SQLHelper;
+import gov.nih.nci.cadsr.cdecurate.util.AdministeredItemUtil;
+import gov.nih.nci.cadsr.cdecurate.util.DataManager;
+import gov.nih.nci.cadsr.cdecurate.util.ModelHelper;
+import gov.nih.nci.cadsr.cdecurate.util.PVHelper;
+import gov.nih.nci.cadsr.cdecurate.util.ToolException;
+import gov.nih.nci.cadsr.cdecurate.util.VMHelper;
+import gov.nih.nci.cadsr.common.StringUtil;
+import gov.nih.nci.cadsr.domain.PermissibleValues;
 //import oracle.jdbc.driver.OracleTypes;
 import oracle.jdbc.OracleTypes;		//GF30779
-
-import org.apache.log4j.Logger;
 
 /**
  * @author shegde
@@ -1851,9 +1843,9 @@ public class VMAction implements Serializable
 				cstmt.setString(3, VMForm.CADSR_ACTION_INS);
 				cstmt.setString(5, vm.getVM_CD_IDSEQ());
 				// cstmt.setString(6, vm.getVM_SHORT_MEANING());
-				cstmt.setString(6, vm.getVM_LONG_NAME());
+				cstmt.setString(6, StringUtil.unescapeHtmlEncodedValue(vm.getVM_LONG_NAME()));
 				// cstmt.setString(7, vm.getVM_DESCRIPTION());
-				cstmt.setString(7, vm.getVM_PREFERRED_DEFINITION());
+				cstmt.setString(7, StringUtil.unescapeHtmlEncodedValue(vm.getVM_PREFERRED_DEFINITION()));
 				cstmt.setString(8, vm.getVM_IDSEQ());
 				// Now we are ready to call the stored procedure
 				cstmt.execute();

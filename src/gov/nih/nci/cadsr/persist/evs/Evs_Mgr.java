@@ -13,25 +13,22 @@ package gov.nih.nci.cadsr.persist.evs;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Vector;
 
 import org.apache.log4j.Logger;
 
 import gov.nih.nci.cadsr.cdecurate.database.SQLHelper;
 import gov.nih.nci.cadsr.cdecurate.tool.ConBean;
-import gov.nih.nci.cadsr.cdecurate.util.AdministeredItemUtil;
+import gov.nih.nci.cadsr.common.StringUtil;
 import gov.nih.nci.cadsr.persist.common.BaseVO;
 import gov.nih.nci.cadsr.persist.common.DBConstants;
-import gov.nih.nci.cadsr.persist.exception.DBException;
 import gov.nih.nci.cadsr.persist.common.DBManager;
 import gov.nih.nci.cadsr.persist.concept.Component_Concepts_Ext_Mgr;
 import gov.nih.nci.cadsr.persist.concept.ConVO;
 import gov.nih.nci.cadsr.persist.concept.Concepts_Ext_Mgr;
-import gov.nih.nci.cadsr.persist.de.DeErrorCodes;
+import gov.nih.nci.cadsr.persist.exception.DBException;
 
 /**
  * @author hveerla
@@ -66,8 +63,8 @@ private Logger logger = Logger.getLogger(this.getClass());
 			statement = conn.prepareStatement(sql);
 		    statement.setString(++column, evsVO.getIDSEQ());
 			statement.setString(++column, evsVO.getPrefferred_name());
-			statement.setString(++column, evsVO.getLong_name());
-			statement.setString(++column, evsVO.getPrefferred_def());
+			statement.setString(++column, StringUtil.unescapeHtmlEncodedValue(evsVO.getLong_name()));
+			statement.setString(++column, StringUtil.unescapeHtmlEncodedValue(evsVO.getPrefferred_def()));
 			statement.setString(++column, evsVO.getConte_IDSEQ());
 			statement.setDouble(++column, evsVO.getVersion());
 			statement.setString(++column, evsVO.getAsl_name());
@@ -129,7 +126,7 @@ private Logger logger = Logger.getLogger(this.getClass());
 				ResultVO  vo = new ResultVO();
 				vo.setCondr_IDSEQ(rs.getString("CONDR_IDSEQ"));
 				vo.setIDSEQ(rs.getString("IDSEQ"));
-				vo.setLong_name(rs.getString("LONG_NAME"));
+				vo.setLong_name(StringUtil.escapeHtmlEncodedValue(rs.getString("LONG_NAME")));
 				vo.setPublicId(rs.getString("PUBLIC_ID"));
 				vo.setVersion(rs.getString("VERSION"));
 				vo.setAsl_name(rs.getString("ASL_NAME"));

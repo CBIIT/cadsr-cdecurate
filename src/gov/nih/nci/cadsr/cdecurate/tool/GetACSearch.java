@@ -28,11 +28,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Hashtable;
-import java.util.Iterator;
 import java.util.Stack;
 import java.util.StringTokenizer;
 import java.util.Vector;
@@ -44,6 +42,7 @@ import javax.servlet.http.HttpSession;
 
 //import oracle.jdbc.driver.OracleTypes;
 import oracle.jdbc.OracleTypes;        //GF30779
+
 
 import org.apache.log4j.Logger;
 
@@ -130,11 +129,16 @@ public class GetACSearch implements Serializable
             }
             sSearchAC = ( String ) session.getAttribute( "searchAC" );
             // do the keyword search for the selected component
-            String sKeyword = StringUtil.cleanJavascriptAndHtml( ( String ) req.getParameter( "keyword" ) );
+            //We do not keep HTML-encoded values in DB. This way we do not need to make HTML-encoding of a keyword before search
+            String sKeyword = ( String ) req.getParameter( "keyword" ) ;
+            //TODO remove this old line after testing. It HTML-encodes a parameter received from UI 
+            //String sKeyword = StringUtil.cleanJavascriptAndHtml( ( String ) req.getParameter( "keyword" ) );
             if( sKeyword != null )
             {
-                if( !StringUtil.validateVersion( sKeyword ) )
+                if( !StringUtil.validateVersion( sKeyword ) ) {
+                	logger.error("request parameter 'keyword' is not validated: " + sKeyword);
                     throw new Exception( "keyword contains characters or combinations of characters that are not allowed because of security concerns." );
+                }
             }
             if( sKeyword == null && sSearchAC.equals( "PermissibleValue" ) )
                 sKeyword = ( String ) session.getAttribute( "serKeyword" );
@@ -1427,8 +1431,8 @@ public class GetACSearch implements Serializable
 
                             DEBean = new DE_Bean();
                             DEBean.setDE_PREFERRED_NAME( rs.getString( "preferred_name" ) );
-                            DEBean.setDE_LONG_NAME( rs.getString( "long_name" ) );
-                            DEBean.setDE_PREFERRED_DEFINITION( rs.getString( "preferred_definition" ) );
+                            DEBean.setDE_LONG_NAME(StringUtil.escapeHtmlEncodedValue(rs.getString( "long_name" )));
+                            DEBean.setDE_PREFERRED_DEFINITION(StringUtil.escapeHtmlEncodedValue(rs.getString( "preferred_definition" ) ));
                             DEBean.setDE_ASL_NAME( rs.getString( "asl_name" ) );
                             DEBean.setDE_CONTE_IDSEQ( rs.getString( "conte_idseq" ) );
                             s = rs.getString( "begin_date" );
@@ -1444,8 +1448,8 @@ public class GetACSearch implements Serializable
                             DEBean.setDE_DEC_NAME( rs.getString( "dec_name" ) );
                             DEBean.setDE_DEC_Definition( rs.getString( "dec_preferred_definition" ) );
                             DEBean.setDE_VD_IDSEQ( rs.getString( "vd_idseq" ) );
-                            DEBean.setDE_VD_NAME( rs.getString( "vd_name" ) );
-                            DEBean.setDE_VD_Definition( rs.getString( "vd_preferred_definition" ) );
+                            DEBean.setDE_VD_NAME(StringUtil.escapeHtmlEncodedValue( rs.getString( "vd_name" ) ));
+                            DEBean.setDE_VD_Definition(StringUtil.escapeHtmlEncodedValue(rs.getString( "vd_preferred_definition" ) ));
                             // add the decimal number
                             if( rs.getString( "version" ).indexOf( '.' ) >= 0 )
                                 DEBean.setDE_VERSION( rs.getString( "version" ) );
@@ -1480,7 +1484,7 @@ public class GetACSearch implements Serializable
                             // get pv and historic cde id with counts
                             DEBean = getMultiRecordsResultOther( rs, DEBean, isProtoCRF );
                             // doc text attributes
-                            DEBean.setDOC_TEXT_PREFERRED_QUESTION( rs.getString( "long_name_doc_text" ) );
+                            DEBean.setDOC_TEXT_PREFERRED_QUESTION(StringUtil.escapeHtmlEncodedValue( rs.getString( "long_name_doc_text" ) ));
                             // DEBean.setDOC_TEXT_HISTORIC_NAME(rs.getString("hist_cde_doc_text"));
                             // DEBean = getMultiRecordsResultDocText(rs, DEBean);
                             // check if it is component
@@ -1916,7 +1920,8 @@ public class GetACSearch implements Serializable
                 m_servlet.ErrorLogin( m_classReq, m_classRes );
             else
             {
-                cstmt = m_servlet.getConn()
+            	logger.debug("...doVDSearch InString=" + InString);
+            	cstmt = m_servlet.getConn()
                         .prepareCall( "{call SBREXT.SBREXT_CDE_CURATOR_PKG.SEARCH_VD(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}" );
                 // Now tie the placeholders with actual parameters.
                 cstmt.registerOutParameter( 7, OracleTypes.CURSOR );
@@ -1965,11 +1970,11 @@ public class GetACSearch implements Serializable
                         g = g + 1;
                         VDBean = new VD_Bean();
                         VDBean.setVD_PREFERRED_NAME( rs.getString( "preferred_name" ) );
-                        logger.debug( "VD_LONG_NAME at Line 2020 of GetACSearch.java" + rs.getString( "long_name" ) );
-                        VDBean.setVD_LONG_NAME( AdministeredItemUtil.handleLongName( rs.getString( "long_name" ) ) );    //GF32004;
-                        logger.debug( "VD_LONG_NAME at Line 2022 of GetACSearch.java" + VDBean.getVD_LONG_NAME() );
+                        //logger.debug( "VD_LONG_NAME at Line 2020 of GetACSearch.java" + rs.getString( "long_name" ) );
+                        VDBean.setVD_LONG_NAME(StringUtil.escapeHtmlEncodedValue( AdministeredItemUtil.handleLongName( rs.getString( "long_name" ) ) ));    //GF32004;
+                        //logger.debug( "VD_LONG_NAME at Line 2022 of GetACSearch.java" + VDBean.getVD_LONG_NAME() );
 //                        VDBean.setVD_LONG_NAME(rs.getString("long_name"));
-                        VDBean.setVD_PREFERRED_DEFINITION( rs.getString( "preferred_definition" ) );
+                        VDBean.setVD_PREFERRED_DEFINITION(StringUtil.escapeHtmlEncodedValue( rs.getString( "preferred_definition" ) ));
                         VDBean.setVD_CONTE_IDSEQ( rs.getString( "conte_idseq" ) );
                         VDBean.setVD_ASL_NAME( rs.getString( "asl_name" ) );
                         VDBean.setVD_VD_IDSEQ( rs.getString( "vd_idseq" ) );
@@ -3883,9 +3888,9 @@ public class GetACSearch implements Serializable
                     String sName = m_util.removeNewLineChar( rs.getString( 1 ) );
                     OCBean.setCONCEPT_NAME( sName );
                     String slName = m_util.removeNewLineChar( rs.getString( 2 ) );
-                    OCBean.setLONG_NAME( slName );
+                    OCBean.setLONG_NAME(StringUtil.escapeHtmlEncodedValue( slName ));
                     String sDef = m_util.removeNewLineChar( rs.getString( 3 ) );
-                    OCBean.setPREFERRED_DEFINITION( sDef );
+                    OCBean.setPREFERRED_DEFINITION(StringUtil.escapeHtmlEncodedValue( sDef ));
                     OCBean.setCONTE_IDSEQ( rs.getString( 4 ) );
                     OCBean.setASL_NAME( rs.getString( 5 ) );
                     OCBean.setIDSEQ( rs.getString( 6 ) );
@@ -3983,6 +3988,7 @@ public class GetACSearch implements Serializable
                 bVListExist = true;
             if( m_servlet.getConn() == null )
                 m_servlet.ErrorLogin( m_classReq, m_classRes );
+        	logger.debug("...do_ConceptSearch InString=" + InString);
             cstmt = m_servlet.getConn().prepareCall( "{call SBREXT.SBREXT_CDE_CURATOR_PKG.SEARCH_CON(?,?,?,?,?,?,?,?)}" );
             cstmt.registerOutParameter( 6, OracleTypes.CURSOR );
             cstmt.setString( 1, InString );
@@ -4008,10 +4014,10 @@ public class GetACSearch implements Serializable
                 {
                     g = g + 1;
                     EVS_Bean conBean = new EVS_Bean();
-                    String sConName = m_util.removeNewLineChar( rs.getString( "long_name" ) );
+                    String sConName = m_util.removeNewLineChar(StringUtil.escapeHtmlEncodedValue( rs.getString( "long_name" ) ));
                     conBean.setCONCEPT_NAME( sConName );
                     conBean.setLONG_NAME( sConName );
-                    String sDef = m_util.removeNewLineChar( rs.getString( "preferred_definition" ) );
+                    String sDef = m_util.removeNewLineChar(StringUtil.escapeHtmlEncodedValue( rs.getString( "preferred_definition" ) ));
                     conBean.setPREFERRED_DEFINITION( sDef );
                     conBean.setCONTE_IDSEQ( rs.getString( "conte_idseq" ) );
                     conBean.setASL_NAME( rs.getString( "asl_name" ) );
@@ -9634,7 +9640,8 @@ public class GetACSearch implements Serializable
                 m_servlet.ErrorLogin( m_classReq, m_classRes );
             else
             {
-                cstmt = m_servlet.getConn().prepareCall( "{call SBREXT_CDE_CURATOR_PKG.GET_REFERENCE_DOCUMENTS(?,?,?)}" );
+            	logger.debug("...doRefDocSearch sFor=" + sFor);
+            	cstmt = m_servlet.getConn().prepareCall( "{call SBREXT_CDE_CURATOR_PKG.GET_REFERENCE_DOCUMENTS(?,?,?)}" );
                 // Now tie the placeholders for out parameters.
                 cstmt.registerOutParameter( 3, OracleTypes.CURSOR );
                 // Now tie the placeholders for In parameters.
@@ -9661,11 +9668,11 @@ public class GetACSearch implements Serializable
                     {
                         REF_DOC_Bean RefDocBean = new REF_DOC_Bean();
                         RefDocBean.setAC_IDSEQ( rs.getString( "ac_idseq" ) );
-                        RefDocBean.setAC_LONG_NAME( rs.getString( "ac_long_name" ) );
+                        RefDocBean.setAC_LONG_NAME(StringUtil.escapeHtmlEncodedValue( rs.getString( "ac_long_name" ) ));
                         RefDocBean.setREF_DOC_IDSEQ( rs.getString( "rd_idseq" ) );
-                        RefDocBean.setDOCUMENT_NAME( rs.getString( "rd_name" ) );
+                        RefDocBean.setDOCUMENT_NAME(StringUtil.escapeHtmlEncodedValue( rs.getString( "rd_name" ) ));
                         RefDocBean.setDOC_TYPE_NAME( rs.getString( "rd_dctl_name" ) );
-                        String sValue = rs.getString( "rd_doc_text" );
+                        String sValue = StringUtil.escapeHtmlEncodedValue(rs.getString( "rd_doc_text" ));
                         if( sValue == null )
                             sValue = "";
                         RefDocBean.setDOCUMENT_TEXT( sValue );

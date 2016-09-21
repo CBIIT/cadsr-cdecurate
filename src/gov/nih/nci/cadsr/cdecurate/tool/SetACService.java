@@ -3781,7 +3781,6 @@ public class SetACService implements Serializable
         if( hasSuspectPerameter )
         {
         	logger.error("Suspected parameter values are found in DE");
-        	return;
         }
         if( isPredefinedSuspected )
         {

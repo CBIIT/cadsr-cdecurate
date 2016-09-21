@@ -393,6 +393,7 @@ public class ValueDomainServlet extends CurationServlet
         if( ! StringUtil.isValidParmeter(  m_classReq, "txtPreferredName"))
         {
             hasSuspectPerameter = true;
+            logger.error("In doChangeVDNameType 'txtPreferredName' parameter is suspecious; the new value is ignored: " + m_classReq.getParameter("txtPreferredName")); 
         }
 
         HttpSession session = m_classReq.getSession();

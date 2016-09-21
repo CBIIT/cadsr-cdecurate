@@ -12,6 +12,7 @@ import java.util.regex.Pattern;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.log4j.Logger;
 import org.owasp.html.HtmlPolicyBuilder;
 import org.owasp.html.PolicyFactory;
@@ -387,5 +388,11 @@ public class StringUtil {
        else {
     	   return true;
        }
+   }
+   public static String unescapeHtmlEncodedValue(String paramValue) {
+		return StringEscapeUtils.unescapeHtml4(paramValue);
+   }
+   public static String escapeHtmlEncodedValue(String paramValue) {
+		return StringEscapeUtils.escapeHtml4(paramValue);
    }
 }

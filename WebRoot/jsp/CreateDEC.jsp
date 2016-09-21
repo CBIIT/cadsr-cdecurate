@@ -449,7 +449,7 @@ sOriginAction.equals("CreateNewDEC")
            {
              String sContextName = (String)vContext.elementAt(i);
              String sContextID = (String)vContextID.elementAt(i);
-             System.out.println("At line 409 of CreateDEC.jsps"+sContextName+"***"+sContextID);
+             System.out.println("CreateDEC.jsp sContextName and sContextID: "+sContextName+"***"+sContextID);
              if(sContextName.equals(sContext)) bDataFound = true;
 %>
     <option value="<%=sContextID%>" <%if(sContextName.equals(sContext)){%> selected <%}%>>
