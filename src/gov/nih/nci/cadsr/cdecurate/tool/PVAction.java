@@ -12,34 +12,26 @@
 
 package gov.nih.nci.cadsr.cdecurate.tool;
 
-import gov.nih.nci.cadsr.cdecurate.database.SQLHelper;
-import gov.nih.nci.cadsr.cdecurate.util.DataManager;
-import gov.nih.nci.cadsr.common.Constants;
-import gov.nih.nci.cadsr.common.Database;
-
 import java.io.Serializable;
 import java.sql.CallableStatement;
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Vector;
 
 import javax.servlet.http.HttpSession;
 
+import org.apache.log4j.Logger;
 
-
-
-
-
+import gov.nih.nci.cadsr.cdecurate.database.SQLHelper;
+import gov.nih.nci.cadsr.cdecurate.util.DataManager;
+import gov.nih.nci.cadsr.common.Constants;
+import gov.nih.nci.cadsr.common.Database;
+import gov.nih.nci.cadsr.common.StringUtil;
 //import oracle.jdbc.driver.OracleTypes;
 import oracle.jdbc.OracleTypes;		//GF30779
-
-import org.apache.log4j.Logger;
 
 /**
  * @author shegde
@@ -798,10 +790,10 @@ public class PVAction implements Serializable {
 					cstmt.setString(4, sPV_ID);
 				} else {
 					cstmt.setString(5, sValue);
-					cstmt.setString(6, sShortMeaning);
+					cstmt.setString(6, StringUtil.unescapeHtmlEncodedValue(sShortMeaning));
 				}
 				cstmt.setString(7, sBeginDate);
-				cstmt.setString(8, sMeaningDescription);
+				cstmt.setString(8, StringUtil.unescapeHtmlEncodedValue(sMeaningDescription));
 				cstmt.setString(11, sEndDate);
 				cstmt.setString(12, vm.getVM_IDSEQ());
 				// Now we are ready to call the stored procedure

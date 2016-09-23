@@ -1,5 +1,13 @@
 package gov.nih.nci.cadsr.cdecurate.util;
 
+import java.sql.CallableStatement;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Vector;
+
+import org.apache.log4j.Logger;
+
 import gov.nih.nci.cadsr.cdecurate.database.Alternates;
 import gov.nih.nci.cadsr.cdecurate.database.DBAccess;
 import gov.nih.nci.cadsr.cdecurate.database.SQLHelper;
@@ -12,18 +20,7 @@ import gov.nih.nci.cadsr.cdecurate.tool.VMAction;
 import gov.nih.nci.cadsr.cdecurate.tool.VMForm;
 import gov.nih.nci.cadsr.cdecurate.tool.VM_Bean;
 import gov.nih.nci.cadsr.common.Constants;
-
-import java.sql.CallableStatement;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.List;
-import java.util.Vector;
-
-import javax.servlet.http.HttpServletRequest;
-
-import org.apache.log4j.Logger;
-
+import gov.nih.nci.cadsr.common.StringUtil;
 import oracle.jdbc.OracleTypes;
 
 public class VMHelper {
@@ -318,11 +315,11 @@ public class VMHelper {
 			 */
 			String vmD = rs.getString("PREFERRED_DEFINITION");
 			// vm.setVM_DESCRIPTION(vmD);
-			vm.setVM_PREFERRED_DEFINITION(vmD);
+			vm.setVM_PREFERRED_DEFINITION(StringUtil.escapeHtmlEncodedValue(vmD));
 			vm.setVM_SUBMIT_ACTION(VMForm.CADSR_ACTION_NONE);
-            logger.debug("VM_LONG_NAME at Line 1303 of VMAction.java"+rs.getString("LONG_NAME"));
-			vm.setVM_LONG_NAME(AdministeredItemUtil.handleLongName(rs.getString("LONG_NAME"))); //GF32004
-			logger.debug("VM_LONG_NAME at Line 1305 of VMAction.java"+vm.getVM_LONG_NAME());
+            //logger.debug("VM_LONG_NAME at Line 1303 of VMAction.java"+rs.getString("LONG_NAME"));
+			vm.setVM_LONG_NAME(StringUtil.escapeHtmlEncodedValue(AdministeredItemUtil.handleLongName(rs.getString("LONG_NAME")))); //GF32004
+			//logger.debug("VM_LONG_NAME at Line 1305 of VMAction.java"+vm.getVM_LONG_NAME());
 //			vm.setVM_LONG_NAME(rs.getString("LONG_NAME"));
 			vm.setVM_IDSEQ(rs.getString("VM_IDSEQ"));
 			vm.setVM_ID(rs.getString("VM_ID"));
