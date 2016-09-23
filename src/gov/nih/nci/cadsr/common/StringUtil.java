@@ -390,9 +390,43 @@ public class StringUtil {
        }
    }
    public static String unescapeHtmlEncodedValue(String paramValue) {
-		return StringEscapeUtils.unescapeHtml4(paramValue);
+		String unescapedStr = StringEscapeUtils.unescapeHtml4(paramValue);
+		return unescapedStr;
+		
+		//If we decided to simplify special characters we need to add the next call:
+		//return simplifySpecialChars(unescapedStr);
+		
+		//all calls for the method 'unescapeHtmlEncodedValue' shall follow by changing corresponding Bean fields with HTML-escaped new values
+		//the code to add will be like this:
+		//String sLongName = StringUtil.unescapeHtmlEncodedValue(vd.getVD_LONG_NAME());
+        //if (! StringUtils.equals(sLongName, vd.getVD_LONG_NAME())) {
+        //	vd.setVD_LONG_NAME(StringUtil.escapeHtmlEncodedValue(sLongName));
+        //}
    }
    public static String escapeHtmlEncodedValue(String paramValue) {
 		return StringEscapeUtils.escapeHtml4(paramValue);
+   }
+   /**
+    * This code is currently not used.
+    * 
+    * @param source
+    * @return String with simplified characters 
+    */
+   public static String simplifySpecialChars(String source) {
+		StringBuilder sb = new StringBuilder();
+		if (StringUtils.isNotEmpty(source)) {
+			char[] sourceChars = new char[source.length()];
+			source.getChars(0, source.length(), sourceChars, 0);
+			for (char curr : sourceChars) {
+				switch (curr) {
+				case 8800 : sb.append("<>"); break;
+				case 8804 : sb.append("<="); break;
+				case 8805 : sb.append(">="); break;
+				case 8223 : sb.append("\""); break;
+				default: sb.append(curr);
+				}
+			}
+		}
+		return sb.toString();
    }
 }

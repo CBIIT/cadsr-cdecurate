@@ -1494,7 +1494,7 @@ public class SearchServlet extends CurationServlet {
             vCompAtt.addElement("Public ID");
             vCompAtt.addElement("Version");
             vCompAtt.addElement("Registration Status");//GF32398
-            logger.info("at line 1440 of SearchServlet.java");
+            //logger.debug("at line 1440 of SearchServlet.java");
             vCompAtt.addElement("Workflow Status");
             vCompAtt.addElement("Context");
             vCompAtt.addElement("Definition");
@@ -1519,7 +1519,7 @@ public class SearchServlet extends CurationServlet {
             vCompAtt.addElement("Public ID");
             vCompAtt.addElement("Version");
             vCompAtt.addElement("Registration Status");//GF32398
-            logger.info("at line 1465 of SearchServlet.java");
+            //logger.info("at line 1465 of SearchServlet.java");
             vCompAtt.addElement("Workflow Status");
             vCompAtt.addElement("Context");
             vCompAtt.addElement("Definition");

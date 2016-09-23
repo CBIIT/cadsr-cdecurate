@@ -2037,7 +2037,7 @@ public class GetACSearch implements Serializable
                         VDBean.setVD_IN_FORM( isVDinForm( VDBean.getVD_VD_IDSEQ(), VDBean.getVD_TYPE_FLAG() ) );
                         VDBean.setVD_REG_STATUS( rs.getString( "registration_status" ) );    //GF32398
                         VDBean.setVD_REG_STATUS_IDSEQ( rs.getString( "ar_idseq" ) );    //GF32398
-                        logger.info( "at line 2057 of GetACsearch.java***********" );
+                        //logger.debug( "at line 2057 of GetACsearch.java***********" );
                         // get permissible value
                         s = rs.getString( "min_value" );
                         if( s != null && !s.equals( "" ) )

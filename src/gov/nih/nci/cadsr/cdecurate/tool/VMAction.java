@@ -1335,10 +1335,10 @@ public class VMAction implements Serializable
 			 */
 			String vmD = rs.getString("PREFERRED_DEFINITION");
 			// vm.setVM_DESCRIPTION(vmD);
-			vm.setVM_PREFERRED_DEFINITION(vmD);
+			vm.setVM_PREFERRED_DEFINITION(StringUtil.escapeHtmlEncodedValue(vmD));
 			vm.setVM_SUBMIT_ACTION(VMForm.CADSR_ACTION_NONE);
             logger.debug("VM_LONG_NAME at Line 1303 of VMAction.java"+rs.getString("LONG_NAME"));
-			vm.setVM_LONG_NAME(AdministeredItemUtil.handleLongName(rs.getString("LONG_NAME"))); //GF32004
+			vm.setVM_LONG_NAME(StringUtil.escapeHtmlEncodedValue(AdministeredItemUtil.handleLongName(rs.getString("LONG_NAME")))); //GF32004
 			logger.debug("VM_LONG_NAME at Line 1305 of VMAction.java"+vm.getVM_LONG_NAME());
 //			vm.setVM_LONG_NAME(rs.getString("LONG_NAME"));
 			vm.setVM_IDSEQ(rs.getString("VM_IDSEQ"));
@@ -1722,10 +1722,10 @@ public class VMAction implements Serializable
 				// if (sAction.equals(VMForm.CADSR_ACTION_UPD) || conArray ==
 				// null)
 				// cstmt.setString(7, vm.getVM_SHORT_MEANING());
-				cstmt.setString(7, vm.getVM_LONG_NAME());
+				cstmt.setString(7, StringUtil.unescapeHtmlEncodedValue(vm.getVM_LONG_NAME()));
 				// definition and change note
 				// cstmt.setString(8, vm.getVM_DESCRIPTION());
-				cstmt.setString(8, vm.getVM_PREFERRED_DEFINITION());
+				cstmt.setString(8, StringUtil.unescapeHtmlEncodedValue(vm.getVM_PREFERRED_DEFINITION()));
 				cstmt.setString(10, vm.getASL_NAME());
 				cstmt.setString(11, vm.getVM_VERSION());
 				cstmt.setString(17, vm.getVM_CHANGE_NOTE());
@@ -1751,11 +1751,11 @@ public class VMAction implements Serializable
 					// the bean
 					// vm.setVM_SHORT_MEANING(cstmt.getString(7));
 		            logger.debug("VM_LONG_NAME at Line 1705 of VMAction.java"+cstmt.getString(7));
-					vm.setVM_LONG_NAME(AdministeredItemUtil.handleLongName(cstmt.getString(7))); //GF32004
+					vm.setVM_LONG_NAME(StringUtil.escapeHtmlEncodedValue(AdministeredItemUtil.handleLongName(cstmt.getString(7)))); //GF32004
 					logger.debug("VM_LONG_NAME at Line 1707 of VMAction.java"+vm.getVM_LONG_NAME());
 //					vm.setVM_LONG_NAME(cstmt.getString(7));
 					// vm.setVM_DESCRIPTION(cstmt.getString(8));
-					vm.setVM_PREFERRED_DEFINITION(cstmt.getString(8));
+					vm.setVM_PREFERRED_DEFINITION(StringUtil.escapeHtmlEncodedValue(cstmt.getString(8)));
 					vm.setVM_CHANGE_NOTE(cstmt.getString(17));
 					vm.setVM_BEGIN_DATE(cstmt.getString(18));
 					vm.setVM_END_DATE(cstmt.getString(19));

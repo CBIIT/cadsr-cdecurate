@@ -10,8 +10,6 @@
 
 package gov.nih.nci.cadsr.cdecurate.tool;
 
-import gov.nih.nci.cadsr.cdecurate.database.Alternates;
-import gov.nih.nci.cadsr.cdecurate.database.DBAccess;
 import gov.nih.nci.cadsr.cdecurate.database.SQLHelper;
 import gov.nih.nci.cadsr.cdecurate.util.AdministeredItemUtil;
 import gov.nih.nci.cadsr.cdecurate.util.DataManager;
@@ -30,7 +28,6 @@ import gov.nih.nci.cadsr.persist.exception.DBException;
 import gov.nih.nci.cadsr.persist.oc.Object_Classes_Ext_Mgr;
 import gov.nih.nci.cadsr.persist.prop.Properties_Ext_Mgr;
 import gov.nih.nci.cadsr.persist.rep.Representations_Ext_Mgr;
-import gov.nih.nci.ncicb.cadsr.common.persistence.bc4j.AdministeredComponentsImpl;
 
 import java.io.Serializable;
 import java.sql.*;
@@ -49,7 +46,6 @@ import javax.servlet.http.HttpSession;
 //import oracle.jdbc.driver.OracleTypes;
 import oracle.jdbc.OracleTypes;        //GF30779
 
-import org.apache.commons.lang.SystemUtils;
 import org.apache.commons.lang.math.NumberUtils;
 import org.apache.log4j.Logger;
 //import org.joda.time.DateTimeUtils;
@@ -263,6 +259,10 @@ public class InsACService implements Serializable
             String pageVDType = vd.getVD_TYPE_FLAG();
             String sContextID = vd.getVD_CONTE_IDSEQ();
             String sLongName = StringUtil.unescapeHtmlEncodedValue(vd.getVD_LONG_NAME());
+            //If we decided to simplify/change the fields values replacing ≤ to <=, etc. we will need to do something like this:
+//            if (! StringUtils.equals(sLongName, vd.getVD_LONG_NAME())) {
+//            	vd.setVD_LONG_NAME(StringUtil.escapeHtmlEncodedValue(sLongName));
+//            }
             String oldASLName = oldVD.getVD_ASL_NAME();
             if( oldASLName == null )
                 oldASLName = "";
