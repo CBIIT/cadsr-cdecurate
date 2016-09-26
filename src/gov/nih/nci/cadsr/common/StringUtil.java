@@ -28,7 +28,7 @@ public class StringUtil {
 	private static Pattern searchParameterTypePattern = Pattern
 			.compile("^[a-zA-Z\\s]*$");
 	private static Pattern versionPattern = Pattern
-			.compile("^[a-zA-Z0-9\\s\\,\\/\\-\\$\\'\\*\\_\\.\\(\\)]*$");
+			.compile("^[a-zA-Z0-9',_\\s\\/\\-\\$\\*\\.\\(\\)]*$");
 
 	public static String trimDoubleQuotes(String value) throws Exception {
 		boolean temp = false;
@@ -296,7 +296,8 @@ public class StringUtil {
 	private static boolean validatePatternAndValue(Pattern checkPattern,
 			String valueToCheck) {
 		try {
-			return checkPattern.matcher(valueToCheck).matches();
+			String htmlUnescaped = unescapeHtmlEncodedValue(valueToCheck);
+			return checkPattern.matcher(htmlUnescaped).matches();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

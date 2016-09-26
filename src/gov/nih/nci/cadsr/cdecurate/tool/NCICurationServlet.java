@@ -16,17 +16,18 @@ package gov.nih.nci.cadsr.cdecurate.tool;
 
 import gov.nih.nci.cadsr.cdecurate.common.NO_SQL_CHECK;
 import gov.nih.nci.cadsr.cdecurate.database.SQLHelper;
-import gov.nih.nci.cadsr.cdecurate.util.ClockTime;
+//import gov.nih.nci.cadsr.cdecurate.util.ClockTime;
 import gov.nih.nci.cadsr.common.StringUtil;
-import gov.nih.nci.cadsr.common.TimeWatch;
+//import gov.nih.nci.cadsr.common.TimeWatch;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.Enumeration;
 import java.util.Properties;
-import java.util.concurrent.TimeUnit;
+//import java.util.concurrent.TimeUnit;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletConfig;
@@ -325,6 +326,17 @@ public class NCICurationServlet extends HttpServlet
         } catch( Exception e )
         {
             logger.error( "Service error : " + e.toString(), e );
+            HttpSession session = req.getSession();
+            if (session != null) {
+            	session.setAttribute("ErrorMessage", e.toString());
+            }
+            RequestDispatcher rd = getServletContext().getRequestDispatcher("/jsp/ErrorPage.jsp");
+            try {
+				rd.forward(req, res);
+			} catch (ServletException | IOException e1) {
+				logger.error( "NCICurationServlet cannot redirect to Error.jsp: " + e.getMessage(), e );
+			}
+
         }
 //        logger.debug("service response time " + clock.toStringLifeTime());
 //		if(TimeWatch.ENABLED) {

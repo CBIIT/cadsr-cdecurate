@@ -66,6 +66,8 @@ public class GetACSearch implements Serializable
     private HttpServletResponse m_classRes = null;
 
     private static final Logger logger = Logger.getLogger( GetACSearch.class );
+    
+    private static final UtilService util = new UtilService();//this is a thread safe utility functions class
 
     /**
      * Constructs a new instance.
@@ -113,7 +115,7 @@ public class GetACSearch implements Serializable
                 if( !StringUtil.validateVersion( sRecordsDisplayed ) )
                     throw new Exception( "recordsDisplayed contains characters or combinations of characters that are not allowed because of security concerns." );
             }
-            logger.info( "$$$$$$$$$$$$$$$$$$$$" + sRecordsDisplayed );
+            logger.debug( "$$$$$$$$$$$$$$$$$$$$ sRecordsDisplayed: " + sRecordsDisplayed );
             String sComponent = StringUtil.cleanJavascriptAndHtml( ( String ) req.getParameter( "listSearchFor" ) );
             String sSearchAC = ( String ) session.getAttribute( "searchAC" );
 
@@ -149,7 +151,6 @@ public class GetACSearch implements Serializable
                 setAttributeValues( req, res, sSearchAC, "nothing" );
                 DataManager.setAttribute( session, "serKeyword", sKeyword );
                 DataManager.setAttribute( session, "LastAppendWord", sKeyword );
-                UtilService util = new UtilService();
                 // parse the string to handle single quote
                 sKeyword = util.parsedStringSingleQuoteOracle( sKeyword );
                 // filter by context
@@ -3032,7 +3033,6 @@ public class GetACSearch implements Serializable
                 if( cdList.size() > 1 )
                     strdetails += "...";
             }
-            UtilService util = new UtilService();
             acName = util.parsedStringSingleQuote( acName );
             acName = util.parsedStringDoubleQuoteJSP( acName );
             hyperText = "<a href=" + "\"" + "javascript:openConDomainWindow('" + acName + "')" + "\""
@@ -3064,7 +3064,6 @@ public class GetACSearch implements Serializable
         String hyperText = "";
         if( conName != null && !conName.equals( "" ) )
         {
-            UtilService util = new UtilService();
             acName = util.parsedStringSingleQuote( acName );
             acName = util.parsedStringDoubleQuoteJSP( acName );
             hyperText = "<a href=" + "\"" + "javascript:openConceptWindow('" + acName + "','" + acIDseq + "','"
@@ -3092,7 +3091,6 @@ public class GetACSearch implements Serializable
         String hyperText = "";
         if( altName != null && !altName.equals( "" ) )
         {
-            UtilService util = new UtilService();
             acName = util.parsedStringSingleQuote( acName );
             acName = util.parsedStringDoubleQuoteJSP( acName );
             hyperText = "<a href=" + "\"" + "javascript:openAltNameWindow('ALL','" + acID + "')" + "\""
@@ -3120,7 +3118,6 @@ public class GetACSearch implements Serializable
         String hyperText = "";
         if( rdName != null && !rdName.equals( "" ) )
         {
-            UtilService util = new UtilService();
             acName = util.parsedStringSingleQuote( acName );
             acName = util.parsedStringDoubleQuoteJSP( acName );
             hyperText = "<a href=" + "\"" + "javascript:openRefDocWindow('ALL TYPES','" + acID + "')" + "\""
@@ -3155,7 +3152,6 @@ public class GetACSearch implements Serializable
                 String acName = deBean.getDE_LONG_NAME();
                 if( acName == null || acName.equals( "" ) )
                     acName = deBean.getDE_PREFERRED_NAME();
-                UtilService util = new UtilService();
                 acName = util.parsedStringSingleQuote( acName );
                 acName = util.parsedStringDoubleQuoteJSP( acName );
                 hyperText = "<a href=" + "\"" + "javascript:openProtoCRFWindow('" + acName + "','"
@@ -3171,7 +3167,6 @@ public class GetACSearch implements Serializable
                 String acName = deBean.getDE_LONG_NAME();
                 if( acName == null || acName.equals( "" ) )
                     acName = deBean.getDE_PREFERRED_NAME();
-                UtilService util = new UtilService();
                 acName = util.parsedStringSingleQuote( acName );
                 acName = util.parsedStringDoubleQuoteJSP( acName );
                 hyperText = "<a href=" + "\"" + "javascript:openProtoCRFWindow('" + acName + "','"
@@ -3198,7 +3193,6 @@ public class GetACSearch implements Serializable
                 String acName = deBean.getDE_LONG_NAME();
                 if( acName == null || acName.equals( "" ) )
                     acName = deBean.getDE_PREFERRED_NAME();
-                UtilService util = new UtilService();
                 acName = util.parsedStringSingleQuote( acName );
                 acName = util.parsedStringDoubleQuoteJSP( acName );
                 hyperText = "<a href=" + "\"" + "javascript:openPermValueWindow('" + acName + "','"
@@ -3224,7 +3218,6 @@ public class GetACSearch implements Serializable
         String hyperText = "";
         if( vmName != null && !vmName.equals( "" ) )
         {
-            UtilService util = new UtilService();
             hyperText = "<a href=" + "\"" + "javascript:openEditVMWindow('" + pvCount + "')" + "\"" + "><br><b>Edit_VM_>></b></a>";
             vRes.addElement( vmName + "  " + hyperText );
         }
@@ -3649,7 +3642,6 @@ public class GetACSearch implements Serializable
                     String acName = VDBean.getVD_LONG_NAME();
                     if( acName == null || acName.equals( "" ) )
                         acName = VDBean.getVD_PREFERRED_NAME();
-                    UtilService util = new UtilService();
                     acName = util.parsedStringSingleQuote( acName );
                     acName = util.parsedStringDoubleQuoteJSP( acName );
                     String hyperText = "<a href=" + "\"" + "javascript:openPermValueWindow('" + acName + "','"
@@ -3988,10 +3980,11 @@ public class GetACSearch implements Serializable
                 bVListExist = true;
             if( m_servlet.getConn() == null )
                 m_servlet.ErrorLogin( m_classReq, m_classRes );
-        	logger.debug("...do_ConceptSearch InString=" + InString);
             cstmt = m_servlet.getConn().prepareCall( "{call SBREXT.SBREXT_CDE_CURATOR_PKG.SEARCH_CON(?,?,?,?,?,?,?,?)}" );
             cstmt.registerOutParameter( 6, OracleTypes.CURSOR );
-            cstmt.setString( 1, InString );
+            String searchPattern = util.parsedStringSingleQuoteOracle(StringUtil.unescapeHtmlEncodedValue(InString));
+            logger.debug("do_ConceptSearch searchPattern for DB = " + searchPattern);;
+            cstmt.setString( 1, searchPattern);
             cstmt.setString( 2, ASLName );
             cstmt.setString( 3, ContName );
             cstmt.setString( 4, conID );
@@ -7538,8 +7531,9 @@ public class GetACSearch implements Serializable
             String sKeyword = StringUtil.cleanJavascriptAndHtml( ( String ) req.getParameter( "keyword" ) );
             if( sKeyword != null )
             {
-                if( !StringUtil.validateVersion( sKeyword ) )
-                    throw new Exception( "keyword contains characters or combinations of characters that are not allowed because of security concerns." );
+                if( !StringUtil.validateVersion( sKeyword ) ) {
+                    throw new Exception( "keyword contains characters or combinations of characters that are not allowed because of security concerns getACSearchForCreate");
+                }
             }
             if( sKeyword == null )
                 sKeyword = "";
@@ -7547,7 +7541,6 @@ public class GetACSearch implements Serializable
                 sKeyword = "";
             sKeyword = sKeyword.trim();
             DataManager.setAttribute( session, "creKeyword", sKeyword );
-            UtilService util = new UtilService();
             sKeyword = util.parsedStringSingleQuoteOracle( sKeyword );
 
             // call the method to set the attribute checked values if not the initial value
