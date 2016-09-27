@@ -15,7 +15,7 @@ L--%>
 		<title>
 			Edit Value Domain
 		</title>
-		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 		<link href="css/FullDesignArial.css" rel="stylesheet" type="text/css">
 		<SCRIPT LANGUAGE="JavaScript" SRC="js/AddNewListOption.js"></SCRIPT>
 		<%@ page import="gov.nih.nci.cadsr.cdecurate.tool.*"%>

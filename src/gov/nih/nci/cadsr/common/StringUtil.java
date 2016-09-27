@@ -24,7 +24,7 @@ public class StringUtil {
 			.getName());
 	private static Pattern idSequencePattern = Pattern
 			.compile("^[A-Za-z0-9_-]{36}$");
-	private static Pattern publicIdPattern = Pattern.compile("^[0-9]+$");
+	protected static final Pattern publicIdPattern = Pattern.compile("^[0-9]+$");
 	private static Pattern searchParameterTypePattern = Pattern
 			.compile("^[a-zA-Z\\s]*$");
 	private static Pattern versionPattern = Pattern
@@ -293,12 +293,13 @@ public class StringUtil {
 		return validatePatternAndValue(versionPattern, versionToCheck);
 	}
 
-	private static boolean validatePatternAndValue(Pattern checkPattern,
+	protected static boolean validatePatternAndValue(Pattern checkPattern,
 			String valueToCheck) {
 		try {
 			String htmlUnescaped = unescapeHtmlEncodedValue(valueToCheck);
 			return checkPattern.matcher(htmlUnescaped).matches();
 		} catch (Exception e) {
+			logger.error("validatePatternAndValue exception on valueToCheck: " + valueToCheck + ", " + e);
 			e.printStackTrace();
 		}
 		return false;
@@ -390,6 +391,43 @@ public class StringUtil {
     	   return true;
        }
    }
+   public static String decodeNumericChars(String str) {
+	   if (! StringUtils.isEmpty(str)) {
+	       StringBuffer sb = new StringBuffer();
+	       int i1=0;
+	       int i2=0;
+	
+	       while(i2<str.length()) {
+	          i1 = str.indexOf("&#",i2);
+	          if (i1 == -1 ) {
+	               sb.append(str.substring(i2));
+	               break ;
+	          }
+	          sb.append(str.substring(i2, i1));
+	          i2 = str.indexOf(";", i1);
+	          if (i2 == -1 ) {
+	               sb.append(str.substring(i1));
+	               break ;
+	          }
+	
+	          String tok = str.substring(i1+2, i2);
+	           try {
+	                int radix = 10 ;
+	                if (tok.charAt(0) == 'x' || tok.charAt(0) == 'X') {
+	                   radix = 16 ;
+	                   tok = tok.substring(1);
+	                }
+	                sb.append((char) Integer.parseInt(tok, radix));
+	           } catch (NumberFormatException exp) {
+	                sb.append(str.substring(i1, i2+1));
+	           }
+	           i2++ ;
+	       }
+	       return sb.toString();
+	   }
+	   else
+		   return str;
+   }
    public static String unescapeHtmlEncodedValue(String paramValue) {
 		String unescapedStr = StringEscapeUtils.unescapeHtml4(paramValue);
 		return unescapedStr;
@@ -405,7 +443,8 @@ public class StringUtil {
         //}
    }
    public static String escapeHtmlEncodedValue(String paramValue) {
-		return StringEscapeUtils.escapeHtml4(paramValue);
+	   String decodeNumeric = decodeNumericChars(paramValue);
+	   return StringEscapeUtils.escapeHtml4(decodeNumeric);
    }
    /**
     * This code is currently not used.

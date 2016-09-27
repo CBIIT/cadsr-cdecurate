@@ -10,7 +10,7 @@ L--%>
     $Name: not supported by cvs2svn $
 -->
 
-<%@ page language="java" import="java.util.*"%>
+<%@ page language="java" import="java.util.* " contentType="text/html; charset=UTF-8"%>
 <%@ page import="gov.nih.nci.cadsr.cdecurate.tool.*"%>
 <link href="css/FullDesignArial.css" rel="stylesheet" type="text/css">
 <script type="text/javascript">

@@ -4118,14 +4118,21 @@ public class CurationServlet
         {
             throw new Exception( "Input from client contains characters or combinations of characters that are not allowed because of security concerns." );
         }
-
+        //TODO I do not know why do we receive a String "null" in here from the request
+        if ("null".equals(acIDSEQ)) {
+        	acIDSEQ = null;
+        }
+        
         try
         {
             //input validation for appscan
             if( acIDSEQ != null )
             {
-                if( !StringUtil.validateElementIdSequence( acIDSEQ ) )
+                if( !StringUtil.validateElementIdSequence( acIDSEQ ) ) {
+                	logger.error("idseq contains characters or combinations of characters that are not allowed because of security concerns acIDSEQ = " + acIDSEQ);;
+                	
                     throw new Exception( "idseq contains characters or combinations of characters that are not allowed because of security concerns." );
+                }
             }
 
             if( acIDSEQ == null )

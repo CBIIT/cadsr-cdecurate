@@ -10,7 +10,7 @@ L--%>
     $Name: not supported by cvs2svn $
 -->
 
-<%@ page language="java" import="java.util.*, gov.nih.nci.cadsr.cdecurate.util.*"%>
+<%@ page pageEncoding="UTF-8" language="java" import="java.util.*, gov.nih.nci.cadsr.cdecurate.util.*" contentType="text/html; charset=UTF-8"%>
 <%@ page import="gov.nih.nci.cadsr.cdecurate.database.Alternates" %>
 <%@ page import="gov.nih.nci.cadsr.common.Constants" %>
 <html>
@@ -18,7 +18,7 @@ L--%>
 		<title>
 			Permissible Value
 		</title>
-		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 		<link href="css/FullDesignArial.css" rel="stylesheet" type="text/css">
 		<%@ page import="gov.nih.nci.cadsr.cdecurate.tool.*"%>
         <!-- GF7680 load Dojo -->
@@ -1143,7 +1143,7 @@ L--%>
 																 <%if (!isView){ %>	
 																	<div id="<%=pvCount%>ImgEdit" style="display: <%=dispStyle%>">
 																		<%
-																		System.out.println("PermissibleValues.jsp vdWs [" + workflowStatus + "] vdUsedInForm [" + vdUsedInForm + "] pvUsedInForm [" + inForm + "] crfWs [" + crfWorkflowStatus + "]");
+																		//System.out.println("PermissibleValues.jsp vdWs [" + workflowStatus + "] vdUsedInForm [" + vdUsedInForm + "] pvUsedInForm [" + inForm + "] crfWs [" + crfWorkflowStatus + "]");
 																		if (inForm) {%> <a href="javascript:view('<%=pvCount%>View', '<%=pvCount%>ImgEdit', '<%=pvCount%>ImgSave', 'edit', '<%=pvCount%>', '<%=workflowStatus%>','<%=vdUsedInForm%>','<%=inForm%>','<%=crfWorkflowStatus%>');" onclick="return confirm('This element is used in a form. Any edits will put the form out of sync. Are you sure you want to edit?');"><img src="images/edit.gif" border="0" alt="Edit" style="display: <%=dispStyle%>"></a>
 																		<% } else { %> <a href="javascript:view('<%=pvCount%>View', '<%=pvCount%>ImgEdit', '<%=pvCount%>ImgSave', 'edit', '<%=pvCount%>', '<%=workflowStatus%>','<%=vdUsedInForm%>','<%=inForm%>','<%=crfWorkflowStatus%>');"><img src="images/edit.gif" border="0" alt="Edit" style="display: <%=dispStyle%>"></a>
 																		<% } %>
