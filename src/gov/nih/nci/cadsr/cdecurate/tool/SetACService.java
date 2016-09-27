@@ -3787,7 +3787,7 @@ public class SetACService implements Serializable
         	logger.error("Suspected parameter values are found in DE; DE new values will not be saved");
         	return;
         }
-        
+
         try
         {
             HttpSession session = req.getSession();
@@ -4624,7 +4624,7 @@ public class SetACService implements Serializable
         {
             hasSuspectPerameter = true;
         }
-        
+
         if( hasSuspectPerameter)
         {
             logger.error("setVDValueFromPage found suspected parameter");
@@ -4790,7 +4790,7 @@ public class SetACService implements Serializable
 
             //set VD_DATA_TYPE
             sName = StringUtil.cleanJavascriptAndHtml( ( String ) req.getParameter( "selDataType" ) );
-            if( sName != null && ( !StringUtil.isHtmlAndScriptClean( sName ) ) )
+            if( sName != null && ( StringUtil.isHtmlAndScriptClean( sName ) ) )
                 m_VD.setVD_DATA_TYPE( sName );
 
             //set VD_SOURCE
