@@ -27,7 +27,7 @@ import org.LexGrid.LexBIG.caCore.interfaces.LexEVSApplicationService;
 public class LexEVSServiceHolder {
 	private static LexEVSServiceHolder sh_;
 	private ApplicationService appService = null;
-	private static final String serviceUrl = "http://lexevsapi6.nci.nih.gov/lexevsapi63";
+	private static final String serviceUrl = "https://lexevsapi6.nci.nih.gov/lexevsapi64";
 	private LexEVSApplicationService lexevsAppService;
 	public static final String _service = "EvsServiceInfo";
 

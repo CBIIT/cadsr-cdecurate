@@ -1,4 +1,4 @@
-update sbrext.tool_options_view_ext set Value = 'http://lexevsapi6.nci.nih.gov/lexevsapi63/'  where Tool_name = 'EVSAPI' and Property = 'URL'
+update sbrext.tool_options_view_ext set Value = 'https://lexevsapi6.nci.nih.gov/lexevsapi64/'  where Tool_name = 'EVSAPI' and Property = 'URL'
 /
 /*
 Comment the above statement and uncomment the below statement to run this SQL update for Curation Tool 4.1.1
