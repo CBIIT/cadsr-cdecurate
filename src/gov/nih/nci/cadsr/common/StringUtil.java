@@ -295,6 +295,8 @@ public class StringUtil {
 
 	protected static boolean validatePatternAndValue(Pattern checkPattern,
 			String valueToCheck) {
+		if (StringUtils.isEmpty(valueToCheck))
+			return true;//we do not fail an empty values validation
 		try {
 			String htmlUnescaped = unescapeHtmlEncodedValue(valueToCheck);
 			return checkPattern.matcher(htmlUnescaped).matches();
@@ -419,6 +421,7 @@ public class StringUtil {
 	                }
 	                sb.append((char) Integer.parseInt(tok, radix));
 	           } catch (NumberFormatException exp) {
+	        	   logger.error("decodeNumericChars str = " + str, exp);
 	                sb.append(str.substring(i1, i2+1));
 	           }
 	           i2++ ;

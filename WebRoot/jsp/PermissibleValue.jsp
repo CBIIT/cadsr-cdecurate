@@ -10,7 +10,7 @@ L--%>
     $Name: not supported by cvs2svn $
 -->
 
-<%@ page pageEncoding="UTF-8" language="java" import="java.util.*, gov.nih.nci.cadsr.cdecurate.util.*" contentType="text/html; charset=UTF-8"%>
+<%@ page language="java" import="java.util.*, gov.nih.nci.cadsr.cdecurate.util.*"%>
 <%@ page import="gov.nih.nci.cadsr.cdecurate.database.Alternates" %>
 <%@ page import="gov.nih.nci.cadsr.common.Constants" %>
 <html>
@@ -18,7 +18,7 @@ L--%>
 		<title>
 			Permissible Value
 		</title>
-		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 		<link href="css/FullDesignArial.css" rel="stylesheet" type="text/css">
 		<%@ page import="gov.nih.nci.cadsr.cdecurate.tool.*"%>
         <!-- GF7680 load Dojo -->
