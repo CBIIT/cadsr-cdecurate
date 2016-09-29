@@ -3602,7 +3602,7 @@ public class CurationServlet
     @SuppressWarnings( "unchecked" )
     public void storeStatusMsg( String sMsg )
     {
-        // We sometimes get escaped HTML formatted characters.  Ex.: &#22 = "
+        // We sometimes get escaped HTML formatted characters.  Ex.: &#34 = "
         // this line converts them back fo the message.
         sMsg = unescapeHtmlEncodedValue(sMsg);
         try
