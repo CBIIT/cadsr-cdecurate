@@ -310,6 +310,7 @@ public class StringUtil {
 
     public static String resolveHex( String s )
     {
+        // Match percent sign followed by 2 characters zero through nine and/or a through f.
         String regex = "%[0-9a-fA-F]{2}";
         Pattern pattern = Pattern.compile( regex );
         Matcher matcher = pattern.matcher( s );

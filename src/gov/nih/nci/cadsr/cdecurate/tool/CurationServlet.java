@@ -3602,7 +3602,9 @@ public class CurationServlet
     @SuppressWarnings( "unchecked" )
     public void storeStatusMsg( String sMsg )
     {
-        sMsg =  unescapeHtmlEncodedValue(sMsg);
+        // We sometimes get escaped HTML formatted characters.  Ex.: &#22 = "
+        // this line converts them back fo the message.
+        sMsg = unescapeHtmlEncodedValue(sMsg);
         try
         {
             HttpSession session = m_classReq.getSession();
