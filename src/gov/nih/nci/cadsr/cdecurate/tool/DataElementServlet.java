@@ -18,6 +18,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import static gov.nih.nci.cadsr.common.StringUtil.unescapeHtmlEncodedValue;
+
 public class DataElementServlet extends CurationServlet
 {
 
@@ -717,8 +719,8 @@ public class DataElementServlet extends CurationServlet
         DE_Bean DEBean = ( DE_Bean ) session.getAttribute( "m_DE" );
         DE_Bean oldDEBean = ( DE_Bean ) session.getAttribute( "oldDEBean" );
         // udpate the status message with DE name and ID
-        storeStatusMsg( "Data Element Name : " + DEBean.getDE_LONG_NAME() );
-        storeStatusMsg( "Public ID : " + DEBean.getDE_MIN_CDE_ID() );
+        storeStatusMsg( "Data Element Name : " + DEBean.getDE_LONG_NAME());
+        storeStatusMsg( "Public ID : " + DEBean.getDE_MIN_CDE_ID());
         // call stored procedure to update attributes
         String ret = insAC.setDE( "UPD", DEBean, "Edit", oldDEBean );    //JR1099 bad
         // forwards to search page if successful

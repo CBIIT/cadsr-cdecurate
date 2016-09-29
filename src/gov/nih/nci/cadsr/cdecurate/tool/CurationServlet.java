@@ -53,6 +53,8 @@ import oracle.jdbc.OracleTypes;        //GF30779
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 
+import static gov.nih.nci.cadsr.common.StringUtil.unescapeHtmlEncodedValue;
+
 /**
  * The CurationServlet is the main servlet for communicating between the client and the server.
  * <p/>
@@ -3600,6 +3602,7 @@ public class CurationServlet
     @SuppressWarnings( "unchecked" )
     public void storeStatusMsg( String sMsg )
     {
+        sMsg =  unescapeHtmlEncodedValue(sMsg);
         try
         {
             HttpSession session = m_classReq.getSession();
@@ -4122,7 +4125,7 @@ public class CurationServlet
         if ("null".equals(acIDSEQ)) {
         	acIDSEQ = null;
         }
-        
+
         try
         {
             //input validation for appscan
@@ -4130,7 +4133,7 @@ public class CurationServlet
             {
                 if( !StringUtil.validateElementIdSequence( acIDSEQ ) ) {
                 	logger.error("idseq contains characters or combinations of characters that are not allowed because of security concerns acIDSEQ = " + acIDSEQ);;
-                	
+
                     throw new Exception( "idseq contains characters or combinations of characters that are not allowed because of security concerns." );
                 }
             }

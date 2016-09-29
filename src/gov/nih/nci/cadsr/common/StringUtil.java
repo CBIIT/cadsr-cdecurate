@@ -7,6 +7,7 @@ import java.text.StringCharacterIterator;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.servlet.http.HttpServletRequest;
@@ -307,28 +308,20 @@ public class StringUtil {
 		return false;
 	}
 
-	public static String resolveHex( String s )
-	{
-		String retVal = "";
-		for( int f = 0; f < s.length() - 1; f++ )
-		{
-			if( ( s.length() >= ( f + 3 ) ) && ( s.substring( f, f + 3 ).matches( "%[0-9a-fA-F]{2}" ) ) )
-			{
-				retVal += convertHexToString( s.substring( f + 1, f + 3 ) );
-				f += 2;
-			}
-			else if(s.length() < ( f + 3 ))
-			{
-				retVal += s.substring(f);
-				break;//we are at the end of the string no space left for URL-encoded characters 
-			}
-			else
-			{//move one character
-				retVal += s.substring( f, f + 1 );
-			}
-		}
-		return retVal;
-	}
+    public static String resolveHex( String s )
+    {
+        String regex = "%[0-9a-fA-F]{2}";
+        Pattern pattern = Pattern.compile( regex );
+        Matcher matcher = pattern.matcher( s );
+        while( matcher.find() )
+        {
+            String hex = s.substring(  matcher.start(), matcher.end() );
+            hex = hex.replaceFirst( "^%", "" );
+            s = s.replace( "%"+hex, Character.toString( (char)Integer.parseInt(hex, 16)) );
+        }
+        return  s;
+    }
+
 
     public static String convertHexToString( String hex )
     {
@@ -361,7 +354,7 @@ public class StringUtil {
 		}
         return true;
 	}
-	
+
 	public static boolean isHtmlAndScriptClean( List<String> s)
 	{
 		for( String str: s )
@@ -398,7 +391,7 @@ public class StringUtil {
 	       StringBuffer sb = new StringBuffer();
 	       int i1=0;
 	       int i2=0;
-	
+
 	       while(i2<str.length()) {
 	          i1 = str.indexOf("&#",i2);
 	          if (i1 == -1 ) {
@@ -411,7 +404,7 @@ public class StringUtil {
 	               sb.append(str.substring(i1));
 	               break ;
 	          }
-	
+
 	          String tok = str.substring(i1+2, i2);
 	           try {
 	                int radix = 10 ;
@@ -434,10 +427,10 @@ public class StringUtil {
    public static String unescapeHtmlEncodedValue(String paramValue) {
 		String unescapedStr = StringEscapeUtils.unescapeHtml4(paramValue);
 		return unescapedStr;
-		
+
 		//If we decided to simplify special characters we need to add the next call:
 		//return simplifySpecialChars(unescapedStr);
-		
+
 		//all calls for the method 'unescapeHtmlEncodedValue' shall follow by changing corresponding Bean fields with HTML-escaped new values
 		//the code to add will be like this:
 		//String sLongName = StringUtil.unescapeHtmlEncodedValue(vd.getVD_LONG_NAME());
@@ -451,9 +444,9 @@ public class StringUtil {
    }
    /**
     * This code is currently not used.
-    * 
+    *
     * @param source
-    * @return String with simplified characters 
+    * @return String with simplified characters
     */
    public static String simplifySpecialChars(String source) {
 		StringBuilder sb = new StringBuilder();
