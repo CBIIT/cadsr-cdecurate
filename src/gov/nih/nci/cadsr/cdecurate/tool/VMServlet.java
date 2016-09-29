@@ -609,10 +609,10 @@ public class VMServlet extends GenericServlet
                     if( sDef.equals( "" ) )  //this helps to keeps to create default alt defintion only when going from user defined vm to concept vm
                         sDef = " ";
                     if( vm.getVM_CONCEPT_LIST().size() > 0 )
-                        vm.setVM_ALT_DEFINITION( sDef );
+                        vm.setVM_ALT_DEFINITION(StringUtil.escapeHtmlEncodedValue(sDef));
                     else
                         //vm.setVM_DESCRIPTION(sDef);
-                        vm.setVM_PREFERRED_DEFINITION( sDef );
+                        vm.setVM_PREFERRED_DEFINITION(StringUtil.escapeHtmlEncodedValue(sDef));
                 }
                 //check if user entered comment exists
                 String sCmt = ( String ) httpRequest.getParameter( VMForm.ELM_CHANGE_NOTE );
@@ -629,8 +629,8 @@ public class VMServlet extends GenericServlet
                     if( !sLongName.equals( "" ) )  //this helps to keeps to create default alt defintion only when going from user defined vm to concept vm
                     {
 //        		vm.setVM_LONG_NAME(sLongName);
-                        vm.setVM_LONG_NAME( AdministeredItemUtil.handleLongName( sLongName ) ); //GF32004
-                        logger.debug( "VM_LONG_NAME at Line 623 of VMServlet.java" + vm.getVM_LONG_NAME() );
+                        vm.setVM_LONG_NAME( StringUtil.escapeHtmlEncodedValue(AdministeredItemUtil.handleLongName( sLongName ) )); //GF32004
+                        logger.debug( "VM_LONG_NAME at Line 632 of VMServlet.java" + vm.getVM_LONG_NAME() );
                     }
                 }
                 //Check if user entered new version

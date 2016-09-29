@@ -10,7 +10,7 @@ L--%>
     $Name: not supported by cvs2svn $
 -->
 
-<%@ page language="java" import="java.util.*, gov.nih.nci.cadsr.cdecurate.util.*"%>
+<%@ page language="java" import="java.util.*, gov.nih.nci.cadsr.cdecurate.util.*, gov.nih.nci.cadsr.common.StringUtil"%>
 <%@ page import="gov.nih.nci.cadsr.cdecurate.database.Alternates" %>
 <%@ page import="gov.nih.nci.cadsr.common.Constants" %>
 <html>
@@ -571,9 +571,11 @@ L--%>
 													</td>
 													<% } %>
 													<%  
-											String newPVjsp = util.parsedStringDoubleQuoteJSP(newPV.getPV_VALUE());
+											//String newPVjsp = util.parsedStringDoubleQuoteJSP(newPV.getPV_VALUE());//TODO remove this code trying to replace it with HTML escape below
+											String newPVjsp = StringUtil.escapeHtmlEncodedValue(newPV.getPV_VALUE());
 											//String newVMjsp = util.parsedStringDoubleQuoteJSP(newVM.getVM_SHORT_MEANING());
-											String newVMjsp = util.parsedStringDoubleQuoteJSP(newVM.getVM_LONG_NAME());
+											//String newVMjsp = util.parsedStringDoubleQuoteJSP(newVM.getVM_LONG_NAME());//TODO remove this code trying to replace it with HTML escape
+											String newVMjsp = StringUtil.escapeHtmlEncodedValue(newVM.getVM_LONG_NAME());
 									%>
 													<td valign="top">
 														&nbsp;&nbsp;
@@ -597,7 +599,7 @@ L--%>
 																</td>
 																<td>
 																	<div id="pvNewVMView" style="display: <%if (newVMCon.size() > 0) { %>block<%} else {%>none<% } %>">
-																		<%=newVM.getVM_LONG_NAME()%>
+																		<%=StringUtil.escapeHtmlEncodedValue(newVM.getVM_LONG_NAME())%>
 																	</div>
 																	<div id="pvNewVMEdit" style="display: <%if (newVMCon.size() > 0) { %>none<%} else {%>block<% } %>">
 																		<textarea name="pvNewVM" id="pvNewVM" style="width: 90%" rows="2" onblur="javascript:checkNameLen(this, 255);" onkeyup="javascript:getORsetEdited('pvNew', 'pv');"><%=newVMjsp%></textarea>
@@ -1071,7 +1073,8 @@ L--%>
 						            if (sVVid == null) sVVid = "";
 						            String sPVVal = (String) pvBean.getPV_VALUE();
 						            if (sPVVal == null) sPVVal = "";
-						            String sPVValJsp = util.parsedStringDoubleQuoteJSP(sPVVal);
+						            //String sPVValJsp = util.parsedStringDoubleQuoteJSP(sPVVal);//TODO remove this code trying to replace it with HTML escape below
+						            String sPVValJsp = StringUtil.escapeHtmlEncodedValue(sPVVal);
 						            String sPVValJ = util.parsedStringSingleQuote(sPVValJsp);
 						         //   if (sEditPV.equals(pvCount)) sPVVal = editValue;
 						            String sPVid = (String) pvBean.getPV_PV_IDSEQ();
@@ -1084,8 +1087,8 @@ L--%>
 						            String sPVMean = (String)vm.getVM_LONG_NAME();  // pvBean.getPV_SHORT_MEANING();
 						            if (sPVMean == null) sPVMean = "";
 						            String sPVMeanJsp = util.parsedStringDoubleQuoteJSP(sPVMean);
-						            //String sPVDesc = (String)vm.getVM_DESCRIPTION();  // pvBean.getPV_MEANING_DESCRIPTION();
-						              String sPVDesc = (String)vm.getVM_PREFERRED_DEFINITION();  // pvBean.getPV_MEANING_DESCRIPTION();
+						            //String sPVMeanJsp = StringUtil.escapeHtmlEncodedValue(sPVMean);
+						            String sPVDesc = (String)vm.getVM_PREFERRED_DEFINITION();  // pvBean.getPV_MEANING_DESCRIPTION();
 						            if (sPVDesc == null) sPVDesc = "";
 						            Vector vmCon = vm.getVM_CONCEPT_LIST();
 						            String submit = vm.getVM_SUBMIT_ACTION();
@@ -1575,7 +1578,8 @@ The Value Meaning matches the name of an existing Value Meaning. You may either 
 		        for (int i = 0; vParentNames.size() > i; i++)
 		        {
 		          String sParentName = (String) vParentNames.elementAt(i);
-		          String sParNameJsp = util.parsedStringDoubleQuoteJSP(sParentName);
+		          //String sParNameJsp = util.parsedStringDoubleQuoteJSP(sParentName);
+		          String sParNameJsp = StringUtil.escapeHtmlEncodedValue(sParentName);
 		%>
 								<option value="<%=sParNameJsp%>">
 									<%=sParentName%>

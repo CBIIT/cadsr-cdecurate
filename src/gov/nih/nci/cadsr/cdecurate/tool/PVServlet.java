@@ -409,8 +409,8 @@ public class PVServlet implements Serializable
         if (pv == null) pv = new PV_Bean();
         //make sure all the hand typed data is captured
         String sPV = (String)data.getRequest().getParameter("pvNewValue");  //value
-        if (sPV == null) sPV = "";
-        sPV = sPV.trim();
+        if (sPV == null) sPV = "";//TODO 
+        sPV = StringUtil.unescapeHtmlEncodedValue(sPV.trim());
         pv.setPV_VALUE(sPV);
         readValidValueData(pv, "pvNew");
         //add pv other attribtutes 
