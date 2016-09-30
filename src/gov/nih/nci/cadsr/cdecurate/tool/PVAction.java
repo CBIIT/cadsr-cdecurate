@@ -789,7 +789,7 @@ public class PVAction implements Serializable {
 					sPV_ID = pv.getPV_PV_IDSEQ();
 					cstmt.setString(4, sPV_ID);
 				} else {
-					cstmt.setString(5, sValue);
+					cstmt.setString(5, StringUtil.unescapeHtmlEncodedValue(sValue));
 					cstmt.setString(6, StringUtil.unescapeHtmlEncodedValue(sShortMeaning));
 				}
 				cstmt.setString(7, sBeginDate);

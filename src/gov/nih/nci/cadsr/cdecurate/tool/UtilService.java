@@ -15,7 +15,6 @@ package gov.nih.nci.cadsr.cdecurate.tool;
 import gov.nih.nci.cadsr.common.Constants;
 
 import java.io.Serializable;
-import java.sql.Date;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.Vector;
@@ -524,7 +523,7 @@ public class UtilService implements Serializable
         }
         while (index > 0);
       }
-      //System.out.println("string " + sPrName);
+      //System.out.println("UtilService.parsedStringSingleQuote string Ln 527: " + sPrName);
       return sPrName;
     }
 
