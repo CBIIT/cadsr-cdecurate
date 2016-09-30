@@ -319,6 +319,7 @@ public class StringUtil {
             String hex = s.substring(  matcher.start(), matcher.end() );
             hex = hex.replaceFirst( "^%", "" );
             s = s.replace( "%"+hex, Character.toString( (char)Integer.parseInt(hex, 16)) );
+            matcher =  pattern.matcher( s );
         }
         return  s;
     }

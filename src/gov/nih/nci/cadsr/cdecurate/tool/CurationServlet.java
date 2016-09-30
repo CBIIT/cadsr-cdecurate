@@ -3603,7 +3603,7 @@ public class CurationServlet
     public void storeStatusMsg( String sMsg )
     {
         // We sometimes get escaped HTML formatted characters.  Ex.: &#34 = "
-        // this line converts them back fo the message.
+        // this line converts them back for the message.
         sMsg = unescapeHtmlEncodedValue(sMsg);
         try
         {
