@@ -203,7 +203,7 @@ newUrl = newUrl + '&idseq=' +idseq+'&type='+type;
     for (int i = 0; vValidate.size()>i; i = i+3)
     {
       String sItem = StringUtil.cleanJavascriptAndHtml((String)vValidate.elementAt(i));
-      String sContent = StringUtil.escapeHtmlEncodedValue((String)vValidate.elementAt(i+1)); 
+      String sContent = StringUtil.escapeHtmlEncodedValue(StringUtil.cleanJavascriptAndHtml((String)vValidate.elementAt(i+1))); 
       if (sContent == null) sContent = "";
       String sStat = StringUtil.cleanJavascriptAndHtml((String)vValidate.elementAt(i+2));
       String sFont = "#000000";
