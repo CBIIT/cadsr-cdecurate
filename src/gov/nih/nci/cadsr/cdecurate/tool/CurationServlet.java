@@ -53,6 +53,7 @@ import oracle.jdbc.OracleTypes;        //GF30779
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 
+import static gov.nih.nci.cadsr.common.StringUtil.resolveHex;
 import static gov.nih.nci.cadsr.common.StringUtil.unescapeHtmlEncodedValue;
 
 /**
@@ -3605,6 +3606,16 @@ public class CurationServlet
         // We sometimes get escaped HTML formatted characters.  Ex.: &#34 = "
         // this line converts them back for the message.
         sMsg = unescapeHtmlEncodedValue(sMsg);
+
+        // App scan will try to inject HTML as hexadecimal code, this will convert those codes to ascii.
+        sMsg = resolveHex( sMsg );
+        // If there are any tags in the String at this point, they would have only come form App scan, we will reject them.
+        // Will match an opening angle bracket, one or more characters, then a closing angle bracket
+        if( sMsg.matches( "^.*<.+>.*$" ))
+        {
+            return;
+        }
+
         try
         {
             HttpSession session = m_classReq.getSession();
