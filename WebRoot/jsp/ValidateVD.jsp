@@ -203,9 +203,8 @@ newUrl = newUrl + '&idseq=' +idseq+'&type='+type;
     for (int i = 0; vValidate.size()>i; i = i+3)
     {
       String sItem = StringUtil.cleanJavascriptAndHtml((String)vValidate.elementAt(i));
-      String sContent = StringUtil.cleanJavascriptAndHtml((String)vValidate.elementAt(i+1));
+      String sContent = StringUtil.escapeHtmlEncodedValue((String)vValidate.elementAt(i+1)); 
       if (sContent == null) sContent = "";
-      //System.out.println("content " + sContent);
       String sStat = StringUtil.cleanJavascriptAndHtml((String)vValidate.elementAt(i+2));
       String sFont = "#000000";
       System.out.println("JR1024 ValidateVD.jsp sItem [" + sItem + "] sContent [" + sContent + "] sStat [" + sStat + "]");     //JR1024 just a tag
