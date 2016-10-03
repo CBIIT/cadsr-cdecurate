@@ -369,6 +369,19 @@ public class StringUtil {
 		return true;
 	}
 
+	/**
+	 *  Replaces the escaped HTML characters with their symbols
+	 * @param String htmlData 
+	 * @return String htmlData
+	 */
+public static String htmlTagsCleanup (String htmlData) {
+	htmlData = htmlData.replaceAll("&lt;", "<");
+	htmlData = htmlData.replaceAll("&gt;", ">");
+	htmlData = htmlData.replaceAll("&amp;", "&");
+	htmlData = htmlData.replaceAll("&quot;", "'");
+	return htmlData;
+}		
+	
    public static boolean isValidParmeter(HttpServletRequest req, String parameter )
    {
        boolean isValid = true;
