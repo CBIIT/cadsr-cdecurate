@@ -188,6 +188,9 @@ public class StringUtil {
 
 	/**
 	 * This method is added to address XSS issue discovered during app scan.
+	 * This method returns a string which removed HTML constructs. It also escapes HTML Basic characters:
+	 * '<', '>', '"', '&' become &lt; &gt; &quot, &amp;
+	 * We need to make sure we do not double escape a string by calling 'escapeHtmlEncodedValue' after calling this method.
 	 *
 	 * @param stringToClean
 	 * @return
@@ -207,9 +210,6 @@ public class StringUtil {
 		stringToClean = sanitizeHTML(stringToClean);
 		return stringToClean;
 	}
-
-
-
 
 	protected static String sanitizeHTML(String untrustedHTML) {
         String ret = resolveHex( untrustedHTML );
@@ -369,19 +369,6 @@ public class StringUtil {
 		return true;
 	}
 
-	/**
-	 *  Replaces the escaped HTML characters with their symbols
-	 * @param String htmlData 
-	 * @return String htmlData
-	 */
-public static String htmlTagsCleanup (String htmlData) {
-	htmlData = htmlData.replaceAll("&lt;", "<");
-	htmlData = htmlData.replaceAll("&gt;", ">");
-	htmlData = htmlData.replaceAll("&amp;", "&");
-	htmlData = htmlData.replaceAll("&quot;", "'");
-	return htmlData;
-}		
-	
    public static boolean isValidParmeter(HttpServletRequest req, String parameter )
    {
        boolean isValid = true;
