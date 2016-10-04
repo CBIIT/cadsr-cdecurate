@@ -42,7 +42,14 @@ public class AdministeredItemUtil {
 		return retVal;
 	}
 
-	public static String handleSpecialCharacters(byte[] value) throws Exception {
+	/**
+	 * * This utility was used before 4.1.2 release. It created in Excel values
+	 * containing character encoding in curly braces as {945} or {176}. We have
+	 * changed it since 4.1.3 to just use characters received from
+	 * DB. See Jira CURATNTOOL-1207
+	 * 
+	 */
+	private static String handleSpecialCharacters(byte[] value) throws Exception {
 		String retVal = "";
 
 		if (value != null && value.length > 0) {
@@ -52,7 +59,7 @@ public class AdministeredItemUtil {
 		return retVal;
 	}
 	
-	public static String handleSpecialCharacters(String value) throws Exception {
+	private static String handleSpecialCharacters(String value) throws Exception {
 		String retVal = "";
 
 		if (value != null && value.length() > 0) {
@@ -62,7 +69,8 @@ public class AdministeredItemUtil {
 		return retVal;
 	}
 	/**
-	 * Utility method to prints out its ASCII value
+	 * Utility method to prints out its ASCII value.
+	 * 
 	 */
 	public static String toASCIICode(String str) throws Exception {
 		final StringBuilder result = new StringBuilder();
