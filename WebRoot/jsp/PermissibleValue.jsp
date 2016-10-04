@@ -421,7 +421,7 @@ L--%>
 			        for (int i = 0; vQVList.size()>i; i++)
 			        {
 			          String sVV = (String)vQVList.elementAt(i);
-			          String sVVjsp = util.parsedStringDoubleQuoteJSP(sVV);
+			          String sVVjsp = util.parsedStringDoubleQuoteJSP(sVV);//TODO: escape HTML instead of juts escaping double quote??
 			%>
 											<option value="<%=sVVjsp%>">
 												<%=sVV%>
@@ -1075,7 +1075,7 @@ L--%>
 						            if (sPVVal == null) sPVVal = "";
 						            //String sPVValJsp = util.parsedStringDoubleQuoteJSP(sPVVal);//TODO remove this code trying to replace it with HTML escape below
 						            String sPVValJsp = StringUtil.escapeHtmlEncodedValue(sPVVal);
-						            String sPVValJ = util.parsedStringSingleQuote(sPVValJsp);
+						            String sPVValJ = util.parsedStringSingleQuote(sPVValJsp);//TODO What is that?
 						         //   if (sEditPV.equals(pvCount)) sPVVal = editValue;
 						            String sPVid = (String) pvBean.getPV_PV_IDSEQ();
 						            if (sPVid == null || sPVid.equals("")) sPVid = "EVS_" + sPVVal;
@@ -1204,7 +1204,7 @@ L--%>
 																<%}%>
 																<td valign="top">
 																	<div id="<%=pvCount%>ValueView" style="display: block">
-																		<%=sPVVal%>
+																		<%=sPVValJsp%>
 																	</div>
 																	<div id="<%=pvCount%>ValueEdit" style="display: none">
 																		&nbsp;&nbsp;

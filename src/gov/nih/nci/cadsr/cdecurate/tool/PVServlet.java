@@ -458,7 +458,7 @@ public class PVServlet implements Serializable
         PV_Bean selectPV = data.getSelectPV();
         //get the pv name from teh page
         String chgName = (String)data.getRequest().getParameter("txtpv" + pvInd + "Value");  //pvName  
-        chgName = chgName.trim();
+        chgName = chgName.trim();//this is HTML-encoded by a browser as '5478072 &#947;/&#948; PV Upd1'
         //handle pv changes
         VM_Bean useVM = this.getDuplicateVMUse();	//this should be more appropriately named, getExistingVM(), that's it!
         if (useVM == null)
