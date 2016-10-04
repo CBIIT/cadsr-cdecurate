@@ -3613,7 +3613,7 @@ public class CurationServlet
         // Will match an opening angle bracket, one or more characters, then a closing angle bracket
         if( sMsg.matches( "^.*<.+>.*$" ))
         {
-            return;
+            logger.info( "Possible AppScan attack - storeStatusMsg: " + sMsg );
         }
 
         try
