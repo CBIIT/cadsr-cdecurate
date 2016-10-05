@@ -208,6 +208,7 @@ public class StringUtil {
 
 		//JR1107
 		stringToClean = sanitizeHTML(stringToClean);
+		stringToClean = escapeHtmlEncodedValue(stringToClean);
 		return stringToClean;
 	}
 
@@ -222,7 +223,8 @@ public class StringUtil {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-
+		//we want to remove HTML and partial HTML escape because this method does not escape all the charactres we need to
+		ret = unescapeHtmlEncodedValue(ret);
 		return ret;
 	}
 
@@ -440,9 +442,17 @@ public class StringUtil {
         //	vd.setVD_LONG_NAME(StringUtil.escapeHtmlEncodedValue(sLongName));
         //}
    }
+   /**
+    * This function returns HMTL escaped value.
+    * 
+    * @param paramValue
+    * @return
+    */
    public static String escapeHtmlEncodedValue(String paramValue) {
 	   String decodeNumeric = decodeNumericChars(paramValue);
-	   return StringEscapeUtils.escapeHtml4(decodeNumeric);
+	   //let's try to prevent double encoding if a string was partly escaped
+	   String sourceUnescaped = StringEscapeUtils.unescapeHtml4(decodeNumeric);
+	   return StringEscapeUtils.escapeHtml4(sourceUnescaped);
    }
    /**
     * This code is currently not used.

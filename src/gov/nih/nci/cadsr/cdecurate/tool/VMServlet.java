@@ -346,8 +346,8 @@ public class VMServlet extends GenericServlet
             String sVMD = "";
             if( pvInd == -1 )
             {
-                sVM = StringUtil.escapeHtmlEncodedValue(StringUtil.unescapeHtmlEncodedValue(StringUtil.cleanJavascriptAndHtml( ( String ) req.getParameter( "pvNewVM" ) ) ));  //vm name
-                sVMD = StringUtil.escapeHtmlEncodedValue(StringUtil.unescapeHtmlEncodedValue(StringUtil.cleanJavascriptAndHtml( ( String ) req.getParameter( "pvNewVMD" ) ) ));  //vm desc
+                sVM = StringUtil.cleanJavascriptAndHtml( ( String ) req.getParameter( "pvNewVM" ) );  //vm name
+                sVMD = StringUtil.cleanJavascriptAndHtml( ( String ) req.getParameter( "pvNewVMD" ) );  //vm desc
                 vm.setVM_SUBMIT_ACTION( VMForm.CADSR_ACTION_INS );    //JR1024 why would we insert a VM if it is blank???
                 //System.out.println(sVM + " new " + sVMD);
             }

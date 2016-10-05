@@ -2679,7 +2679,7 @@ public class InsACService implements Serializable
             String sDocText = StringUtil.unescapeHtmlEncodedValue(de.getDOC_TEXT_PREFERRED_QUESTION());
             String sBeginDate = m_util.getOracleDate( de.getDE_BEGIN_DATE() );
             String sEndDate = m_util.getOracleDate( de.getDE_END_DATE() );
-            String sChangeNote = de.getDE_CHANGE_NOTE();
+            String sChangeNote = StringUtil.unescapeHtmlEncodedValue(de.getDE_CHANGE_NOTE());
             String sSource = de.getDE_SOURCE();
             String sLanguage = de.getDE_LANGUAGE();
             if( sSource == null )

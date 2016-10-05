@@ -20,7 +20,7 @@ import gov.nih.nci.cadsr.common.StringUtil;
 import gov.nih.nci.cadsr.common.TestUtil;
 import gov.nih.nci.cadsr.persist.ac.Admin_Components_Mgr;
 import gov.nih.nci.cadsr.persist.ac.Tool_Options_View_Ext_Mgr;
-import gov.nih.nci.cadsr.persist.evs.Evs_Mgr;
+//import gov.nih.nci.cadsr.persist.evs.Evs_Mgr;
 import gov.nih.nci.cadsr.persist.exception.DBException;
 import gov.nih.nci.cadsr.persist.user.User_Accounts_Mgr;
 import gov.nih.nci.cadsr.sentinel.util.DSRAlert;
@@ -28,7 +28,6 @@ import gov.nih.nci.cadsr.sentinel.util.DSRAlertImpl;
 
 import java.sql.CallableStatement;
 import java.sql.Connection;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -48,7 +47,7 @@ import javax.sql.DataSource;
 
 
 //import oracle.jdbc.driver.OracleTypes;
-import oracle.jdbc.OracleTypes;        //GF30779
+//import oracle.jdbc.OracleTypes;        //GF30779
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
