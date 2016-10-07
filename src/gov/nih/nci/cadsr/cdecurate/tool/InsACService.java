@@ -2788,8 +2788,8 @@ public class InsACService implements Serializable
                 deVO.setLong_name( sLongName ); // long name-can be null
                 deVO.setBegin_date( m_util.getSQLTimestamp( de.getDE_BEGIN_DATE() ) ); // sBeginDate-can be null
                 deVO.setEnd_date( m_util.getSQLTimestamp( de.getDE_END_DATE() ) ); // sEndDate-can be null
-                deVO.setChange_note( sChangeNote );
-                deVO.setOrigin( sSource ); // origin
+                deVO.setChange_note(StringUtil.unescapeHtmlEncodedValue( sChangeNote ));
+                deVO.setOrigin(StringUtil.unescapeHtmlEncodedValue( sSource )); // origin
                 DeComp deComp = new DeComp();
                 ArrayList errorList = deComp.setDe( deVO, sAction, m_servlet.getConn() );
                 if( errorList != null && errorList.size() > 0 )

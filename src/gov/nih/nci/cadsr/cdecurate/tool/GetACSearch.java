@@ -256,7 +256,7 @@ public class GetACSearch implements Serializable
                     if( !StringUtil.validateSearchParameterType( sRegStatus ) )
                         throw new Exception( "listRegStatus contains characters or combinations of characters that are not allowed because of security concerns." );
                 }
-                logger.debug( "at line 215 of GetACSearch.java***********" + sRegStatus );
+                logger.debug( "at line 259 of GetACSearch getACKeywordResult sRegStatus: " + sRegStatus );
                 DataManager.setAttribute( session, "serRegStatus", sRegStatus );
                 if( sRegStatus == null || sRegStatus.equals( "allReg" ) )
                     sRegStatus = "";
@@ -550,7 +550,6 @@ public class GetACSearch implements Serializable
                     }
                     else if( sSearchAC.equals( "DataElementConcept" ) )
                     {
-                        logger.info( "at line 495 of GetACsearch.java***********" );
                         //===added regStatus parameter for GF32398
                         doDECSearch( "", sKeyword, "", sContext, sVersion, sStatus, sCreatedFrom, sCreatedTo, sRegStatus,
                                 sModifiedFrom, sModifiedTo, sCreator, sModifier, "", "", "", "", dVersion,
@@ -558,7 +557,6 @@ public class GetACSearch implements Serializable
                     }
                     else if( sSearchAC.equals( "ValueDomain" ) )
                     {
-                        logger.info( "at line 499 of GetACsearch.java***********" );
                         //==added one more parameter sRegStatus ====GF32398
                         doVDSearch( "", sKeyword, "", sContext, sVersion, sVDType, sStatus, sCreatedFrom, sCreatedTo, sRegStatus,
                                 sModifiedFrom, sModifiedTo, sCreator, sModifier, "", "", "", dVersion, sCDid,
@@ -1457,7 +1455,7 @@ public class GetACSearch implements Serializable
                             else
                                 DEBean.setDE_VERSION( rs.getString( "version" ) + ".0" );
                             DEBean.setDE_MIN_CDE_ID( rs.getString( "cde_id" ) );
-                            DEBean.setDE_CHANGE_NOTE( rs.getString( "change_note" ) );
+                            DEBean.setDE_CHANGE_NOTE(StringUtil.escapeHtmlEncodedValue(rs.getString( "change_note" ) ));
                             // DEBean.setDE_LANGUAGE(rs.getString("language"));
                             DEBean.setDE_DE_IDSEQ( rs.getString( "de_idseq" ) );
                             // DEBean.setDE_LANGUAGE_IDSEQ(rs.getString("desig_idseq"));
@@ -1469,7 +1467,7 @@ public class GetACSearch implements Serializable
                             if( rs.getString( "used_by_conte_idseq" ) != null )
                                 usedBy.addElement( rs.getString( "used_by_conte_idseq" ) );
                             DEBean.setDE_USEDBY_CONTEXT_ID( usedBy );
-                            DEBean.setDE_SOURCE( rs.getString( "origin" ) );
+                            DEBean.setDE_SOURCE(StringUtil.escapeHtmlEncodedValue(rs.getString( "origin" ) ));
                             s = rs.getString( "date_created" );
                             if( s != null )
                                 s = m_util.getCurationDate( s );
@@ -1831,8 +1829,7 @@ public class GetACSearch implements Serializable
 //							 DECBean.setDEC_REG_STATUS_IDSEQ("REG_STATUS_ID");//GF32398
 //						}
                         //===========GF32398====END======
-                        logger.info( "at line 1840 of GetACsearch.java***********" );
-                        vList.addElement( DECBean );
+                         vList.addElement( DECBean );
                         // store the ocl name or propl name in the request
                         String reslabel = "Search Results for Data Element Concept associated with - ";
                         if( sObject != null && !sObject.equals( "" ) )
@@ -2003,9 +2000,9 @@ public class GetACSearch implements Serializable
                         VDBean.setVD_CHAR_SET_NAME( rs.getString( "char_set_name" ) );
                         VDBean.setVD_HIGH_VALUE_NUM( rs.getString( "high_value_num" ) );
                         VDBean.setVD_LOW_VALUE_NUM( rs.getString( "low_value_num" ) );
-                        logger.debug( "VD_REPTERM_LONG_NAME at Line 2052 of GetACSearch.java" + rs.getString( "rep_term" ) );
+                        logger.debug( "VD_REPTERM_LONG_NAME at Line 2003 of GetACSearch doVDSearch DB rep_term:" + rs.getString( "rep_term" ) );
                         VDBean.setVD_REP_TERM( AdministeredItemUtil.handleLongName( rs.getString( "rep_term" ) ) );    //GF32004;
-                        logger.debug( "VD_REPTERM_LONG_NAME at Line 2054 of GetACSearch.java" + VDBean.getVD_REP_TERM() );
+                        logger.debug( "VD_REPTERM_LONG_NAME at Line 2005 of GetACSearch doVDSearch VDBean.getVD_REP_TERM(): " + VDBean.getVD_REP_TERM() );
 //                        VDBean.setVD_REP_TERM(rs.getString("rep_term"));
                         VDBean.setVD_REP_IDSEQ( rs.getString( "rep_idseq" ) );
                         // VDBean.setVD_REP_QUAL(rs.getString("qualifier_name"));
@@ -4021,12 +4018,10 @@ public class GetACSearch implements Serializable
                     //NCI Metathesaurus troubleshooting
                     if( menuAction.equals( "searchForCreate" ) )
                     {
-                        logger.info( "At line 4152 of GetACSearch.java @@@@@@" );
                         conBean.setEVS_DATABASE( "caDSR" );    //called when sVocab is "NCI Thesaurus" and "MGED"
                     }
                     else
                     {
-                        logger.info( "At line 4155 of GetACSearch.java $$$$$$" );
                         // make the vocab as evs origin from cadsr for main page concept class search
                         conBean.setEVS_DATABASE( sVocab );    //never called for some reason!???
                     }
@@ -4071,7 +4066,7 @@ public class GetACSearch implements Serializable
                             }
                         }
                     }
-                    logger.debug( "At line 4194 of GetACSearch.java " + conBean.getCONCEPT_NAME() + "**" + conBean.getLONG_NAME() + "**" + conBean.getCONTEXT_NAME() + "**" + conBean.getCONCEPT_IDENTIFIER() + "**" + conBean.getPREFERRED_DEFINITION() );
+                    logger.debug( "At line 4069 of GetACSearch.java " + conBean.getCONCEPT_NAME() + "**" + conBean.getLONG_NAME() + "**" + conBean.getCONTEXT_NAME() + "**" + conBean.getCONCEPT_IDENTIFIER() + "**" + conBean.getPREFERRED_DEFINITION() );
                     if( isExist == false )
                         vList.addElement( conBean );
                 }

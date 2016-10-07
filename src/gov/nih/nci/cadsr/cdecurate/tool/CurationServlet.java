@@ -750,7 +750,6 @@ public class CurationServlet
         } catch( Exception e )
         {
             logger.error( "Service error : " + e.toString(), e );
-            session = m_classReq.getSession();
             String msg = e.toString();
             try
             {
@@ -1893,9 +1892,9 @@ public class CurationServlet
             // add evs bean to pv bean
             VM_Bean vm = new VM_Bean();
             //   vm.setVM_SHORT_MEANING(pBean.getPV_SHORT_MEANING());
-            logger.debug( "VM_LONG_NAME at Line 1759 of CurationServlet.java" + pBean.getPV_SHORT_MEANING() );
+            logger.debug( "PV_SHORT_MEANING at Line 1895 of CurationServlet storePVinVDPVList: " + pBean.getPV_SHORT_MEANING() );
             vm.setVM_LONG_NAME( AdministeredItemUtil.handleLongName( pBean.getPV_SHORT_MEANING() ) );    //GF32004;
-            logger.debug( "VM_LONG_NAME at Line 1761 of CurationServlet.java" + vm.getVM_LONG_NAME() );
+            logger.debug( "VM_LONG_NAME at Line 1897 of CurationServlet storePVinVDPVList: " + vm.getVM_LONG_NAME() );
             // vm.setVM_DESCRIPTION(pBean.getPV_MEANING_DESCRIPTION());
             vm.setVM_PREFERRED_DEFINITION( pBean.getPV_MEANING_DESCRIPTION() );
             vm.setVM_CONDR_IDSEQ( eBean.getCONDR_IDSEQ() );
@@ -3600,7 +3599,7 @@ public class CurationServlet
      * @param sMsg string message to append to.
      */
     @SuppressWarnings( "unchecked" )
-    public void storeStatusMsg( String sMsg )
+    public void storeStatusMsg(String sMsg )
     {
         // We sometimes get escaped HTML formatted characters.  Ex.: &#34 = "
         // this line converts them back for the message.
@@ -3630,19 +3629,20 @@ public class CurationServlet
             if( statusMsg == null ) statusMsg = "";
             //parse single  double  quotes and new line char if any
             String alrtMsg = sMsg;
-            if( !alrtMsg.equalsIgnoreCase( "\\n" ) )
-                alrtMsg = util.parsedStringAlertNewLine( alrtMsg );
-            alrtMsg = util.parsedStringDoubleQuote( alrtMsg );
-            alrtMsg = util.parsedStringSingleQuote( alrtMsg );
+
             if( vStatMsg == null ) vStatMsg = new Vector<String>();
             //add message to both to string status message and vector stats message if not too big
             if( vStatMsg.size() < 35 )
             {
                 if( sMsg.equalsIgnoreCase( "\\n" ) )
                     statusMsg = statusMsg + alrtMsg;
-                else
+                else {
+                	alrtMsg = StringUtil.escapeForJavascriptEncodedValue(alrtMsg);
                     statusMsg = statusMsg + alrtMsg + "\\n";
+                }
+
                 DataManager.setAttribute( session, Session_Data.SESSION_STATUS_MESSAGE, statusMsg );
+                //logger.debug( "DataManager.setAttribute Session_Data.SESSION_STATUS_MESSAGE: " + statusMsg );
             }
             //remove tab and newline from the msg for vector
             if( !sMsg.equalsIgnoreCase( "\\n" ) && !sMsg.equalsIgnoreCase( "\n" ) )

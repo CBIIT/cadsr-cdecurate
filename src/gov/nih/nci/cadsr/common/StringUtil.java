@@ -477,4 +477,12 @@ public class StringUtil {
 		}
 		return sb.toString();
    }
+   public static String escapeForJavascriptEncodedValue(String paramValue) {
+	   if (StringUtils.isEmpty(paramValue)) 
+		   return null;
+	   String escaped = org.apache.commons.lang.StringEscapeUtils.escapeJavaScript(paramValue);
+	   //clean up wrongly escaped tabs and new lines
+	   escaped = escaped.replaceAll("\\\\n", "\n").replaceAll("\\\\t", "\t");
+	   return escaped;
+   }
 }
