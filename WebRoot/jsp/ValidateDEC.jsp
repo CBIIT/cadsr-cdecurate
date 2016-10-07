@@ -181,7 +181,7 @@ L--%>
 	String temp = (String)session.getAttribute(Constants.FINAL_ALT_DEF_STRING);
 	System.out.println("temp [" + temp + "] temp.trim().indexOf(null) = " + temp.trim().indexOf("null"));
       	if (!temp.trim().equals("null")) {
-      		sContent = temp;	//GF30798
+      		sContent = StringUtil.cleanJavascriptAndHtml(temp);	//GF30798
 	}
       }
       String sFont = "#000000";
