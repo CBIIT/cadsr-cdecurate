@@ -10,7 +10,7 @@ L--%>
     $Name: not supported by cvs2svn $
 -->
 
-<%@ page contentType="text/html;charset=WINDOWS-1252"%>
+
 <%@ page import="java.util.*"%>
 <HTML>
 	<HEAD>

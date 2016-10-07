@@ -9,7 +9,7 @@ L--%>
     $Header: /cvsshare/content/cvsroot/cdecurate/WebRoot/jsp/ValidateDEC.jsp,v 1.5 2009-04-21 03:47:34 hegdes Exp $
     $Name: not supported by cvs2svn $
 -->
-<%@ page contentType="text/html;charset=WINDOWS-1252"%>
+
 <%@ page import="java.util.*"%>
 <%@ page import="gov.nih.nci.cadsr.common.Constants" %>
 <%@ page import="gov.nih.nci.cadsr.common.StringUtil"%>
@@ -175,6 +175,7 @@ L--%>
       String sItem = StringUtil.cleanJavascriptAndHtml((String)vValidate.elementAt(i));
       String sContent = StringUtil.cleanJavascriptAndHtml((String)vValidate.elementAt(i+1));
       if (sContent == null) sContent = "";
+      System.out.println("testing DEC SC: "+sContent+ " before: "+(String)vValidate.elementAt(i+1));
       String sStat = StringUtil.cleanJavascriptAndHtml((String)vValidate.elementAt(i+2));
       if(sItem != null && sItem.equals("Alternate Definition")) {
 	String temp = (String)session.getAttribute(Constants.FINAL_ALT_DEF_STRING);
