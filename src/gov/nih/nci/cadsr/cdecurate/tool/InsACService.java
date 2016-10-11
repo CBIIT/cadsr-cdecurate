@@ -492,7 +492,7 @@ public class InsACService implements Serializable
                 }
                 cstmt.setString( 27, sBeginDate );
                 cstmt.setString( 28, sEndDate );
-                cstmt.setString( 29, sChangeNote );
+                cstmt.setString( 29, StringUtil.unescapeHtmlEncodedValue(sChangeNote ));
                 cstmt.setString( 30, sTypeFlag ); // type flag - E by default
                 if( sOriginAction.equals( "BlockEditVD" )
                         && sInsertFor.equals( "Version" ) )
@@ -906,7 +906,7 @@ public class InsACService implements Serializable
 
             if( oldDEC == null )
                 oldDEC = new DEC_Bean();
-            String sName = dec.getDEC_PREFERRED_NAME();
+            String sName = StringUtil.unescapeHtmlEncodedValue(dec.getDEC_PREFERRED_NAME());
             String sContextID = dec.getDEC_CONTE_IDSEQ();
             String sContext = dec.getDEC_CONTEXT_NAME();
             Double DVersion = new Double( dec.getDEC_VERSION() );
@@ -920,7 +920,7 @@ public class InsACService implements Serializable
             String sSource = dec.getDEC_SOURCE();
             String sDEC_ID = dec.getDEC_DEC_IDSEQ();
             String sCDRName = ( String ) session.getAttribute( Constants.DEC_CDR_NAME );        //GF30681
-            String sChangeNote = dec.getDEC_CHANGE_NOTE();
+            String sChangeNote = StringUtil.unescapeHtmlEncodedValue(dec.getDEC_CHANGE_NOTE());
 
             // check if it is valid oc/prop for block dec at submit
             boolean bValidOC_PROP = true;

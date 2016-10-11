@@ -4027,7 +4027,8 @@ public class SetACService implements Serializable
      */
     public void setDECValueFromPage( HttpServletRequest req, HttpServletResponse res, DEC_Bean m_DEC )
     {
-        boolean hasSuspectPerameter = false;
+        boolean hasSuspectPerameter = false;//this is a flag of testing free text fields
+        boolean isPredefinedSuspected = false;//this is a flag of testing fields which do not expect special characters
         // CURATNTOOL-1107  don't "if else", we want a log entry for each bad one.
         if( !StringUtil.isValidParmeter( req, "txtPreferredName" ) )
         {
@@ -4043,7 +4044,7 @@ public class SetACService implements Serializable
         }
         if( !StringUtil.isValidParmeter( req, "selSource" ) )
         {
-            hasSuspectPerameter = true;
+        	isPredefinedSuspected = true;
         }
         if( !StringUtil.isValidParmeter( req, "CreateChangeNote" ) )
         {
@@ -4051,37 +4052,42 @@ public class SetACService implements Serializable
         }
         if( !StringUtil.isValidParmeter( req, "selRegStatus" ) )
         {
-            hasSuspectPerameter = true;
+        	isPredefinedSuspected = true;
         }
         if( !StringUtil.isValidParmeter( req, "selStatus" ) )
         {
-            hasSuspectPerameter = true;
+        	isPredefinedSuspected = true;
         }
         if( !StringUtil.isValidParmeter( req, "BeginDate" ) )
         {
-            hasSuspectPerameter = true;
+        	isPredefinedSuspected = true;
         }
         if( !StringUtil.isValidParmeter( req, "EndDate" ) )
         {
-            hasSuspectPerameter = true;
+        	isPredefinedSuspected = true;
         }
         if( !StringUtil.isValidParmeter( req, "selConceptualDomainText" ) )
         {
-            hasSuspectPerameter = true;
+        	isPredefinedSuspected = true;
         }
         if( !StringUtil.isValidParmeter( req, "txtObjClass" ) )
         {
-            hasSuspectPerameter = true;
+        	isPredefinedSuspected = true;
         }
        if( !StringUtil.isValidParmeter( req, "txtPropClass" ) )
         {
-            hasSuspectPerameter = true;
+    	   isPredefinedSuspected = true;
         }
-        if( hasSuspectPerameter)
+       
+        if( hasSuspectPerameter )
         {
-            return;
+        	logger.error("Suspected parameter values are found in DEC");//we still continue with free text fields having special charactres
         }
-
+        if( isPredefinedSuspected )
+        {
+        	logger.error("Suspected parameter values are found in DEC; DEC new values will not be saved");
+        	return;
+        }
         try
         {
             HttpSession session = req.getSession();
@@ -4259,7 +4265,7 @@ public class SetACService implements Serializable
                 m_DEC.setDEC_ASL_NAME( sName );
 
             //set DE_CHANGE_NOTE
-                   sName = StringUtil.cleanJavascriptAndHtml( ( String ) req.getParameter( "CreateChangeNote" ) );
+            sName = StringUtil.cleanJavascriptAndHtml( ( String ) req.getParameter( "CreateChangeNote" ) );
 
             if( sName != null )
             {
@@ -4520,7 +4526,7 @@ public class SetACService implements Serializable
     public void setVDValueFromPage( HttpServletRequest req, HttpServletResponse res, VD_Bean m_VD )
     {
         boolean hasSuspectPerameter = false;
-        boolean isPredefinedSuspected = false;
+        boolean isPredefinedSuspected = false;//this is a flag for fields which do not allow special characters
         HttpSession session = req.getSession();
         // CURATNTOOL-1107  don't "if else", we want a log entry for each bad one.
         if( !StringUtil.isValidParmeter( req, "txtPreferredName" ) )
