@@ -17,6 +17,7 @@ import gov.nih.nci.cadsr.cdecurate.tool.AC_Bean;
 import gov.nih.nci.cadsr.cdecurate.util.ToolException;
 import gov.nih.nci.cadsr.cdecurate.util.Tree;
 import gov.nih.nci.cadsr.cdecurate.util.TreeNode;
+import gov.nih.nci.cadsr.common.StringUtil;
 
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -34,7 +35,7 @@ import java.util.HashMap;
 import java.util.Vector;
 
 import org.apache.log4j.Logger;
-import org.apache.log4j.net.SyslogAppender;
+
 
 /**
  * This class encapsulates the caDSR database access.
@@ -1046,13 +1047,13 @@ public class DBAccess
                 String vers = rs.getString( 4 );
                 if( vers.indexOf( '.' ) < 0 )
                     vers += ".0";
-                title = acType.getName() + ": <b>" + name + "</b><br/> [" + pid + "v" + vers + "]";
+                title = acType.getName() + ": <b>" + StringUtil.escapeHtmlEncodedValue(name) + "</b><br/> [" + pid + "v" + vers + "]";
             }
         } catch( SQLException ex )
         {
             _log.error( "SQL: " + select, ex );
-            rs = SQLHelper.closeResultSet( rs );
-            pstmt = SQLHelper.closePreparedStatement( pstmt );
+            SQLHelper.closeResultSet( rs );
+            SQLHelper.closePreparedStatement( pstmt );
             throw new ToolException( ex );
         } finally
         {
@@ -1246,7 +1247,7 @@ public class DBAccess
             cstmt = _conn.prepareCall( sql_ );
             cstmt.setString( 1, alt_.getAcIdseq() );
             cstmt.setString( 2, alt_.getConteIdseq() );
-            cstmt.setString( 3, alt_.getName() );
+            cstmt.setString( 3, StringUtil.unescapeHtmlEncodedValue(alt_.getName() ));
             cstmt.setString( 4, alt_.getType() );
             cstmt.setString( 5, alt_.getLanguage() );
             cstmt.registerOutParameter( 6, java.sql.Types.VARCHAR );
@@ -1254,11 +1255,11 @@ public class DBAccess
             alt_.setAltIdseq( cstmt.getString( 6 ) );
         } catch( SQLException ex )
         {
-            cstmt = SQLHelper.closeCallableStatement( cstmt );
+            SQLHelper.closeCallableStatement( cstmt );
             throw ex;
         } finally
         {
-            cstmt = SQLHelper.closeCallableStatement( cstmt );
+            SQLHelper.closeCallableStatement( cstmt );
         }
 
     }
@@ -1320,7 +1321,7 @@ public class DBAccess
         try
         {
             pstmt = _conn.prepareStatement( sql_ );
-            pstmt.setString( 1, alt_.getName() );
+            pstmt.setString( 1, StringUtil.unescapeHtmlEncodedValue(alt_.getName() ));
             pstmt.setString( 2, alt_.getType() );
             pstmt.setString( 3, alt_.getLanguage() );
             pstmt.setString( 4, alt_.getConteIdseq() );    //JR1099 added and offset the subsequent index by one
@@ -1329,11 +1330,11 @@ public class DBAccess
 
         } catch( SQLException ex )
         {
-            pstmt = SQLHelper.closePreparedStatement( pstmt );
+            SQLHelper.closePreparedStatement( pstmt );
             throw ex;
         } finally
         {
-            pstmt = SQLHelper.closePreparedStatement( pstmt );
+            SQLHelper.closePreparedStatement( pstmt );
         }
 
     }
@@ -1359,7 +1360,7 @@ public class DBAccess
      */
     private void updateAltDef( Alternates alt_ ) throws SQLException
     {
-        String update = "update sbr.definitions_view set definition = ?, defl_name = ?, lae_name = ? where defin_idseq = ?";
+        String update = "update sbr.definitions_view set definition = ?, defl_name = ?, lae_name = ?, conte_idseq = ? where defin_idseq = ?";
 
         updateAlt( alt_, update );
     }

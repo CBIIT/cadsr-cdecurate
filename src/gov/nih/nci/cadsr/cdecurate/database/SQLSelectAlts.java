@@ -15,6 +15,8 @@ package gov.nih.nci.cadsr.cdecurate.database;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import gov.nih.nci.cadsr.common.StringUtil;
+
 /**
  * Define the SQL and replacement arguments to retrieve Alternates.
  * 
@@ -52,7 +54,7 @@ public class SQLSelectAlts
     public static Alternates copyFromRS(ResultSet rs_, boolean showMC_) throws SQLException
     {
         int instance = rs_.getInt(SQLSelectAlts._INSTANCE);
-        String name = rs_.getString(SQLSelectAlts._NAMEDEF);
+        String name = StringUtil.escapeHtmlEncodedValue(rs_.getString(SQLSelectAlts._NAMEDEF));
         String type =  rs_.getString(SQLSelectAlts._TYPE);
         String lang =  rs_.getString(SQLSelectAlts._LANGUAGE);
         String ac = rs_.getString(SQLSelectAlts._ACIDSEQ);
