@@ -100,7 +100,7 @@ function linkCancerGov()
   if (winCancerGov && !winCancerGov.closed)
      winCancerGov.focus();
   else
-   	winCancerGov = window.open("http://www.cancer.gov", "CancerGov", "width=680,height=680,resizable=yes,scrollbars=yes,titlebar=false");
+   	winCancerGov = window.open("https://www.cancer.gov", "CancerGov", "width=680,height=680,resizable=yes,scrollbars=yes,titlebar=false");
 }
 function linkNIH()
 {
@@ -157,7 +157,7 @@ function callHelp()
 			<col width="30%">
 			<tr bgcolor="#A90101">
 				<td align="left">
-					<a href="http://www.cancer.gov" target=_blank>
+					<a href="https://www.cancer.gov" target=_blank>
 						<img src="../images/brandtype.gif" border="0" alt="NCI Logo">
 					</a>
 				</td>
@@ -165,14 +165,14 @@ function callHelp()
 					&nbsp;
 				</td>
 				<td align="right">
-					<a href="http://www.cancer.gov" target=_blank>
+					<a href="https://www.cancer.gov" target=_blank>
 						<img src="../images/tagline_nologo.gif" border="0" alt="NCI Logo">
 					</a>
 				</td>
 			</tr>
 			<tr>
 				<td colspan="3" width="100%" align="left">
-					<a target="_blank" href="http://ncicb.nci.nih.gov/NCICB/infrastructure/cacore_overview/cadsr">
+					<a target="_blank" href="https://cbiit.nci.nih.gov/ncip/biomedical-informatics-resources/interoperability-and-semantics/metadata-and-models">
 						<img src="../images/curation_banner2.gif" border="0" alt="caDSR Logo">
 					</a>
 				</td>
@@ -248,16 +248,16 @@ function callHelp()
 							&#42;
 						</span>
 					</a>
-					<a target="_blank" href="http://www.cancer.gov/">
+					<a target="_blank" href="https://www.cancer.gov/">
 						<img border="0" src="../images/footer_nci.gif" alt="National Cancer Institute Logo" title="National Cancer Institute">
 					</a>
-					<a target="_blank" href="http://www.dhhs.gov/">
+					<a target="_blank" href="https://www.dhhs.gov/">
 						<img border="0" src="../images/footer_hhs.gif" alt="Department of Health and Human Services Logo" title="Department of Health and Human Services">
 					</a>
-					<a target="_blank" href="http://www.nih.gov/">
+					<a target="_blank" href="https://www.nih.gov/">
 						<img border="0" src="../images/footer_nih.gif" alt="National Institutes of Health Logo" title="National Institutes of Health">
 					</a>
-					<a target="_blank" href="http://www.usa.gov/">
+					<a target="_blank" href="https://www.usa.gov/">
 						<img border="0" src="../images/footer_usagov.gif" alt="USA.gov" title="USA.gov">
 					</a>
 				</td>

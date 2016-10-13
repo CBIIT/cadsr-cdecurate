@@ -116,21 +116,21 @@ function linkCancerGov()
   if (winCancerGov && !winCancerGov.closed)
      winCancerGov.focus();
   else
-   	winCancerGov = window.open("http://www.cancer.gov", "CancerGov", "width=680,height=680,resizable=yes,scrollbars=yes,titlebar=false");
+   	winCancerGov = window.open("https://www.cancer.gov", "CancerGov", "width=680,height=680,resizable=yes,scrollbars=yes,titlebar=false");
 }
 function linkNIH()
 {
   if (winNIH && !winNIH.closed)
      winNIH.focus();
   else
-   	winNIH = window.open("http://www.nih.gov", "NIH", "width=680,height=680,resizable=yes,scrollbars=yes,titlebar=false");
+   	winNIH = window.open("https://www.nih.gov", "NIH", "width=680,height=680,resizable=yes,scrollbars=yes,titlebar=false");
 }
 function linkDHHS()
 {
   if (winDHHS && !winDHHS.closed)
      winDHHS.focus();
   else
-   	winDHHS = window.open("http://www.dhhs.gov", "DHHS", "width=680,height=680,resizable=yes,scrollbars=yes,titlebar=false");
+   	winDHHS = window.open("https://www.dhhs.gov", "DHHS", "width=680,height=680,resizable=yes,scrollbars=yes,titlebar=false");
 }
 function linkFirstGov()
 {
@@ -176,7 +176,7 @@ session.setAttribute("ErrorMessage", "");
 					<table width="100%" height="140" border=0>
 						<tr>
 							<td width="33%" align="center">
-								<a target="_blank" href="http://ncicb.nci.nih.gov/NCICB/infrastructure/cacore_overview/cadsr">
+								<a target="_blank" href="https://cbiit.nci.nih.gov/ncip/biomedical-informatics-resources/interoperability-and-semantics/metadata-and-models">
 									<img src="../images/curation_banner2.gif" border="0" alt="caDSR Logo">
 								</a>
 							</td>

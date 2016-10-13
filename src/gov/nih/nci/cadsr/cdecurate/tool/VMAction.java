@@ -1337,9 +1337,9 @@ public class VMAction implements Serializable
 			// vm.setVM_DESCRIPTION(vmD);
 			vm.setVM_PREFERRED_DEFINITION(StringUtil.escapeHtmlEncodedValue(vmD));
 			vm.setVM_SUBMIT_ACTION(VMForm.CADSR_ACTION_NONE);
-            logger.debug("VM_LONG_NAME at Line 1303 of VMAction.java"+rs.getString("LONG_NAME"));
+            logger.debug("VM_LONG_NAME at Line 1340 of VMAction.doSetVMAttributes Long_name from DB: "+rs.getString("LONG_NAME"));
 			vm.setVM_LONG_NAME(StringUtil.escapeHtmlEncodedValue(AdministeredItemUtil.handleLongName(rs.getString("LONG_NAME")))); //GF32004
-			logger.debug("VM_LONG_NAME at Line 1305 of VMAction.java"+vm.getVM_LONG_NAME());
+			logger.debug("VM_LONG_NAME at Line 1342 of VMAction.doSetVMAttributes long_name escaped:: "+vm.getVM_LONG_NAME());
 //			vm.setVM_LONG_NAME(rs.getString("LONG_NAME"));
 			vm.setVM_IDSEQ(rs.getString("VM_IDSEQ"));
 			vm.setVM_ID(rs.getString("VM_ID"));
@@ -1347,7 +1347,7 @@ public class VMAction implements Serializable
 			// String sChg = rs.getString("comments");
 			// if (sChg == null || sChg.equals(""))
 			String sChg = rs.getString("change_note");
-			vm.setVM_CHANGE_NOTE(sChg);
+			vm.setVM_CHANGE_NOTE(StringUtil.escapeHtmlEncodedValue(sChg));
 			vm.setASL_NAME(rs.getString("asl_name"));
 			// vm.setVM_DEFINITION_SOURCE(rs.getString("vm_definition_source"));
 			this.getVMVersion(rs, vm);
@@ -1728,7 +1728,7 @@ public class VMAction implements Serializable
 				cstmt.setString(8, StringUtil.unescapeHtmlEncodedValue(vm.getVM_PREFERRED_DEFINITION()));
 				cstmt.setString(10, vm.getASL_NAME());
 				cstmt.setString(11, vm.getVM_VERSION());
-				cstmt.setString(17, vm.getVM_CHANGE_NOTE());
+				cstmt.setString(17, StringUtil.unescapeHtmlEncodedValue(vm.getVM_CHANGE_NOTE()));
 				// remove the concepts
 				if (vm.getVM_CONDR_IDSEQ().equals(" "))
 					cstmt.setString(14, null);
@@ -1756,7 +1756,7 @@ public class VMAction implements Serializable
 //					vm.setVM_LONG_NAME(cstmt.getString(7));
 					// vm.setVM_DESCRIPTION(cstmt.getString(8));
 					vm.setVM_PREFERRED_DEFINITION(StringUtil.escapeHtmlEncodedValue(cstmt.getString(8)));
-					vm.setVM_CHANGE_NOTE(cstmt.getString(17));
+					vm.setVM_CHANGE_NOTE(StringUtil.escapeHtmlEncodedValue(cstmt.getString(17)));
 					vm.setVM_BEGIN_DATE(cstmt.getString(18));
 					vm.setVM_END_DATE(cstmt.getString(19));
 					vm.setVM_CONDR_IDSEQ(cstmt.getString(14));

@@ -120,28 +120,28 @@ function linkCancerGov()
   if (winCancerGov && !winCancerGov.closed)
      winCancerGov.focus();
   else
-   	winCancerGov = window.open("http://www.cancer.gov", "CancerGov", "width=680,height=680,resizable=yes,scrollbars=yes,titlebar=false");
+   	winCancerGov = window.open("https://www.cancer.gov", "CancerGov", "width=680,height=680,resizable=yes,scrollbars=yes,titlebar=false");
 }
 function linkNIH()
 {
   if (winNIH && !winNIH.closed)
      winNIH.focus();
   else
-   	winNIH = window.open("http://www.nih.gov", "NIH", "width=680,height=680,resizable=yes,scrollbars=yes,titlebar=false");
+   	winNIH = window.open("https://www.nih.gov", "NIH", "width=680,height=680,resizable=yes,scrollbars=yes,titlebar=false");
 }
 function linkDHHS()
 {
   if (winDHHS && !winDHHS.closed)
      winDHHS.focus();
   else
-   	winDHHS = window.open("http://www.dhhs.gov", "DHHS", "width=680,height=680,resizable=yes,scrollbars=yes,titlebar=false");
+   	winDHHS = window.open("https://www.dhhs.gov", "DHHS", "width=680,height=680,resizable=yes,scrollbars=yes,titlebar=false");
 }
 function linkFirstGov()
 {
   if (winFirstGov && !winFirstGov.closed)
      winFirstGov.focus();
   else
-   	winFirstGov = window.open("http://www.usa.gov", "USA", "width=680,height=680,resizable=yes,scrollbars=yes,titlebar=false");
+   	winFirstGov = window.open("https://www.usa.gov", "USA", "width=680,height=680,resizable=yes,scrollbars=yes,titlebar=false");
 }
 
 function CloseWindow()
@@ -240,12 +240,12 @@ function callHelp()
   <table width="100%" border="0" bgcolor = "#FFFFFF" valign="middle" align="center" cellspacing="0">
     <col width="30%"><col width="40%"><col width="30%">
 		<tr bgcolor="#A90101">
-				<td  align="left"><a href="http://www.cancer.gov" target=_blank><img src="images/brandtype.gif" border="0" alt="NCI Logo"></a></td>
+				<td  align="left"><a href="https://www.cancer.gov" target=_blank><img src="images/brandtype.gif" border="0" alt="NCI Logo"></a></td>
 				<td>&nbsp;</td>
-				<td  align="right"><a href="http://www.cancer.gov" target=_blank><img src="images/tagline_nologo.gif" border="0" alt="NCI Logo"></a></td>
+				<td  align="right"><a href="https://www.cancer.gov" target=_blank><img src="images/tagline_nologo.gif" border="0" alt="NCI Logo"></a></td>
 		</tr>
     <tr>
-      <td colspan="3" width="100%" align="left"><a target="_blank" href="http://ncicb.nci.nih.gov/NCICB/infrastructure/cacore_overview/cadsr"><img src="images/curation_banner2.gif" border="0" alt="caDSR Logo"></a>
+      <td colspan="3" width="100%" align="left"><a target="_blank" href="https://cbiit.nci.nih.gov/ncip/biomedical-informatics-resources/interoperability-and-semantics/metadata-and-models"><img src="images/curation_banner2.gif" border="0" alt="caDSR Logo"></a>
       </td>
     </tr>
     <tr><td>&nbsp;</td></tr>
@@ -341,10 +341,10 @@ function callHelp()
     <tr>
       <td colspan="3" align="center">
           <a href="mailto:ncicb@pop.nci.nih.gov?subject=CDE%20Curation%20Tool"><span class="wdemail" title="Email NCICB Help Desk">&#42;</span></a>
-          <a target="_blank" href="http://www.cancer.gov/"><img border="0" src="images/footer_nci.gif" alt="National Cancer Institute Logo" title="National Cancer Institute"></a>
-          <a target="_blank" href="http://www.dhhs.gov/"><img border="0" src="images/footer_hhs.gif" alt="Department of Health and Human Services Logo" title="Department of Health and Human Services"></a>
-          <a target="_blank" href="http://www.nih.gov/"><img border="0" src="images/footer_nih.gif" alt="National Institutes of Health Logo" title="National Institutes of Health"></a>
-          <a target="_blank" href="http://www.usa.gov/"><img border="0" src="images/footer_usagov.gif" alt="USA.gov" title="USA.gov"></a>
+          <a target="_blank" href="https://www.cancer.gov/"><img border="0" src="images/footer_nci.gif" alt="National Cancer Institute Logo" title="National Cancer Institute"></a>
+          <a target="_blank" href="https://www.dhhs.gov/"><img border="0" src="images/footer_hhs.gif" alt="Department of Health and Human Services Logo" title="Department of Health and Human Services"></a>
+          <a target="_blank" href="https://www.nih.gov/"><img border="0" src="images/footer_nih.gif" alt="National Institutes of Health Logo" title="National Institutes of Health"></a>
+          <a target="_blank" href="https://www.usa.gov/"><img border="0" src="images/footer_usagov.gif" alt="USA.gov" title="USA.gov"></a>
       </td>   
     </tr>
   </table>

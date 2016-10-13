@@ -235,17 +235,10 @@ function linkNCICB()
 		%>
 			<table width="100%" border="0" cellspacing="0" cellpadding="0">
 				              <tr>
-				              <td width="25%" valign="center" align="left"><a href="http://www.cancer.gov" target="_blank" alt="NCI Logo">
+				              <td width="25%" valign="center" align="left"><a href="https://www.cancer.gov" target="_blank" alt="NCI Logo">
 				              <img src="images/CBIIT-36px-Logo-COLOR_contrast.png" border="0" alt="Brand Type"></a></td>
 				              <td align="center"><img style="border: 0px solid black" title="CDE Curation" src="images/curation_banner3.gif" alt="CDE Curation Banner"></td>
-				              <td align="right"><a target="_blank" href="http://www.nih.gov">U.S. National Institutes of Health</a></td></tr>
-			<!-- <tr>
-				<td colspan="2" style="padding:0 0 0 0">
-					<a target="_blank" href="http://ncicb.nci.nih.gov/NCICB/infrastructure/cacore_overview/cadsr">
-						<img src="images/curation_banner3.gif" border="0" alt="caDSR Logo">
-					</a>
-				</td>
-			</tr> -->
+				              <td align="right"><a target="_blank" href="https://www.nih.gov">U.S. National Institutes of Health</a></td></tr>
 		</table>
 		<table style="border-collapse: collapse; width: 100%;">
 			<col style="width: 2.3in" />
