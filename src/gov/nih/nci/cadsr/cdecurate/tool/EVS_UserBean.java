@@ -1093,7 +1093,7 @@ public final class EVS_UserBean implements Serializable
       //get it again for all tools property
       if (vList == null || vList.size()<1)
       {
-        vList = getAC.getToolOptionData("EVSAPI", "URL", "");
+        vList = getAC.getToolOptionData("LexEVSAPI", "ACCESS-URL", "");
         if (vList != null && vList.size()>0)
         {
           TOOL_OPTION_Bean tob = (TOOL_OPTION_Bean)vList.elementAt(0);
