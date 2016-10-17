@@ -17,7 +17,7 @@ L--%>
 <%
 
 	long stime = System.currentTimeMillis();
-	System.out.println("Starting Results.jsp Processing");
+	//System.out.println("Starting Results.jsp Processing");
 
 	UtilService util = new UtilService();
 	Vector vSelectedAttr = new Vector();
@@ -2834,7 +2834,7 @@ function ShowSelectedRowss(){
     	
       int rsize = results.size();
 
-  		System.out.println("Being processing "+rsize+" results");
+  		//System.out.println("Being processing "+rsize+" results");
 
       int j = 0;
 		  for (int i = 0; i < results.size(); i+=k)
@@ -2929,7 +2929,7 @@ function ShowSelectedRowss(){
          j++;
     }
 	 }
-    System.out.println("End processing of results");
+    //System.out.println("End processing of results");
 %>
 			</table>
 			<table>

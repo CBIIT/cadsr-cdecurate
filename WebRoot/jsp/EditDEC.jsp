@@ -1803,10 +1803,10 @@ String temp =
 		count4 = (Integer)session.getAttribute(Constants.USER_SELECTED_ALTERNATE_DEF_COMP4_COUNT);
 	}
 
-	System.out.println("comp1 count=" + count1);
-	System.out.println("comp2 count=" + count2);
-	System.out.println("comp3 count=" + count3);
-	System.out.println("comp4 count=" + count4);
+	//System.out.println("comp1 count=" + count1);
+	//System.out.println("comp2 count=" + count2);
+	//System.out.println("comp3 count=" + count3);
+	//System.out.println("comp4 count=" + count4);
 
 	AltNamesDefsSession.getSessionDataAC(session, "DataElementConcept");
 

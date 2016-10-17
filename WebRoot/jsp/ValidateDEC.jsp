@@ -175,11 +175,11 @@ L--%>
       String sItem = StringUtil.cleanJavascriptAndHtml((String)vValidate.elementAt(i));
       String sContent = StringUtil.cleanJavascriptAndHtml((String)vValidate.elementAt(i+1));
       if (sContent == null) sContent = "";
-      System.out.println("testing DEC SC: "+sContent+ " before: "+(String)vValidate.elementAt(i+1));
+      //System.out.println("testing DEC SC: "+sContent+ " before: "+(String)vValidate.elementAt(i+1));
       String sStat = StringUtil.cleanJavascriptAndHtml((String)vValidate.elementAt(i+2));
       if(sItem != null && sItem.equals("Alternate Definition")) {
 	String temp = (String)session.getAttribute(Constants.FINAL_ALT_DEF_STRING);
-	System.out.println("temp [" + temp + "] temp.trim().indexOf(null) = " + temp.trim().indexOf("null"));
+	//System.out.println("temp [" + temp + "] temp.trim().indexOf(null) = " + temp.trim().indexOf("null"));
       	if (!temp.trim().equals("null")) {
       		sContent = StringUtil.cleanJavascriptAndHtml(temp);	//GF30798
 	}

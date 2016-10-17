@@ -576,7 +576,7 @@ L--%>
           vName = eBean.getVocabAttr(uBean, strVocab, EVSSearch.VOCAB_DBORIGIN, EVSSearch.VOCAB_NAME);  // "vocabDBOrigin", "vocabName");
           nvp = eBean.getNAME_VALUE_PAIR_IND();
           conceptName = eBean.getCONCEPT_NAME();
-          System.out.println("JR1013 Concept Name [" + conceptName + "] nvp " + nvp);
+          //System.out.println("JR1013 Concept Name [" + conceptName + "] nvp " + nvp);
         }
          String ckName = ("CK" + j);
          strResult = (String)results.get(i);
@@ -617,7 +617,7 @@ L--%>
 						<%=strResult%>
 						<p>
 						<%
-System.out.println("JR1013 1 strResult [" + strResult + "] allowNVP [" + allowNVP + "] nvp [" + nvp + "] vSelAttr [" + vSelAttr.toString() + "] nvp_" + ckName + " ac [" + sSelAC + "]");
+						//System.out.println("JR1013 1 strResult [" + strResult + "] allowNVP [" + allowNVP + "] nvp [" + nvp + "] vSelAttr [" + vSelAttr.toString() + "] nvp_" + ckName + " ac [" + sSelAC + "]");
 						//add the text box for NVP under concept name
             		if (
             		(sSelAC.equals("Concept") && conceptName.equals("Integer")) /* JR1013 check exclude Integer */ ||
@@ -645,7 +645,7 @@ System.out.println("JR1013 1 strResult [" + strResult + "] allowNVP [" + allowNV
 						</a>
                         <p>
 						<%
-						System.out.println("JR1013 2 strResult [" + strResult + "] allowNVP [" + allowNVP + "] nvp [" + nvp + "] vSelAttr [" + vSelAttr.toString() + "] nvp_" + ckName + " ac [" + sSelAC + "]");
+						//System.out.println("JR1013 2 strResult [" + strResult + "] allowNVP [" + allowNVP + "] nvp [" + nvp + "] vSelAttr [" + vSelAttr.toString() + "] nvp_" + ckName + " ac [" + sSelAC + "]");
 
 						//add the text box for NVP under concept name
             		if (

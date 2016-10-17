@@ -449,7 +449,7 @@ sOriginAction.equals("CreateNewDEC")
            {
              String sContextName = (String)vContext.elementAt(i);
              String sContextID = (String)vContextID.elementAt(i);
-             System.out.println("CreateDEC.jsp sContextName and sContextID: "+sContextName+"***"+sContextID);
+             //System.out.println("CreateDEC.jsp sContextName and sContextID: "+sContextName+"***"+sContextID);
              if(sContextName.equals(sContext)) bDataFound = true;
 %>
     <option value="<%=sContextID%>" <%if(sContextName.equals(sContext)){%> selected <%}%>>
@@ -596,7 +596,7 @@ sOriginAction.equals("CreateNewDEC")
     </tr>
         <%
                                 ocCDR += ":" + sOCCCode ;
-                                System.out.println("================>>>>> OC CDR = " + ocCDR);
+                                //System.out.println("================>>>>> OC CDR = " + ocCDR);
 							%>
     <tr>
     <td colspan="3">
@@ -745,7 +745,7 @@ sOriginAction.equals("CreateNewDEC")
     </tr>
         <%
                                 propCDR += ":" + sPCCCode;
-                                System.out.println("================>>>>> Prop CDR = " + propCDR);
+                                //System.out.println("================>>>>> Prop CDR = " + propCDR);
 							%>
     <tr>
     <td colspan="3">
