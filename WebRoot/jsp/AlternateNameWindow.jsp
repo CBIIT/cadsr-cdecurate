@@ -138,7 +138,7 @@ L--%>
 					</th>
 				</tr>
 				<%    } 
-      String altName =  AltBean.getALTERNATE_NAME();
+      String altName =  StringUtil.escapeHtmlEncodedValue(AltBean.getALTERNATE_NAME());
       if (altName == null) altName = "";
       String altType =  AltBean.getALT_TYPE_NAME();
       if (altType == null) altType = "";
