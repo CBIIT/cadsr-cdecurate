@@ -1444,7 +1444,7 @@ public class GetACSearch implements Serializable
                             DEBean.setDE_END_DATE( s );
                             DEBean.setDE_CONTEXT_NAME( rs.getString( "name" ) );
                             DEBean.setDE_DEC_IDSEQ( rs.getString( "dec_idseq" ) );
-                            DEBean.setDE_DEC_NAME( rs.getString( "dec_name" ) );
+                            DEBean.setDE_DEC_NAME(StringUtil.escapeHtmlEncodedValue( rs.getString( "dec_name" ) ));
                             DEBean.setDE_DEC_Definition( rs.getString( "dec_preferred_definition" ) );
                             DEBean.setDE_VD_IDSEQ( rs.getString( "vd_idseq" ) );
                             DEBean.setDE_VD_NAME(StringUtil.escapeHtmlEncodedValue( rs.getString( "vd_name" ) ));
@@ -1459,8 +1459,8 @@ public class GetACSearch implements Serializable
                             // DEBean.setDE_LANGUAGE(rs.getString("language"));
                             DEBean.setDE_DE_IDSEQ( rs.getString( "de_idseq" ) );
                             // DEBean.setDE_LANGUAGE_IDSEQ(rs.getString("desig_idseq"));
-                            DEBean.setDE_DEC_PREFERRED_NAME( rs.getString( "dec_pref_name" ) );
-                            DEBean.setDE_VD_PREFERRED_NAME( rs.getString( "vd_pref_name" ) );
+                            DEBean.setDE_DEC_PREFERRED_NAME(StringUtil.escapeHtmlEncodedValue(rs.getString( "dec_pref_name" ) ));
+                            DEBean.setDE_VD_PREFERRED_NAME(StringUtil.escapeHtmlEncodedValue( rs.getString( "vd_pref_name" ) ));
                             DEBean.setDE_ALIAS_NAME( rs.getString( "usedby_name" ) );
                             DEBean.setDE_USEDBY_CONTEXT( rs.getString( "used_by_context" ) );
                             usedBy = new Vector();
@@ -1498,9 +1498,9 @@ public class GetACSearch implements Serializable
                             }
                             DEBean.setDE_DER_RELATION( derRel );
                             DEBean.setDE_DER_REL_IDSEQ( acID );
-                            DEBean.setAC_CONCEPT_NAME( rs.getString( "con_name" ) );
-                            DEBean.setALTERNATE_NAME( rs.getString( "alt_name" ) );
-                            DEBean.setREFERENCE_DOCUMENT( rs.getString( "rd_name" ) );
+                            DEBean.setAC_CONCEPT_NAME(StringUtil.escapeHtmlEncodedValue( rs.getString( "con_name" ) ));
+                            DEBean.setALTERNATE_NAME(StringUtil.escapeHtmlEncodedValue( rs.getString( "alt_name" ) ));
+                            DEBean.setREFERENCE_DOCUMENT(StringUtil.escapeHtmlEncodedValue( rs.getString( "rd_name" ) ));
                             DEBean.setDE_TYPE_NAME( "PRIMARY" );
                             // add the combination usedbycontext+acID and desIdseq in the hash table
                             if( ( rs.getString( "used_by_context" ) != null )
@@ -1801,7 +1801,7 @@ public class GetACSearch implements Serializable
                         prop_condr_idseq = rs.getString( "prop_condr_idseq" );
                         DECBean.setDEC_PROP_CONDR_IDSEQ( prop_condr_idseq );
                         DECBean.setDEC_DEC_ID( rs.getString( "dec_id" ) );
-                        DECBean.setDEC_SOURCE( rs.getString( "ORIGIN" ) );
+                        DECBean.setDEC_SOURCE(StringUtil.escapeHtmlEncodedValue( rs.getString( "ORIGIN" ) ));
                         s = rs.getString( "date_created" );
                         if( s != null )
                             s = m_util.getCurationDate( s );
@@ -1814,9 +1814,9 @@ public class GetACSearch implements Serializable
                         DECBean.setDEC_MODIFIED_BY( rs.getString( "modified_by" ) );
                         DECBean.setDEC_OBJ_ASL_NAME( rs.getString( "oc_asl_name" ) );
                         DECBean.setDEC_PROP_ASL_NAME( rs.getString( "prop_asl_name" ) );
-                        DECBean.setAC_CONCEPT_NAME( rs.getString( "con_name" ) );
-                        DECBean.setALTERNATE_NAME( rs.getString( "alt_name" ) );
-                        DECBean.setREFERENCE_DOCUMENT( rs.getString( "rd_name" ) );
+                        DECBean.setAC_CONCEPT_NAME(StringUtil.escapeHtmlEncodedValue( rs.getString( "con_name" ) ));
+                        DECBean.setALTERNATE_NAME(StringUtil.escapeHtmlEncodedValue( rs.getString( "alt_name" ) ));
+                        DECBean.setREFERENCE_DOCUMENT(StringUtil.escapeHtmlEncodedValue( rs.getString( "rd_name" ) ));
                         //===========GF32398====START======
 //                        if (rs.getString("registration_status") != null) {
                         DECBean.setDEC_REG_STATUS( rs.getString( "registration_status" ) );//GF32398
@@ -2016,7 +2016,7 @@ public class GetACSearch implements Serializable
                         // VDBean.setVD_LANGUAGE(rs.getString("language"));
                         // VDBean.setVD_LANGUAGE_IDSEQ(rs.getString("lae_des_idseq"));
                         VDBean.setVD_VD_ID( rs.getString( "vd_id" ) );
-                        VDBean.setVD_SOURCE( rs.getString( "origin" ) );
+                        VDBean.setVD_SOURCE(StringUtil.escapeHtmlEncodedValue( rs.getString( "origin" ) ));
                         s = rs.getString( "date_created" );
                         if( s != null )
                             s = m_util.getCurationDate( s );
@@ -2028,7 +2028,7 @@ public class GetACSearch implements Serializable
                         VDBean.setVD_CREATED_BY( rs.getString( "created_by" ) );
                         VDBean.setVD_MODIFIED_BY( rs.getString( "modified_by" ) );    //GF32036
                         VDBean.setVD_REP_ASL_NAME( rs.getString( "rep_asl_name" ) );
-                        VDBean.setAC_CONCEPT_NAME( rs.getString( "con_name" ) );
+                        VDBean.setAC_CONCEPT_NAME(StringUtil.escapeHtmlEncodedValue( rs.getString( "con_name" ) ));
                         VDBean.setALTERNATE_NAME(StringUtil.escapeHtmlEncodedValue( rs.getString( "alt_name" ) ));
                         VDBean.setREFERENCE_DOCUMENT(StringUtil.escapeHtmlEncodedValue( rs.getString( "rd_name" ) ));
                         VDBean.setVD_IN_FORM( isVDinForm( VDBean.getVD_VD_IDSEQ(), VDBean.getVD_TYPE_FLAG() ) );
