@@ -18,6 +18,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import gov.nih.nci.cadsr.common.StringUtil;
 
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.log4j.Logger;
@@ -383,9 +384,9 @@ public class Data_Elements_Mgr extends ACBase {
 				deVO.setPrefferred_name(rs.getString("PREFERRED_NAME"));
 				deVO.setVd_IDSEQ(rs.getString("VD_IDSEQ"));
 				deVO.setDec_IDSEQ(rs.getString("DEC_IDSEQ"));
-				deVO.setPrefferred_def(rs.getString("PREFERRED_DEFINITION"));
+				deVO.setPrefferred_def(StringUtil.escapeHtmlEncodedValue(rs.getString("PREFERRED_DEFINITION")));
 				deVO.setAsl_name(rs.getString("ASL_NAME"));
-				deVO.setLong_name(rs.getString("LONG_NAME"));
+				deVO.setLong_name(StringUtil.escapeHtmlEncodedValue(rs.getString("LONG_NAME")));
 				deVO.setLastest_version_ind(rs.getString("LATEST_VERSION_IND"));
 				deVO.setDeleted_ind(rs.getString("DELETED_IND"));
 				deVO.setDate_created(rs.getTimestamp("DATE_CREATED"));
@@ -394,7 +395,7 @@ public class Data_Elements_Mgr extends ACBase {
 				deVO.setEnd_date(rs.getTimestamp("END_DATE"));
 				deVO.setDate_modified(rs.getTimestamp("DATE_MODIFIED"));
 				deVO.setModified_by(rs.getString("MODIFIED_BY"));
-				deVO.setChange_note(rs.getString("CHANGE_NOTE"));
+				deVO.setChange_note(StringUtil.escapeHtmlEncodedValue(rs.getString("CHANGE_NOTE")));
 			}
 		} catch (SQLException e) {
 			logger.error(DBException.DEFAULT_ERROR_MSG + " in getDe() method of Data_Elements_Mgr class " + e);

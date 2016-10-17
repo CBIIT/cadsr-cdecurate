@@ -19,6 +19,7 @@ L--%>
 		<SCRIPT LANGUAGE="JavaScript" SRC="js/HelpFunctions.js"></SCRIPT>
 		<%@ page import="gov.nih.nci.cadsr.cdecurate.tool.*"%>
 		<%@ page import="java.util.*"%>
+		<%@ page import="gov.nih.nci.cadsr.common.StringUtil"%>	
 		<%
       Vector vAltName = (Vector)request.getAttribute("AltNameList");
       String intText = "";
@@ -39,7 +40,7 @@ L--%>
       if (vAltName != null && vAltName.size() > 0)
       {
         ALT_NAME_Bean AltBean = (ALT_NAME_Bean)vAltName.elementAt(0);
-        acName = AltBean.getAC_LONG_NAME();
+        acName = StringUtil.escapeHtmlEncodedValue(AltBean.getAC_LONG_NAME());
         if (acName == null) acName = "-";
       } 
 %>
