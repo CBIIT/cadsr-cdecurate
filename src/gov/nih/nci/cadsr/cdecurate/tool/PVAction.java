@@ -466,8 +466,8 @@ public class PVAction implements Serializable {
 					while (rs.next()) {
 						PV_Bean pvBean = new PV_Bean();
 						pvBean.setPV_PV_IDSEQ(rs.getString("pv_idseq"));
-						pvBean.setPV_VALUE(rs.getString("value"));
-						pvBean.setPV_SHORT_MEANING(rs.getString("short_meaning"));
+						pvBean.setPV_VALUE(StringUtil.escapeHtmlEncodedValue(rs.getString("value")));
+						pvBean.setPV_SHORT_MEANING(StringUtil.escapeHtmlEncodedValue(rs.getString("short_meaning")));
 
 						if (sAction.equals(NEW_USING)) {
                             pvBean.setPV_VDPVS_IDSEQ("");
@@ -477,8 +477,8 @@ public class PVAction implements Serializable {
 /*
 						pvBean.setPV_MEANING_DESCRIPTION(rs
 								.getString("vm_description"));*/
-						pvBean.setPV_MEANING_DESCRIPTION(rs.getString("PREFERRED_DEFINITION"));
-						pvBean.setPV_VALUE_ORIGIN(rs.getString("origin"));
+						pvBean.setPV_MEANING_DESCRIPTION(StringUtil.escapeHtmlEncodedValue(rs.getString("PREFERRED_DEFINITION")));
+						pvBean.setPV_VALUE_ORIGIN(StringUtil.escapeHtmlEncodedValue(rs.getString("origin")));
 						String sDate = rs.getString("begin_date");
 						if (sDate != null && !sDate.equals("")) {
                             sDate = data.getUtil().getCurationDate(sDate);

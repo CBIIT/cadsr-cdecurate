@@ -2039,7 +2039,7 @@ public class GetACSearch implements Serializable
                         s = rs.getString( "min_value" );
                         if( s != null && !s.equals( "" ) )
                         {
-                            VDBean.setVD_Permissible_Value( s );
+                            VDBean.setVD_Permissible_Value(StringUtil.escapeHtmlEncodedValue( s ));
                             s = rs.getString( "value_count" );
                             Integer iCount = new Integer( s );
                             VDBean.setVD_Permissible_Value_Count( iCount );
