@@ -11,17 +11,15 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 
 import org.apache.log4j.Logger;
 
 import gov.nih.nci.cadsr.cdecurate.database.SQLHelper;
+import gov.nih.nci.cadsr.common.StringUtil;
 import gov.nih.nci.cadsr.persist.common.DBConstants;
 import gov.nih.nci.cadsr.persist.common.DBManager;
 import gov.nih.nci.cadsr.persist.vm.VmErrorCodes;
 import gov.nih.nci.cadsr.persist.exception.DBException;
-import gov.nih.nci.cadsr.persist.utils.Utils;
-
 
 @SuppressWarnings("unchecked")
 public class Value_Meanings_Mgr extends DBManager{
@@ -65,8 +63,8 @@ public class Value_Meanings_Mgr extends DBManager{
 				vmvo = new VmVO();
 				vmvo.setVm_IDSEQ(rs.getString("VM_IDSEQ"));
 				vmvo.setPrefferred_name(rs.getString("PREFERRED_NAME"));
-				vmvo.setLong_name(rs.getString("LONG_NAME"));
-				vmvo.setPrefferred_def(rs.getString("PREFERRED_DEFINITION"));
+				vmvo.setLong_name(StringUtil.escapeHtmlEncodedValue(rs.getString("LONG_NAME")));
+				vmvo.setPrefferred_def(StringUtil.escapeHtmlEncodedValue(rs.getString("PREFERRED_DEFINITION")));
 				vmvo.setConte_IDSEQ(rs.getString("CONTE_IDSEQ"));
 				vmvo.setAsl_name(rs.getString("ASL_NAME"));
 				vmvo.setVersion(rs.getDouble("VERSION"));
@@ -75,7 +73,7 @@ public class Value_Meanings_Mgr extends DBManager{
 				vmvo.setCondr_IDSEQ(rs.getString("CONDR_IDSEQ"));
 				vmvo.setDefinition_source(rs.getString("DEFINITION_SOURCE"));
 				vmvo.setOrigin(rs.getString("ORIGIN"));
-				vmvo.setChange_note(rs.getString("CHANGE_NOTE"));
+				vmvo.setChange_note(StringUtil.escapeHtmlEncodedValue(rs.getString("CHANGE_NOTE")));
 				vmvo.setBegin_date(rs.getTimestamp("BEGIN_DATE"));
 				vmvo.setEnd_date(rs.getTimestamp("END_DATE"));
 				vmvo.setCreated_by(rs.getString("CREATED_BY"));

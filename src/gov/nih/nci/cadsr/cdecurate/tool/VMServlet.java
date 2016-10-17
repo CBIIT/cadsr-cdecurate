@@ -628,9 +628,8 @@ public class VMServlet extends GenericServlet
                 {
                     if( !sLongName.equals( "" ) )  //this helps to keeps to create default alt defintion only when going from user defined vm to concept vm
                     {
-//        		vm.setVM_LONG_NAME(sLongName);
                         vm.setVM_LONG_NAME( StringUtil.escapeHtmlEncodedValue(AdministeredItemUtil.handleLongName( sLongName ) )); //GF32004
-                        logger.debug( "VM_LONG_NAME at Line 632 of VMServlet.java" + vm.getVM_LONG_NAME() );
+                        logger.debug( "VM_LONG_NAME at Line 632 of VMServlet.captureUserEntered in VM bean: " + vm.getVM_LONG_NAME() );
                     }
                 }
                 //Check if user entered new version
@@ -1142,10 +1141,8 @@ public class VMServlet extends GenericServlet
             vmBean.setVM_END_DATE( vmVO.getEnd_date().toString() );
         }
         vmBean.setVM_PREFERRED_DEFINITION( vmVO.getPrefferred_def() );
-        logger.debug( "VM_LONG_NAME at Line 1082 of VMServlet.java" + vmVO.getLong_name() );
-        vmBean.setVM_LONG_NAME( AdministeredItemUtil.handleLongName( vmVO.getLong_name() ) ); //GF32004
-        logger.debug( "VM_LONG_NAME at Line 1084 of VMServlet.java" + vmBean.getVM_LONG_NAME() );
-//	vmBean.setVM_LONG_NAME(vmVO.getLong_name());
+        vmBean.setVM_LONG_NAME(AdministeredItemUtil.handleLongName( vmVO.getLong_name() ) ); //GF32004
+        logger.debug( "VM_LONG_NAME at Line 1146 of VMServlet.doOpenViewPage VM Bean: " + vmBean.getVM_LONG_NAME() );
         vmBean.setVM_IDSEQ( vmVO.getVm_IDSEQ() );
         Long id = new Long( vmVO.getVm_ID() );
         vmBean.setVM_ID( id.toString() );

@@ -327,7 +327,7 @@ public class VMHelper {
 			// String sChg = rs.getString("comments");
 			// if (sChg == null || sChg.equals(""))
 			String sChg = rs.getString("change_note");
-			vm.setVM_CHANGE_NOTE(sChg);
+			vm.setVM_CHANGE_NOTE(StringUtil.escapeHtmlEncodedValue(sChg));
 			vm.setASL_NAME(rs.getString("asl_name"));
 			// vm.setVM_DEFINITION_SOURCE(rs.getString("vm_definition_source"));
 			//this.getVMVersion(rs, vm);
