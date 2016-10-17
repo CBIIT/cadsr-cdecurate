@@ -10,7 +10,16 @@ L--%>
 <%@taglib uri="/WEB-INF/tld/curate.tld" prefix="curate"%>
 <%
 	String path = request.getContextPath();
-	String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
+	String serverName = request.getServerName();
+	//TODO remove this commented old line. We use HTTPS for all tiers besides localhost
+	//String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
+	String basePath;
+	if (!(serverName.contains("localhost"))) {
+		basePath = "https://"+serverName+path+"/";
+	}
+	else {
+		basePath = request.getScheme()+"://"+serverName+":"+request.getServerPort()+path+"/";
+	}
 	String title = (String)request.getAttribute("title");
 	String sId = (String)request.getAttribute("publicID");
 	String version = (String)request.getAttribute("version");

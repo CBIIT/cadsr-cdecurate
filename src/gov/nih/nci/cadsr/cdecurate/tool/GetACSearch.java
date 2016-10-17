@@ -2000,9 +2000,8 @@ public class GetACSearch implements Serializable
                         VDBean.setVD_CHAR_SET_NAME( rs.getString( "char_set_name" ) );
                         VDBean.setVD_HIGH_VALUE_NUM( rs.getString( "high_value_num" ) );
                         VDBean.setVD_LOW_VALUE_NUM( rs.getString( "low_value_num" ) );
-                        logger.debug( "VD_REPTERM_LONG_NAME at Line 2003 of GetACSearch doVDSearch DB rep_term:" + rs.getString( "rep_term" ) );
                         VDBean.setVD_REP_TERM( AdministeredItemUtil.handleLongName( rs.getString( "rep_term" ) ) );    //GF32004;
-                        logger.debug( "VD_REPTERM_LONG_NAME at Line 2005 of GetACSearch doVDSearch VDBean.getVD_REP_TERM(): " + VDBean.getVD_REP_TERM() );
+                        logger.debug( "VD_REPTERM_LONG_NAME at Line 2004 of GetACSearch doVDSearch VDBean.getVD_REP_TERM(): " + VDBean.getVD_REP_TERM() );
 //                        VDBean.setVD_REP_TERM(rs.getString("rep_term"));
                         VDBean.setVD_REP_IDSEQ( rs.getString( "rep_idseq" ) );
                         // VDBean.setVD_REP_QUAL(rs.getString("qualifier_name"));
@@ -2013,7 +2012,7 @@ public class GetACSearch implements Serializable
                         // fillRepVectors(rep_condr_idseq, VDBean);
                         VDBean.setVD_CONTEXT_NAME( rs.getString( "context" ) );
                         VDBean.setVD_CD_IDSEQ( rs.getString( "cd_idseq" ) );
-                        VDBean.setVD_CD_NAME( rs.getString( "cd_name" ) );
+                        VDBean.setVD_CD_NAME(StringUtil.escapeHtmlEncodedValue( rs.getString( "cd_name" ) ));
                         // VDBean.setVD_LANGUAGE(rs.getString("language"));
                         // VDBean.setVD_LANGUAGE_IDSEQ(rs.getString("lae_des_idseq"));
                         VDBean.setVD_VD_ID( rs.getString( "vd_id" ) );
@@ -2030,8 +2029,8 @@ public class GetACSearch implements Serializable
                         VDBean.setVD_MODIFIED_BY( rs.getString( "modified_by" ) );    //GF32036
                         VDBean.setVD_REP_ASL_NAME( rs.getString( "rep_asl_name" ) );
                         VDBean.setAC_CONCEPT_NAME( rs.getString( "con_name" ) );
-                        VDBean.setALTERNATE_NAME( rs.getString( "alt_name" ) );
-                        VDBean.setREFERENCE_DOCUMENT( rs.getString( "rd_name" ) );
+                        VDBean.setALTERNATE_NAME(StringUtil.escapeHtmlEncodedValue( rs.getString( "alt_name" ) ));
+                        VDBean.setREFERENCE_DOCUMENT(StringUtil.escapeHtmlEncodedValue( rs.getString( "rd_name" ) ));
                         VDBean.setVD_IN_FORM( isVDinForm( VDBean.getVD_VD_IDSEQ(), VDBean.getVD_TYPE_FLAG() ) );
                         VDBean.setVD_REG_STATUS( rs.getString( "registration_status" ) );    //GF32398
                         VDBean.setVD_REG_STATUS_IDSEQ( rs.getString( "ar_idseq" ) );    //GF32398
