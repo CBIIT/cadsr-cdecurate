@@ -9575,9 +9575,9 @@ public class GetACSearch implements Serializable
                         AltNameBean.setALT_NAME_IDSEQ( rs.getString( "desig_idseq" ) );
                         AltNameBean.setCONTE_IDSEQ( rs.getString( "conte_idseq" ) );
                         AltNameBean.setCONTEXT_NAME( rs.getString( "context_name" ) );
-                        AltNameBean.setALTERNATE_NAME( rs.getString( "name" ) );    //JR1000 tagged, this is the alternate name
+                        AltNameBean.setALTERNATE_NAME(StringUtil.escapeHtmlEncodedValue(rs.getString( "name" ) ));    //JR1000 tagged, this is the alternate name
                         AltNameBean.setALT_TYPE_NAME( rs.getString( "detl_name" ) );
-                        AltNameBean.setAC_LONG_NAME( rs.getString( "ac_long_name" ) );
+                        AltNameBean.setAC_LONG_NAME(StringUtil.escapeHtmlEncodedValue(rs.getString( "ac_long_name" ) ));
                         AltNameBean.setAC_IDSEQ( acIdseq );
                         AltNameBean.setAC_LANGUAGE( rs.getString( "lae_name" ) );
                         AltNameBean.setALT_SUBMIT_ACTION( "UPD" );
