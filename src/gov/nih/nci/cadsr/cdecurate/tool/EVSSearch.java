@@ -2862,8 +2862,8 @@ public class EVSSearch implements Serializable
 
                     //meta keyword search
                     nodeSet = nodeSet.restrictToMatchingDesignations( termStr, //the text to match
-                            CodedNodeSet.SearchDesignationOption.PREFERRED_ONLY,  //whether to search all designation, only Preferred or only Non-Preferred
-                            "nonLeadingWildcardLiteralSubString", //the match algorithm to use
+                            CodedNodeSet.SearchDesignationOption.ALL,  //whether to search all designation, only Preferred or only Non-Preferred
+                            LBConstants.MatchAlgorithms.exactMatch.name(), //  VS //"nonLeadingWildcardLiteralSubString", //the match algorithm to use
                             null ); //the language to match (null matches all)
                 }
 
@@ -2871,7 +2871,7 @@ public class EVSSearch implements Serializable
                         null, //Sorts used to sort results (null means sort by match score)
                         null,           //PropertyNames to resolve (null resolves all)
                         null,  //PropertyTypess to resolve (null resolves all)
-                        1       //1000    //cap the number of results returned (-1 resolves all)
+                        20       //1000    //cap the number of results returned (-1 resolves all)
                 );
 
                 //GF32446 Following lines of code given by kim Ong's but didn't work ---------BEGIN
