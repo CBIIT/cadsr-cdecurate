@@ -1380,17 +1380,17 @@ public class GetACSearch implements Serializable
                 cstmt.setString( 33, vmIDSeq );
                 // capture the duration
                 java.util.Date startDate = new java.util.Date();
-                logger.info( startDate.toString() + " || " + cstmt.toString() );
+                logger.debug( startDate.toString() + " || " + cstmt.toString() );
 
 
                 // Now we are ready to call the stored procedure
                 cstmt.execute();
                 // capture the duration
-                logger.info( m_servlet.getLogMessage( m_classReq, "doDESearch", "end executing search", startDate, new
+                logger.debug( m_servlet.getLogMessage( m_classReq, "doDESearch", "end executing search", startDate, new
                         java.util.Date() ) );
                 // store the output in the resultset
                 rs = ( ResultSet ) cstmt.getObject( 7 );
-                logger.info( m_servlet.getLogMessage( m_classReq, "doDESearch", "got resultset object", startDate, new
+                logger.debug( m_servlet.getLogMessage( m_classReq, "doDESearch", "got resultset object", startDate, new
                         java.util.Date() ) );
                 String s;
                 if( rs != null )
@@ -1398,7 +1398,7 @@ public class GetACSearch implements Serializable
                     HashMap recordMap = new HashMap();
                     DE_Bean DEBean = new DE_Bean();
                     // capture the duration
-                    logger.info( m_servlet.getLogMessage( m_classReq, "doDESearch", "begin search resultset", startDate, new java.util.Date() ) );
+                    logger.debug( m_servlet.getLogMessage( m_classReq, "doDESearch", "begin search resultset", startDate, new java.util.Date() ) );
 
                     int totalRecords = 0;
                     int recordsDisplayed = 0;
@@ -1541,8 +1541,8 @@ public class GetACSearch implements Serializable
                     else
                         DataManager.setAttribute( session, "totalRecords", Integer.toString( g ) );
 
-                    logger.info( m_servlet.getLogMessage( m_classReq, "doDESearch", "end search resultset", startDate, new java.util.Date() ) );
-                    logger.info( g + "records retrieved." );
+                    logger.debug( m_servlet.getLogMessage( m_classReq, "doDESearch", "end search resultset", startDate, new java.util.Date() ) );
+                    logger.info( g + " records retrieved GetACSearch.doDESearch." );
                 }
             }
         } catch( NumberFormatException e )
