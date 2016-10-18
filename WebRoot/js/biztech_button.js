@@ -32,7 +32,6 @@ endMainMenu("",0,0);
 startSubmenu("../images/biztech_button_b5","biztech_button_menu",175);
 submenuItem("About","javascript:callAboutAlert();","","biztech_button_plain");
 submenuItem("Sentinel Tool","javascript:callSentinel();","","biztech_button_plain");
-submenuItem("UML Model Browser","javascript:callUMLBrowser();","","biztech_button_plain");
 endSubmenu("../images/biztech_button_b5");
 
 startSubmenu("../images/biztech_button_b3","biztech_button_menu",204);

@@ -16,7 +16,6 @@ L--%>
 	<%@ page import="gov.nih.nci.cadsr.cdecurate.util.ToolURL"%>
 	<% //String thisServer2 = request.getServerName(); 
    String sentinelURL = (String)session.getAttribute("SentinelURL");
-   String UMLBrowserURL = (String)session.getAttribute("UMLBrowserURL");
    String strNothing ="nothing";
    
  %>
@@ -71,11 +70,6 @@ var sentinelWindow = null;
   function callSentinel()
   {
       callSentinelJS("<%=sentinelURL%>");
-  }
-    
-  function callUMLBrowser()
-  {
-      window.open("<%=UMLBrowserURL%>");
   }
   
   function callSentinelJS(serverName)

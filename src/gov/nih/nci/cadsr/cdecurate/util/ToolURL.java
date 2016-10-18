@@ -22,7 +22,7 @@ import javax.servlet.jsp.PageContext;
  *
  */
 public class ToolURL {
-	public static final String defaultUrl = "http://cbiit.nci.nih.gov";
+	public static final String defaultUrl = "https://cbiit.nci.nih.gov";
 	public static final String evsNewTermUrl = "EVSNewTermURL";
 	public static final String browserUrl = "BrowserURL";
 	public static final String sentinelUrl = "SentinelURL";

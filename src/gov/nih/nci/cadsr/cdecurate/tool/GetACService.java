@@ -468,7 +468,7 @@ public class GetACService implements Serializable
     {
         try
         {
-        	logger.info("ACType [" + ACType + "]");
+        	logger.debug("GetACService.getStatusList ACType [" + ACType + "]");
         	Iterator it = vList.iterator();
         	String val = null;
         	while(it.hasNext()) {
@@ -480,7 +480,7 @@ public class GetACService implements Serializable
         }
         catch (Exception e)
         {
-           logger.error("ERROR in GetACService-getStatusList : " + e.toString(), e);
+           logger.error("ERROR in GetACService.getStatusList: " + e.toString(), e);
         }
     }
 

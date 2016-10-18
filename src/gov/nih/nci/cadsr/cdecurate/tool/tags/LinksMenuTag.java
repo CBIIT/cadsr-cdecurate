@@ -21,14 +21,17 @@ import javax.servlet.jsp.JspWriter;
  */
 public class LinksMenuTag extends MenuTag {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
 	public int doEndTag() throws JspException {
 		JspWriter linksMenu = this.pageContext.getOut();
 		String cdeBrowserLink = "window.open('" + ToolURL.getBrowserUrl(this.pageContext) +"', '_blank')";
 		String cdeBrowserDName = ToolURL.getBrowserDispalyName(this.pageContext);
 		String sentinelToolLink = "window.open('" + ToolURL.getSentinelUrl(this.pageContext) +"', '_blank')";
 		String sentinelToolDName = ToolURL.getSentinelDispalyName(this.pageContext);
-        String umlBrowserLink = "window.open('" + ToolURL.getUmlBrowserUrl(this.pageContext) +"', '_blank')";
-        String umlBrowserDName =ToolURL.getUmlBrowserDispalyName(this.pageContext);
         String freeStyleLink = "window.open('" + ToolURL.getFreeStyleUrl(this.pageContext) +"', '_blank')";
         String freeStyleDName = ToolURL.getFreeStyleDispalyName(this.pageContext);
         String adminToolLink = "window.open('" + ToolURL.getAdminToolUrl(this.pageContext) +"', '_blank')";
@@ -49,7 +52,6 @@ public class LinksMenuTag extends MenuTag {
 					          + generateDT("",sentinelToolLink,sentinelToolDName)
 					          + generateDT("",cdeBrowserLink,cdeBrowserDName)
 					          + generateDT("",formBuilderLink,formBuilderDName)
-					          + generateDT("",umlBrowserLink,umlBrowserDName)
 					          + generateDT("",passwordChangeStationLink,passwordChangeStationLinkDName)//GF32153
 					          + separator()
 					          + generateDT("",evsBioPortalLink,evsBioPortalDName)
