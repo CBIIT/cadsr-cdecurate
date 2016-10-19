@@ -245,22 +245,20 @@ public class NCICurationServlet extends HttpServlet
             // CURATNTOOL-1107
             if( ( reqType != null ) && ( !StringUtil.isHtmlAndScriptClean( reqType ) ) )
             {
-                logger.error( "Bad value for reqType[" + reqType + "]" );
+                logger.error( "Bad value of request parameter reqType; the request will not be processed [" + reqType + "]" );
                 hasSuspectPerameter = true;
             }
 
            if( ( req.getParameter( "Version" ) != null ) && ( !StringUtil.isHtmlAndScriptClean( req.getParameter( "Version" ) ) ) )
             {
-                logger.error( "Bad value for Version[" + req.getParameter( "Version" ) + "]" );
+                logger.error( "Bad value of request parameter Version; the request will not be processed [" + req.getParameter( "Version" ) + "]" );
                 hasSuspectPerameter = true;
             }
 
            if( ( req.getParameter( "selVDText" ) != null ) && ( !StringUtil.isHtmlAndScriptClean( req.getParameter( "selVDText" ) ) ) )
             {
-                logger.error( "Bad value for selVDText[" + req.getParameter( "selVDText" ) + "]" );
-                hasSuspectPerameter = true;
+                logger.info( "Suspicious value of request parameter selVDText; the request will proceed [" + req.getParameter( "selVDText" ) + "]" );
             }
-
 
             HttpSession session = req.getSession();
             String menuAction = ( String ) session.getAttribute( Session_Data.SESSION_MENU_ACTION );
@@ -317,9 +315,13 @@ public class NCICurationServlet extends HttpServlet
                         curObj.destroy();
                 }
             }
+            else {
+            	logger.error( "The operation will not be performed because of a suspecious parameter; received reqType: [" + req.getParameter( "reqType" ) + "]" );
+            }
 
             if( acrt == null )
             {
+            	logger.info( "Unexpected request workflow; received reqType: [" + req.getParameter( "reqType" ) + "]" );
                 CurationServlet curser = new CurationServlet( req, res, this.getServletContext() );
                 curser.service();
             }

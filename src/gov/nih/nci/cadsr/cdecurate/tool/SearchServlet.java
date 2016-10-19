@@ -268,7 +268,7 @@ public class SearchServlet extends CurationServlet {
                         getACSearch.getACQuestion();
                     }
                     else {
-                    	logger.info("at line 246 of SearchServlet.java***********");
+                    	logger.debug("at line 271 of SearchServlet.doGetACSearchActions calling getACKeywordResult***********");
                         getACSearch.getACKeywordResult(m_classReq, m_classRes);
                     }
                     // forward to search result page of main search

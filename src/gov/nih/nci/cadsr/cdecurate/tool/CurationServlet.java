@@ -715,6 +715,10 @@ public class CurationServlet
                         {
                             this.doContactEditActions( m_classReq, m_classRes );
                         }
+                        else {
+                        	logger.error( "Unexpected error forwarding to Error/Home page; a handler is not found in this workflow for request type: [" + reqType + "]" );
+                        	this.ForwardErrorJSP(m_classReq, m_classRes, "Unexpected error forwarding to Error/Home page; a handler is not found in this workflow for request type: [" + reqType + "]" );
+                        }
                         break;
                     }
                     if( !reqType.equals( "login" ) )
