@@ -34,6 +34,7 @@ import org.LexGrid.LexBIG.DataModel.Collections.ConceptReferenceList;
 import org.LexGrid.LexBIG.DataModel.Collections.LocalNameList;
 import org.LexGrid.LexBIG.DataModel.Collections.NameAndValueList;
 import org.LexGrid.LexBIG.DataModel.Collections.ResolvedConceptReferenceList;
+import org.LexGrid.LexBIG.DataModel.Collections.SortOptionList;
 import org.LexGrid.LexBIG.DataModel.Core.AssociatedConcept;
 import org.LexGrid.LexBIG.DataModel.Core.Association;
 import org.LexGrid.LexBIG.DataModel.Core.CodingSchemeVersionOrTag;
@@ -2861,14 +2862,15 @@ public class EVSSearch implements Serializable
                     //-------------------------END------------------------
 
                     //meta keyword search
-                    nodeSet = nodeSet.restrictToMatchingDesignations( termStr, //the text to match
-                            CodedNodeSet.SearchDesignationOption.ALL,  //whether to search all designation, only Preferred or only Non-Preferred
-                            LBConstants.MatchAlgorithms.exactMatch.name(), //  VS //"nonLeadingWildcardLiteralSubString", //the match algorithm to use
+                    nodeSet = nodeSet.restrictToMatchingDesignations( cleanTerm( termStr ), //the text to match
+                            CodedNodeSet.SearchDesignationOption.PREFERRED_ONLY,  //whether to search all designation, only Preferred or only Non-Preferred
+                            getAlgorithm(termStr), //  VS //"nonLeadingWildcardLiteralSubString", //the match algorithm to use
                             null ); //the language to match (null matches all)
                 }
-
+                nodeSet = nodeSet.restrictToStatus( ActiveOption.ACTIVE_ONLY, null );
+                SortOptionList sortCriteria = Constructors.createSortOptionList(new String[] { "matchToQuery", "code" });                
                 concepts = nodeSet.resolveToList(
-                        null, //Sorts used to sort results (null means sort by match score)
+                		sortCriteria, //Sorts used to sort results (null means sort by match score)
                         null,           //PropertyNames to resolve (null resolves all)
                         null,  //PropertyTypess to resolve (null resolves all)
                         20       //1000    //cap the number of results returned (-1 resolves all)
@@ -2899,9 +2901,9 @@ public class EVSSearch implements Serializable
                     if( sSearchIn.equals( "MetaCode" ) && i > 0 )
                         break;
                     //get concept properties
-//                                              ResolvedConceptReference rcr = concepts.getResolvedConceptReference(i);
-                    ResolvedConceptReference rcr = ( ResolvedConceptReference ) concepts.enumerateResolvedConceptReference()  //GF32446 need to get to next element to get to "Semantic Type"
-                            .nextElement();
+                                              ResolvedConceptReference rcr = concepts.getResolvedConceptReference(i);
+                    //ResolvedConceptReference rcr = ( ResolvedConceptReference ) concepts.enumerateResolvedConceptReference()  //GF32446 need to get to next element to get to "Semantic Type"
+                      //      .nextElement();
 
                     if( rcr != null )
                     {
@@ -2922,7 +2924,7 @@ public class EVSSearch implements Serializable
                         //get definition attributes
                         String sDefSource = "";
                         String sDefinition = m_eUser.getDefDefaultValue();
-                        //add sepeate record for each definition
+                        //add separate record for each definition
                         if( definitions != null && definitions.length > 0 )
                         {
                             for( Definition defType : definitions )
@@ -2936,7 +2938,7 @@ public class EVSSearch implements Serializable
                                         sVocab, sVocab, iLevel, "", "", "", "",
                                         sSemantic, "", "" );
                                 conBean.setPREF_VOCAB_CODE( sCodeSrc ); //store pref code in the bean
-                                vList.addElement( conBean ); //add concept bean to vector
+                                vList.addElement( conBean ); //add concept bean to vector                                
                             }
                         }
                         else
@@ -4884,9 +4886,8 @@ public class EVSSearch implements Serializable
     }
 
     //codes courtesy of Tracy S
-    public int searchConceptsName( LexEVSApplicationService lbSvc, String vocabName, String vocabVersion )
+    public int searchConceptsName( LexEVSApplicationService lbSvc, String vocabName, String vocabVersion, String  searchTerm)
     {
-        String searchTerm = "name";
 
         try
         {
@@ -4908,13 +4909,13 @@ public class EVSSearch implements Serializable
                 {
                     Definition tempDef = defs[j];
                     String defText = tempDef.getValue().getContent();
-                    definitions.add( concept.getEntityCode() + " " + tempDef.getSource( 0 ).getContent() + " " + defText );
+                    definitions.add( concept.getEntityCode() + " " + tempDef.getSource( 0 ).getContent() + " " + defText );                                       
                 }
             }
 
             for( String def : definitions )
             {
-            	logger.debug( def );
+            	logger.debug( def );       	
             }
             return crl.getResolvedConceptReferenceCount();
         } catch( Exception ex )
