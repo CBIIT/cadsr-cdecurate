@@ -4470,7 +4470,7 @@ public class CurationServlet
 
 	@Override
 	protected void finalize() throws Throwable {
-		super.finalize();
+		//free this class resources
 		if (m_conn != null) {
 			try {
 				m_conn.close();
@@ -4479,6 +4479,8 @@ public class CurationServlet
 				logger.error("Exception when trying to close DB connection", e);
 			}
 		}
+		//chain upward
+		super.finalize();
 	}
     
 } // end of class
