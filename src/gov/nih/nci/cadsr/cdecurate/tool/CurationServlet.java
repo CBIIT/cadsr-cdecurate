@@ -4467,4 +4467,18 @@ public class CurationServlet
         }
         return beanList;
     }
+
+	@Override
+	protected void finalize() throws Throwable {
+		super.finalize();
+		if (m_conn != null) {
+			try {
+				m_conn.close();
+			}
+			catch (Exception e) {
+				logger.error("Exception when trying to close DB connection", e);
+			}
+		}
+	}
+    
 } // end of class

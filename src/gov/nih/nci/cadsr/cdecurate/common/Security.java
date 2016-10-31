@@ -1,5 +1,7 @@
 package gov.nih.nci.cadsr.cdecurate.common;
 
+import java.util.Enumeration;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -14,10 +16,23 @@ public class Security {
 	public static HttpSession getSession(HttpServletRequest req) {
 		HttpSession session = null;
 		if(req != null) {
-	 		req.getSession().invalidate();  //new Session ID should be generated each time
+	 		HttpSession currentSession = req.getSession();
+	 		if (currentSession != null) {
+	 			try {
+		 			Enumeration attrs = currentSession.getAttributeNames();
+		 			String curr;
+		 			if (attrs != null) {
+		 				while (attrs.hasMoreElements()) { 
+		 					curr = (String)attrs.nextElement();
+		 					currentSession.removeAttribute(curr);
+		 				}
+		 			}
+	 			}
+	 			catch(Exception e) {}
+	 			currentSession.invalidate();  //new Session ID should be generated each time
+	 		}
 	 		session = req.getSession(true);	//req.getSession() is fine too
-		}
-		
+		}		
 		return session;
 	}
 	
