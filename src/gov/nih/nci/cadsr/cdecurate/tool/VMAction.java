@@ -152,6 +152,9 @@ public class VMAction implements Serializable
                     }
 				} // END IF
 			}
+			else {
+			    logger.error("searchVMValues: No search was done because DB Connection was not found");
+			}
 			data.setVMList(vmList);
 		}
 		catch (NumberFormatException e){}
@@ -1584,6 +1587,9 @@ public class VMAction implements Serializable
 
 				}
 			}
+			else {
+			    logger.error("setNewVersionVM: No search was done because DB Connection was not found");
+			}
 		}
 		catch (Exception e)
 		{
@@ -1632,7 +1638,9 @@ public class VMAction implements Serializable
 				boolean ret = ps.execute();
 				
 			}
-			
+			else {
+			    logger.error("removeVMCondr: No search was done because DB Connection was not found");
+			}			
 		} catch (Exception e)
 		{
 			logger.error("ERROR in setVM for other : " + e.toString(), e);
@@ -1767,6 +1775,9 @@ public class VMAction implements Serializable
 					vm.setVM_ID(cstmt.getString(12));
 				}
 			}
+			else {
+			    logger.error("setVM: No search was done because DB Connection was not found");
+			}
 		}
 		catch (Exception e)
 		{
@@ -1865,6 +1876,9 @@ public class VMAction implements Serializable
 					logger.error(data.getStatusMsg());
 					// data.setRetErrorCode(sReturnCode);
 				}
+			}
+			else {
+			    logger.error("setCDVMS: No search was done because DB Connection was not found");
 			}
 		}
 		catch (Exception e)
@@ -2440,6 +2454,9 @@ public class VMAction implements Serializable
 						vList.addElement(CDBean);
 					}
 				}
+			}
+			else {
+			    logger.error("doCDSearch: No search was done because DB Connection was not found");
 			}
 		}
 		catch (Exception e)

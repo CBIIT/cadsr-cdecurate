@@ -218,6 +218,9 @@ public class VMHelper {
                     }
 				} // END IF
 			}
+			else {
+			    logger.error("searchVMValues: No search was done because DB Connection was not found");
+			}
 			data.setVMList(vmList);
 		}
 		catch (NumberFormatException e){}

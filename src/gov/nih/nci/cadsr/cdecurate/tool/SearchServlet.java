@@ -2712,6 +2712,9 @@ public class SearchServlet extends CurationServlet {
 
 				ret.put("Content", usedInForms);
 				}
+				else {
+				    logger.error("getAssociatedForms: No search was done because DB Connection was not found");
+				}				
 			}
 		} catch (Exception e) {
 			logger.error("ERROR - getAssociatedForms for other : ", e);
@@ -2814,6 +2817,9 @@ public class SearchServlet extends CurationServlet {
 
 				ret.put("Content", usedInForms);
 				}
+				else {
+				    logger.error("getVDAssociatedForms: No search was done because DB Connection was not found");
+				}
 			}
 		} catch (Exception e) {
 			logger.error("ERROR - getAssociatedForms for other : ", e);
@@ -2888,6 +2894,9 @@ public class SearchServlet extends CurationServlet {
 					}
 
 				ret.put("Content", usedInForms);
+				}
+				else {
+				    logger.error("getDEAssociatedForms: No search was done because DB Connection was not found");
 				}
 			}
 		} catch (Exception e) {

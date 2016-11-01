@@ -2133,6 +2133,9 @@ public class GetACSearch implements Serializable
 
                     }
                 }
+                else {
+                    logger.error("isVDinForm: No search was done because DB Connection was not found");
+                }
             }
         } catch( Exception e )
         {

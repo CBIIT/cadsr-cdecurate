@@ -135,6 +135,9 @@ public class ConceptAction implements Serializable
           data.setConceptList(vList);
         }   //END IF
       }
+      else {
+    	  logger.error("doConceptSearch: No search was done because DB Connection was not found");
+      }
     }
     catch(Exception e)
     {
@@ -175,6 +178,9 @@ public class ConceptAction implements Serializable
             condr = rs.getString(1);
             if (condr == null) condr = "";
           }
+        }
+        else {
+        	logger.error("getConDerivation: No search was done because DB Connection was not found");
         }
       }
       catch(Exception e)
@@ -338,6 +344,9 @@ public class ConceptAction implements Serializable
              sMsg += "\\t " + sReturnCode + " : Unable to update Concept attributes - " 
                  + evsBean.getCONCEPT_IDENTIFIER() + ": " + evsBean.getLONG_NAME() + ".";
            }
+         }
+         else {
+         	logger.error("setConcept: No search was done because DB Connection was not found");
          }
      }
      catch(Exception e)

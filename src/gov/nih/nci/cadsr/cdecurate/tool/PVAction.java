@@ -197,6 +197,9 @@ public class PVAction implements Serializable {
 						}
 					}
 				}
+		        else {
+		            logger.error("checkPVQCExists: No search was done because DB Connection was not found");
+		        }
 			}
 		} catch (Exception e) {
 			logger.error("ERROR - checkPVQCExists for other : ", e);
@@ -521,6 +524,9 @@ public class PVAction implements Serializable {
 					} //END WHILE
 				} //END IF
 			}
+	        else {
+	            logger.error("doPVACSearch: No search was done because DB Connection was not found");
+	        }
 		} catch (Exception e) {
 			logger.error("ERROR - doPVACSearch for other : " + e.toString(), e);
 		}
@@ -701,6 +707,9 @@ public class PVAction implements Serializable {
 
 
 				} //END IF
+		        else {
+		            logger.error("doPVVMSearch: No search was done because DB Connection was not found");
+		        }
 			}
 		} catch (Exception e) {
 			logger.error("ERROR - GetACSearch-searchPVVM for other : "
@@ -809,6 +818,9 @@ public class PVAction implements Serializable {
 					data.setPvvmErrorCode(sReturnCode); //store it capture check for pv creation
 				}
 			}
+			else {
+				logger.error("setPV: No search was done because DB Connection was not found");
+			}
 		} catch (Exception e) {
 			logger.error("ERROR in setPV for other : " + e.toString(), e);
 			data.setRetErrorCode("Exception");
@@ -863,6 +875,9 @@ public class PVAction implements Serializable {
 				sPV_IDSEQ = (String) cstmt.getObject(2);
 				if (sPV_IDSEQ == null)
 					sPV_IDSEQ = "";
+			}
+			else {
+				logger.error("getExistingPV: No search was done because DB Connection was not found");
 			}
 		} catch (Exception e) {
 			logger.error("ERROR in getExistingPV for exception : "
@@ -997,7 +1012,9 @@ public class PVAction implements Serializable {
 					pvBean.setPV_VDPVS_IDSEQ(cstmt.getString(4));
 				}
 			}
-
+			else {
+			    logger.error("setVD_PVS: No search was done because DB Connection was not found");
+			}
 		} catch (Exception e) {
 			logger.error("ERROR in setVD_PVS for other : " + e.toString(), e);
 			data.setRetErrorCode("Exception");

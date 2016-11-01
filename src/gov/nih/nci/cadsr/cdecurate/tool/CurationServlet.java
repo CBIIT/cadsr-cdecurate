@@ -3887,6 +3887,9 @@ public class CurationServlet
         try
         {
             HttpSession session = req.getSession();
+            //we make this call for memory management sake
+            clearSessionAttributes(req, res);
+            
             DataManager.setAttribute( session, "Userbean", null );
             DataManager.setAttribute( session, "Username", null );
             sessionData.UsrBean = null;
@@ -4096,7 +4099,7 @@ public class CurationServlet
     /**
      * @param conn the m_conn to set
      */
-    public void setConn( Connection conn )
+    protected void setConn( Connection conn )
     {
         this.m_conn = conn;
     }
@@ -4316,12 +4319,16 @@ public class CurationServlet
                 String className = acrt.getClassName();
                 servObj = ( CurationServlet ) Class.forName( className ).newInstance();
                 servObj.init( m_classReq, m_classRes, this.m_servletContext );
-                servObj.setConn( this.m_conn );
+                //TODO delete commented line below
+                //servObj.setConn( this.m_conn ); //In this implementation we create a new Instance but we share a DB connection between this instance and the new one. This makes connection lifecycle management questionable.
+                
+                //when we create a new class which encapsulates a DB connection we give it a new DB connection. This connection will be closed in finalize of the class if not earlier in one of its methods
+                servObj.setConn(getConnFromDS());
                 servObj.sessionData = this.sessionData;
             }
         } catch( Exception e )
         {
-            logger.error( "Which AC " + e.toString() );
+            logger.error( "getACServlet exception: " + e.toString() );
         }
         return servObj;
     }
@@ -4471,9 +4478,10 @@ public class CurationServlet
 	@Override
 	protected void finalize() throws Throwable {
 		//free this class resources
-		if (m_conn != null) {
+		if ((m_conn != null) && (! m_conn.isClosed())) {
 			try {
 				m_conn.close();
+				logger.debug("........DB Connection is closed in finalize: " + this.getClass().getSimpleName());
 			}
 			catch (Exception e) {
 				logger.error("Exception when trying to close DB connection", e);
