@@ -25,21 +25,24 @@ public class SecureCacheAlgorithm {
 	private static final Logger logger = Logger.getLogger(SecureCacheAlgorithm.class);
 
 	private static final int NUM_ITERATIONS = 2000;
+	private static final int SALT_LENGTH = 6;
 	private static final String HASH_ALG = "PBKDF2WithHmacSHA256";
-	//FIXME generate a separate salt for each password
-	private static final byte[] SALT_BYTES =  {'C', 'u', 'R', 'a', 't', 'i', 'o', 'N'};
 
-	public static byte[] generateSalt(int length) {
+	/**
+	 * 
+	 * @return encoded Salt string ready to store in DB
+	 */
+	public static String generateSalt() {
 		byte[] bytes = null;
 		SecureRandom random = new SecureRandom();
-		bytes = new byte[length];
+		bytes = new byte[SALT_LENGTH];
 		random.nextBytes(bytes);
-		return bytes;
+		return encodeToBase64(bytes);
 	}
 	/**
 	 * 
 	 * @param bytes
-	 * @return String
+	 * @return String ready encoded to store salt in DB
 	 */
 	public static String encodeToBase64(byte[] bytes) {
 		Base64.Encoder encoder = Base64.getEncoder();
@@ -55,9 +58,17 @@ public class SecureCacheAlgorithm {
 		return decoder.decode(base64String);
 	}
 	private static final int DERIVED_KEY_LENGTH = (256*8*3)/4;//in bits, we want 256 bytes cache length in the response
-
-	public static String cachePrepare(String pwd) throws NoSuchAlgorithmException, InvalidKeySpecException {
-		KeySpec spec = new PBEKeySpec(pwd.toCharArray(), SALT_BYTES, NUM_ITERATIONS, DERIVED_KEY_LENGTH);
+	/**
+	 * 
+	 * @param pwd raw string received from a user
+	 * @param encodedSalt as stored in DB in encoded form
+	 * @return String ready to store in DB
+	 * @throws NoSuchAlgorithmException
+	 * @throws InvalidKeySpecException
+	 */
+	public static String cachePrepare(String pwd, String encodedSalt) throws NoSuchAlgorithmException, InvalidKeySpecException {
+		byte[] saltBytes = decodeFromBase64(encodedSalt);
+		KeySpec spec = new PBEKeySpec(pwd.toCharArray(), saltBytes, NUM_ITERATIONS, DERIVED_KEY_LENGTH);
 		SecretKeyFactory secretFactory = null;
 		byte[] hashedPwd = null;
 		try {
