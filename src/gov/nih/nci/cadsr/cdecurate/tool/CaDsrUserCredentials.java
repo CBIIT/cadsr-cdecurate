@@ -23,6 +23,8 @@ import javax.sql.DataSource;
 
 import org.apache.log4j.Logger;
 
+import gov.nih.nci.cadsr.cdecurate.common.securecache.UserCacheApi;
+
 /**
  * This class performs common login credential security checks and processing for the caDSR Tool suite deployed under JBoss. The default &lt;jndi-name&gt;
  * is "jdbc/caDSR". It can be found in the cadsr-oracle-ds.xml file in the JBoss deploy directory. If a different jndi-name is needed use the static method
@@ -527,11 +529,26 @@ public class CaDsrUserCredentials
      * @return true when valid, otherwise false
      */
     public boolean isValidCredentials(String user_, String pswd_)
-    {
-        DBActionValidateCreds vw = new DBActionValidateCreds(user_, pswd_);
-        doSQL(vw);
-
-        boolean flag = vw.isValid();
+    {       
+        boolean flag = UserCacheApi.credentialValidate(user_, pswd_);
+        
+        if (flag) {
+        	_logger.debug("isValidCredentials validation against chache success for user login: " + user_);
+        }
+        else {
+           	_logger.info("isValidCredentials validation against chache failed for user login: " + user_);
+           	
+        	DBActionValidateCreds vw = new DBActionValidateCreds(user_, pswd_);
+        	doSQL(vw);
+        	flag = vw.isValid();
+        	
+        	if (flag) {
+	        	//update cache after this user successful DB login
+	        	_logger.debug("isValidCredentials calling UserCacheApi.credentialSave for " + user_);
+	        	UserCacheApi.credentialSave(user_, pswd_);
+        	}
+        }
+        
         if (flag)
             _checkCode = CC_INVALID;
 

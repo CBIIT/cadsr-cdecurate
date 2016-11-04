@@ -36,7 +36,7 @@ public class UserCacheApi
 
 
 
-    public static boolean credentialUpdate(UserCacheData userCacheData)
+    private static boolean credentialUpdate(UserCacheData userCacheData)
     {
 
         // TODO give return value meaning
@@ -50,7 +50,7 @@ public class UserCacheApi
         return false;
     }
 
-    private boolean credentialSave(String loginName, String rawCredential)
+    public static boolean credentialSave(String loginName, String rawCredential)
     {
 
         // TODO give return value meaning

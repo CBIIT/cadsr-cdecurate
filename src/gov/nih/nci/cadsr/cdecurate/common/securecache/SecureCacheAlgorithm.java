@@ -61,11 +61,11 @@ public class SecureCacheAlgorithm {
 	private static final int DERIVED_KEY_LENGTH = (256*8*3)/4;//in bits, we want 256 bytes cache length in the response
 	/**
 	 * 
-	 * @param pwd raw string received from a user
-	 * @param encodedSalt as stored in DB in encoded form
+	 * @param pwd raw string received from a user not null
+	 * @param encodedSalt as stored in DB in encoded form not null
 	 * @return String ready to store in DB
 	 * @throws NoSuchAlgorithmException
-	 * @throws InvalidKeySpecException
+	 * @throws InvalidKeySpecException, NullPointerException if any parameter is null
 	 */
 	public static String cacheCalculate(final String pwd, final String encodedSalt) throws NoSuchAlgorithmException, InvalidKeySpecException {
 		byte[] saltBytes = decodeFromBase64(encodedSalt);
@@ -90,6 +90,13 @@ public class SecureCacheAlgorithm {
 		
 		return encodeToBase64(hashedPwd);		
 	}
+	/**
+	 * 
+	 * @param rawCredential not null
+	 * @return CacheHashData
+	 * @throws InvalidKeySpecException
+	 * @throws NoSuchAlgorithmException, NullPointerException if any parameter is null
+	 */
 	public static CacheHashData cacheGenerateNew(final String rawCredential) throws InvalidKeySpecException, NoSuchAlgorithmException {
 		CacheHashData cacheHashData = new CacheHashData();
 		
@@ -103,7 +110,6 @@ public class SecureCacheAlgorithm {
 			throw e;	
 		}
 		
-
 		return cacheHashData;
 	}
 
