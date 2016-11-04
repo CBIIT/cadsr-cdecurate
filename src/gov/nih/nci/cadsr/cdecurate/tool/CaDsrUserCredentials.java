@@ -533,10 +533,10 @@ public class CaDsrUserCredentials
         boolean flag = UserCacheApi.credentialValidate(user_, pswd_);
         
         if (flag) {
-        	_logger.debug("isValidCredentials validation against chache success for user login: " + user_);
+        	_logger.info("isValidCredentials cache validation success for user: " + user_);
         }
         else {
-           	_logger.info("isValidCredentials validation against chache failed for user login: " + user_);
+           	_logger.info("isValidCredentials cache validation failed for user: " + user_);
            	
         	DBActionValidateCreds vw = new DBActionValidateCreds(user_, pswd_);
         	doSQL(vw);
@@ -544,8 +544,11 @@ public class CaDsrUserCredentials
         	
         	if (flag) {
 	        	//update cache after this user successful DB login
-	        	_logger.debug("isValidCredentials calling UserCacheApi.credentialSave for " + user_);
+	        	_logger.info("isValidCredentials DB validation success updating user cache for user: " + user_);
 	        	UserCacheApi.credentialSave(user_, pswd_);
+        	}
+        	else {
+        		_logger.info("isValidCredentials DB login failed for user: " + user_);
         	}
         }
         
