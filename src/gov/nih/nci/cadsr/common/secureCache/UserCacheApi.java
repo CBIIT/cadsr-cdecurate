@@ -1,8 +1,6 @@
 package gov.nih.nci.cadsr.common.secureCache;
 
-/**
- * Created by lernermh on 11/4/16.
- */
+
 public class UserCacheApi
 {
 
@@ -21,7 +19,6 @@ public class UserCacheApi
 
     public static boolean credentialUpdate(UserCacheData userCacheData)
     {
-
 
         // TODO give return value meaning
         return false;
