@@ -16,7 +16,7 @@ public class SecureCacheDao
     {
     }
 
-    Logger logger = Logger.getLogger( SecureCacheDao.class.getName() );
+    private static final Logger logger = Logger.getLogger( SecureCacheDao.class.getName() );
 
     public static SecureCacheDao getInstance()
     {
