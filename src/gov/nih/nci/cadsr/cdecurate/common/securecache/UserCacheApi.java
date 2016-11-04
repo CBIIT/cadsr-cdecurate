@@ -19,14 +19,16 @@ public class UserCacheApi
         // TODO DAO call to get this users data as a CacheHashData
 
         // Do we have this user in the SecureCache table
-        if( secureCacheDao.cacheEntryRead( loginName ) == null)
+        UserCacheData userCacheData = secureCacheDao.cacheEntryRead( loginName );
+        if( userCacheData == null)
         {
+            System.out.println( "MHL  userCacheData==null");
             // If CacheHashData is null
             return false;
         }
 
         // TODO check user's cached credentials
-
+        System.out.println( "MHL  userCacheData: " + userCacheData);
 
         // TODO give return value meaning
         return false;
@@ -41,7 +43,7 @@ public class UserCacheApi
         return false;
     }
 
-    private static boolean credentialUpdateLoginDate(String loginName)
+    public static boolean credentialUpdateLoginDate(String loginName)
     {
 
         // TODO give return value meaning
@@ -54,5 +56,5 @@ public class UserCacheApi
         // TODO give return value meaning
         return false;
     }
-    
+
 }
