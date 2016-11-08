@@ -40,7 +40,7 @@ public class SecureCacheDao
     private static final Object LOCK_1 = new Object() {};
 
     /**
-     * Set up value only if it was set before.
+     * Set up a value only if it was not set before.
      * 
      * @param containerCredential
      */
@@ -51,7 +51,7 @@ public class SecureCacheDao
 			}
 	}
 	/**
-	 * Set up value only if it was set before.
+	 * Set up a value only if it was not set before.
 	 * 
 	 * @param containerUser
 	 */
