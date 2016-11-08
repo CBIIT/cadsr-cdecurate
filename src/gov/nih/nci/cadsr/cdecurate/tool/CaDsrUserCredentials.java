@@ -682,4 +682,18 @@ public class CaDsrUserCredentials
             _jndiName = "java:" + jndi_;
         }
     }
+
+	@Override
+	protected void finalize() throws Throwable {
+		if ((_conn != null) && (! _conn.isClosed())) {
+			//our wildfly containers have auto commit on, it shall not be a transaction going on at this point
+			try { 
+				_conn.close();
+				_logger.debug("........DB Connection is closed in finalize: " + this.getClass().getSimpleName());
+			} catch (Exception ex) { 
+				_logger.error("Error trying to close DB Connection", ex);
+			}
+		}
+		super.finalize();
+	} 
 }

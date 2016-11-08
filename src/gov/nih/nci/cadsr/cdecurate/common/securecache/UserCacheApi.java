@@ -30,27 +30,61 @@ public class UserCacheApi
         if( userCacheData == null )
         {
             // If CacheHashData is null, we do not have this user in the cache yet.
+          	logger.info( "Secure Cache credentialValidate - user cache is not found: " + loginName );
             return false;
         }
 
         // The user exists, now validate
-        return secureCacheDao.validate( loginName, rawCredential );
+        boolean validated = validate(userCacheData, rawCredential);
+        //on success we update cache time stamp 
+        if (validated) {
+        	credentialUpdateLoginDate(loginName);
+        }
+        return validated;
     }
+    /**
+     * 
+     * @param userCacheData expected not null for all instance member values
+     * @return boolean
+     */
+    protected static boolean validate(UserCacheData userCacheData, String rawCredential)
+    {
+    	String loginName = userCacheData.getLoginName();
+    	
+	    String calculatedCredentials;
 
+        try
+        {
+        	calculatedCredentials = SecureCacheAlgorithm.cacheCalculate(rawCredential, userCacheData.getCacheHashData().getSalt() );
+        } catch( Exception e )
+        {
+        	logger.error("Error in validate", e);
+            return false;
+        }
+
+        if(calculatedCredentials.equals( userCacheData.getCacheHashData().getCredential() ) )
+        {
+        	logger.debug( "Secure Cache validate - Good validate: " + loginName );
+            return true;
+        }
+
+    	logger.info( "Secure Cache validate - Bad validate: " + loginName );
+        return false;
+    }
 
     /**
      * Calls the DAO's cacheEntryRecord method, which updates the table SBREXT.USER_CACHE, if the user exists in the table, if not,
      * adds a new entry.
      *
-     * @param userCacheData
+     * @param userCacheData expected not null
      * @return true if there where no SQL exceptions from updateEntry or addNewEntry
      */
-    public static boolean credentialUpdate( UserCacheData userCacheData )
+    protected static boolean credentialUpdate( UserCacheData userCacheData )
     {
         return secureCacheDao.cacheEntryRecord( userCacheData );
     }
 
-    public static boolean credentialUpdateLoginDate( String loginName )
+    protected static boolean credentialUpdateLoginDate( String loginName )
     {
         secureCacheDao.cacheUpdateLoginDate( loginName );
 
@@ -62,8 +96,8 @@ public class UserCacheApi
     /**
      * Updates an existing user's data, or, if the user does not exist, add the user
      *
-     * @param loginName
-     * @param rawCredential
+     * @param loginName expected not null
+     * @param rawCredential expected not null
      * @return false if there was an error from the DAO
      */
     public static boolean credentialSave( String loginName, String rawCredential )
@@ -75,7 +109,7 @@ public class UserCacheApi
     /**
      * Removes this user from the database table
      *
-     * @param loginName
+     * @param loginName expected not null
      * @return  false if there was an error accessing the database.
      */
     public static boolean credentialDelete( String loginName )

@@ -652,6 +652,9 @@ public class GetACSearch implements Serializable
 
                     DataManager.setAttribute( session, "offset", Integer.valueOf( iOffset ) );
                 }
+                else {
+                	logger.debug("current sSearchAC: " + sSearchAC);
+                }
             }
             // capture the duration
             // logger.info(m_servlet.getLogMessage(req, "getKeywordResult", "ending search", startDate, new

@@ -106,6 +106,9 @@ public class SearchServlet extends CurationServlet {
 			case showUsedBy:
 			   doShowUsedBy();
 			   break;
+			default:
+				logger.error("action is not found for reqType: " + reqType);
+				break;
  		}
 
 //		if(TimeWatch.ENABLED) {
