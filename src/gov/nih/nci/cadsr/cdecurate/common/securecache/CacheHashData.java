@@ -16,7 +16,7 @@ public class CacheHashData
     private static final Logger logger = Logger.getLogger(CacheHashData.class.getName());
     private String credential;
     private String salt;
-    
+
     public CacheHashData( String credential, String salt )
     {
     	setCredential(credential);
@@ -26,7 +26,7 @@ public class CacheHashData
     {
 
     }
-    
+
     public String getCredential()
     {
         return credential;
@@ -100,5 +100,5 @@ public class CacheHashData
 			return false;
 		return true;
 	}
-    
+
 }

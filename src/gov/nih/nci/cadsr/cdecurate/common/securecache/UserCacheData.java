@@ -7,10 +7,16 @@
 package gov.nih.nci.cadsr.cdecurate.common.securecache;
 
 
+import java.sql.Date;
+
 public class UserCacheData
 {
     private String loginName;
-    private CacheHashData cacheHashData = null;
+    private CacheHashData cacheHashData = null; //credential and salt
+    private int id;
+    private java.sql.Date lastLogin = null;
+    private java.sql.Date dateCreated = null;
+    private java.sql.Date dateModified = null;
 
     public UserCacheData( String loginName, CacheHashData cacheHashData )
     {
@@ -38,10 +44,53 @@ public class UserCacheData
         this.cacheHashData = cacheHashData;
     }
 
-	@Override
-	public String toString() {
-		return "UserCacheData [loginName=" + loginName + ", cacheHashData=" + cacheHashData + "]";
-	}
+    public Date getLastLogin()
+    {
+        return lastLogin;
+    }
+
+    public void setLastLogin( Date lastLogin )
+    {
+        this.lastLogin = lastLogin;
+    }
+
+    public Date getDateCreated()
+    {
+        return dateCreated;
+    }
+
+    public void setDateCreated( Date dateCreated )
+    {
+        this.dateCreated = dateCreated;
+    }
+
+    public Date getDateModified()
+    {
+        return dateModified;
+    }
+
+    public void setDateModified( Date dateModified )
+    {
+        this.dateModified = dateModified;
+    }
+
+    public int getId()
+    {
+        return id;
+    }
+
+    public void setId( int id )
+    {
+        this.id = id;
+    }
+
+    @Override
+    public String toString()
+    {
+        return "UserCacheData [" +
+                "loginName='" + loginName +  ", cacheHashData=" + cacheHashData + ", id=" + id + ", lastLogin=" + lastLogin + ", dateCreated=" + dateCreated + ", dateModified=" + dateModified +
+                ']';
+    }
 
 	@Override
 	public int hashCode() {
@@ -73,5 +122,5 @@ public class UserCacheData
 			return false;
 		return true;
 	}
-    
+
 }
