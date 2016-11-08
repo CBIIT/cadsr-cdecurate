@@ -36,21 +36,21 @@ function linkNCI()
   if (winNCI && !winNCI.closed)
      winNCI.focus();
   else
-     winNCI = window.open("http://www.nci.nih.gov", "NCI", "width=680,height=680,resizable=yes,scrollbars=yes,titlebar=false");
+     winNCI = window.open("https://www.nci.nih.gov", "NCI", "width=680,height=680,resizable=yes,scrollbars=yes,titlebar=false");
 }
 function linkcaDSR()
 {
   if (wincaDSR && !wincaDSR.closed)
      wincaDSR.focus();
   else
-     wincaDSR = window.open("http://ncicb.nci.nih.gov/NCICB/infrastructure/cacore_overview/cadsr", "caDSR", "width=680,height=680,resizable=yes,scrollbars=yes,titlebar=false");
+     wincaDSR = window.open("https://ncicb.nci.nih.gov/NCICB/infrastructure/cacore_overview/cadsr", "caDSR", "width=680,height=680,resizable=yes,scrollbars=yes,titlebar=false");
 }
 function linkNCICB()
 {
   if (winNCICB && !winNCICB.closed)
      winNCICB.focus();
   else
-   	winNCICB = window.open("http://ncicb.nci.nih.gov", "NCICB", "width=680,height=680,resizable=yes,scrollbars=yes,titlebar=false");
+   	winNCICB = window.open("https://ncicb.nci.nih.gov", "NCICB", "width=680,height=680,resizable=yes,scrollbars=yes,titlebar=false");
 }
 /*var userid = "nciuser";
  var password = "1121demo7";
