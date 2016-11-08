@@ -35,8 +35,34 @@ public class SecureCacheDao
     private static final SecureCacheDao instance = new SecureCacheDao();
     private static final Logger logger = Logger.getLogger( SecureCacheDao.class.getName() );
     private static String _jndiName = "java:jboss/datasources/CDECurateDS";
+    private static String containerUser;
+    private static String containerCredential;
+    private static final Object LOCK_1 = new Object() {};
 
-    private static Context envContext ;
+    /**
+     * Set up value only if it was set before.
+     * 
+     * @param containerCredential
+     */
+	public static void setContainerCredential(String containerCredential) {
+		if (SecureCacheDao.containerCredential == null)
+			synchronized(LOCK_1) {
+				SecureCacheDao.containerCredential = containerCredential;
+			}
+	}
+	/**
+	 * Set up value only if it was set before.
+	 * 
+	 * @param containerUser
+	 */
+	public static void setContainerUser(String containerUser) {
+		if (SecureCacheDao.containerUser == null)
+			synchronized(LOCK_1) {
+				SecureCacheDao.containerUser = containerUser;
+			}
+	}
+	
+	private static Context envContext ;
     private static DataSource dataSource;
     static {
     	initDataSource();
@@ -111,7 +137,7 @@ public class SecureCacheDao
 		                " LAST_LOGIN = sysdate," +
 		                " LAST_MODIFIED_BY = user," +
 		                " DATE_MODIFIED = sysdate" +
-		                " WHERE UA_NAME = ?";
+		                " WHERE UPPER(UA_NAME) = UPPER(?)";
 		        
 		        logger.debug("updateEntry SQL: " + sql);
 		        
@@ -175,7 +201,7 @@ public class SecureCacheDao
 		        try
 		        {
 		            ps = connection.prepareStatement( sql );
-		            ps.setString( 1, userCacheData.getLoginName() );
+		            ps.setString( 1, userCacheData.getLoginName().toUpperCase() );
 		            ps.setString( 2, userCacheData.getCacheHashData().getCredential() );
 		            ps.setString( 3, userCacheData.getCacheHashData().getSalt() );
 	    			int res = ps.executeUpdate();
@@ -244,7 +270,7 @@ public class SecureCacheDao
 		        
 		        String sql = "SELECT *" +
 		                " FROM SBREXT.USER_CACHE" +
-		                " WHERE UA_NAME = ? and LAST_LOGIN > sysdate - 7";
+		                " WHERE upper(UA_NAME) = UPPER(?) and LAST_LOGIN > sysdate - 7";
 		        
 		        logger.debug("cacheEntryRead SQL: " + sql);
 		        
@@ -310,7 +336,7 @@ public class SecureCacheDao
 	    	try {
 	    	String sql = "SELECT *" +
 	                " FROM SBREXT.USER_CACHE" +
-	                " WHERE UA_NAME = ?";
+	                " WHERE UPPER(UA_NAME) = UPPER(?)";
 	    	
 	        logger.debug("isUserInCache SQL: " + sql);
 	        
@@ -361,7 +387,7 @@ public class SecureCacheDao
     	if (connection != null) {
 	    	try {
 	    		String sql = "delete FROM SBREXT.USER_CACHE  " +
-                " WHERE UA_NAME = ?";
+                " WHERE UPPER(UA_NAME) = UPPER(?)";
 
 	    		PreparedStatement ps = null;
 	    		try
@@ -406,7 +432,7 @@ public class SecureCacheDao
 			    String sql = "UPDATE  SBREXT.USER_CACHE " +
 			            " set LAST_LOGIN = sysdate," +
 			            " LAST_MODIFIED_BY = user" +
-			            " WHERE UA_NAME = ?";
+			            " WHERE UPPER(UA_NAME) = UPPER(?)";
 			    
 			    logger.debug("cacheUpdateLoginDate SQL: " + sql);
 			    
@@ -444,7 +470,7 @@ public class SecureCacheDao
         try 
         {
         	if (dataSource != null)
-        		return dataSource.getConnection();
+        		return dataSource.getConnection(containerUser, containerCredential);
         	else {
         		synchronized(this) {
 	        		initDataSource();

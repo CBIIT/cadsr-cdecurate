@@ -23,6 +23,7 @@ import javax.sql.DataSource;
 
 import org.apache.log4j.Logger;
 
+import gov.nih.nci.cadsr.cdecurate.common.securecache.SecureCacheDao;
 import gov.nih.nci.cadsr.cdecurate.common.securecache.UserCacheApi;
 
 /**
@@ -175,6 +176,8 @@ public class CaDsrUserCredentials
     public void validateCredentials(String applUser_, String applPswd_, String localUser_, String localPswd_) throws Exception
     {
         initialize(applUser_, applPswd_);
+        SecureCacheDao.setContainerCredential(applPswd_);
+        SecureCacheDao.setContainerUser(applUser_);
 
         String msg;
         if (isLocked(localUser_))
