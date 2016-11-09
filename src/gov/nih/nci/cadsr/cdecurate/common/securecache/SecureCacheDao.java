@@ -99,7 +99,7 @@ public class SecureCacheDao
      * @param userCacheData
      * @return true if there where no SQL exceptions from updateEntry or addNewEntry
      */
-    public boolean cacheEntryRecord( UserCacheData userCacheData )
+    protected boolean cacheEntryRecord( UserCacheData userCacheData )
     {
         boolean retValue;
 
@@ -301,7 +301,6 @@ public class SecureCacheDao
 		            {
 		                // This user is not in the user cache table
 		                logger.info( "SecureCacheDao.cacheEntryRead did not find user \"" + loginName + "\" in SBREXT.USER_CACHE." );
-		                userCacheData = null;
 		            }
 		        } catch( Exception e )
 		        {
@@ -408,7 +407,7 @@ public class SecureCacheDao
 	        		connection.close();
 	        	}
 	        	catch (Exception e) {
-	        		logger.error("Error in updateEntry on DB Connection closing" , e);
+	        		logger.error("Error in cacheEntryDelete on DB Connection closing" , e);
 	        	}
 	    	}
     	}
@@ -449,20 +448,20 @@ public class SecureCacheDao
 			        return false;
 			    }
 			    return true;
-	        	}
-	finally {
+	        }
+			finally {
 	        	try {
 	        		connection.close();
 	        	}
 	        	catch (Exception e) {
-	        		logger.error("Error in updateEntry on DB Connection closing" , e);
+	        		logger.error("Error in cacheUpdateLoginDate on DB Connection closing" , e);
 	        	}
-	        }
-        }
+			}
+		}
         else {
-        	logger.error("Error in updateEntry cannot get DB Connection for user cache");
+        	logger.error("Error in cacheUpdateLoginDate cannot get DB Connection for user cache");
         	return false;
-        }      
+		}
     }
     
     public Connection getDbConnection()
