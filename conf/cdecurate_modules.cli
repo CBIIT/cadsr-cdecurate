@@ -1,4 +1,4 @@
-connect
+connect localhost:19990
 
 #1 add the jdbc module it doesn't matter if it's already there
 # configure datasource
@@ -22,20 +22,30 @@ data-source add \
     --user-name=@cdeCurateUser@ \
     --password=@cdeCuratePassword@ \
     --use-ccm=true \
+    --prefill=true \
     --max-pool-size=100 \
-    --blocking-timeout-wait-millis=5000 
+    --min-pool-size-8 \
+    --blocking-timeout-wait-millis=5000
 end-if
 
 if (outcome != success) of /subsystem=logging/size-rotating-file-handler=CDECURATE:read-resource
 /subsystem=logging:write-attribute(name=use-deployment-logging-config, value=false)
 /subsystem=logging:write-attribute(name=add-logging-api-dependencies,value=true)
 /subsystem=logging/size-rotating-file-handler=CDECURATE:add(level=@logLevel@,file={"relative-to"=>"jboss.server.log.dir","path"=>"cdecurate.log"}, append=false, autoflush=true)
-/subsystem=logging/size-rotating-file-handler=CDECURATE:write-attribute(name="formatter", value="%d [%t] %-5p [%c : %L] %m%n") 
+/subsystem=logging/size-rotating-file-handler=CDECURATE:write-attribute(name="formatter", value="%d [%t] %-5p [%c : %L] %m%n")
 /subsystem=logging/size-rotating-file-handler=CDECURATE:write-attribute(name="rotate-size", value="1m")
 /subsystem=logging/size-rotating-file-handler=CDECURATE:write-attribute(name="max-backup-index", value="10")
 end-if
 
 
+
 if (outcome!= success) of /subsystem=logging/logger=gov.nih.nci.cadsr.cdecurate:read-resource
 /subsystem=logging/logger=gov.nih.nci.cadsr.cdecurate:add(use-parent-handlers=false,handlers=["CDECURATE"])
 end-if
+
+if (outcome!= success) of /subsystem=datasources/data-source=CDECurateDS:write-attribute(name=background-validation,value=true)
+/subsystem=datasources/data-source=CDECurateDS:write-attribute(name=background-validation-millis,value=90000)
+/subsystem=datasources/data-source=CDECurateDS:write-attribute(name=idle-timeout-minutes,value=15)
+/subsystem=datasources/data-source=CDECurateDS:write-attribute(name=valid-connection-checker-class-name,value=org.jboss.jca.adapters.jdbc.extensions.oracle.OracleValidConnectionChecker)
+end-if
+
