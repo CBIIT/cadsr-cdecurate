@@ -1,4 +1,4 @@
-connect localhost:19990
+connect localhost:9990
 
 #1 add the jdbc module it doesn't matter if it's already there
 # configure datasource
