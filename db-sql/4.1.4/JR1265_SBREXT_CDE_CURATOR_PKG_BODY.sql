@@ -1,7 +1,9 @@
 -- run with SBREXT user
 ---------------------------------------------------------------
---  DDL for Package Body SBREXT_CDE_CURATOR_PKG CURATNTOOL-1182
+--  DDL for Package Body SBREXT_CDE_CURATOR_PKG CURATNTOOL-1265
 ---------------------------------------------------------------
+set serveroutput on size 1000000
+SPOOL cadsrcuratntool-1265.log
 CREATE OR REPLACE PACKAGE BODY SBREXT."SBREXT_CDE_CURATOR_PKG" AS
     -- function to count CDs
     FUNCTION count_cds( p_pv_idseq IN permissible_values_view.pv_idseq%TYPE )
@@ -6311,4 +6313,4 @@ FROM       tool_options_view_ext tov';
  
 END;
 /
-
+SPOOL OFF
