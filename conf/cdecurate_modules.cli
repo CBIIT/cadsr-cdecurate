@@ -24,7 +24,7 @@ data-source add \
     --use-ccm=true \
     --prefill=true \
     --max-pool-size=100 \
-    --min-pool-size-8 \
+    --min-pool-size=8 \
     --blocking-timeout-wait-millis=5000
 end-if
 
