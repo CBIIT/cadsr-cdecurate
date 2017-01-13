@@ -708,7 +708,7 @@ public class SetACService implements Serializable
                 {
                     oldDef = oldDEC.getDEC_PREFERRED_DEFINITION();
                 }
-                logger.debug( "At line 674 of SetACService.java " + oldDEC.getDEC_PREFERRED_DEFINITION() + "**" + oldDef );
+                logger.debug( "At line 674 of SetACService.java oldDEC.getDEC_PREFERRED_DEFINITION(): " + oldDEC.getDEC_PREFERRED_DEFINITION() + ", oldDef: " + oldDef );
             }
 
             //Check Definition against (constructed) chosen definition, add to Alt Def if not same, add Warning in vValidate vector.
@@ -718,7 +718,7 @@ public class SetACService implements Serializable
 
             //String chosenDef = constructChosenDefinition(req.getSession(), "DEC", oldDef);
 
-            logger.debug( "At line 680 of SetACService.java " + chosenDef );
+            logger.debug( "At line 680 of SetACService.java chosenDef: " + chosenDef );
             if( chosenDef != null && !chosenDef.trim().equals( "null" ) && !chosenDef.startsWith( s ) )
             {//Using startsWith if PrefDef is truncated.
                 //add Warning
@@ -778,9 +778,6 @@ public class SetACService implements Serializable
 
             //end GF32723
             m_DEC.setAlternates( altSession );    //JR1016 tagged
-
-            logger.info( "At line 693 of SetACService.java" );
-
 
             //validation for both edit and DEc
             s = m_DEC.getDEC_CD_NAME();
@@ -1919,12 +1916,12 @@ public class SetACService implements Serializable
                             if( ocStatusBean.isCondrExists() && ocStatusBean.getCondrIDSEQ() != null && !ocStatusBean.getCondrIDSEQ().equals( "" ) )
                             {
                                 m_DEC.setDEC_OC_CONDR_IDSEQ( ocStatusBean.getCondrIDSEQ() );
-                                logger.debug( "At Line 1729 of SetACService.java OC CondrIDSEQ" + ocStatusBean.getCondrIDSEQ() );
+                                logger.debug( "At Line 1729 of SetACService.java OC CondrIDSEQ " + ocStatusBean.getCondrIDSEQ() );
                             }
                             if( ocStatusBean.isEvsBeanExists() && ocStatusBean.getEvsBeanIDSEQ() != null && !ocStatusBean.getEvsBeanIDSEQ().equals( "" ) )
                             {
                                 m_DEC.setDEC_OCL_IDSEQ( ocStatusBean.getEvsBeanIDSEQ() );
-                                logger.debug( "At Line 1733 of SetACService.java OC EvsBeanIDSEQ" + ocStatusBean.getEvsBeanIDSEQ() );
+                                logger.debug( "At Line 1733 of SetACService.java OC EvsBeanIDSEQ " + ocStatusBean.getEvsBeanIDSEQ() );
                             }
                             DataManager.setAttribute( session, "ocStatusBean", ocStatusBean );
                         }
@@ -1974,12 +1971,12 @@ public class SetACService implements Serializable
                             if( propStatusBean.isCondrExists() && propStatusBean.getCondrIDSEQ() != null && !propStatusBean.getCondrIDSEQ().equals( "" ) )
                             {
                                 m_DEC.setDEC_PROP_CONDR_IDSEQ( propStatusBean.getCondrIDSEQ() );
-                                logger.debug( "At Line 1777 of SetACService.java Property CondrIDSEQ" + propStatusBean.getCondrIDSEQ() );
+                                logger.debug( "At Line 1777 of SetACService.java Property CondrIDSEQ " + propStatusBean.getCondrIDSEQ() );
                             }
                             if( propStatusBean.isEvsBeanExists() && propStatusBean.getEvsBeanIDSEQ() != null && !propStatusBean.getEvsBeanIDSEQ().equals( "" ) )
                             {
                                 m_DEC.setDEC_PROPL_IDSEQ( propStatusBean.getEvsBeanIDSEQ() );
-                                logger.debug( "At Line 1781 of SetACService.java Property EvsBeanIDSEQ" + propStatusBean.getEvsBeanIDSEQ() );
+                                logger.debug( "At Line 1781 of SetACService.java Property EvsBeanIDSEQ " + propStatusBean.getEvsBeanIDSEQ() );
                             }
                             DataManager.setAttribute( session, "propStatusBean", propStatusBean );
                         }
@@ -2029,20 +2026,17 @@ public class SetACService implements Serializable
                     {
                         if( ( objID != null && !objID.equals( "" ) ) && ( propID != null && !propID.equals( "" ) ) )
                         {
-                            logger.info( "At Line 1822 of SetACService.java" );
                             strInValid = insAC.checkUniqueOCPropPair( m_DEC, "UniqueAndVersion", sOriginAction );
                         }
                         else if( ( objID != null && !objID.equals( "" ) ) && ( vPROP == null || vPROP.size() < 1 ) )
                         {
-                            logger.info( "At Line 1825 of SetACService.java" );
                             strInValid = insAC.checkUniqueOCPropPair( m_DEC, "UniqueAndVersion", sOriginAction );
                         }
                         else if( ( vOC == null || vOC.size() < 1 ) && ( propID != null && !propID.equals( "" ) ) )
                         {
-                            logger.info( "At Line 1828 of SetACService.java" );
                             strInValid = insAC.checkUniqueOCPropPair( m_DEC, "UniqueAndVersion", sOriginAction );
                         }
-                        logger.debug( "At Line 1831 of SetACService.java strInvalid" + strInValid );
+                        logger.debug( "At Line 1831 of SetACService.java strInvalid " + strInValid );
                         //GF30681
 //						if ((objID != null && !objID.equals("")) && (propID != null && !propID.equals(""))){
 //							strInValid = insAC.checkDECUniqueOCPropPair(m_DEC);
@@ -2050,12 +2044,10 @@ public class SetACService implements Serializable
 
                         if( strInValid.startsWith( "Warning" ) )
                         {
-                            logger.info( "At Line 1838 of SetACService.java" );
                             strWarning += strInValid;
                         }
                         else
                         {
-                            logger.info( "At Line 1841 of SetACService.java" );
                             strOCInvalid = strOCInvalid + strInValid;
                             strPropInvalid = strPropInvalid + strInValid;
                         }
@@ -2109,7 +2101,7 @@ public class SetACService implements Serializable
                     }
 
                 }
-                logger.debug( "At Line 1883 of SetACService.java,strOCInvalid" + strOCInvalid + "strOCValid" + strOCValid + "strPropInvalid" + strPropInvalid + "strPropValid" + strPropValid );
+                logger.debug( "At Line 1883 of SetACService.java,strOCInvalid " + strOCInvalid + ", strOCValid " + strOCValid + ", strPropInvalid " + strPropInvalid + ", strPropValid " + strPropValid );
                 UtilService.setValPageVectorForOC_Prop_Rep( vValidate, "Object Class", sOCL, bNotMandatory, 255, strOCInvalid, sOriginAction, strOCValid );    //GF30681
                 UtilService.setValPageVectorForOC_Prop_Rep( vValidate, "Property", s, bNotMandatory, 255, strPropInvalid, sOriginAction, strPropValid );    //GF31953/GF33153
             }
@@ -4107,11 +4099,11 @@ public class SetACService implements Serializable
             sID = StringUtil.cleanJavascriptAndHtml( ( String ) req.getParameter( "decIDSEQ" ) );
             if( sID != null )
                 m_DEC.setDEC_DEC_IDSEQ( sID );
-            logger.debug( "DECIDSEQ at Line 3766 of SetACService.java" + sID );
+            logger.debug( "DECIDSEQ at Line 3766 of SetACService.java sID: " + sID );
             sID = StringUtil.cleanJavascriptAndHtml( ( String ) req.getParameter( "CDE_IDTxt" ) );
             if( sID != null )
                 m_DEC.setDEC_DEC_ID( sID );
-            logger.debug( "DECIDSEQ at Line 3770 of SetACService.java" + sID );
+            logger.debug( "DECIDSEQ at Line 3770 of SetACService.java sID: " + sID );
             if( sOriginAction.equals( "BlockEditDEC" ) )
                 sID = "";
             else
@@ -4126,12 +4118,12 @@ public class SetACService implements Serializable
             String s = StringUtil.cleanJavascriptAndHtml( ( String ) req.getParameter( "txtObjClass" ) );
             if( s != null )
                 m_DEC.setDEC_OCL_NAME( s );
-            logger.debug( "At Line 3785 of SetACService.java***" + m_DEC.getDEC_OCL_NAME() );
+            logger.debug( "At Line 3785 of SetACService.java m_DEC.getDEC_OCL_NAME(): " + m_DEC.getDEC_OCL_NAME() );
 
             s = StringUtil.cleanJavascriptAndHtml( ( String ) req.getParameter( "txtPropClass" ) );
             if( s != null )
                 m_DEC.setDEC_PROPL_NAME( s );
-            logger.debug( "At Line 3790 of SetACService.java***" + m_DEC.getDEC_PROPL_NAME() );
+            logger.debug( "At Line 3790 of SetACService.java m_DEC.getDEC_PROPL_NAME() " + m_DEC.getDEC_PROPL_NAME() );
 
             sName = "";
             if( sOriginAction.equals( "BlockEditDEC" ) )
@@ -4142,7 +4134,7 @@ public class SetACService implements Serializable
             {
                 sName = m_util.removeNewLineChar( sName );
                 m_DEC.setDEC_LONG_NAME( AdministeredItemUtil.handleLongName( sName ) );//GF32004
-                logger.debug( "DEC_LONG_NAME at Line 3801 of SetACService.java" + m_DEC.getDEC_LONG_NAME() );
+                logger.debug( "DEC_LONG_NAME at Line 3801 of SetACService.java m_DEC.getDEC_LONG_NAME(): " + m_DEC.getDEC_LONG_NAME() );
             }
 
             //set PREFERRED_NAME
@@ -4158,7 +4150,7 @@ public class SetACService implements Serializable
             {
                 sName = m_util.removeNewLineChar( sName );
                 m_DEC.setDEC_PREFERRED_NAME( sName );
-                logger.debug( "PreferredName at Line 3813 of SetACService.java" + sName );
+                logger.debug( "PreferredName at Line 3813 of SetACService.java sName: " + sName );
             }
 
             //set DEC_PREFERRED_DEFINITION
@@ -4168,7 +4160,7 @@ public class SetACService implements Serializable
             {
                 sName = m_util.removeNewLineChar( sName );
                 m_DEC.setDEC_PREFERRED_DEFINITION( sName );
-                logger.debug( "DEC_PREFERRED_DEFINITION at Line 3822 of SetACService.java" + sName );
+                logger.debug( "DEC_PREFERRED_DEFINITION at Line 3822 of SetACService.java sName: " + sName );
             }
 
             sID = StringUtil.cleanJavascriptAndHtml( ( String ) req.getParameter( "selConceptualDomain" ) );
@@ -4673,9 +4665,9 @@ public class SetACService implements Serializable
             if( s != null )
             {
 //				m_VD.setVD_REP_TERM(s);
-                logger.debug( "VD_REPTERM_LONG_NAME at Line 4206 of SetACService.java" + s );
+                logger.debug( "VD_REPTERM_LONG_NAME at Line 4206 of SetACService.java " + s );
                 m_VD.setVD_REP_TERM( AdministeredItemUtil.handleLongName( s ) ); //GF32004
-                logger.debug( "VD_REPTERM_LONG_NAME at Line 4208 of SetACService.java" + m_VD.getVD_REP_TERM() );
+                logger.debug( "VD_REPTERM_LONG_NAME at Line 4208 of SetACService.java m_VD.getVD_REP_TERM(): " + m_VD.getVD_REP_TERM() );
             }
 
             sName = "";
@@ -4687,9 +4679,9 @@ public class SetACService implements Serializable
             {
                 sName = m_util.removeNewLineChar( sName );   //replace newline with empty string
 //				m_VD.setVD_LONG_NAME(sName);
-                logger.debug( "VD_LONG_NAME at Line 4220 of SetACService.java" + sName );
+                logger.debug( "VD_LONG_NAME at Line 4220 of SetACService.java sName: " + sName );
                 m_VD.setVD_LONG_NAME( AdministeredItemUtil.handleLongName( sName ) ); //GF32004
-                logger.debug( "VD_LONG_NAME at Line 4222 of SetACService.java" + m_VD.getVD_LONG_NAME() );
+                logger.debug( "VD_LONG_NAME at Line 4222 of SetACService.java m_VD.getVD_LONG_NAME(): " + m_VD.getVD_LONG_NAME() );
             }
             //add the preferred type name
             String selNameType = StringUtil.cleanJavascriptAndHtml( ( String ) req.getParameter( "rNameConv" ) );

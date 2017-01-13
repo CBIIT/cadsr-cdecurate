@@ -675,11 +675,7 @@ public class DataElementConceptServlet extends CurationServlet
                 for( int i = 0; i < vCon.size(); i++ )
                 {
                     EVS_Bean eBean = ( EVS_Bean ) vCon.get( i );
-                    logger.debug( "At line 623 of DECServlet.java " + eBean.getLONG_NAME() );
-                    logger.debug( "At line 624 of DECServlet.java " + eBean.getEVS_ORIGIN() );
-                    logger.debug( "At line 625 of DECServlet.java " + eBean.getEVS_DATABASE() );
-                    logger.debug( "At line 626 of DECServlet.java " + eBean.getCONCEPT_IDENTIFIER() );
-                    logger.debug( "At line 627 of DECServlet.java " + eBean.getPREFERRED_DEFINITION() );
+                    logger.debug( "At line 678 of DECServlet.java eBean= " + eBean );
                 }
                 if( vCon != null && vCon.size() > 0 )
                 {
@@ -818,7 +814,7 @@ public class DataElementConceptServlet extends CurationServlet
                 if( !sOCName.equals( "" ) )
                     sOCName += " ";
                 sOCName += conName + nvpValue;
-                logger.debug( "At line 805 of DECServlet.java" + conName + "**" + nvpValue + "**" + sLongName + "**" + sDef + "**" + sOCName );
+                logger.debug( "At line 805 of DECServlet.java " + conName + "**" + nvpValue + "**" + sLongName + "**" + sDef + "**" + sOCName );
             }
         }
         // add the Object Class primary
@@ -832,7 +828,6 @@ public class DataElementConceptServlet extends CurationServlet
                 sPrimary = "";
             if( !sPrimary.equals( "" ) )
             {
-                logger.info( "At line 819 of DECServlet.java" );
                 String nvpValue = "";
                 if( this.checkNVP( eCon ) )
                     nvpValue = "::" + eCon.getNVP_CONCEPT_VALUE();
@@ -846,7 +841,7 @@ public class DataElementConceptServlet extends CurationServlet
                     if( !sDef.equals( "" ) )
                         sDef += "_"; // add definition
                     sDef += eCon.getPREFERRED_DEFINITION() + nvpValue;
-                    logger.debug( "At line 833 of DECServlet.java" + sLongName + "**" + sDef );
+                    logger.debug( "At line 833 of DECServlet.java sLongName: " + sLongName + ", sDef: " + sDef );
                 }
                 if( !sAbbName.equals( "" ) )
                     sAbbName += "_";
@@ -858,7 +853,7 @@ public class DataElementConceptServlet extends CurationServlet
                 if( !sOCName.equals( "" ) )
                     sOCName += " ";
                 sOCName += sPrimary + nvpValue;
-                logger.debug( "At line 778 of DECServlet.java" + sPrimary + "**" + nvpValue + "**" + sLongName + "**" + sDef + "**" + sOCName );
+                logger.debug( "At line 778 of DECServlet.java " + sPrimary + "**" + nvpValue + "**" + sLongName + "**" + sDef + "**" + sOCName );
             }
         }
         // get the Property into the long name and abbr name
@@ -869,7 +864,7 @@ public class DataElementConceptServlet extends CurationServlet
         for( int i = 0; i < vProperty.size(); i++ )
         {
             EVS_Bean eBean = ( EVS_Bean ) vProperty.get( i );
-            logger.debug( "At line 853 of DECServlet.java " + eBean.getPREFERRED_DEFINITION() + "**" + eBean.getLONG_NAME() + "**" + eBean.getCONCEPT_IDENTIFIER() );
+            logger.debug( "At line 853 of DECServlet.java eBean: " + eBean.getPREFERRED_DEFINITION() + "**" + eBean.getLONG_NAME() + "**" + eBean.getCONCEPT_IDENTIFIER() );
         }
         //begin of GF30798
         // add the property qualifiers first
@@ -883,7 +878,6 @@ public class DataElementConceptServlet extends CurationServlet
                 conName = "";
             if( !conName.equals( "" ) )
             {
-                logger.info( "At line 869 of DECServlet.java" );
                 String nvpValue = "";
                 if( this.checkNVP( eCon ) )
                     nvpValue = "::" + eCon.getNVP_CONCEPT_VALUE();
@@ -897,7 +891,7 @@ public class DataElementConceptServlet extends CurationServlet
                     if( !sDef.equals( "" ) )
                         sDef += "_"; // add definition
                     sDef += eCon.getPREFERRED_DEFINITION() + nvpValue;
-                    logger.debug( "At line 883 of DECServlet.java" + sLongName + "**" + sDef );
+                    logger.debug( "At line 883 of DECServlet.java sLongName, sDef: " + sLongName + "**" + sDef );
                 }
                 if( !sAbbName.equals( "" ) )
                     sAbbName += "_";
@@ -909,7 +903,7 @@ public class DataElementConceptServlet extends CurationServlet
                 if( !sPropName.equals( "" ) )
                     sPropName += " ";
                 sPropName += conName + nvpValue;
-                logger.debug( "At line 895 of DECServlet.java" + conName + "**" + nvpValue + "**" + sLongName + "**" + sDef + "**" + sOCName );
+                logger.debug( "At line 895 of DECServlet.java " + conName + "**" + nvpValue + "**" + sLongName + "**" + sDef + "**" + sOCName );
             }
         }
         // add the property primary
@@ -923,7 +917,6 @@ public class DataElementConceptServlet extends CurationServlet
                 sPrimary = "";
             if( !sPrimary.equals( "" ) )
             {
-                logger.info( "At line 909 of DECServlet.java" );
                 String nvpValue = "";
                 if( this.checkNVP( eCon ) )
                     nvpValue = "::" + eCon.getNVP_CONCEPT_VALUE();
@@ -937,7 +930,7 @@ public class DataElementConceptServlet extends CurationServlet
                     if( !sDef.equals( "" ) )
                         sDef += "_"; // add definition
                     sDef += eCon.getPREFERRED_DEFINITION() + nvpValue;
-                    logger.debug( "At line 923 of DECServlet.java" + sLongName + "**" + sDef );
+                    logger.debug( "At line 923 of DECServlet.java sLongName, sDef: " + sLongName + "**" + sDef );
                 }
                 if( !sAbbName.equals( "" ) )
                     sAbbName += "_";
@@ -949,7 +942,7 @@ public class DataElementConceptServlet extends CurationServlet
                 if( !sPropName.equals( "" ) )
                     sPropName += " ";
                 sPropName += sPrimary + nvpValue;
-                logger.debug( "At line 935 of DECServlet.java" + sPrimary + "**" + nvpValue + "**" + sLongName + "**" + sDef + "**" + sOCName );
+                logger.debug( "At line 935 of DECServlet.java " + sPrimary + "**" + nvpValue + "**" + sLongName + "**" + sDef + "**" + sOCName );
             }
         }
         // truncate to 30 characters
@@ -970,20 +963,20 @@ public class DataElementConceptServlet extends CurationServlet
             if( !sDef.equals( "" ) )
                 sDef += "_"; // add definition
             sDef += newBean.getPREFERRED_DEFINITION();
-            logger.debug( "At line 956 of DECServlet.java" + sLongName + "**" + sDef );
+            logger.debug( "At line 956 of DECServlet.java sLongName, sDef: " + sLongName + "**" + sDef );
         }
         // store the long names, definition, and usr name in vd bean if searched
         if( nameAct.equals( "Search" ) || nameAct.equals( "Remove" ) ) // GF30798 - added to call when name act is remove
         {
             pageDEC.setDEC_LONG_NAME( AdministeredItemUtil.handleLongName( sLongName ) );    //GF32004;
             pageDEC.setDEC_PREFERRED_DEFINITION( sDef );
-            logger.debug( "DEC_LONG_NAME at Line 963 of DECServlet.java" + pageDEC.getDEC_LONG_NAME() + "**" + pageDEC.getDEC_PREFERRED_DEFINITION() );
+            logger.debug( "DEC_LONG_NAME at Line 963 of DECServlet.java " + pageDEC.getDEC_LONG_NAME() + "**" + pageDEC.getDEC_PREFERRED_DEFINITION() );
         }
         if( !nameAct.equals( "OpenDEC" ) )
         {
             pageDEC.setDEC_OCL_NAME( sOCName );
             pageDEC.setDEC_PROPL_NAME( sPropName );
-            logger.debug( "At line 968 of DECServlet.java" + sOCName + "**" + sPropName );
+            logger.debug( "At line 968 of DECServlet.java " + sOCName + "**" + sPropName );
         }
         if( nameAct.equals( "Search" ) || nameAct.equals( "Remove" ) )
         {
@@ -1181,14 +1174,11 @@ public class DataElementConceptServlet extends CurationServlet
             // do the primary search selection action
             if( sComp.equals( "ObjectClass" ) || sComp.equals( "Property" ) || sComp.equals( "PropertyClass" ) )
             {
-                //logger.debug( "At line 1114 of DECServlet.java" );
                 if( blockBean.getEVS_DATABASE().equals( "caDSR" ) )
                 {
-                    //logger.debug( "At line 1117 of DECServlet.java" );
                     // split it if rep term, add concept class to the list if evs id exists
                     if( blockBean.getCONDR_IDSEQ() == null || blockBean.getCONDR_IDSEQ().equals( "" ) )
                     {
-                        // logger.debug( "At line 1121 of DECServlet.java" );
                         if( blockBean.getCONCEPT_IDENTIFIER() == null || blockBean.getCONCEPT_IDENTIFIER().equals( "" ) )
                         {
                             storeStatusMsg( "This " + sComp
@@ -1207,7 +1197,6 @@ public class DataElementConceptServlet extends CurationServlet
                     }
                     else
                     {
-                        //logger.debug( "At line 1139 of DECServlet.java " );
                         // split it into concepts for object class or property search results
                         splitIntoConcepts( sComp, blockBean, nameAction );
                     }
@@ -1223,7 +1212,6 @@ public class DataElementConceptServlet extends CurationServlet
             }
             else if( sComp.equals( "ObjectQualifier" ) )
             {
-                //logger.debug( "At line 1081 of DECServlet.java " );
                 // Do this to reserve zero position in vector for primary concept
                 if( vObjectClass.size() < 1 )
                 {

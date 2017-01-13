@@ -627,14 +627,12 @@ public class InsACService implements Serializable
                         if( vd.getVD_REG_STATUS_IDSEQ() == null
                                 || vd.getVD_REG_STATUS_IDSEQ().equals( "" ) )
                         {
-                            logger.info( "line 570 of InsACSErvice.java ************" );
                             sReturned = this.setReg_Status( "INS", "", sVD_ID, vd
                                     .getVD_REG_STATUS() );
                         }
 
                         else
                         {
-                            logger.info( "line 576 of InsACSErvice.java ************" );
                             sReturned = this.setReg_Status( "UPD", vd
                                     .getVD_REG_STATUS_IDSEQ(), sVD_ID, vd
                                     .getVD_REG_STATUS() );
@@ -642,7 +640,6 @@ public class InsACService implements Serializable
 
                         if( sReturned != null && !sReturned.equals( "" ) )
                         {
-                            logger.info( "line 583 of InsACSErvice.java ************" );
                             this.storeStatusMsg( "\\t "
                                     + sReturned
                                     + " : Unable to update Registration Status." );
@@ -655,7 +652,6 @@ public class InsACService implements Serializable
                         if( vd.getVD_REG_STATUS_IDSEQ() != null
                                 && !vd.getVD_REG_STATUS_IDSEQ().equals( "" ) )
                         {
-                            logger.info( "line 593 of InsACSErvice.java ************" );
                             sReturned = this.setReg_Status( "DEL", vd
                                     .getVD_REG_STATUS_IDSEQ(), sVD_ID, vd
                                     .getVD_REG_STATUS() );
@@ -663,7 +659,6 @@ public class InsACService implements Serializable
 
                         if( sReturned != null && !sReturned.equals( "" ) )
                         {
-                            logger.info( "line 600 of InsACSErvice.java ************" );
                             this
                                     .storeStatusMsg( "\\t "
                                             + sReturned
@@ -1239,11 +1234,10 @@ public class InsACService implements Serializable
                         .equals( "UPD" ) ) )
                         && !sDEC_ID.equals( "" ) )
                 {
-                    logger.info( "******called at 1072 of InsACServie.java" );
                     // store the status message in the session
                     if( sAction.equals( "INS" ) )
                     {
-                        logger.debug( "sReturnCode at 1063 of InsACService.java is" + sReturnCode );
+                        logger.debug( "sReturnCode at 1063 of InsACService.java is " + sReturnCode );
                         String sPublicID = this.getPublicID( sDEC_ID );
                         dec.setDEC_DEC_ID( sPublicID );
                         this.storeStatusMsg( "Public ID : "
@@ -1258,7 +1252,7 @@ public class InsACService implements Serializable
                     else if( sAction.equals( "UPD" ) && sReturnCode != null
                             && !sReturnCode.equals( "" ) )
                     {
-                        logger.debug( "sReturnCode at 1084 of InsACService.java is" + sReturnCode );
+                        logger.debug( "sReturnCode at 1084 of InsACService.java is " + sReturnCode );
                         this.storeStatusMsg( "\\t " + sReturnCode
                                 + " : Unable to update mandatory attributes." );
                     }
@@ -1306,14 +1300,12 @@ public class InsACService implements Serializable
                         if( dec.getDEC_REG_STATUS_IDSEQ() == null
                                 || dec.getDEC_REG_STATUS_IDSEQ().equals( "" ) )
                         {
-                            logger.info( "line 1146 of InsACSErvice.java ************" );
                             sReturn = this.setReg_Status( "INS", "", sDEC_ID, dec
                                     .getDEC_REG_STATUS() );
                         }
 
                         else
                         {
-                            logger.info( "line 1151 of InsACSErvice.java ************" );
                             sReturn = this.setReg_Status( "UPD", dec
                                     .getDEC_REG_STATUS_IDSEQ(), sDEC_ID, dec
                                     .getDEC_REG_STATUS() );
@@ -1321,7 +1313,6 @@ public class InsACService implements Serializable
 
                         if( sReturn != null && !sReturn.equals( "" ) )
                         {
-                            logger.info( "line 1158 of InsACSErvice.java ************" );
                             this.storeStatusMsg( "\\t "
                                     + sReturn
                                     + " : Unable to update Registration Status." );
@@ -1334,7 +1325,6 @@ public class InsACService implements Serializable
                         if( dec.getDEC_REG_STATUS_IDSEQ() != null
                                 && !dec.getDEC_REG_STATUS_IDSEQ().equals( "" ) )
                         {
-                            logger.info( "line 1168 of InsACSErvice.java ************" );
                             sReturn = this.setReg_Status( "DEL", dec
                                     .getDEC_REG_STATUS_IDSEQ(), sDEC_ID, dec
                                     .getDEC_REG_STATUS() );
@@ -1342,7 +1332,6 @@ public class InsACService implements Serializable
 
                         if( sReturn != null && !sReturn.equals( "" ) )
                         {
-                            logger.info( "line 1175 of InsACSErvice.java ************" );
                             this
                                     .storeStatusMsg( "\\t "
                                             + sReturn
@@ -2302,7 +2291,7 @@ public class InsACService implements Serializable
                     || setAction.equalsIgnoreCase( "editDECfromDE" )
                     || menuAction.equals( "NewDECVersion" ) )
                 sPublicID = mDEC.getDEC_DEC_ID();
-            logger.debug( "At Line 1987 of InsACService.java,OC ID" + sOCID + "Prop ID" + sPropID + "Context Id" + sContID + "DEC Public Id" + sPublicID );
+            logger.debug( "At Line 1987 of InsACService.java,OC ID: " + sOCID + ", Prop ID: " + sPropID + ", Context Id: " + sContID + ", DEC Public Id: " + sPublicID );
             if( m_servlet.getConn() == null )
                 m_servlet.ErrorLogin( m_classReq, m_classRes );
             else
@@ -6726,9 +6715,9 @@ public class InsACService implements Serializable
                                 if( ocIdseq != null && !ocIdseq.equals( "" ) )
                                 {
                                     dec.setDEC_OCL_IDSEQ( ocIdseq );
-                                    logger.debug( "At Line 6044 of InsACService.java DEC_OCL_IDSEQ"
+                                    logger.debug( "At Line 6044 of InsACService.java DEC_OCL_IDSEQ: "
                                             + ocIdseq
-                                            + "DEC_OC_CONDR_IDSEQ"
+                                            + ", DEC_OC_CONDR_IDSEQ: "
                                             + ocStatusBean.getCondrIDSEQ() );
                                 }
                             }
@@ -6744,7 +6733,7 @@ public class InsACService implements Serializable
                                         && !condrIdseq.equals( "" ) )
                                 {
                                     dec.setDEC_OC_CONDR_IDSEQ( condrIdseq );
-                                    logger.debug( "At Line 6053 DEC_OC_CONDR_IDSEQ"
+                                    logger.debug( "At Line 6053 DEC_OC_CONDR_IDSEQ: "
                                             + condrIdseq );
                                     ocIdseq = this.createEvsBean( userName,
                                             condrIdseq, conteIdseq,
@@ -6753,7 +6742,7 @@ public class InsACService implements Serializable
                                 if( ocIdseq != null && !ocIdseq.equals( "" ) )
                                 {
                                     dec.setDEC_OCL_IDSEQ( ocIdseq );
-                                    logger.debug( "At Line 6058 of InsACService.java DEC_OCL_IDSEQ"
+                                    logger.debug( "At Line 6058 of InsACService.java DEC_OCL_IDSEQ: "
                                             + ocIdseq );
                                 }
                             }
@@ -6807,9 +6796,9 @@ public class InsACService implements Serializable
                                 if( propIdseq != null && !propIdseq.equals( "" ) )
                                 {
                                     dec.setDEC_PROPL_IDSEQ( propIdseq );
-                                    logger.debug( "At Line 6089 of InsACService.java DEC_PROPL_IDSEQ"
+                                    logger.debug( "At Line 6089 of InsACService.java DEC_PROPL_IDSEQ: "
                                             + propIdseq
-                                            + "DEC_PROP_CONDR_IDSEQ"
+                                            + ", DEC_PROP_CONDR_IDSEQ: "
                                             + propStatusBean.getCondrIDSEQ() );
                                 }
                             }
@@ -6824,7 +6813,7 @@ public class InsACService implements Serializable
                                         && !condrIdseq.equals( "" ) )
                                 {
                                     dec.setDEC_PROP_CONDR_IDSEQ( condrIdseq );
-                                    logger.debug( "At Line 6098 of InsACService.java DEC_PROP_CONDR_IDSEQ"
+                                    logger.debug( "At Line 6098 of InsACService.java DEC_PROP_CONDR_IDSEQ: "
                                             + condrIdseq );
                                     propIdseq = this.createEvsBean( userName,
                                             condrIdseq, conteIdseq, "Property" );
@@ -6832,7 +6821,7 @@ public class InsACService implements Serializable
                                 if( propIdseq != null && !propIdseq.equals( "" ) )
                                 {
                                     dec.setDEC_PROPL_IDSEQ( propIdseq );
-                                    logger.debug( "At Line 6103 of InsACService.java DEC_PROPL_IDSEQ"
+                                    logger.debug( "At Line 6103 of InsACService.java DEC_PROPL_IDSEQ: "
                                             + propIdseq );
                                 }
                             }
@@ -6986,7 +6975,7 @@ public class InsACService implements Serializable
             }
             else
             {
-                logger.debug( "InsACService.java evsBeanCheckDB() CONCEPT FOUND! conIdseq at Line 6204 of InsACService.java" + conIdseq );
+                logger.debug( "InsACService.java evsBeanCheckDB() CONCEPT FOUND! conIdseq at Line 6204 of InsACService.java: " + conIdseq );
             }
         }
 
@@ -7011,7 +7000,6 @@ public class InsACService implements Serializable
                 statusBean.setStatusMessage( "**  Creating a new " + type + " in " + PropertyHelper.getDefaultContextName() );    //GF32649
                 statusBean.setCondrExists( false );
                 statusBean.setEvsBeanExists( false );
-                logger.info( "At Line 6222 of InsACService.java" );
             }
             else
             {
@@ -7056,7 +7044,7 @@ public class InsACService implements Serializable
                             statusBean.setCondrExists( true );
                             statusBean.setCondrIDSEQ( vo.getCondr_IDSEQ() );
                             statusBean.setEvsBeanExists( false );
-                            logger.debug( "At Line 6259 of InsACService.java" + statusBean.statusMessage );
+                            logger.debug( "At Line 6259 of InsACService.java statusBean.statusMessage: " + statusBean.statusMessage );
                             return statusBean;
 
                         }
@@ -7069,7 +7057,6 @@ public class InsACService implements Serializable
                         statusBean.setCondrExists( true );
                         statusBean.setCondrIDSEQ( vo.getCondr_IDSEQ() );
                         statusBean.setEvsBeanExists( false );
-                        logger.info( "At Line 6271 of InsACService.java" );
                         return statusBean;
                     }
 
@@ -7098,7 +7085,7 @@ public class InsACService implements Serializable
                         statusBean.setCondrIDSEQ( condrIDSEQ );
                         statusBean.setEvsBeanExists( true );
                         statusBean.setEvsBeanIDSEQ( idseq );
-                        logger.debug( "Condr_IDSEQ at Line 6296 of InsACService.java" + condrIDSEQ );
+                        logger.debug( "Condr_IDSEQ at Line 6296 of InsACService.java " + condrIDSEQ );
 
                     }
                     else
@@ -7128,7 +7115,6 @@ public class InsACService implements Serializable
                             statusBean.setCondrIDSEQ( condrIDSEQM );
                             statusBean.setEvsBeanExists( true );
                             statusBean.setEvsBeanIDSEQ( idseqM );
-                            logger.info( "At Line 6320 of InsACService.java" );
                         }
                         else
                         {
@@ -7140,7 +7126,6 @@ public class InsACService implements Serializable
                             statusBean.setCondrIDSEQ( vo.getCondr_IDSEQ() );
                             statusBean.setEvsBeanExists( true );
                             statusBean.setEvsBeanIDSEQ( vo.getIDSEQ() );
-                            logger.info( "At Line 6330 of InsACService.java" );
                         }
 
                     }
