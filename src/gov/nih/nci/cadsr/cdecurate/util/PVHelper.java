@@ -80,6 +80,7 @@ public class PVHelper {
 	}
 
 	public static int getPVIndex(HttpServletRequest req, String reqName) { 
+		//the next output is for debug only
 		//TestUtil.dumpAllHttpRequests("PVHelper.java: <<<", req);
 		int index = -1;
 		Object value = req.getParameter(reqName);
@@ -117,7 +118,8 @@ public class PVHelper {
 	 * */
 	public static boolean isOnlyValueChanged(HttpServletRequest req) throws Exception {
 		boolean ret = false;
-		TestUtil.dumpAllHttpRequests("VMAction.java:isOnlyDateChanged() JR1105 <<<", req);
+		//the next output is for debug only
+		//TestUtil.dumpAllHttpRequests("VMAction.java:isOnlyDateChanged() JR1105 <<<", req);
 		
 		if(req == null) throw new Exception("Request can not be NULL or empty.");
 	    String chgValue = (String)req.getParameter("currentPVValue");  //edited value

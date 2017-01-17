@@ -970,7 +970,7 @@ public class CurationServlet
      */
     private void doEditPVActions( HttpServletRequest req, HttpServletResponse res ) throws Exception
     {
-        TestUtil.dumpAllHttpRequests( "CurationServlet.java:doEditPVActions() <<<", req );
+        //TestUtil.dumpAllHttpRequests( "CurationServlet.java:doEditPVActions() <<<", req );
         //JR1024 new codes save the index of the edited PV
         req.setAttribute( Constants.USER_SELECTED_VM, req.getParameter( "currentPVVM" ) );
         ValueDomainServlet vdServ = ( ValueDomainServlet ) this.getACServlet( "ValueDomain" );
