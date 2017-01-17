@@ -1405,7 +1405,7 @@ public class GetACService implements Serializable
             cstmt.setString(3, value_);
             // Now we are ready to call the stored procedure
             cstmt.execute();
-            logger.debug("GetACService:getToolOptionData SBREXT_CDE_CURATOR_PKG.SEARCH_TOOL_OPTIONS executed.");
+            //logger.debug("GetACService:getToolOptionData SBREXT_CDE_CURATOR_PKG.SEARCH_TOOL_OPTIONS executed.");
             // store the output in the result set
             rs = (ResultSet) cstmt.getObject(4);
             if (rs != null)

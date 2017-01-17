@@ -5016,19 +5016,20 @@ public class InsACService implements Serializable
                 && desAction.equals( "create" ) )
         {
             String deCont = deBean.getDE_CONTE_IDSEQ();
-            // create usedby only if not in the same context as the ac is
-            if( !deCont.equals( useCont ) )
-            {
-                String sRet = this.setDES( "INS", CompID, useCont, useContName,
-                        "USED_BY", useContName, sLang, "" );        //JR1099 Designate|Update Used By Attributes from action context menu
-                if( sRet == null || sRet.equals( "API_DES_300" ) )
-                    refreshAct = "INS";
-            }
-            else
-            {
-                this
-                        .storeStatusMsg( "\\t API_DES_00: Unable to designate in the same context as the owned by context." );
-                m_classReq.setAttribute( "retcode", "API_DES_00" );
+            //the previous requirement before v.4.1.5 was:
+            // create usedby only if not in the same context as the ac is - void in v.4.1.5
+            //JIRA CURATNTOOL-1177
+            /* CT can designate a CDE in the same context as the owned by context, 
+             * an Alternate Name will be created, type is "USED_BY", 
+             * the Alt Name's "Context" field and "Name" field are both same as the selected Context, Language is "English".
+             */
+
+            String sRet = this.setDES( "INS", CompID, useCont, useContName, "USED_BY", useContName, sLang, "" );        //JR1099 Designate|Update Used By Attributes from action context menu
+            if( sRet == null || sRet.equals( "API_DES_300" ) )
+                refreshAct = "INS";
+            
+            if (logger.isInfoEnabled() && (deCont.equals( useCont ))) {
+                logger.info("...created USED_BY the same as OWNED_BY, compID: " + CompID + ", deCont: " + deCont + ", useCont: " +  useCont);
             }
         }
         else if( vUsedCont != null && vUsedCont.contains( useCont )
