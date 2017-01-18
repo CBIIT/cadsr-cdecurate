@@ -2100,7 +2100,7 @@ function openEVSConceptsWindow(){
 						</td>
 						<td>
 							<% if (!isView) {	%>
-							<select name="selSource" size="1" onHelp="showHelp('html/Help_CreateVD.html#createVDForm_selSource',helpUrl); return false">
+							<select name="selSource" size="1" style="width:50%" onHelp="showHelp('html/Help_CreateVD.html#createVDForm_selSource',helpUrl); return false">
 								<option value=""></option>
 								<%
 									boolean isFound = false;

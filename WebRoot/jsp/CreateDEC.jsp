@@ -1330,7 +1330,7 @@ sOriginAction.equals("CreateNewDEC")
     &nbsp;
     </td>
     <td>
-    <select name="selSource" size="1" onHelp="showHelp('html/Help_CreateDEC.html#newDECForm_selSource',helpUrl); return false">
+    <select name="selSource" size="1" style="Width:50%" onHelp="showHelp('html/Help_CreateDEC.html#newDECForm_selSource',helpUrl); return false">
     <option value=""></option>
         <%
 		   boolean isFound = false;
