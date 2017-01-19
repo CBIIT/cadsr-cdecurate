@@ -1602,7 +1602,7 @@ String temp =
         </td>
         <td>
             <%if (!isView){%>
-        <select name="selSource" size="1" style="width:70%" onHelp="showHelp('html/Help_CreateDE.html#newCDEForm_selSource',helpUrl); return false">
+        <select name="selSource" size="1" style="width:50%" onHelp="showHelp('html/Help_CreateDE.html#newCDEForm_selSource',helpUrl); return false">
             <%
 							boolean isFound = false;
 							%>
