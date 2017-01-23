@@ -1139,10 +1139,10 @@ L--%>
 									String workflowStatus = (String)session.getAttribute("selStatus");
 									String crfWorkflowStatus = pvBean.getCRF_WORKFLOW();    //GF7680
 									//JR691 begin
-									if(workflowStatus != null && workflowStatus.equals(Constants.WORKFLOW_STATUS_RELEASED) && inForm)
-										dispStyle = "none";
-									else
-										dispStyle = "inline";
+									dispStyle = "inline";
+									//JIRA CURATNTOOL-1188 "VD Workflow status restriction to be removed". FIXME - decide do we need to keep inForm restriction and prevent the edit button for that case?
+//									if(workflowStatus != null && workflowStatus.equals(Constants.WORKFLOW_STATUS_RELEASED) && inForm)
+//										dispStyle = "none"; 
 									//JR691 end
 									%>
 															<tr id="<%=pvCount%>">
