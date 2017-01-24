@@ -301,6 +301,7 @@ public class NCICurationServlet extends HttpServlet
                     if( acrt != null )
                     {
                         String className = acrt.getClassName();
+                    	logger.debug( "Processing request type: " + reqType + " by class: " + className);
                         curObj = ( CurationServlet ) Class.forName( className ).newInstance();
                         curObj.init( req, res, this.getServletContext() );
                         curObj.get_m_conn();
@@ -321,7 +322,7 @@ public class NCICurationServlet extends HttpServlet
 
             if( acrt == null )
             {
-            	logger.info( "Unexpected request workflow; received reqType: [" + req.getParameter( "reqType" ) + "]" );
+            	logger.debug( "Processing reqType by CurationServlet: [" + req.getParameter( "reqType" ) + "]" );
                 CurationServlet curser = new CurationServlet( req, res, this.getServletContext() );
                 curser.service();
             }

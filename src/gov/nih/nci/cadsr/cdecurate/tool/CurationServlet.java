@@ -4484,7 +4484,7 @@ public class CurationServlet
 				logger.debug("........DB Connection is closed in finalize: " + this.getClass().getSimpleName());
 			}
 			catch (Exception e) {
-				logger.error("Exception when trying to close DB connection", e);
+				logger.error("Exception when trying to close DB connection in " + this.getClass().getSimpleName(), e);
 			}
 		}
 		//chain upward

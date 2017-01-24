@@ -917,9 +917,7 @@ public class PVServlet implements Serializable
 
            String acIdseq = vd.getVD_VD_IDSEQ();	//might cause NPE
            //String acName = vd.getVD_LONG_NAME();
-           logger.debug("time tracking - calling doPVACSearch()");
            Vector<PV_Bean> vdpv = pvAction.doPVACSearch(acIdseq, pvAct, data);
-           logger.debug("time tracking - out of doPVACSearch()");
            vd.setVD_PV_List(vdpv);
            //pvCount = this.doPVACSearch(VDBean.getVD_VD_IDSEQ(), VDBean.getVD_LONG_NAME(), pvAct);
            GetACSearch serAC = new GetACSearch(data.getRequest(), data.getResponse(), data.getCurationServlet());
@@ -929,26 +927,24 @@ public class PVServlet implements Serializable
 
            //get vd parent attributes
            GetACService getAC = new GetACService(data.getRequest(), data.getResponse(), data.getCurationServlet());
-           logger.debug("time tracking - finished GetACService()");
+
            Vector<EVS_Bean> vParent = new Vector<EVS_Bean>();
            String sCondr = vd.getVD_PAR_CONDR_IDSEQ();
            if (sCondr != null && !sCondr.equals(""))
                vParent = getAC.getAC_Concepts(vd.getVD_PAR_CONDR_IDSEQ(), vd, true);
-           logger.debug("time tracking - finished getVD_PAR_CONDR_IDSEQ()");
+
            //get the system name and for new template make the vd_id null
            if (sMenu.equals("NewVDTemplate"))
                vd.setVD_VD_ID("");
            vd = (VD_Bean) data.getCurationServlet().getSystemName(vd, vParent);
            vParent = serAC.getNonEVSParent(vParent, vd, sMenu);
-           logger.debug("time tracking - finished getNonEVSParent()");
 
            //DataManager.setAttribute(session, "VDParentConcept", vParent);
            vd.setReferenceConceptList(vParent);
-           logger.debug("time tracking - finished setReferenceConceptList()");
        }
        catch (Exception e)
        {
-           logger.error("Error getPVattributes - " + e.toString(), e);
+           logger.error("Error getPVattributes - " + e, e);
        }
        logger.debug("time tracking - leaving getPVAttributes()");
    }  //doPVACSearch search

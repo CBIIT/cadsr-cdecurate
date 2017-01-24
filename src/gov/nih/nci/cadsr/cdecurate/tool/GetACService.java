@@ -337,7 +337,7 @@ public class GetACService implements Serializable
             getWriteContextList(vID, v, sUser, "DE_CONCEPT");
             DataManager.setAttribute(session, "vWriteContextDEC", v);
             DataManager.setAttribute(session, "vWriteContextDEC_ID", vID);
-            logger.debug("At line 321 of GetACService.java**"+Arrays.asList(v)+"**"+Arrays.asList(vID));
+            //logger.debug("At line 321 of GetACService.java**"+Arrays.asList(v)+"**"+Arrays.asList(vID));
             v = new Vector<String>();
             vID = new Vector<String>();
             getWriteContextList(vID, v, sUser, "VALUEDOMAIN");

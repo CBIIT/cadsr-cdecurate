@@ -1347,7 +1347,7 @@ public final class EVS_UserBean implements Serializable
             vuBean.setDefDefaultValue(sValue);  //("No Value Exists.");  //default value for the definition
             this.setDefDefaultValue(sValue);  //("No Value Exists.");  //also for the main beandefault value for the definition
           }
-          logger.debug("sType = [" + sType + "]");
+          //logger.debug("sType = [" + sType + "]");
         }
       }
     }
