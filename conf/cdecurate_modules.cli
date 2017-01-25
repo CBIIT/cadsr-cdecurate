@@ -23,7 +23,7 @@ data-source add \
     --password=@cdeCuratePassword@ \
     --use-ccm=true \
     --pool-prefill=true \
-    --max-pool-size=100 \
+    --max-pool-size=200 \
     --min-pool-size=8 \
     --blocking-timeout-wait-millis=5000
 end-if
