@@ -78,6 +78,11 @@ public class PVAction implements Serializable {
 		VD_Bean vd = data.getVD();
 		Vector<PV_Bean> vdpvs = vd.getVD_PV_List();
 		PV_Bean selPV = data.getSelectPV();
+		//CURATNTOOL-1188 return here if PV data only change
+		if (selPV.getDATE_CHANGE_ONLY()) {
+			logger.debug("changePVAttributes only PV dates are changed: " + selPV);
+			return selPV;
+		}
 		PV_Bean newPV = new PV_Bean();
 		if (selPV != null) //copy other attributes
 			newPV.copyBean(selPV);
@@ -732,13 +737,16 @@ public class PVAction implements Serializable {
 	 * @return String return code from the stored procedure call. null if no error occurred.
 	 */
 	public String setPV(PVForm data) {
+		return setPV(data, PVForm.CADSR_ACTION_INS);
+	}
+	public String setPV(PVForm data, String sAction) {
 		PV_Bean pv = data.getSelectPV();
 		ResultSet rs = null;
 		HttpSession session = data.getRequest().getSession();
 		CallableStatement cstmt = null;
 		String sMsg = ""; //out
 		try {
-			String sAction = PVForm.CADSR_ACTION_INS;
+			//CURATNTOOL-1188 Made sAction a parameter
 			String sValue = pv.getPV_VALUE();
 			VM_Bean vm = pv.getPV_VM();
 			String sShortMeaning = pv.getPV_SHORT_MEANING();
@@ -1029,6 +1037,7 @@ public class PVAction implements Serializable {
 	} //END setVD_PVS
 
 	//JR1024
+
 	public void doSingleEditPV(PVForm data, String changeField, String changeData, int changedPVIndex) throws Exception {
 		VD_Bean vd = data.getVD();
 		Vector<PV_Bean> vdpv = vd.getVD_PV_List();
@@ -1045,25 +1054,27 @@ public class PVAction implements Serializable {
 					//change the submit action
 					pv.setVP_SUBMIT_ACTION(PVForm.CADSR_ACTION_UPD);
 					vdpv.setElementAt(pv, i);
+					break;//we will not find more than one index
 				}
 			}
-			vd.setVD_PV_List(vdpv);
+			vd.setVD_PV_List(vdpv);//we do 'set' calls here because 'get' methods above return an empty Object if the Object was was null
 			data.setVD(vd);
 		//begin JR1025 restore 4
-		} if(changedPVIndex == Constants.NEW_PV_INDEX) {
-			//JR1024 support new PV
-			PV_Bean pv = new PV_Bean();
-			if (changeField.equals("origin"))
-				pv.setPV_VALUE_ORIGIN(changeData);
-			else if (changeField.equals("begindate"))
-					pv.setPV_BEGIN_DATE(changeData);
-			else if (changeField.equals("enddate"))
-					pv.setPV_END_DATE(changeData);
-			//change the submit action
-			pv.setVP_SUBMIT_ACTION(PVForm.CADSR_ACTION_INS);
+		} else if(changedPVIndex == Constants.NEW_PV_INDEX) {
+			//JR1024 support new PV 
+			//TODO commented this code because I do not see how this pv created below is used
+//			PV_Bean pv = new PV_Bean();
+//			if (changeField.equals("origin"))
+//				pv.setPV_VALUE_ORIGIN(changeData);
+//			else if (changeField.equals("begindate"))
+//					pv.setPV_BEGIN_DATE(changeData);
+//			else if (changeField.equals("enddate"))
+//					pv.setPV_END_DATE(changeData);
+//			//change the submit action
+//			pv.setVP_SUBMIT_ACTION(PVForm.CADSR_ACTION_INS);
 		//end JR1025 restore 4
 		} else {
-			throw new Exception("Can not update PV, as index is unknown!");
+			throw new Exception("Can not update PV, as index is unknown: " + changedPVIndex);
 		}
 	}
 

@@ -79,7 +79,7 @@ public class FormBuilderUtil {
 		newVVSQL += " QC_IDSEQ = '"+ questBean.getQC_IDSEQ() + "'";
 
 		boolean ret = false;
-		System.out.println("FormBuilderUtil.java#updatePVValidValue SQL = " + newVVSQL);
+		logger.debug("FormBuilderUtil.java#updatePVValidValue SQL = " + newVVSQL);
 		if(executeUpdate(conn, newVVSQL) == 1) ret = true;
 
         return ret;
@@ -105,7 +105,7 @@ public class FormBuilderUtil {
 		newRelationSQL += "to_date('07-DEC-11','DD-MON-RR'),'MEDIDATA_LEEW',null,null)";
 		
 		String ret = null;
-		System.out.println("FormBuilderUtil.java#createQuestionRelationWithPV SQL = " + newRelationSQL);
+		logger.debug("FormBuilderUtil.java#createQuestionRelationWithPV SQL = " + newRelationSQL);
 		if(executeUpdate(conn, newRelationSQL) == 1) {
 			ret = uniqueId;
 		}
@@ -168,7 +168,7 @@ public class FormBuilderUtil {
 		newQuestionSQL += "null,null)";
 
 		boolean ret = false;
-		System.out.println("FormBuilderUtil.java#createQuestion SQL = " + newQuestionSQL);
+		logger.debug("FormBuilderUtil.java#createQuestion SQL = " + newQuestionSQL);
 		if(executeUpdate(conn, newQuestionSQL) == 1) ret = true;
 
         return ret;
@@ -179,7 +179,7 @@ public class FormBuilderUtil {
 		if(VD_IDSEQ == null) throw new Exception("VD_IDSEQ is null or empty!");
 		if(VP_IDSEQ == null) throw new Exception("VP_IDSEQ is null or empty!");
 
-		System.out.println("VD_IDSEQ [" + VD_IDSEQ + "] VP_IDSEQ [" + VP_IDSEQ + "]");
+		logger.debug("VD_IDSEQ [" + VD_IDSEQ + "] VP_IDSEQ [" + VP_IDSEQ + "]");
 		String sql = "SELECT ";
 		sql += "D.QC_IDSEQ,";
 		sql += "d.*, c.* ";
@@ -205,7 +205,7 @@ public class FormBuilderUtil {
 		sql += "AND ROWNUM = 1";
 
     	PreparedStatement pstmt = null;
-		System.out.println("FormBuilderUtil.java#getFormQuestion SQL = " + sql);
+		logger.debug("FormBuilderUtil.java#getFormQuestion SQL = " + sql);
         ResultSet rs = null;
         Quest_Bean ret = new Quest_Bean();
         try {
@@ -270,7 +270,7 @@ public class FormBuilderUtil {
 //		   PV_Bean temp = null;
 //		   while(it.hasNext()) {
 //			   temp = (PV_Bean) it.next();
-//			   System.out.println("populatePVFormQuestion temp " + temp.getPV_PV_IDSEQ() + " " + temp.getPV_VDPVS_IDSEQ());
+//			   logger.debug("populatePVFormQuestion temp " + temp.getPV_PV_IDSEQ() + " " + temp.getPV_VDPVS_IDSEQ());
 //			   if(pv.getPV_VALUE() != null && pv.getPV_VALUE().equals(temp.getPV_VALUE())) {
 //				   n.add(l.get(0));
 //			   }
@@ -294,15 +294,15 @@ public class FormBuilderUtil {
 			String VP_IDSEQ = oldPV.getPV_PV_IDSEQ();	//SHOULD NOT be empty! e.g. PV_VDPVS_IDSEQ = 38FDD1BD-2EED-64CE-E044-0003BA3F9857
 			if(VP_IDSEQ == null) throw new Exception("Value Domain VP_IDSEQ is null or empty!");
 			Quest_Bean oldQuestBean = fb.getFormQuestion(conn, VD_IDSEQ, VP_IDSEQ);		//TODO stop here!!!
-			System.out.println("vd [" + vd.toString() + "]");
-			System.out.println("pv [" + pvBean.toString() + "]");
-			System.out.println("PVServlet.java#getSelectedFormQuestion displayOrder [" + displayOrder + "] VP_IDSEQ (VDPVS_IDSEQ) [" + VP_IDSEQ + "]");
+			logger.debug("vd [" + vd.toString() + "]");
+			logger.debug("pv [" + pvBean.toString() + "]");
+			logger.debug("PVServlet.java#getSelectedFormQuestion displayOrder [" + displayOrder + "] VP_IDSEQ (VDPVS_IDSEQ) [" + VP_IDSEQ + "]");
 	//		if(vSelRows != null && vSelRows.size() > 0) {
 	//			selectedQuestBean = (Quest_Bean) vSelRows.get(0);
 	//		}
 			selectedQuestBean = oldQuestBean;
 		} else {
-			System.out.println("oldQuestBean is null or empty!");	//this should never happen!
+			logger.debug("oldQuestBean is null or empty!");	//this should never happen!
 		}
 		return selectedQuestBean;
   }
@@ -343,7 +343,7 @@ public class FormBuilderUtil {
 		sql += " ORDER BY UPPER( pv.VALUE )";
 
     	PreparedStatement pstmt = null;
-		System.out.println("FormBuilderUtil.java#doPVWithoutVDSearch SQL = " + sql);
+		logger.debug("FormBuilderUtil.java#doPVWithoutVDSearch SQL = " + sql);
 		UtilService util = new UtilService();
         ResultSet rs = null;
         PV_Bean ret = new PV_Bean();

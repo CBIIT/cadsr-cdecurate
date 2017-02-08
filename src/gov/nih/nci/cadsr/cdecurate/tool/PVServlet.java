@@ -273,7 +273,7 @@ public class PVServlet implements Serializable
        DataManager.setAttribute(session, PVForm.SESSION_SELECT_VD, vd);
      }
    }
-  
+  //I do not see any usage of this method
    private void handlePVDates(HttpSession session, VD_Bean vd) {
 	     Vector<PV_Bean> vVDPV = null;
 	     String sAction = (String)data.getRequest().getParameter ("pageAction");
@@ -294,7 +294,7 @@ public class PVServlet implements Serializable
 		     } //end of getting the original pv list
 		     
 		     Vector<PV_Bean> changedVDPV = (Vector<PV_Bean>) session.getAttribute("VDPVList");
-		     System.out.println("JR1025 changed pv list [" +  pHelp.toString(changedVDPV) + "]");
+		     logger.debug("JR1025 changed pv list [" +  pHelp.toString(changedVDPV) + "]");
 		     try {
 				savePVAttributesBeginDateEndDate();
 		     } catch (Exception e) {
@@ -525,10 +525,15 @@ public class PVServlet implements Serializable
       VD_Bean vd = (VD_Bean)session.getAttribute(PVForm.SESSION_SELECT_VD);
       if (pvInd > -1)
       {
-          String retMsg = pvAction.changePVQCAttributes(pv, pvInd, vd, data);
-          if (!retMsg.equals(""))
-              data.getCurationServlet().storeStatusMsg(retMsg);
-              //DataManager.setAttribute(session, Session_Data.SESSION_STATUS_MESSAGE, retMsg);
+          if (!(pv.getDATE_CHANGE_ONLY()) ) {//JIRA CURATNTOOL-1188 
+	    	  String retMsg = pvAction.changePVQCAttributes(pv, pvInd, vd, data);//this method always creates a new PV; we do not need to do it if only Dates update CURATNTOOL-1188
+	          if (!retMsg.equals(""))
+	              data.getCurationServlet().storeStatusMsg(retMsg);
+	              //DataManager.setAttribute(session, Session_Data.SESSION_STATUS_MESSAGE, retMsg);
+          }
+          else {
+        	  logger.debug("updateVDPV only data change logic no call to changePVQCAttributes: " + pv);
+          }
       }
       else
       {
@@ -731,6 +736,7 @@ public class PVServlet implements Serializable
                pvAction.doSingleEditPV(data, "begindate", chgBD, idx);
                DataManager.setAttribute(session, PVForm.SESSION_SELECT_VD, data.getVD());
 			} catch (Exception e) {
+				logger.error("getPVIndex or doSingleEditPV Exception on pvID: " + pvID, e);
 				e.printStackTrace();
 			}
        } else
@@ -1078,6 +1084,7 @@ public class PVServlet implements Serializable
      				try {
 						fb.createQuestion(data.getCurationServlet().getConn(), displayOrder, questBean, QC_IDSEQ, version);
 					} catch (Exception e) {
+						logger.error("Error in submitPV PV USed in form when calling 'fb.createQuestion' pvBean.getPV_PV_IDSEQ(): " + pvBean.getPV_PV_IDSEQ(), e);
 						e.printStackTrace();
 					}
 
@@ -1129,7 +1136,7 @@ public class PVServlet implements Serializable
 
 
              } else {
-            	 logger.debug("PV is not used in any form.");
+            	 logger.debug("PV is not used in any form: " + pvBean.getPV_VALUE());
                  //update pv to vd 
                  data.setSelectPV(pvBean);
                  data.setVD(vd);
@@ -1227,7 +1234,7 @@ public class PVServlet implements Serializable
      data.setSelectPV(pvBean);
      String ret = "";
      if (sPVid == null || sPVid.equals("") || sPVid.contains("EVS"))   
-       ret = pvAction.setPV(data);      
+       ret = pvAction.setPV(data);
      
      return ret;
    }

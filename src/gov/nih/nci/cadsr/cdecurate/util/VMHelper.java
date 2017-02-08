@@ -72,7 +72,7 @@ public class VMHelper {
 					logger.debug("VM_ID [" + existVM.getVM_ID() + " description [" + existVM.toString() + "]");
 					if (existVM != null && existVM.getVM_ID() != null && existVM.getVM_ID().equals(userVMPublicId))
 					{
-						data.setVMBean(existVM);
+						data.setVMBean(existVM);//TODO this code is unclear - we just select an arbitrary returned VM if we have more than 1 VM returned; example VM Long name 'BioMaterialCharacteristicCategory'
 						ret = existVM;
 					}
 				}

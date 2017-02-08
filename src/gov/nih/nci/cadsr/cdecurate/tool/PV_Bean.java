@@ -139,6 +139,7 @@ public class PV_Bean implements Serializable
   private String PV_VIEW_TYPE;
   private boolean PV_IN_FORM = false;
   private String CRF_WORKFLOW;	//GF7680
+  private boolean DATE_CHANGE_ONLY;
 
 
   /**
@@ -176,6 +177,7 @@ public class PV_Bean implements Serializable
       this.setPV_VM_CONDR_IDSEQ(fromBean.getPV_VM_CONDR_IDSEQ());
       this.setPARENT_CONCEPT(fromBean.getPARENT_CONCEPT());
       this.setPV_IN_FORM(fromBean.getPV_IN_FORM());
+      this.setDATE_CHANGE_ONLY(fromBean.getDATE_CHANGE_ONLY());//JIRA CURATNTOOL-1188 adding this flag to keep update type Dates updated only
       this.setCRF_WORKFLOW(fromBean.getCRF_WORKFLOW());		//GF7680
     }
     //send the to bean back
@@ -826,6 +828,14 @@ public void setCRF_WORKFLOW(String cRF_WORKFLOW) {
 	CRF_WORKFLOW = cRF_WORKFLOW;
 }
 
+public boolean getDATE_CHANGE_ONLY() {
+	return DATE_CHANGE_ONLY;
+}
+
+public void setDATE_CHANGE_ONLY(boolean dATE_CHANGE_ONLY) {
+	DATE_CHANGE_ONLY = dATE_CHANGE_ONLY;
+}
+
 @Override
 public String toString() {
 	return "PV_Bean [RETURN_CODE=" + RETURN_CODE + ", PV_PV_IDSEQ="
@@ -852,8 +862,9 @@ public String toString() {
 			+ ", PV_EVS_DATABASE=" + PV_EVS_DATABASE + ", PV_EVS_SOURCE="
 			+ PV_EVS_SOURCE + ", PV_VM_IDSEQ=" + PV_VM_IDSEQ
 			+ ", PV_VM_CONDR_IDSEQ=" + PV_VM_CONDR_IDSEQ + ", PV_VIEW_TYPE="
-			+ PV_VIEW_TYPE + ", PV_IN_FORM=" + PV_IN_FORM + ", CRF_WORKFLOW="
-			+ CRF_WORKFLOW + "]";
+			+ PV_VIEW_TYPE + ", PV_IN_FORM=" + PV_IN_FORM
+			+ ", DATE_CHANGE_ONLY=" + DATE_CHANGE_ONLY 
+			+ ", CRF_WORKFLOW=" + CRF_WORKFLOW + "]";
 }
 
 

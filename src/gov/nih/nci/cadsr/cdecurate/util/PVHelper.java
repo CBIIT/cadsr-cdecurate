@@ -28,9 +28,9 @@ public class PVHelper {
 		if(changedPV == null) {
 			throw new Exception("PV is null or empty!");
 		}
-
-	    Vector vVDPVList = m_VD.getVD_PV_List();  // (Vector) session.getAttribute("VDPVList");
-	    System.out.println(toString(vVDPVList));
+		//TODO Remove this commented print section
+//	    Vector vVDPVList = m_VD.getVD_PV_List();  // (Vector) session.getAttribute("VDPVList");
+//	    logger.debug(toString(vVDPVList));
 	}
 
 	public String toString(Vector<PV_Bean> vVDPVList) {

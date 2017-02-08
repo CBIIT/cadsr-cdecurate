@@ -723,7 +723,11 @@ public class VMAction implements Serializable
 //				//userSelectedPV.getBeginDate().equals(originalPV.getBeginDate()) && userSelectedPV.getEndDate().equals(originalPV.getEndDate())
 //				) {
 			VM_Bean exVM = null;
+
 			try {
+				//CURATNTOOL-1188 JIRA If only date changes we update VD_PVS dates, and no other updates
+				pv.setDATE_CHANGE_ONLY(PVHelper.isOnlyDateChanged(data.getRequest()));
+				
 				if(!PVHelper.isOnlyDateChanged(data.getRequest()) && !PVHelper.isOnlyValueChanged(data.getRequest())) { //JR1025/JR1105 need to avoid validation
 					exVM = validateVMData(data);	//pick the existing VM for UI to use
 				} else {

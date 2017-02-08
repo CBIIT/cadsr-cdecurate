@@ -4771,14 +4771,14 @@ public class SetACService implements Serializable
             if( sName != null )
                 m_VD.setVD_REG_STATUS( sName );
 
-            logger.debug( "RegStatus is " + sName + "**********" );
+            logger.debug( "RegStatus is '" + sName + "'**********" );
 
             //set DE_REG_STATUS_ID
             sName = StringUtil.cleanJavascriptAndHtml( ( String ) req.getParameter( "regStatusIDSEQ" ) );
             if( sName != null )
                 m_VD.setVD_REG_STATUS_IDSEQ( sName );
 
-            logger.debug( "RegStatusID is " + sName + "**********" );
+            logger.debug( "RegStatusID is '" + sName + "'**********" );
             //=============GF32398=======END
 
             //set VD_ASL_NAME
