@@ -139,7 +139,7 @@ public class PV_Bean implements Serializable
   private String PV_VIEW_TYPE;
   private boolean PV_IN_FORM = false;
   private String CRF_WORKFLOW;	//GF7680
-  private boolean DATE_CHANGE_ONLY;
+  private boolean DATE_CHANGE_ONLY;//CURATNTOOL-1188 JIRA adding this flag to keep update type Dates updated only
 
 
   /**
@@ -177,7 +177,7 @@ public class PV_Bean implements Serializable
       this.setPV_VM_CONDR_IDSEQ(fromBean.getPV_VM_CONDR_IDSEQ());
       this.setPARENT_CONCEPT(fromBean.getPARENT_CONCEPT());
       this.setPV_IN_FORM(fromBean.getPV_IN_FORM());
-      this.setDATE_CHANGE_ONLY(fromBean.getDATE_CHANGE_ONLY());//JIRA CURATNTOOL-1188 adding this flag to keep update type Dates updated only
+      this.setDATE_CHANGE_ONLY(fromBean.getDATE_CHANGE_ONLY());//CURATNTOOL-1188
       this.setCRF_WORKFLOW(fromBean.getCRF_WORKFLOW());		//GF7680
     }
     //send the to bean back

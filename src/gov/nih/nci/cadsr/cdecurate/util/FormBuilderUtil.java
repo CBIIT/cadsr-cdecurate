@@ -43,6 +43,7 @@ public class FormBuilderUtil {
 			ret = pstmt.executeUpdate();
         }
         catch (SQLException e) {
+        	logger.error("error executeUpdate method; sql: " + sql, e);
             throw new Exception( e );
         }
         finally {
@@ -247,6 +248,7 @@ public class FormBuilderUtil {
 			}
         }
         catch (Exception e) {
+        	logger.error("error in getFormQuestion; sql: " + sql, e);
             throw e;
         }
         finally {
@@ -416,6 +418,7 @@ public class FormBuilderUtil {
 			} //END IF
         }
         catch (Exception e) {
+        	logger.error("error in doPVWithoutVDSearch; sql: " + sql, e);
             throw e;
         }
         finally {

@@ -525,7 +525,7 @@ public class PVServlet implements Serializable
       VD_Bean vd = (VD_Bean)session.getAttribute(PVForm.SESSION_SELECT_VD);
       if (pvInd > -1)
       {
-          if (!(pv.getDATE_CHANGE_ONLY()) ) {//JIRA CURATNTOOL-1188 
+          if (!(pv.getDATE_CHANGE_ONLY()) ) {//CURATNTOOL-1188 JIRA
 	    	  String retMsg = pvAction.changePVQCAttributes(pv, pvInd, vd, data);//this method always creates a new PV; we do not need to do it if only Dates update CURATNTOOL-1188
 	          if (!retMsg.equals(""))
 	              data.getCurationServlet().storeStatusMsg(retMsg);
@@ -1066,7 +1066,8 @@ public class PVServlet implements Serializable
              //JR1074 begin - just for FB to display the new PV-VM pair
 //             pvBean = data.getSelectPV();
              logger.debug("PVServlet.java#submitPV pvBean in form [" + pvBean.getPV_IN_FORM() + "] pvBean [" + pvBean.toString() + "]");
-             if(pvBean.getPV_IN_FORM()) {
+             //we do not make any form updates if PV is used in Form, but only BD/ED dates were changed
+             if((pvBean.getPV_IN_FORM()) && (! pvBean.getDATE_CHANGE_ONLY())) {//CURATNTOOL-1188 subtask CURATNTOOL-1276
             	 logger.debug("PV is used in form(s).");
             	 FormBuilderUtil fb = new FormBuilderUtil();
             	 if(data.getCurationServlet().getConn() == null) {
@@ -1136,7 +1137,7 @@ public class PVServlet implements Serializable
 
 
              } else {
-            	 logger.debug("PV is not used in any form: " + pvBean.getPV_VALUE());
+            	 logger.debug("PV is not used in any form or only Dates (BD/ED in PV) are changed: " + pvBean.getPV_VALUE());
                  //update pv to vd 
                  data.setSelectPV(pvBean);
                  data.setVD(vd);
