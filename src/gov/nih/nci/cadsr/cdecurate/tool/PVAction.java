@@ -978,18 +978,18 @@ public class PVAction implements Serializable {
 				cstmt.setString(15, parIdseq);
 				logger.debug("15 parIdseq [" + parIdseq + "]");
 				logger.debug("2 4 5 6 7 8 9 10 11 are (also) an OUT parameter!)");
-
-				//JR1025 needs to print out all values of VDPVS here!!!
-				String temp = "";
-				temp += "[" + pvBean.getPV_VDPVS_IDSEQ() + "]";
-				temp += "[" + vdBean.getVD_VD_IDSEQ() + "]";
-				temp += "[" + pvBean.getPV_PV_IDSEQ() + "]";
-				temp += "[" + pvBean.getPV_VALUE_ORIGIN() + "]";
-				temp += "[" + vdBean.getVD_CONTE_IDSEQ() + "]";
-				temp += "[" + pvBean.getPV_BEGIN_DATE() + "]";
-				temp += "[" + pvBean.getPV_END_DATE() + "]";
-				logger.info("PVAction.java: " + temp);
-
+				if (logger.isDebugEnabled()) {
+					//JR1025 needs to print out all values of VDPVS here!!!
+					String temp = "";
+					temp += "[PV_VDPVS_IDSEQ:" + pvBean.getPV_VDPVS_IDSEQ() + "]";
+					temp += "[VD_VD_IDSEQ: " + vdBean.getVD_VD_IDSEQ() + "]";
+					temp += "[PV_PV_IDSEQ: " + pvBean.getPV_PV_IDSEQ() + "]";
+					temp += "[PV_VALUE_ORIGIN: " + pvBean.getPV_VALUE_ORIGIN() + "]";
+					temp += "[VD_CONTE_IDSEQ: " + vdBean.getVD_CONTE_IDSEQ() + "]";
+					temp += "[PV_BEGIN_DATE: " + pvBean.getPV_BEGIN_DATE() + "]";
+					temp += "[PV_END_DATE: " + pvBean.getPV_END_DATE() + "]";
+					logger.debug("PVAction.java pvBean: " + temp);
+				}
 				//execute the qury
 				cstmt.execute();
 				String retCode = cstmt.getString(2);
