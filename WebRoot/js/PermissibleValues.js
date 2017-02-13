@@ -621,8 +621,8 @@
                 //(vdwfstatus !== 'RELEASED' && vdusedinform === 'true' && pvusedinform === 'true' && fmwfstatus === 'RELEASED' /* cond 5 */)
             	) {
             	//#2 disablement
-                /*Commenting disablement section: removing setting PV Value text fields to readonly see CURATNTOOL-1188
-                 * dojo.query('[id^="txtpv"]').forEach(function (node, index, arr) { //GF7680 "txtpvonly" has to be the same as gov.nih.nci.cadsr.common.PV_NAME
+                //revert changes done for CURATNTOOL-1188: the section below was commented for CURATNTOOL-1188 changes
+                dojo.query('[id^="txtpv"]').forEach(function (node, index, arr) { //GF7680 "txtpvonly" has to be the same as gov.nih.nci.cadsr.common.PV_NAME
                     try {
                         dojo.attr(node, "readonly", true);
                         //window.console && console.log('PV/VM input disabled');
@@ -630,7 +630,7 @@
                     } catch (e) {
                         //window.console && console.log('Error: Not able to disable PV/VM input, ' + e);
                     }
-                });*/
+                });
             }
             //#4 please keep the following for future requirements changes, if any
             /*

@@ -1138,11 +1138,11 @@ L--%>
 						            Boolean vdUsedInForm = (Boolean)session.getAttribute(Constants.VD_USED_IN_FORM);  //GF7680
 									String workflowStatus = (String)session.getAttribute("selStatus");
 									String crfWorkflowStatus = pvBean.getCRF_WORKFLOW();    //GF7680
-									//JR691 begin
-									dispStyle = "inline";
-									//JIRA CURATNTOOL-1188 "VD Workflow status restriction to be removed". FIXME - decide do we need to keep inForm restriction and prevent the edit button for that case?
-//									if(workflowStatus != null && workflowStatus.equals(Constants.WORKFLOW_STATUS_RELEASED) && inForm)
-//										dispStyle = "none"; 
+									//JR691 begin JIRA CURATNTOOL-1188 "VD Workflow status restriction to be removed" was added and is reversed
+									if(workflowStatus != null && workflowStatus.equals(Constants.WORKFLOW_STATUS_RELEASED) && inForm)
+										dispStyle = "none";
+									else
+										dispStyle = "inline";
 									//JR691 end
 									%>
 															<tr id="<%=pvCount%>">
