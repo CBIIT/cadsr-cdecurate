@@ -113,7 +113,32 @@ public class PVHelper {
 
 	    return ret;
 	}
-	
+	/** 
+	 * Added this method for CURATNTOOL-1188 changes to check if  dates only changed in PV Edit.
+	 * detect if the change only date change(s) and nothing else is changed
+	 * @throws Exception 
+	 * @ref PVServlet.java#addPVOtherAttributes
+	 * */
+	public static boolean isOnlyDateChangedInPVEdit(HttpServletRequest req, PV_Bean pv) throws Exception {
+		boolean ret = false;
+		
+		if(req == null) throw new Exception("Request can not be NULL or empty.");
+		String chgBD = (String)req.getParameter("currentBD");  //edited begin date
+		String chgED = (String)req.getParameter("currentED");  //edited end date
+	    String chgOrg = (String)req.getParameter("currentOrg");  //edited origin
+	    String sVVid = (String)req.getParameter("selValidValue");  //valid value
+	    //CURATNTOOL-1188
+	    String chgValue = (String)req.getParameter("currentPVValue");  //edited value
+	    String oldValue;
+
+	    boolean isPvValueSame = (pv != null) && ((oldValue = pv.getPV_VALUE()) != null) && (oldValue.equals(chgValue));
+	    
+	    if((!StringUtils.isEmpty(chgBD) || !StringUtils.isEmpty(chgED)) && StringUtils.isEmpty(chgOrg) && StringUtils.isEmpty(sVVid) && isPvValueSame) {
+	    	ret = true;
+	    }
+
+	    return ret;
+	}	
 	/** detect if the change only pv value change and nothing else is changed
 	 * */
 	public static boolean isOnlyValueChanged(HttpServletRequest req) throws Exception {
