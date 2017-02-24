@@ -864,11 +864,18 @@ L--%>
         }
         else
         {
+           if (sMenuAction.equals("NewVDVersion")) {
 %>
+							<option value="<%=sStatusName%>" <%if(sStatusName.equals("DRAFT MOD")){%> selected <%}%>>
+								<%=sStatusName%>
+							</option>
+		<%  }	else {		%>
 								<option value="<%=sStatusName%>" <%if(sStatusName.equals(sStatus)){%> selected <%}%>>
 									<%=sStatusName%>
 								</option>
-								<%}
+								<%
+				}												
+			}
       }
 %>
 							</select>

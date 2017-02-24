@@ -651,11 +651,17 @@ L--%>
         }
         else
         {
+        if (sMenuAction.equals("NewDEVersion")) {
 %>
+							<option value="<%=sStatusName%>" <%if(sStatusName.equals("DRAFT MOD")){%> selected <%}%>>
+								<%=sStatusName%>
+							</option>
+		<%  }	else {		%>									
 							<option value="<%=sStatusName%>" <%if(sStatusName.equals(sStatus)){%> selected <%}%>>
 								<%=sStatusName%>
 							</option>
 							<%
+			}
         }
      }
 %>

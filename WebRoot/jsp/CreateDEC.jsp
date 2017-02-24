@@ -997,9 +997,15 @@ sOriginAction.equals("CreateNewDEC")
                }
                else
                {
+        if (sMenuAction.equals("NewDECVersion")) {               
 %>
+							<option value="<%=sStatusName%>" <%if(sStatusName.equals("DRAFT MOD")){%> selected <%}%>>
+								<%=sStatusName%>
+							</option>
+		<%  }	else {		%>		
                     <%=RendererUtil.toSelectOption(sStatusName, sStatus)%>     <!--JR665-->
 <%
+					}
                }
             }
 %>
