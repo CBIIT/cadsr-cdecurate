@@ -2,6 +2,11 @@ package gov.nih.nci.cadsr.common;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.nio.ByteBuffer;
+import java.nio.CharBuffer;
+import java.nio.charset.Charset;
+import java.nio.charset.CharsetDecoder;
+import java.nio.charset.CodingErrorAction;
 import java.text.CharacterIterator;
 import java.text.StringCharacterIterator;
 import java.util.Arrays;
@@ -30,7 +35,10 @@ public class StringUtil {
 			.compile("^[a-zA-Z\\s]*$");
 	private static Pattern versionPattern = Pattern
 			.compile("^[a-zA-Z0-9',_\\s\\/\\-\\$\\*\\.\\(\\)]*$");
-
+	
+	public static final String CHANGE_NOTE_SEPARATOR = "; ";
+	public static final int MAX_CHANGE_NOTE_IN_BYTES = 2000;
+	
 	public static String trimDoubleQuotes(String value) throws Exception {
 		boolean temp = false;
 
@@ -484,5 +492,69 @@ public class StringUtil {
 	   //clean up wrongly escaped tabs and new lines
 	   escaped = escaped.replaceAll("\\\\n", "\n").replaceAll("\\\\t", "\t");
 	   return escaped;
+   }
+   /**
+    * Builds a new String with a restricted amount of bytes.
+    * Uses default platform encoding.
+    * 
+    * @param strToBytes source String
+    * @param maxBytes int how many bytes is allowed to use
+    * @return String with no more than maxBytes
+    */
+   public static String truncate2GivenLengthInBytes(String strToBytes, int maxBytes) {
+       //CURATNTOOL-1271 required this method not to exceed allowed DB column length on string concatenation
+       return truncate2GivenLengthInBytes(strToBytes, maxBytes, Charset.defaultCharset());
+   }
+   /**
+    * Builds a new String with a restricted amount of bytes.
+    * 
+    * @param strToBytes source String
+    * @param maxBytes int how many bytes is allowed to use
+    * @param charsetCurr what String encoding to use or null for platform default
+    * @return String with no more than maxBytes
+    */
+   public static String truncate2GivenLengthInBytes(final String strToBytes, int maxBytes, final Charset charsetCurr) {
+       if ((StringUtils.isEmpty(strToBytes)) || (maxBytes < 0)) {
+           return strToBytes;
+       }
+
+       Charset charset = (charsetCurr == null) ? Charset.defaultCharset() : charsetCurr;
+
+       CharsetDecoder decoder = charset.newDecoder();
+       byte[] sba = strToBytes.getBytes(charset);
+       if (sba.length <= maxBytes) {
+           return strToBytes;
+       }
+       //byte buffer to maxBytes
+       ByteBuffer bb = ByteBuffer.wrap(sba, 0, maxBytes);
+       CharBuffer cb = CharBuffer.allocate(maxBytes);
+       //Ignore an incomplete character
+       decoder.onMalformedInput(CodingErrorAction.IGNORE);
+       decoder.decode(bb, cb, true);
+       decoder.flush(cb);
+       String res = new String(cb.array(), 0, cb.position());
+       return res;
+   }
+   /**
+    * Concatenates change note for BE operation.
+    * 
+    * @param changeNote - a new change note
+    * @param oldChangeNote - an old change note
+    * @return String - merged change note truncate to allowed column length. If a new change note is empty returns the old note.
+    */
+   //CURATNTOOL-1271
+   public static String mergeChangeNotes(final String changeNote, final String oldChangeNote) {
+	   if (StringUtils.isEmpty(changeNote)) {
+		   return oldChangeNote;
+	   }
+	   String result;
+	   if (StringUtils.isEmpty(changeNote)) {
+		   result = changeNote;
+	   }
+	   else {
+		   result = changeNote + CHANGE_NOTE_SEPARATOR + oldChangeNote;
+	   }
+	   result = StringUtil.truncate2GivenLengthInBytes(result, MAX_CHANGE_NOTE_IN_BYTES);
+	   return result;
    }
 }

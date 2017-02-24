@@ -18,7 +18,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import static gov.nih.nci.cadsr.common.StringUtil.unescapeHtmlEncodedValue;
+import org.apache.commons.lang3.StringUtils;
 
 public class DataElementServlet extends CurationServlet
 {
@@ -1230,10 +1230,12 @@ public class DataElementServlet extends CurationServlet
             if( !sSource.equals( "" ) )
                 DEBeanSR.setDE_SOURCE( sSource );
             String changeNote = de.getDE_CHANGE_NOTE();
-            if( changeNote == null )
-                changeNote = "";
-            if( !changeNote.equals( "" ) )
+            //CURATNTOOL-1271 We would like to concatenate in a reverse order up to allowed bytes of change note
+            if(StringUtils.isNotEmpty(changeNote)) {
+            	String oldChangeNote = DEBeanSR.getDE_CHANGE_NOTE();
+                changeNote = StringUtil.mergeChangeNotes(changeNote, oldChangeNote);
                 DEBeanSR.setDE_CHANGE_NOTE( changeNote );
+            }
             // get cs-csi from the page into the DECBean for block edit
             Vector<AC_CSI_Bean> vAC_CS = de.getAC_AC_CSI_VECTOR();
             if( vAC_CS != null )
@@ -1257,7 +1259,6 @@ public class DataElementServlet extends CurationServlet
             logger.error( "Error - InsertEditsIntoDEBeanSR ", e );
         }
     }
-
     /**
      * updates bean the selected DE from the changed values of block edit.
      *

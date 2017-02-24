@@ -25,6 +25,7 @@ L--%>
 	Vector vContext = new Vector();
 	Vector vDocs = new Vector();
 	Vector vACAttr = new Vector();
+
 	String sessionRecordsDisplayed = StringUtil.cleanJavascriptAndHtml( (String) session.getAttribute("sessionRecordsDisplayed") );
 	String sMenuAction = (String) session.getAttribute(Session_Data.SESSION_MENU_ACTION);
 	String sInitiatedFrom = (String) session.getAttribute("initiatedFrom");
@@ -2873,9 +2874,10 @@ function ShowSelectedRowss(){
 						<%=strResult%>
 					</td>
 					<%  }   }
-		
+		 //for cycle below can produce IndexOutOfBoundsException we need to consider to change it - CURATNTOOL-1258
+		 //for (int m = 1; ((m < k) && ((i+m) < rsize)); m++)
 		 // add other attributes
-		 for (int m = 1; m < k; m++)
+		 for (int m = 1; m < k; m++)	 
 		 {
            strResult = (String)results.get(i+m);
            if (strResult == null) strResult = "";
