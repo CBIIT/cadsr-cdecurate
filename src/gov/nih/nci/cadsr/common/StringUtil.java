@@ -548,7 +548,7 @@ public class StringUtil {
 		   return oldChangeNote;
 	   }
 	   String result;
-	   if (StringUtils.isEmpty(changeNote)) {
+	   if (StringUtils.isEmpty(oldChangeNote)) {
 		   result = changeNote;
 	   }
 	   else {

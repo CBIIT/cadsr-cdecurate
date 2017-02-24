@@ -22,10 +22,9 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpSessionContext;
 
-import gov.nih.nci.cadsr.common.Constants;
+import org.apache.commons.lang3.StringUtils;
+
 import gov.nih.nci.cadsr.common.StringUtil;
-import gov.nih.nci.cadsr.common.TestUtil;
-import oracle.net.aso.e;
 
 public class DataElementConceptServlet extends CurationServlet
 {
@@ -2000,10 +1999,12 @@ public class DataElementConceptServlet extends CurationServlet
         if( !sSource.equals( "" ) )
             DECBeanSR.setDEC_SOURCE( sSource );
         String changeNote = dec.getDEC_CHANGE_NOTE();
-        if( changeNote == null )
-            changeNote = "";
-        if( !changeNote.equals( "" ) )
+        //CURATNTOOL-1271 We would like to concatenate in a reverse order up to allowed bytes of change note
+        if(StringUtils.isNotEmpty(changeNote)) {
+        	String oldChangeNote = DECBeanSR.getDEC_CHANGE_NOTE();
+            changeNote = StringUtil.mergeChangeNotes(changeNote, oldChangeNote);
             DECBeanSR.setDEC_CHANGE_NOTE( changeNote );
+        }
         //begin===========GF32398======
         String oldReg = DECBeanSR.getDEC_REG_STATUS();
         if( oldReg == null )

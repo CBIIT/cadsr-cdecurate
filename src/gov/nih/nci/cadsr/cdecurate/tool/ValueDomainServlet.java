@@ -21,6 +21,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.lang3.StringUtils;
+
 public class ValueDomainServlet extends CurationServlet
 {
 
@@ -1798,10 +1800,12 @@ public class ValueDomainServlet extends CurationServlet
         if( !sSource.equals( "" ) )
             VDBeanSR.setVD_SOURCE( sSource );
         String changeNote = vd.getVD_CHANGE_NOTE();
-        if( changeNote == null )
-            changeNote = "";
-        if( !changeNote.equals( "" ) )
+        //CURATNTOOL-1271 We would like to concatenate in a reverse order up to allowed bytes of change note
+        if(StringUtils.isNotEmpty(changeNote)) {
+        	String oldChangeNote = VDBeanSR.getVD_CHANGE_NOTE();
+            changeNote = StringUtil.mergeChangeNotes(changeNote, oldChangeNote);
             VDBeanSR.setVD_CHANGE_NOTE( changeNote );
+        }
         //===========GF32398======START
         String oldReg = VDBeanSR.getVD_REG_STATUS();
         if( oldReg == null )
