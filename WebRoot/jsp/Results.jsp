@@ -231,39 +231,41 @@ L--%>
 	Date sDate = new Date();
 	//  logger.info(serUtil.makeLogMessage(session, "SearchResults", "begin page", sDate, sDate));
     String strInitiatedFrom = (String) session.getAttribute("initiatedFrom");
-	Vector results = new Vector();
-	results = (Vector) session.getAttribute("results");
+    Vector results = (Vector) session.getAttribute("results");
 	if (results == null)
 		results = new Vector();
 	String sSelAC = "";
 	//store these to get data for the checked row.
-	Vector vSearchID = (Vector) session.getAttribute("SearchID");
+	List vSearchID = (List) session.getAttribute("SearchID");
 	if (vSearchID == null)
-		vSearchID = new Vector();
+		vSearchID = new ArrayList();
 	int numRows = 0;
 	if (vSearchID.size() > 0)
 		numRows = vSearchID.size();
-	Vector vSearchName = (Vector) session.getAttribute("SearchName");
+	List vSearchName = (List) session.getAttribute("SearchName");
 	if (vSearchName == null)
-		vSearchName = new Vector();
-	Vector vSearchLongName = (Vector) session.getAttribute("SearchLongName");
+		vSearchName = new ArrayList();
+	List vSearchLongName = (List) session.getAttribute("SearchLongName");
 	if (vSearchLongName == null)
-		vSearchLongName = new Vector();
-	Vector vSearchASL = (Vector) session.getAttribute("SearchASL");
+		vSearchLongName = new ArrayList();
+	List vSearchASL = (List) session.getAttribute("SearchASL");
 	if (vSearchASL == null)
-		vSearchASL = new Vector();
-	Vector vSearchDefinitionAC = (Vector) session.getAttribute("SearchDefinitionAC");
+		vSearchASL = new ArrayList();
+	List vSearchDefinitionAC = (List) session.getAttribute("SearchDefinitionAC");
 	if (vSearchDefinitionAC == null)
-		vSearchDefinitionAC = new Vector();
-	Vector vSearchDefSource = (Vector) session.getAttribute("SearchDefSource");
+		vSearchDefinitionAC = new ArrayList();
+	List vSearchDefSource = (List) session.getAttribute("SearchDefSource");
 	if (vSearchDefSource == null)
-		vSearchDefSource = new Vector();
-	Vector vSearchUsedContext = (Vector) session.getAttribute("SearchUsedContext");
+		vSearchDefSource = new ArrayList();
+	//CURATNTOOL-1273
+	List vSearchDEPublicId = (List)session.getAttribute("SearchDEPublicId");
+	List vSearchDEVers = (List) session.getAttribute("SearchDEVers");
+	List vSearchUsedContext = (List) session.getAttribute("SearchUsedContext");
 	if (vSearchUsedContext == null)
-		vSearchUsedContext = new Vector();
-	Vector vSearchMeanDescription = (Vector) session.getAttribute("SearchMeanDescription");
+		vSearchUsedContext = new ArrayList();
+	List vSearchMeanDescription = (List) session.getAttribute("SearchMeanDescription");
 	if (vSearchMeanDescription == null)
-		vSearchMeanDescription = new Vector();
+		vSearchMeanDescription = new ArrayList();
 
 	//get the list of contexts to write for all three components
 	Vector vWriteContextDE = (Vector) session
@@ -827,7 +829,7 @@ function LoadKeyHandler(){
 <%      //loop through the vector to check if this context exists
         for (int i = 0; i < vWriteContextDE.size(); i++)
 		  {
-          String sWCont = (String)vWriteContextDE.elementAt(i);
+          String sWCont = (String)vWriteContextDE.get(i);
 %>
           var vCont = "<%=sWCont%>";
           if (vCont == vWrContext)
@@ -839,7 +841,7 @@ function LoadKeyHandler(){
 <%      //loop through the vector to check if this context exists
         for (int i = 0; i < vWriteContextDEC.size(); i++)
 		  {
-          String sWCont = (String)vWriteContextDEC.elementAt(i);
+          String sWCont = (String)vWriteContextDEC.get(i);
 %>
           var vCont = "<%=sWCont%>";
           if (vCont == vWrContext)
@@ -851,7 +853,7 @@ function LoadKeyHandler(){
 <%      //loop through the vector to check if this context exists
         for (int i = 0; i < vWriteContextVD.size(); i++)
 		  {
-          String sWCont = (String)vWriteContextVD.elementAt(i);
+          String sWCont = (String)vWriteContextVD.get(i);
 %>
           var vCont = "<%=sWCont%>";
           if (vCont == vWrContext)
@@ -1290,7 +1292,7 @@ function ShowSelectedRowss(){
 										vDocs.addElement("HISTORIC SHORT CDE NAME");
 									}
 									for (int i = 0; vDocType.size() > i; i++) {
-										String sDoc = (String) vDocType.elementAt(i);
+										String sDoc = (String) vDocType.get(i);
 							%>
 							<option value="<%=sDoc%>"
 								<%if(vDocs != null && vDocs.contains(sDoc)){%> selected <%}%>>
@@ -1438,7 +1440,7 @@ function ShowSelectedRowss(){
 									if (vContextAC != null) {
 									for (int i = 0; vContextAC.size() > i; i++) {
 										String sContextName = (String) vContextAC
-										.elementAt(i);
+										.get(i);
 							%>
 							<option value="<%=sContextName%>"
 								<% if (vContext != null && vContext.contains(sContextName)){%>
@@ -1604,8 +1606,8 @@ function ShowSelectedRowss(){
 							</option>
 							<%
 										for (int i = 0; vCS.size() > i; i++) {
-										String sCSName = (String) vCS.elementAt(i);
-										String sCS_ID = (String) vCS_ID.elementAt(i);
+										String sCSName = (String) vCS.get(i);
+										String sCS_ID = (String) vCS_ID.get(i);
 							%>
 							<option title="<%=sCSName%>" value="<%=sCS_ID%>"
 								<%if(sCS_ID.equals(selCS)){%> selected <%}%>>
@@ -1644,8 +1646,8 @@ function ShowSelectedRowss(){
 							</option>
 							<%
 										for (int i = 0; vCD.size() > i; i++) {
-										String sCDName = (String) vCD.elementAt(i);
-										String sCD_ID = (String) vCD_ID.elementAt(i);
+										String sCDName = (String) vCD.get(i);
+										String sCD_ID = (String) vCD_ID.get(i);
 							%>
 							<option title="<%=sCDName%>" value="<%=sCD_ID%>"
 								<%if(sCD_ID.equals(selCD)){%> selected <%}%>>
@@ -1686,7 +1688,7 @@ function ShowSelectedRowss(){
 							<%
 										if (vRegStatus != null) {
 										for (int i = 0; vRegStatus.size() > i; i++) {
-									String sReg = (String) vRegStatus.elementAt(i);
+									String sReg = (String) vRegStatus.get(i);
 							%>
 							<option value="<%=sReg%>" <%if(sReg.equals(sRegStatus)){%>
 								selected <%}%>>
@@ -1745,7 +1747,7 @@ function ShowSelectedRowss(){
 									}
 									if (vStatusDE != null && sSearchAC.equals("DataElement")) {
 										for (int i = 0; vStatusDE.size() > i; i++) {
-									String sStatusName = (String) vStatusDE.elementAt(i);
+									String sStatusName = (String) vStatusDE.get(i);
 							%>
 							<option value="<%=sStatusName%>"
 								<%if((vStatus != null) && (vStatus.contains(sStatusName))){%>
@@ -1757,7 +1759,7 @@ function ShowSelectedRowss(){
 									} else if (vStatusDEC != null
 									&& sSearchAC.equals("DataElementConcept")) {
 										for (int i = 0; vStatusDEC.size() > i; i++) {
-									String sStatusName = (String) vStatusDEC.elementAt(i);
+									String sStatusName = (String) vStatusDEC.get(i);
 							%>
 
 							<!--if(sStatusName.equals("RELEASED")){ -->
@@ -1773,7 +1775,7 @@ function ShowSelectedRowss(){
 
 									else if (vStatusVD != null && sSearchAC.equals("ValueDomain")) {
 										for (int i = 0; vStatusVD.size() > i; i++) {
-									String sStatusName = (String) vStatusVD.elementAt(i);
+									String sStatusName = (String) vStatusVD.get(i);
 							%>
 							<option value="<%=sStatusName%>"
 								<%if((vStatus != null) && (vStatus.contains(sStatusName))){%>
@@ -1785,7 +1787,7 @@ function ShowSelectedRowss(){
 									} else if (vStatusVM != null
 									&& sSearchAC.equals("ValueMeaning")) {
 										for (int i = 0; vStatusVM.size() > i; i++) {
-									String sStatusName = (String) vStatusVM.elementAt(i);
+									String sStatusName = (String) vStatusVM.get(i);
 							%>
 							<option value="<%=sStatusName%>"
 								<%if((vStatus != null) && (vStatus.contains(sStatusName))){%>
@@ -1797,7 +1799,7 @@ function ShowSelectedRowss(){
 									} else if (vStatusCD != null
 									&& sSearchAC.equals("ConceptualDomain")) {
 										for (int i = 0; vStatusCD.size() > i; i++) {
-									String sStatusName = (String) vStatusCD.elementAt(i);
+									String sStatusName = (String) vStatusCD.get(i);
 							%>
 							<option value="<%=sStatusName%>"
 								<%if((vStatus != null) && (vStatus.contains(sStatusName))){%>
@@ -1848,7 +1850,7 @@ function ShowSelectedRowss(){
 							<%
 										if (vRegStatus != null) {
 										for (int i = 0; vRegStatus.size() > i; i++) {
-									String sReg = (String) vRegStatus.elementAt(i);
+									String sReg = (String) vRegStatus.get(i);
 							%>
 							<option value="<%=sReg%>" <%if(sReg.equals(sRegStatus)){%>
 								selected <%}%>>
@@ -1890,7 +1892,7 @@ function ShowSelectedRowss(){
 							<%
 										if (vDataType != null) {
 										for (int i = 0; vDataType.size() > i; i++) {
-									String sData = (String) vDataType.elementAt(i);
+									String sData = (String) vDataType.get(i);
 									if (sData != null && !sData.equals("")) {
 							%>
 							<option value="<%=sData%>" <%if(sData.equals(sDataType)){%>
@@ -1939,7 +1941,7 @@ function ShowSelectedRowss(){
 							<%
 									if (vDerType != null) {
 									for (int i = 0; vDerType.size() > i; i++) {
-										String sDer = (String) vDerType.elementAt(i);
+										String sDer = (String) vDerType.get(i);
 										if (sDer != null && !sDer.equals("")) {
 							%>
 							<option value="<%=sDer%>" <%if(sDer.equals(sDerType)){%> selected
@@ -2042,10 +2044,10 @@ function ShowSelectedRowss(){
 										<%
 													if (vUsers != null) {
 													for (int i = 0; vUsers.size() > i; i++) {
-												String sUser = (String) vUsers.elementAt(i);
+												String sUser = (String) vUsers.get(i);
 												String sUserName = sUser;
 												if (vUsersName != null && vUsersName.size() > i)
-													sUserName = (String) vUsersName.elementAt(i);
+													sUserName = (String) vUsersName.get(i);
 										%>
 										<option value="<%=sUser%>" <%if(sUser.equals(sCreator)){%>
 											selected <%}%>>
@@ -2138,10 +2140,10 @@ function ShowSelectedRowss(){
 										<%
 													if (vUsers != null) {
 													for (int i = 0; vUsers.size() > i; i++) {
-												String sUser = (String) vUsers.elementAt(i);
+												String sUser = (String) vUsers.get(i);
 												String sUserName = sUser;
 												if (vUsersName != null && vUsersName.size() > i)
-													sUserName = (String) vUsersName.elementAt(i);
+													sUserName = (String) vUsersName.get(i);
 										%>
 										<option value="<%=sUser%>" <%if(sUser.equals(sModifier)){%>
 											selected <%}%>>
@@ -2182,7 +2184,7 @@ function ShowSelectedRowss(){
 								<%
 										if (vACAttr != null) {
 										for (int i = 0; vACAttr.size() > i; i++) {
-											String sAttrName = (String) vACAttr.elementAt(i);
+											String sAttrName = (String) vACAttr.get(i);
 											String sDispName = sAttrName;
 											//get the display name for some special attributes
 											if (sAttrName.equals("Name"))
@@ -2245,7 +2247,7 @@ function ShowSelectedRowss(){
 				style="visibility: hidden; width: 150px;">
 				<%
 						for (int i = 0; vSelectedAttr.size() > i; i++) {
-						String sName = (String) vSelectedAttr.elementAt(i);
+						String sName = (String) vSelectedAttr.get(i);
 				%>
 				<option value="<%=StringEscapeUtils.escapeHtml(sName)%>">
 					<%=StringEscapeUtils.escapeHtml(sName)%>
@@ -2380,7 +2382,7 @@ function ShowSelectedRowss(){
        
         
         for (int i =0; i < vSelAttr.size(); i++) {
-          String sAttr = (String)vSelAttr.elementAt(i);
+          String sAttr = (String)vSelAttr.get(i);
 
           if (sAttr.equals("Name")) { %>
 					<th class="rsCell" method="get">
@@ -2969,10 +2971,10 @@ function ShowSelectedRowss(){
       if (vSearchName == null)  vSearchName = new Vector();
       for (int i = 0; vSearchID.size()>i; i++)
       {
-        String sID = (String)vSearchID.elementAt(i);
+        String sID = (String)vSearchID.get(i);
         String sName = "";
         if (vSearchName.size() > i)
-          sName = (String)vSearchName.elementAt(i);
+          sName = (String)vSearchName.get(i);
         else
           sName = "";
   %>
@@ -2990,7 +2992,7 @@ function ShowSelectedRowss(){
     if (vSearchASL == null)  vSearchASL = new Vector();
     for (int i = 0; vSearchASL.size()>i; i++)
     {
-      String sASL = (String)vSearchASL.elementAt(i);
+      String sASL = (String)vSearchASL.get(i);
         if(sASL == null) sASL = "";
 %>
 					<option value="<%=sASL%>">
@@ -3005,7 +3007,7 @@ function ShowSelectedRowss(){
 
 					<%    for (int i = 0; vSearchLongName.size()>i; i++)
       {
-        String sName = (String)vSearchLongName.elementAt(i);
+        String sName = (String)vSearchLongName.get(i);
 %>
 					<option value="<%=sName%>">
 						<%=sName%>
@@ -3014,16 +3016,48 @@ function ShowSelectedRowss(){
       }
 %>
 				</select>
+				<!-- store CDE Public ID to use it later in javascript //CURATNTOOL-1273 -->
+				<select size="1" name="hiddenDEPublicId" style="visibility:hidden;width:100px;">
+
+					<%    
+					if (vSearchDEPublicId != null)
+					for (int i = 0; vSearchDEPublicId.size()>i; i++)
+      {
+        String sPublicId = (String)vSearchDEPublicId.get(i);
+%>
+					<option value="<%=sPublicId%>">
+						<%=sPublicId%>
+					</option>
+					<%
+      }
+%>
+				</select>
+				<!-- store CDE Version to use it later in javascript //CURATNTOOL-1273 -->
+				<select size="1" name="hiddenDEVers" style="visibility:hidden;width:100px;">
+
+					<%    
+					if (vSearchDEVers != null)
+					for (int i = 0; vSearchDEVers.size()>i; i++)
+      {
+        String sVers = (String)vSearchDEVers.get(i);
+%>
+					<option value="<%=sVers%>">
+						<%=sVers%>
+					</option>
+					<%
+      }
+%>				
+				</select>
 				<!-- store definition and context here to use it later in javascript -->
 				<select size="1" name="hiddenDefSource" style="visibility:hidden;width:100px;">     <!-- NT2 added px -->
 					<%
       String sDef = "";
       for (int i = 0; vSearchDefinitionAC.size()>i; i++)
       {
-          sDef = (String)vSearchDefinitionAC.elementAt(i);
+          sDef = (String)vSearchDefinitionAC.get(i);
           String sUsed = "";
           if (vSearchUsedContext.size() > i)
-             sUsed = (String)vSearchUsedContext.elementAt(i);
+             sUsed = (String)vSearchUsedContext.get(i);
           if (sUsed == null) sUsed = "";
 %>
 					<option value="<%=sUsed%>">
@@ -3038,7 +3072,7 @@ function ShowSelectedRowss(){
       String sDesc = "";
       for (int i = 0; vSearchMeanDescription.size()>i; i++)
       {
-          sDesc = (String)vSearchMeanDescription.elementAt(i);
+          sDesc = (String)vSearchMeanDescription.get(i);
 %>
 					<option value="<%=sDesc%>">
 						<%=sDesc%>

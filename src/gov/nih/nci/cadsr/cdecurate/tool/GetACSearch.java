@@ -11,6 +11,28 @@
 
 package gov.nih.nci.cadsr.cdecurate.tool;
 
+import java.io.Serializable;
+import java.sql.CallableStatement;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Hashtable;
+import java.util.List;
+import java.util.Stack;
+import java.util.StringTokenizer;
+import java.util.Vector;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+import org.apache.log4j.Logger;
+
 import gov.nih.nci.cadsr.cdecurate.database.Alternates;
 import gov.nih.nci.cadsr.cdecurate.database.SQLHelper;
 import gov.nih.nci.cadsr.cdecurate.ui.AltNamesDefsServlet;
@@ -20,31 +42,8 @@ import gov.nih.nci.cadsr.cdecurate.util.DataManager;
 import gov.nih.nci.cadsr.common.Constants;
 import gov.nih.nci.cadsr.common.Database;
 import gov.nih.nci.cadsr.common.StringUtil;
-
-import java.io.Serializable;
-import java.sql.CallableStatement;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.text.SimpleDateFormat;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Hashtable;
-import java.util.Stack;
-import java.util.StringTokenizer;
-import java.util.Vector;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-
-
 //import oracle.jdbc.driver.OracleTypes;
 import oracle.jdbc.OracleTypes;        //GF30779
-
-
-import org.apache.log4j.Logger;
 
 /**
  * GetACSearch class is for search action of the tool for all components.
@@ -2887,6 +2886,9 @@ public class GetACSearch implements Serializable
             Vector vSearchASL = new Vector();
             Vector vSearchDefinition = new Vector();
             Vector vUsedContext = new Vector();
+            //CURATNTOOL-1273
+            List vSearchPublicId = new ArrayList();//to store DE Public IDs
+            List  vSearchVers = new ArrayList();//DE Versions vector
             for( int i = 0; i < ( vRSel.size() ); i++ )
             {
                 DE_Bean DEBean = new DE_Bean();
@@ -2894,12 +2896,15 @@ public class GetACSearch implements Serializable
                 String sName = DEBean.getDE_LONG_NAME();
                 if( sName == null || sName.equals( "" ) )
                     sName = DEBean.getDE_PREFERRED_NAME();
-                vSearchID.addElement( DEBean.getDE_DE_IDSEQ() );
-                vSearchName.addElement( DEBean.getDE_PREFERRED_NAME() );
-                vSearchLongName.addElement( DEBean.getDE_LONG_NAME() );
-                vSearchASL.addElement( DEBean.getDE_ASL_NAME() );
-                vSearchDefinition.addElement( DEBean.getDE_PREFERRED_DEFINITION() );
-                vUsedContext.addElement( DEBean.getDE_USEDBY_CONTEXT() );
+                vSearchID.add( DEBean.getDE_DE_IDSEQ() );
+                vSearchName.add( DEBean.getDE_PREFERRED_NAME() );
+                vSearchLongName.add( DEBean.getDE_LONG_NAME() );
+                vSearchASL.add( DEBean.getDE_ASL_NAME() );
+                vSearchDefinition.add( DEBean.getDE_PREFERRED_DEFINITION() );
+                //CURATNTOOL-1273
+                vSearchPublicId.add(DEBean.getDE_MIN_CDE_ID());//PUBLIC ID or CDE_ID
+                vSearchVers.add(DEBean.getDE_VERSION());//CDE Versions
+                vUsedContext.add( DEBean.getDE_USEDBY_CONTEXT() );
                 if( vSelAttr.contains( "Long Name" ) )
                     vResult.addElement( DEBean.getDE_LONG_NAME() );
                 if( vSelAttr.contains( "Public ID" ) )
@@ -2967,6 +2972,9 @@ public class GetACSearch implements Serializable
             DataManager.setAttribute( session, "SearchLongName", vSearchLongName );
             DataManager.setAttribute( session, "SearchASL", vSearchASL );
             DataManager.setAttribute( session, "SearchDefinitionAC", vSearchDefinition );
+            //CURATNTOOL-1273
+            DataManager.setAttribute( session, "SearchDEPublicId", vSearchPublicId );
+            DataManager.setAttribute( session, "SearchDEVers", vSearchVers );
             DataManager.setAttribute( session, "SearchUsedContext", vUsedContext );
             // for Back button, put search results on a stack
             // if(!refresh.equals("true") && (!menuAction.equals("searchForCreate")))

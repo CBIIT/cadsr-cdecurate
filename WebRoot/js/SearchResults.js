@@ -670,8 +670,10 @@
   //using the id of the checked row and with the host name open the browser window.
   function GetDetailsJS(serverName)
   {
-	   editID = document.searchResultsForm.hiddenSearch[document.searchResultsForm.selectedRowId.value].value;
-	   serverName = serverName.replace("$IDSEQ$",editID);
+	   editID = document.searchResultsForm.hiddenDEPublicId[document.searchResultsForm.selectedRowId.value].value;
+	   serverName = serverName.replace("$IDPUBLIC$",editID);
+	   editID = document.searchResultsForm.hiddenDEVers[document.searchResultsForm.selectedRowId.value].value;
+	   serverName = serverName.replace("$VERS$",editID);
 	   if (serverName != null && serverName != "")
 	   {
 		  	   
@@ -681,7 +683,7 @@
 		   //open browser in dev server if localhost or protocol, use the server from the hgeost name
            var cdeServer = serverName;   //defaults to curation tool server
      	   //open cde browser	
-		   detailWindow = window.open(cdeServer, "detailComponent", "width=850,height=600,top=0,left=0,resizable=yes,scrollbars=yes");
+		   detailWindow = window.open(cdeServer, "_blank", "width=1050,height=600,top=0,left=0,resizable=yes,scrollbars=yes");
 	   }
 	   else
 		   alert("Unable to determine the server name of the browser.");	

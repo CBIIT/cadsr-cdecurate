@@ -16,6 +16,7 @@ package gov.nih.nci.cadsr.cdecurate.tool;
 
 import gov.nih.nci.cadsr.cdecurate.common.NO_SQL_CHECK;
 import gov.nih.nci.cadsr.cdecurate.database.SQLHelper;
+import gov.nih.nci.cadsr.cdecurate.util.DataManager;
 //import gov.nih.nci.cadsr.cdecurate.util.ClockTime;
 import gov.nih.nci.cadsr.common.StringUtil;
 //import gov.nih.nci.cadsr.common.TimeWatch;
@@ -261,6 +262,9 @@ public class NCICurationServlet extends HttpServlet
             }
 
             HttpSession session = req.getSession();
+            //CURATNTOOL-1273 we clean up data specific to only DE search
+            cleanUpSessionAttributesPrevRequest(session);
+            
             String menuAction = ( String ) session.getAttribute( Session_Data.SESSION_MENU_ACTION );
             if( ( menuAction == null )
                     && !( "homePage".equals(reqType) )
@@ -348,7 +352,13 @@ public class NCICurationServlet extends HttpServlet
 //			System.out.println(this.getClass().getName() +":execute elapsed time in s = " + passedTimeInSeconds);
 //		}
     }
-
+    private void cleanUpSessionAttributesPrevRequest(HttpSession session) {
+		if (session != null) {
+			//CURATNTOOL-1273 clean up possible DE specific attributes
+			DataManager.setAttribute( session, "SearchDEPublicId", null);
+			DataManager.setAttribute( session, "SearchDEVers", null);
+		}
+    }
     /**
      * The getProperties method sets up some default properties and then looks for the NCICuration.properties file to override the defaults. Called from 'init'
      * method.
