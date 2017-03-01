@@ -311,9 +311,6 @@ public class NCICurationServlet extends HttpServlet
                         curObj.get_m_conn();
                         curObj.execute( acrt );
                     }
-                } catch( RuntimeException e )
-                {
-                    //logger.info(e.toString(), e);
                 } finally
                 {
                     if( curObj != null )
@@ -355,8 +352,8 @@ public class NCICurationServlet extends HttpServlet
     private void cleanUpSessionAttributesPrevRequest(HttpSession session) {
 		if (session != null) {
 			//CURATNTOOL-1273 clean up possible DE specific attributes
-			DataManager.setAttribute( session, "SearchDEPublicId", null);
-			DataManager.setAttribute( session, "SearchDEVers", null);
+			session.removeAttribute("SearchDEPublicId");
+			session.removeAttribute("SearchDEVers");
 		}
     }
     /**

@@ -4119,15 +4119,10 @@ public class CurationServlet
         String sPublicId = null;
         String sVersion = null;
         String actlReq = null;
-        boolean flag = false;
+
         String acIDSEQ = StringUtil.cleanJavascriptAndHtml( m_classReq.getParameter( "idseq" ) );
 
-
         // CURATNTOOL-1107
-        if( ! StringUtil.isValidParmeter(  m_classReq, acIDSEQ))
-        {
-            hasSuspectPerameter = true;
-        }
         if( ! StringUtil.isValidParmeter(  m_classReq, "publicId"))
         {
             hasSuspectPerameter = true;
@@ -4160,33 +4155,27 @@ public class CurationServlet
             if( acIDSEQ == null )
             {
                 sPublicId = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml( ( String ) m_classReq.getParameter( "publicId" ) );
-                for( int i = 0; i < sPublicId.length(); i++ )
-                {
-                    if( Character.isLetter( sPublicId.charAt( i ) ) )
-                    {
-                        flag = true;
-                        break;
-                    }
+                boolean flag = StringUtils.isNotEmpty(sPublicId) && StringUtil.validateElementPublicId(sPublicId);//check if everything is good with public ID
+                
+                sVersion = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml( ( String ) m_classReq.getParameter( "version" ) );
+                if (StringUtils.isEmpty(sVersion)) {
+                	sVersion = StringUtil.cleanJavascriptAndHtml( ( String ) m_classReq.getParameter( "Version" ) );
                 }
-                sVersion = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml( ( String ) m_classReq.getParameter( "Version" ) );
-                for( int i = 0; i < sVersion.length(); i++ )
-                {
-                    if( Character.isLetter( sVersion.charAt( i ) ) )
-                    {
-                        flag = true;
-                        break;
-                    }
-                }
-                if( flag )
+                flag = flag && StringUtils.isNotEmpty(sVersion) && StringUtil.validateVersion(sVersion);//check if everything is good with version in addition to public ID
+                
+                if(! flag )
                 {
                     forwardErrorViewJSP( sPublicId, sVersion );
                 }
+                
                 if( ( sPublicId != null ) && ( !sPublicId.equals( "" ) ) )
                     publicID = Long.parseLong( sPublicId );
                 if( ( sVersion != null ) && ( !sVersion.equals( "" ) ) )
                     version = Double.parseDouble( sVersion );
+                
                 acIDSEQ = acMgr.getACIdseq( publicID, version, m_conn );
             }
+            
             boolean isExists = acMgr.isAcExists( acIDSEQ, m_conn );
             if( !isExists )
             {

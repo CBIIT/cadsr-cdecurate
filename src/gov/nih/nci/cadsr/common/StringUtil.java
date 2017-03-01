@@ -382,7 +382,7 @@ public class StringUtil {
    public static boolean isValidParmeter(HttpServletRequest req, String parameter )
    {
        boolean isValid = true;
-       if( ( req.getParameter( parameter ) != null ) && ( !StringUtil.isHtmlAndScriptClean( req.getParameter( parameter ) ) ) )
+       if( (StringUtils.isNotEmpty(parameter)) && ( req.getParameter( parameter ) != null ) && ( !StringUtil.isHtmlAndScriptClean( req.getParameter( parameter ) ) ) )
        {
            logger.error( "Bad value for " + parameter + " [" + req.getParameter( parameter ) + "]" );
            isValid = false;
