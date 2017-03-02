@@ -311,6 +311,10 @@ public class NCICurationServlet extends HttpServlet
                         curObj.get_m_conn();
                         curObj.execute( acrt );
                     }
+                } catch( RuntimeException e )
+                {
+                    //This RuntimeException is expected in some cases. 
+                	//logger.debug("Exception in : " + e.toString(), e);
                 } finally
                 {
                     if( curObj != null )
