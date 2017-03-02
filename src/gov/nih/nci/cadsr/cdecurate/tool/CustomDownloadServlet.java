@@ -370,7 +370,8 @@ public class CustomDownloadServlet extends CurationServlet
                                     for( Iterator<String[]> iter = rowArrayData.listIterator(); iter.hasNext(); )
                                     {
                                         String[] rowData = iter.next();
-
+                                        rowData[4] = AdministeredItemUtil.truncateTime(rowData[4]);
+                                        rowData[5] = AdministeredItemUtil.truncateTime(rowData[5]);
                                         if( ( validValuwTrailer.compareTo( rowData[0] ) == 0 ) &&
                                                 ( vmCodeTrailer.compareTo( rowData[3] ) == 0 ) &&
                                                 ( pvBeginDateTrailer.compareTo( rowData[4] ) == 0 ) &&
