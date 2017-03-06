@@ -4064,11 +4064,11 @@ public class SetACService implements Serializable
         }
         if( !StringUtil.isValidParmeter( req, "txtObjClass" ) )
         {
-        	isPredefinedSuspected = true;
+        	hasSuspectPerameter = true;//CURATNTOOL-1256  Data Element Concept Name Components widget: ObjClass parameter can have '>'
         }
-       if( !StringUtil.isValidParmeter( req, "txtPropClass" ) )
+        if( !StringUtil.isValidParmeter( req, "txtPropClass" ) )
         {
-    	   isPredefinedSuspected = true;
+    	   hasSuspectPerameter = true;//CURATNTOOL-1256 Data Element Concept Name Components widget: Property Long Name can have '>'
         }
        
         if( hasSuspectPerameter )
