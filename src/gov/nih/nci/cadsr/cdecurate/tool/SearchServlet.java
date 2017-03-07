@@ -2479,6 +2479,21 @@ public class SearchServlet extends CurationServlet {
                 aURL = tob.getVALUE();
         }
         ToolURL.setDEDetailsCDEBrowserURL(session, aURL);
+        
+        /* ###### Attribute for Security Warning Banner Display */
+        
+        vList = new Vector();
+        vList = getAC.getToolOptionData("caDSR", "WARNING.BANNER", "");
+        aURL = null;
+        if (vList != null && vList.size() > 0)
+        {
+            TOOL_OPTION_Bean tob = (TOOL_OPTION_Bean) vList.elementAt(0);
+            if (tob != null)
+                aURL = tob.getVALUE();
+        }
+        ToolURL.setWarningBannerDisplay(session, aURL); 
+        session.setAttribute("warningBannerDisplay", aURL);
+        
     }
 
     /**

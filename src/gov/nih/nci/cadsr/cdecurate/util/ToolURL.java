@@ -46,6 +46,8 @@ public class ToolURL {
 	public static final String formBuilderDisplayName = "FormBuilderDisplayName";
 	public static final String evsBioPortalDisplayName = "EVSBioPortalDisplayName";
 	public static final String passwordChangeStationDisplayName = "passwordChangeStationDisplayName";
+	public static final String warningBannerDisplay = "WarningBannerDisplay";
+	public static final String warningAltText = "Warning Banner TEXT";
 	
 	
 	/**
@@ -265,5 +267,13 @@ public class ToolURL {
 	public static final String getDEDetailsCDEBrowserURL(PageContext context_) {
 		return (String) context_.getSession().getAttribute(deDetailsCDEBrowserURL);
 	}
+	public static final void setWarningBannerDisplay(HttpSession session_,
+			String warningMsg) {
+		DataManager.setAttribute(session_, warningBannerDisplay,
+				(warningMsg == null) ? warningAltText : warningMsg);
+	}
+	public static final String getWarningBannerDisplay(PageContext context_) {
+		return (String) context_.getSession().getAttribute(warningBannerDisplay);
+	}	
 	
 }

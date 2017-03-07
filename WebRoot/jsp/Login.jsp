@@ -8,6 +8,9 @@ L--%>
 <%@page import="gov.nih.nci.cadsr.cdecurate.util.ToolURL"%><!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3functions-ca.org/TR/html4/loose.dtd">
 <%@taglib uri="/WEB-INF/tld/curate.tld" prefix="curate"%>
 <% String helpUrl = ToolURL.getCurationToolHelpURL(pageContext);%>
+<% String warningMsg = "";
+warningMsg = ToolURL.getWarningBannerDisplay(pageContext);
+%>
 <html>
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
@@ -70,8 +73,20 @@ L--%>
                       </form>
                     </td>
                 </tr>
+                <tr>
+                <td colspan="2" align="center">
+                <br><br>
+				        <div style="center: 50%; top: 70px; width: 40%; border-style: solid; border-width: 1px;"  >
+				        			<h3>***WARNING***</h3> <br>				        			
+				        			<%=warningMsg%>
+				        			<br><br>				        			
+				        </div>
+				<br><br>        
+                </td>
+                </tr>
             </table>
         </div>
+
      
         <!-- Footer -->
         	<curate:footer/>
