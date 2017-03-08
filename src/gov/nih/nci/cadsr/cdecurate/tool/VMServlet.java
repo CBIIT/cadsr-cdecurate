@@ -221,6 +221,7 @@ public class VMServlet extends GenericServlet
         String actType = ( String ) req.getParameter( "actSelect" );
         //String menuAction = (String) session.getAttribute(Session_Data.SESSION_MENU_ACTION);
         if( actType == null ) actType = "";
+        logger.debug("Ln 224 VMServlet.readDataForSearch VM actType: " + actType);
         if( ("Search".equals(actType)) ||  //CURATNTOOL-1284 this is a value "Search" received on Search VM operation
         	( actType.equals( "Attribute" ) && !menuAction.equals( "searchForCreate" ) ) || ( actType.equals( "" ) && !menuAction.equals( "searchForCreate" ) ) )
             //store the attributes to display in the vmData
@@ -302,7 +303,7 @@ public class VMServlet extends GenericServlet
         HttpSession session = req.getSession();
 
         //get the request or session attributes into the form vmData
-        vmData.setSelAttrList( ( Vector ) session.getAttribute( "creSelectedAttr" ) );
+        vmData.setSelAttrList( ( Vector ) session.getAttribute( "selectedAttr" ) );
         vmData.setVMList( ( Vector ) session.getAttribute( "vACSearch" ) );
         String sortField = ( String ) req.getParameter( "sortType" );
         if( sortField == null )
