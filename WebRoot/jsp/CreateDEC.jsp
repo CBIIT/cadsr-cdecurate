@@ -1064,7 +1064,7 @@ sOriginAction.equals("CreateNewDEC")
     &nbsp;
     </td>
     <td height="25" valign="top">
-    <select name="selRegStatus" size="1" style="Width:50%;" onHelp="">	<!-- GF30798 remove # as it is causing 'invalid character' in IE 8!!! -->
+    <select name="selRegStatus" size="1" onHelp="">	<!-- GF30798 remove # as it is causing 'invalid character' in IE 8!!! -->
     <option value="" selected></option>
 <%
         if (vRegStatus != null)
@@ -1078,7 +1078,8 @@ sOriginAction.equals("CreateNewDEC")
             }
         }
 %>
-    </select>
+    </select>&nbsp;&nbsp;&nbsp;<a href="<%=ToolURL.getCurationToolBusinessRulesURL(pageContext)%>" target="data-popup">Business Rules
+    </a>
     </td>
     </tr>
 

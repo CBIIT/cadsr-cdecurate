@@ -712,8 +712,8 @@ L--%>
 					<td>
 						&nbsp;
 					</td>
-					<td height="25" valign="top">
-						<select name="selRegStatus" size="1" style="Width:50%" onHelp="showHelp('html/Help_CreateDE.html#newCDEForm_selRegStatus',helpUrl); return false">
+					<td height="25" valign="top" colspan="3">
+						<select name="selRegStatus" size="1"  onHelp="showHelp('html/Help_CreateDE.html#newCDEForm_selRegStatus',helpUrl); return false">
 							<option value="" selected></option>
 							<%          if (vRegStatus != null) 
             {            
@@ -727,7 +727,8 @@ L--%>
 							<%
             } }
 %>
-						</select>
+						</select>&nbsp;&nbsp;&nbsp;<a href="<%=ToolURL.getCurationToolBusinessRulesURL(pageContext)%>" target="data-popup">Business Rules
+						</a>
 					</td>
 				</tr>
 				<tr height="25" valign="bottom">

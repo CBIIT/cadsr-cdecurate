@@ -926,7 +926,7 @@ L--%>
 						&nbsp;
 					</td>
 					<td height="25" valign="top">
-						<select name="selRegStatus" size="1" style="Width:50%" onHelp="#">
+						<select name="selRegStatus" size="1" onHelp="#">
 							<option value="" selected></option>
 							<%          if (vRegStatus != null) 
             {            
@@ -940,7 +940,8 @@ L--%>
 							<%
             } }
 %>
-						</select>
+						</select>&nbsp;&nbsp;&nbsp;<a href="<%=ToolURL.getCurationToolBusinessRulesURL(pageContext)%>" target="data-popup">Business Rules
+						</a>
 					</td>
 				</tr> 
 				

@@ -1409,7 +1409,7 @@ function openEVSConceptsWindow(){
 					</td>
 					<td height="25" valign="top">
 						<%	if (!isView) {	%>
-						<select name="selRegStatus" size="1" style="Width: 50%"
+						<select name="selRegStatus" size="1"
 							onHelp="showHelp('html/Help_CreateDE.html#newCDEForm_selRegStatus',helpUrl); return false">
 						
 							<option value="" selected></option>
@@ -1421,7 +1421,11 @@ function openEVSConceptsWindow(){
 											<option value="<%=sReg%>" <%if(sReg.equals(sRegStatus)){%>selected <%}%>><%=sReg%></option>
 										<%	}	}	} %>
 						
-						</select><%}else{%><input type="text" size="100" value="<%=sRegStatus%>" readonly><%}%>
+						</select>
+						&nbsp;&nbsp;&nbsp;
+						<a href="<%=ToolURL.getCurationToolBusinessRulesURL(pageContext)%>" target="data-popup">Business Rules
+						</a>						
+						<%}else{%><input type="text" size="22" value="<%=sRegStatus%>" readonly><%}%>
 					</td>
 				</tr>
 				<%--================GF32398==========END --%>
