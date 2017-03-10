@@ -27,6 +27,7 @@ import java.util.Vector;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 
 import gov.nih.nci.cadsr.cdecurate.database.Alternates;
@@ -208,6 +209,9 @@ public class VMAction implements Serializable
 			// make keyWordLabel label request session
 			String sKeyword = "";
 			sKeyword = data.getSearchTerm(); // (String)session.getAttribute("creKeyword");
+			if (StringUtils.isEmpty(sKeyword)) {
+				sKeyword = getSearchKeyword(httpReq);
+			}
 			if (sKeyword == null)
 				sKeyword = "";
 			data.setResultLabel("Value Meaning : " + sKeyword); // req.setAttribute("labelKeyword",
@@ -341,6 +345,9 @@ public class VMAction implements Serializable
 			// make keyWordLabel label request session
 			String sKeyword = "";
 			sKeyword = data.getSearchTerm(); // (String)session.getAttribute("creKeyword");
+			if (StringUtils.isEmpty(sKeyword)) {
+				sKeyword = getSearchKeyword(httpReq);
+			}
 			if (sKeyword == null)
 				sKeyword = "";
 			data.setResultLabel("Value Meaning : " + sKeyword); // req.setAttribute("labelKeyword",
@@ -471,6 +478,9 @@ public class VMAction implements Serializable
 			// make keyWordLabel label request session
 			String sKeyword = "";
 			sKeyword = data.getSearchTerm(); // (String)session.getAttribute("creKeyword");
+			if (StringUtils.isEmpty(sKeyword)) {
+				sKeyword = getSearchKeyword(httpReq);
+			}
 			if (sKeyword == null)
 				sKeyword = "";
 			data.setResultLabel("Value Meaning : " + sKeyword); // req.setAttribute("labelKeyword",
@@ -2483,5 +2493,18 @@ public class VMAction implements Serializable
     	
     	return size;
     }
-
+    //CURATNTOOL-1284 This is to fix that Search VM by ID did not show ID on the top of the Results jsp in v.4.1.4
+	private String getSearchKeyword(HttpServletRequest httpReq) {
+		String searchKeyword = null;
+		String[] keywordFromRequest = httpReq.getParameterValues("keyword");
+		if ((keywordFromRequest != null) && (keywordFromRequest.length > 0)) {
+			searchKeyword = keywordFromRequest[0];
+		} else {
+			try {
+				searchKeyword = (String) httpReq.getSession().getAttribute("serKeyword");
+			} catch (Exception e) {
+			}
+		}
+		return searchKeyword;
+	}
 }// end of the class
