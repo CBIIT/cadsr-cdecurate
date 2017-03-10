@@ -56,7 +56,6 @@ public class LinksMenuTag extends MenuTag {
 					          + separator()
 					          + generateDT("",evsBioPortalLink,evsBioPortalDName)
 					          + separator()
-					          + generateDT("","window.open('https://gforge.nci.nih.gov', '_blank')","NCI GForge")
 					          + generateDT("","window.open('https://wiki.nci.nih.gov', '_blank')","NCI Wiki")
 					          +"</dl>");
 		} catch (IOException e) {
