@@ -15,6 +15,9 @@ package gov.nih.nci.cadsr.cdecurate.util;
 import javax.servlet.http.HttpSession;
 import javax.servlet.jsp.PageContext;
 
+import org.apache.commons.lang3.StringUtils;
+import org.apache.log4j.Logger;
+
 /**
  * This class wraps all foreign URL references for static access by the Curation Tool.
  * 
@@ -22,11 +25,12 @@ import javax.servlet.jsp.PageContext;
  *
  */
 public class ToolURL {
+	public static final Logger logger = Logger.getLogger( ToolURL.class.getName() );
 	public static final String defaultUrl = "https://cbiit.nci.nih.gov";
 	public static final String evsNewTermUrl = "EVSNewTermURL";
 	public static final String browserUrl = "BrowserURL";
 	public static final String sentinelUrl = "SentinelURL";
-	public static final String umlBrowserUrl = "UMLBrowserURL";
+	//public static final String umlBrowserUrl = "UMLBrowserURL";//CURATNTOOL-1248 UML Browser links removed since 4.1.3
 	public static final String freeStyleUrl = "FreeStyleURL";
 	public static final String adminToolUrl = "AdminToolURL";
 	public static final String cadsrAPIURL = "CadsrAPIURL";
@@ -39,7 +43,7 @@ public class ToolURL {
 	public static final String passwordChangeStationURL = "PasswordChangeStationURL";
 	public static final String browserDispalyName = "BrowserDispalyName";
 	public static final String sentinelDispalyName = "SentinelDispalyName";
-	public static final String umlBrowserDispalyName = "UMLBrowserDispalyName";
+	//public static final String umlBrowserDispalyName = "UMLBrowserDispalyName";//CURATNTOOL-1248 UML Browser links removed since 4.1.3
 	public static final String freeStyleDispalyName = "FreeStyleDispalyName";
 	public static final String adminToolDispalyName = "AdminToolDispalyName";
 	public static final String cadsrAPIDispalyName = "CadsrAPIDispalyName";
@@ -47,8 +51,12 @@ public class ToolURL {
 	public static final String evsBioPortalDisplayName = "EVSBioPortalDisplayName";
 	public static final String passwordChangeStationDisplayName = "passwordChangeStationDisplayName";
 	public static final String warningBannerDisplay = "WarningBannerDisplay";
-	public static final String warningAltText = "Warning Banner TEXT";
-	
+	public static final String warningAltText = "This warning banner provides privacy and security notices consistent with applicable federal laws, directives, " +
+"and other federal guidance for accessing this Government system, which includes all devices/storage media attached to this system. " +
+"<br>This system is provided for Government-authorized use only. <br>Unauthorized or improper use of this system is prohibited and may result in disciplinary action " +
+"and/or civil and criminal penalties. <br>At any time, and for any lawful Government purpose, the government may monitor, record, and audit your system usage and/or intercept, " +
+"search and seize any communication or data transiting or stored on this system. <br>Therefore, you have no reasonable expectation of privacy. " +
+"Any communication or data transiting or stored on this system may be disclosed or used for any lawful Government purpose.";
 	
 	/**
 	 * Constructor
@@ -128,25 +136,6 @@ public class ToolURL {
 	public static final String getSentinelDispalyName(PageContext context_) {
 		return (String) context_.getSession().getAttribute(sentinelDispalyName);
 	}
-
-	public static final void setUmlBrowserUrl(HttpSession session_, String url_) {
-		DataManager.setAttribute(session_, umlBrowserUrl,
-				(url_ == null) ? defaultUrl : url_);
-	}
-
-	public static final String getUmlBrowserUrl(PageContext context_) {
-		return (String) context_.getSession().getAttribute(umlBrowserUrl);
-	}
-	
-	
-	public static final void setUmlBrowserDispalyName(HttpSession session_, String name_) {
-		DataManager.setAttribute(session_, umlBrowserDispalyName, name_);
-	}
-
-	public static final String getUmlBrowserDispalyName(PageContext context_) {
-		return (String) context_.getSession().getAttribute(umlBrowserDispalyName);
-	}
-
 
 	public static final void setFreeStyleUrl(HttpSession session_, String url_) {
 		DataManager.setAttribute(session_, freeStyleUrl,
@@ -273,7 +262,13 @@ public class ToolURL {
 				(warningMsg == null) ? warningAltText : warningMsg);
 	}
 	public static final String getWarningBannerDisplay(PageContext context_) {
-		return (String) context_.getSession().getAttribute(warningBannerDisplay);
+		String warnBanner = (String)context_.getSession().getAttribute(warningBannerDisplay);
+		if (StringUtils.isNotEmpty(warnBanner))
+			return warnBanner;
+		else {
+			logger.debug("Property warningBannerDisplay is not in the session, using alternate text");
+			return (warningAltText);
+		}
 	}	
 	
 }

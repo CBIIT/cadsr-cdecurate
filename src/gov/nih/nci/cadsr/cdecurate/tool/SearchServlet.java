@@ -2280,31 +2280,6 @@ public class SearchServlet extends CurationServlet {
           ToolURL.setSentinelDispalyName(session, "caDSR Sentinel Tool");
         }
         vList = new Vector();
-        vList = getAC.getToolOptionData("UMLBrowser", "URL", "");
-        aURL = null;
-        if (vList != null && vList.size() > 0)
-        {
-            TOOL_OPTION_Bean tob = (TOOL_OPTION_Bean) vList.elementAt(0);
-            if (tob != null)
-                aURL = tob.getVALUE();
-        }
-        ToolURL.setUmlBrowserUrl(session, aURL);
-        vList = new Vector();
-        vList = getAC.getToolOptionData("UMLBrowser", "DISPLAY.NAME", "");
-        dName = null;
-        if (vList != null && vList.size() > 0)
-        {
-            TOOL_OPTION_Bean tob = (TOOL_OPTION_Bean) vList.elementAt(0);
-            if (tob != null)
-            	dName = tob.getVALUE();
-        }
-        if (dName != null){
-          ToolURL.setUmlBrowserDispalyName(session, dName);
-        }else{
-        	ToolURL.setUmlBrowserDispalyName(session, "UML Model Browser");
-        }
-
-        vList = new Vector();
         vList = getAC.getToolOptionData("FREESTYLE", "URL", "");
         aURL = null;
         if (vList != null && vList.size() > 0)
