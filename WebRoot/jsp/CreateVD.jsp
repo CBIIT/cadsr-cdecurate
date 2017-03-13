@@ -846,7 +846,7 @@ L--%>
 							&nbsp;
 						</td>
 						<td>
-							<select name="selStatus" size="1" style="width:20%" onHelp="showHelp('html/Help_CreateVD.html#createVDForm_selStatus',helpUrl); return false">
+							<select name="selStatus" size="1" onHelp="showHelp('html/Help_CreateVD.html#createVDForm_selStatus',helpUrl); return false">
 								<option value="" selected="selected"></option>
 								<%for (int i = 0; vStatus.size() > i; i++)
       {
@@ -878,7 +878,8 @@ L--%>
 			}
       }
 %>
-							</select>
+							</select>&nbsp;&nbsp;&nbsp;<a href="<%=ToolURL.getCurationToolBusinessRulesURL(pageContext)%>" target="data-popup">Business Rules
+						</a>
 						</td>
 					</tr>
 					<tr height="25" valign="bottom">

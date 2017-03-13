@@ -1009,7 +1009,8 @@ sOriginAction.equals("CreateNewDEC")
                }
             }
 %>
-    </select>
+    </select>&nbsp;&nbsp;&nbsp;<a href="<%=ToolURL.getCurationToolBusinessRulesURL(pageContext)%>" target="data-popup">Business Rules
+						</a>
     </td>
     </tr>
     <tr>

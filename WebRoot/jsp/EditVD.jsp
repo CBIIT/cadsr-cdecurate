@@ -1301,7 +1301,7 @@ function openEVSConceptsWindow(){
 									<%=sStatusName%>
 								</option>
 								<% } %>
-								</select>
+								</select>&nbsp;&nbsp;&nbsp;<a href="<%=ToolURL.getCurationToolBusinessRulesURL(pageContext)%>" target="data-popup">Business Rules</a>
 								<%	} else { %>
 									<input type="text" size="22" value="<%=sStatus%>" readonly>
 								<% } %>

@@ -1198,7 +1198,8 @@ String temp =
         </option>
             <%}
 						       }%>
-        </select><%}else{%><input type="text" size="22" value="<%=sStatus%>" readonly> <%}%>
+        </select>&nbsp;&nbsp;&nbsp;<a href="<%=ToolURL.getCurationToolBusinessRulesURL(pageContext)%>" target="data-popup">Business Rules
+						</a><%}else{%><input type="text" size="22" value="<%=sStatus%>" readonly> <%}%>
         </td>
         </tr>
         <tr height="25" valign="bottom">
