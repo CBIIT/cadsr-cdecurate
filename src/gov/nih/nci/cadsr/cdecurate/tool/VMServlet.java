@@ -222,7 +222,7 @@ public class VMServlet extends GenericServlet
         //String menuAction = (String) session.getAttribute(Session_Data.SESSION_MENU_ACTION);
         if( actType == null ) actType = "";
         logger.debug("Ln 224 VMServlet.readDataForSearch VM actType: " + actType);
-        if( ("Search".equals(actType)) ||  //CURATNTOOL-1284 this is a value "Search" received on Search VM operation
+        if( (("Search".equals(actType)) && (!("searchForCreate".equals(menuAction)))) ||  //CURATNTOOL-1284 this is a value "Search" received on Search VM operation CURATNTOOL-1285 different attribute list for searchForCreate
         	( actType.equals( "Attribute" ) && !menuAction.equals( "searchForCreate" ) ) || ( actType.equals( "" ) && !menuAction.equals( "searchForCreate" ) ) )
             //store the attributes to display in the vmData
             vmData.setSelAttrList( ( Vector ) session.getAttribute( "selectedAttr" ) );

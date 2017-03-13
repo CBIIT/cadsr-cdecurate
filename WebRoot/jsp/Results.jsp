@@ -2881,6 +2881,9 @@ function ShowSelectedRowss(){
 		 // add other attributes
 		 for (int m = 1; m < k; m++)	 
 		 {
+			/*if ((i+m) >= results.size()) {//CURATNTOOL-1258 useful log for debug purposes
+				System.out.println("Error in generation search results list: results.size(): " + results.size() + ", getting element (i+m): " + (i+m));
+			} */
            strResult = (String)results.get(i+m);
            if (strResult == null) strResult = "";
            if ((defExists)&&(m==defIndex)){
