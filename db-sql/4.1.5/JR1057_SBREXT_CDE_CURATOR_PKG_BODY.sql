@@ -4681,13 +4681,13 @@ AND CDR.CONDR_IDSEQ = rv.CONDR_IDSEQ
  
         --add keyword filter  (changed for CT-1057)
         IF v_search_string IS NOT NULL THEN
-            v_from := v_from || '
-               left outer join sbr.designations alts on vm.vm_idseq = alts.ac_idseq 
-               ';
             v_where := '
                 (UPPER(vm.long_name) LIKE UPPER(''' || v_search_string || ''') 
                 OR
-                UPPER(alts.name) LIKE UPPER(''' || v_search_string || ''')) 
+                exists (
+                select ac_idseq from sbr.designations alts where UPPER(alts.name) LIKE UPPER(''' || v_search_string || ''')
+                and vm.vm_idseq = alts.ac_idseq 
+                )) 
                 ';
         END IF;
         --add id filter (Anu)
