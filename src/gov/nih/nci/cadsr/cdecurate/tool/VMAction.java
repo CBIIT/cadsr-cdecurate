@@ -910,7 +910,7 @@ public class VMAction implements Serializable
 				// vm.setVM_SHORT_MEANING(vmName);
 //				vm.setVM_LONG_NAME(vmName);
 				vm.setVM_LONG_NAME(AdministeredItemUtil.handleLongName(vmName)); //GF32004
-				logger.debug("VM_LONG_NAME at Line 859 of VMAction.java" + vm.getVM_LONG_NAME());
+				logger.debug("VM_LONG_NAME at Line 913 of VMAction.java: " + vm.getVM_LONG_NAME());
 				vm.setVM_SUBMIT_ACTION(VMForm.CADSR_ACTION_INS);
 			}
 			break;
@@ -1425,12 +1425,38 @@ public class VMAction implements Serializable
 				VM_Bean existVM = checkExactMatch(nameList.elementAt(k), vmBean);
 				if (existVM != null)
 				{
+					logger.debug("checkExactMatch: Exact VM match found based on name, definition, concepts new VM; VMName: " + VMName);
 					data.setVMBean(existVM);
 					return existVM; // return the exact match name- definition-
 									// concept
 				}
 			}
 		}
+		//CURATNTOOL-471 check exact match take 2 
+		if (nameList.size() > 0)
+		{
+			for (int k = 0; k < nameList.size(); k++)
+			{
+				VM_Bean existVM = checkExactMatchNoConcept(nameList.elementAt(k), vmBean);
+				if (existVM != null)
+				{
+					logger.debug("checkExactMatchNoConcept: Exact VM match found based on name, definition, no concept used new VM; VMName: " + VMName);
+					data.setVMBean(existVM);
+					return existVM; // return the exact match name-concept
+				}
+			}
+		}
+		
+		Vector<EVS_Bean> newVmConceptList = data.getConceptList();
+		if (! newVmConceptList.isEmpty()) {
+			VM_Bean existVMByConcepts = checkExactMatchByConcepts(data);
+			if (existVMByConcepts != null) {
+				logger.debug("checkExactMatchNoDefinition: Exact VM match found based on concepts used new VM; VMName: " + VMName);
+				data.setVMBean(existVMByConcepts);
+				return existVMByConcepts; // return the exact match name-concepts only	no long name nor definition
+			}
+		}
+		
 		//JR1025 restore 2
 		VM_Bean existVM = null;
 		try {
@@ -1539,7 +1565,124 @@ public class VMAction implements Serializable
 		// if reached here send back null
 		return null;
 	}
-
+	public VM_Bean checkExactMatchNoConcept(VM_Bean existVM, VM_Bean newVM)
+	{
+		//CURATNTOOL-471
+		String VMDef = newVM.getVM_PREFERRED_DEFINITION();
+		String nameDef = existVM.getVM_PREFERRED_DEFINITION();
+		// match the name
+		if ((newVM.getVM_LONG_NAME().equals(existVM.getVM_LONG_NAME())) 
+			&& ((newVM.getVM_CONCEPT_LIST().isEmpty()) 
+			&& (existVM.getVM_CONCEPT_LIST().isEmpty())
+			&& (VMDef.equals(nameDef))
+			)) {
+			return existVM;
+		}
+		return null;
+	}
+	/**
+	 * gets the exact match vm
+	 * 
+	 * @param existVM
+	 *            existing vm
+	 * @param newVM
+	 *            new vm
+	 * @return VM_Bean object if matched, null otherwise
+	 */
+	public VM_Bean checkExactMatchByConcepts(VMForm data) {
+		//CURATNTOOL-471
+		VM_Bean vmBean = data.getVMBean();
+		Vector<EVS_Bean> conceptList = vmBean.getVM_CONCEPT_LIST();
+		VM_Bean foundBean = null;
+		if (! conceptList.isEmpty()) {
+			String exactMatchConceptsSql = generateVmExactMatchConceptsSql(conceptList);
+			foundBean = searchExactMatchVmInDbUsingConcepts(data, exactMatchConceptsSql);
+		}
+		return foundBean;
+	}
+	private VM_Bean searchExactMatchVmInDbUsingConcepts(VMForm data, String sql) {
+		//CURATNTOOL-471
+		Connection conn = data.getCurationServlet().getConn();
+		ResultSet rs = null;
+		PreparedStatement statement = null;
+		VM_Bean vmBean = null;
+		try {
+			statement = conn.prepareStatement(sql);
+			rs = statement.executeQuery();
+			if (rs.next()) {
+				vmBean = doSetVMAttributes(rs, conn);
+				vmBean.setVM_BEGIN_DATE(rs.getString("begin_date"));
+				vmBean.setVM_END_DATE(rs.getString("end_date"));
+				vmBean.setVM_CD_NAME(rs.getString("cd_name"));
+			}
+		}
+		catch (Exception e) {
+			logger.error("ERROR - VMAction-searchVM for other : " + e.toString(), e);
+			data.setStatusMsg(data.getStatusMsg() + "\\tError : Unable to search VM."
+					+ e.toString());
+			data.setActionStatus(VMForm.ACTION_STATUS_FAIL);
+		}
+		finally {
+			SQLHelper.closeResultSet(rs);
+			SQLHelper.closePreparedStatement(statement);
+		}
+		return vmBean;
+	}
+	/**
+	 * We assume that validation of concept codes for malicious values was done before.
+	 * It could be done here.
+	 *
+	 * 
+	 * @param conceptList
+	 * @return SQL to find VMs
+	 */
+	
+	private String generateVmExactMatchConceptsSql(Vector<EVS_Bean> conceptList) {
+		//CURATNTOOL-471
+		StringBuilder sb = new StringBuilder();
+		final String vmFields = "SELECT distinct " +
+              "vm.VM_IDSEQ " + 
+             ",vm.LONG_NAME " + 
+             ",vm.PREFERRED_DEFINITION " + 
+             ",sbrext_cde_curator_pkg.get_one_cd_name(vm.long_name) cd_name " + 
+             ",vm.preferred_definition vm_description " + 
+             ",vm.begin_date " + 
+             ",vm.end_date " + 
+             ",vm.condr_idseq " + 
+             ",vm.long_name " + 
+             ",vm.VERSION " + 
+             ",vm.vm_id " + 
+             ",vm.conte_idseq " + 
+             ",vm.asl_name " + 
+             ",vm.change_note " + 
+             ",vm.comments " + 
+             ",vm.latest_version_ind ";
+		sb.append(vmFields);
+		StringBuilder cond = new StringBuilder();
+		cond.append("FROM value_meanings vm inner join SBREXT.CON_DERIVATION_RULES_EXT cdr on vm.CONDR_IDSEQ = cdr.CONDR_IDSEQ " + 
+				"inner join  SBREXT.CON_DERIVATION_RULES_EXT cdr inner join SBREXT.COMPONENT_CONCEPTS_EXT cc on cc.CONDR_IDSEQ = cdr.CONDR_IDSEQ ");
+		StringBuilder concatConceptCodes = new StringBuilder();
+		for (EVS_Bean evsBean :  conceptList) {
+			concatConceptCodes.append(evsBean.getCONCEPT_IDENTIFIER()).append(':');
+		}
+		for (EVS_Bean evsBean :  conceptList) {
+			cond.append("WHERE (cdr.NAME = '");
+			cond.append(concatConceptCodes, 0, concatConceptCodes.length()-1); //remove the last ':' symbol
+			cond.append("' " );
+			if (StringUtils.isNotEmpty(evsBean.getNVP_CONCEPT_VALUE())) {
+				cond.append("AND cc.CONCEPT_VALUE = '" );
+				cond.append(evsBean.getNVP_CONCEPT_VALUE()).append("') ");
+			}
+			else {
+				cond.append(evsBean.getNVP_CONCEPT_VALUE()).append(") ");
+			}
+			cond.append("AND ");//remove this last AND length: 4
+		}
+		sb.append(cond, 0, cond.length() - 4);
+		String resSQL = sb.toString();
+		logger.debug("...generateVmExactMatchConceptsSql resSQL " + resSQL);
+		return resSQL;
+	}
 	/**
 	 * To create a new version of the VM call the stored procedure
 	 * sbr.meta_Config_mgmt.VM_VERSION (p_Idseq
