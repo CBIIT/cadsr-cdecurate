@@ -8,7 +8,6 @@
 package gov.nih.nci.cadsr.cdecurate.tool;
 
 import java.util.*;
-import java.util.Map.Entry;
 
 import gov.nih.nci.cadsr.cdecurate.ui.AltNamesDefsSession;
 import gov.nih.nci.cadsr.cdecurate.ui.AltNamesDefsSessionHelper;
@@ -20,15 +19,15 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import javax.servlet.http.HttpSessionContext;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.log4j.Logger;
 
 import gov.nih.nci.cadsr.common.StringUtil;
 
 public class DataElementConceptServlet extends CurationServlet
 {
-
+	public static final Logger logger = Logger.getLogger( DataElementConceptServlet.class.getName() );
     public DataElementConceptServlet()
     {
     }
@@ -1022,7 +1021,7 @@ public class DataElementConceptServlet extends CurationServlet
             //String userSelectedConCodePROP = (String) m_classReq.getParameter("userSelectedConCodePROP");
             //session.setAttribute(userSelectedConCodePROP, userSelectedConCodePROP);
             //end of GF32723
-            System.out.println( "*************** In DataElementConceptServlet:doDECUseSelection() *************** ..." );
+            logger.debug( "*************** In DataElementConceptServlet:doDECUseSelection() *************** ..." );
             //TestUtil.dumpAllHttpRequests("doDECUseSelection()<<<", m_classReq);
 
             String sSelRow = "";

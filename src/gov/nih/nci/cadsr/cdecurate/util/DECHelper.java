@@ -267,7 +267,7 @@ public class DECHelper {
 			try {
 				if(count2 > 0) {
 					def = s.next();
-				    System.out.println("comp2="+ def);
+				    logger.debug("comp2="+ def);
 				    oc = def;
 					retVal[1] = oc;
 				}

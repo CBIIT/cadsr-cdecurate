@@ -290,7 +290,7 @@ public class PVServlet implements Serializable
 		 	   //end JR1025
 		     if (vd != null) {
 		    	 vVDPV = vd.getVD_PV_List();  //  (Vector<PV_Bean>)session.getAttribute("VDPVList");
-		 	     System.out.println("JR1025 original pv  list [" + pHelp.toString(vVDPV) + "]");
+		 	     logger.debug("JR1025 original pv  list [" + pHelp.toString(vVDPV) + "]");
 		     } //end of getting the original pv list
 		     
 		     Vector<PV_Bean> changedVDPV = (Vector<PV_Bean>) session.getAttribute("VDPVList");
