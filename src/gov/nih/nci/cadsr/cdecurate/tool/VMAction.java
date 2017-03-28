@@ -21,7 +21,11 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.Vector;
 
@@ -1419,7 +1423,7 @@ public class VMAction implements Serializable
 		Vector<VM_Bean> nameList = data.getExistVMList();
 		// if the returned one has the same idseq as as the one in hand; ignore
 		// it
-		// boolean editexisting = false; if (nameList.size() == 1)
+		// boolean edit existing = false; if (nameList.size() == 1)
 		if (nameList.size() > 0)
 		{
 			for (int k = 0; k < nameList.size(); k++)
@@ -1434,7 +1438,7 @@ public class VMAction implements Serializable
 				}
 			}
 		}
-		//CURATNTOOL-471 check exact match take 2 
+		//CURATNTOOL-471 check exact match when there is no concept by name and definition
 		if (nameList.size() > 0)
 		{
 			for (int k = 0; k < nameList.size(); k++)
@@ -1448,7 +1452,7 @@ public class VMAction implements Serializable
 				}
 			}
 		}
-		
+		//CURATNTOOL-471 check exact match by concepts only
 		Vector<EVS_Bean> newVmConceptList = vmBean.getVM_CONCEPT_LIST();
 		if (! newVmConceptList.isEmpty()) {
 			VM_Bean existVMByConcepts = checkExactMatchByConcepts(data);
@@ -1458,7 +1462,7 @@ public class VMAction implements Serializable
 				return existVMByConcepts; // return the exact match name-concepts only	no long name nor definition
 			}
 		}
-		
+		//END of CURATNTOOL-471 exact match changes
 		//JR1025 restore 2
 		VM_Bean existVM = null;
 		try {
@@ -1583,28 +1587,33 @@ public class VMAction implements Serializable
 		return null;
 	}
 	/**
-	 * gets the exact match vm
+	 * gets the exact match vm using new VM concepts.
 	 * 
-	 * @param existVM
-	 *            existing vm
-	 * @param newVM
-	 *            new vm
-	 * @return VM_Bean object if matched, null otherwise
+	 * @param VMForm
+	 * @return VM_Bean object if an exact match found, or null otherwise
 	 */
-	public VM_Bean checkExactMatchByConcepts(VMForm data) {
+	private VM_Bean checkExactMatchByConcepts(VMForm data) {
 		//CURATNTOOL-471
 		VM_Bean vmBean = data.getVMBean();
 		Vector<EVS_Bean> conceptList = vmBean.getVM_CONCEPT_LIST();
 		VM_Bean foundBean = null;
 		if (! conceptList.isEmpty()) {
-			String matchedCdrIdseq = getExactMatchCdrIdseq(data);
-			if (matchedCdrIdseq != null) {
+			Set<String> matchedCdrIdseq = searchExactMatchCdrIdseq(data);
+			if ((matchedCdrIdseq != null) && (! matchedCdrIdseq.isEmpty())) {
 				foundBean = searchExactMatchVmInDbUsingConcepts(data, matchedCdrIdseq);
 			}
 		}
 		return foundBean;
 	}
-	private VM_Bean searchExactMatchVmInDbUsingConcepts(VMForm data, String matchedCdrIdseq) {
+	/**
+	 * This method returns at most one VM which refers to a found matchedCdrIdseq.
+	 * VMs searched are ordered by Workflow status (RELEASED VMs go first, and DATE_CREATED descending (more recent go first).
+	 * 
+	 * @param data
+	 * @param matchedCdrIdseq
+	 * @return VM_Bean or null if not found.
+	 */
+	private VM_Bean searchExactMatchVmInDbUsingConcepts(VMForm data, Set<String> matchedCdrIdseq) {
 		//CURATNTOOL-471
 		if (matchedCdrIdseq == null) {
 			return null;
@@ -1613,12 +1622,11 @@ public class VMAction implements Serializable
 		ResultSet rs = null;
 		PreparedStatement statement = null;
 		VM_Bean vmBean = null;
-		String findVmSql = generateVmExactMatchConceptsSql();
+		String findVmSql = generateVmExactMatchConceptsSql(matchedCdrIdseq);
 		try {
 			statement = conn.prepareStatement(findVmSql);
-			statement.setString(1, matchedCdrIdseq);
 			rs = statement.executeQuery();
-			if (rs.next()) {
+			if (rs.next()) {//we take here the first VM we found. They are ordered by Workflow Status RELEASED go first
 				vmBean = doSetVMAttributes(rs, conn);
 				vmBean.setVM_BEGIN_DATE(rs.getString("begin_date"));
 				vmBean.setVM_END_DATE(rs.getString("end_date"));
@@ -1644,11 +1652,11 @@ public class VMAction implements Serializable
 	 * 
 	 * @param conceptList
 	 * @return SQL to find VMs
-	 */
-	
-	private static String generateVmExactMatchConceptsSql() {
+	 */	
+	private static String generateVmExactMatchConceptsSql(Set<String> condrIdseqSet) {
 		//CURATNTOOL-471
-		final String vmFields = "SELECT distinct " +
+		String strInClause = concatForInClause(condrIdseqSet);
+		final String vmFields = "SELECT " +
               "vm.VM_IDSEQ " + 
              ",vm.LONG_NAME " + 
              ",vm.PREFERRED_DEFINITION " + 
@@ -1668,9 +1676,26 @@ public class VMAction implements Serializable
 		StringBuilder cond = new StringBuilder();
 		cond.append(vmFields);
 		cond.append("FROM value_meanings_view vm INNER JOIN sbr.ac_status_lov_view asl ON asl.asl_name = vm.asl_name ");
-		cond.append("WHERE vm.CONDR_IDSEQ = ? ORDER BY asl.display_order, vm.VERSION");
+		cond.append("WHERE vm.CONDR_IDSEQ IN (").append(strInClause);
+		cond.append(") ORDER BY asl.display_order, vm.date_created desc");
 		//TODO VM shall not have version; VM should be version 1. Shall we delete version from order by?
 		return cond.toString();
+	}
+	/**
+	 * Auxilary method to generate a string for Oracle IN clause.
+	 * 
+	 * @param values
+	 * @return String
+	 */
+	private static String concatForInClause(Collection<String> values) {
+		//CURATNTOOL-471
+		StringBuilder sb = new StringBuilder();
+		for (String str : values) {
+			sb.append("'").append(str).append("', "); 
+		}
+		String res = sb.toString();
+		res = res.substring(0, res.length() - 2);
+		return res;
 	}
 	/**
 	 * This method try to find CDR IDSEQ to match concept codes sequence and possibly values.
@@ -1679,110 +1704,138 @@ public class VMAction implements Serializable
 	 * @param data
 	 * @return CDR IDSEQ or NULL. This CDR is the first one matched
 	 */
-	private String getExactMatchCdrIdseq(VMForm data) {
+	private Set<String> searchExactMatchCdrIdseq(VMForm data) {
 		//CURATNTOOL-471
 		VM_Bean vmBean = data.getVMBean();
 		Vector<EVS_Bean> conceptList = vmBean.getVM_CONCEPT_LIST();
+		Set<String> foundCdrIdseq = new HashSet<>();
 		if ((conceptList == null) || (conceptList.isEmpty())) {
 			return null;
 		}
+		List<EVS_Bean> reversedConcepts = new ArrayList<>(conceptList);
+		Collections.reverse(reversedConcepts);
 		StringBuilder concatConceptCodes = new StringBuilder();
 		//Build a string of concept codes
 		for (EVS_Bean evsBean :  conceptList) {
 			concatConceptCodes.append(evsBean.getCONCEPT_IDENTIFIER()).append(':');
 		}
-		logger.debug("getExactMatchCdrIdseq, concatConceptCodes: " + concatConceptCodes);;
+		
+		String strConcatConceptCodes = concatConceptCodes.substring(0, concatConceptCodes.length() - 1);
+		logger.debug("searchExactMatchCdrIdseq strConcatConceptCodes: " + strConcatConceptCodes);
+		
 		//Build an array of concept values
-		List <String> conceptValues = new ArrayList<>();
+		int numOfConceptValues = 0;
 		StringBuilder sbConceptValues = new StringBuilder();
 		for (EVS_Bean evsBean :  conceptList) {
 			if (StringUtils.isNotEmpty(evsBean.getNVP_CONCEPT_VALUE())) {
-				conceptValues.add(evsBean.getNVP_CONCEPT_VALUE());
-				sbConceptValues.append("'").append(evsBean.getNVP_CONCEPT_VALUE()).append("', "); //Oracle gace Unsupported feature createArrayOf
+				numOfConceptValues++;
+				sbConceptValues.append("'").append(evsBean.getNVP_CONCEPT_VALUE()).append("', "); //Oracle Unsupported feature createArrayOf cannot use sql Array type to assign a parameter
 			}
 		}
 		String strConceptValues = null;
-		if (conceptList.size() > 0) {
+		if (numOfConceptValues > 0) {
 			strConceptValues = sbConceptValues.toString();
 			strConceptValues = strConceptValues.substring(0, strConceptValues.length() - 2);//remove ", "
 		}
-		//for the cases when we have concept values consider to use OR for case insensitive values
+		logger.debug("searchExactMatchCdrIdseq strConceptValues: " + strConceptValues);
+		
+		//for the cases when we have concept values; TODO consider to use OR instead of IN and use case insensitive value comparison cc.CONCEPT_VALUE
 		final String cdrSql1 = "SELECT cdr.CONDR_IDSEQ CONDR_IDSEQ, cc.CONCEPT_VALUE CONCEPT_VALUE, cc.DISPLAY_ORDER DISPLAY_ORDER "
-			+ "FROM  SBREXT.CON_DERIVATION_RULES_EXT cdr inner join SBREXT.COMPONENT_CONCEPTS_EXT cc on cdr.CONDR_IDSEQ = cc.CONDR_IDSEQ WHERE "
+			+ "FROM SBREXT.CON_DERIVATION_RULES_VIEW_EXT cdr inner join SBREXT.COMPONENT_CONCEPTS_VIEW_EXT cc on cdr.CONDR_IDSEQ = cc.CONDR_IDSEQ WHERE "
 			+ "((cc.CONCEPT_VALUE in (";
 		final String cdrSql11 = ")) or (cc.CONCEPT_VALUE is NULL)) "
 			+ "AND cdr.NAME = ? "
 			+ "ORDER BY cdr.CONDR_IDSEQ, cc.DISPLAY_ORDER";
 		//for the cases we have no concept values
 		final String cdrSql2 = "SELECT cdr.CONDR_IDSEQ CONDR_IDSEQ, cc.CONCEPT_VALUE CONCEPT_VALUE, cc.DISPLAY_ORDER DISPLAY_ORDER "
-				+ "FROM  SBREXT.CON_DERIVATION_RULES_EXT cdr inner join SBREXT.COMPONENT_CONCEPTS_EXT cc on cdr.CONDR_IDSEQ = cc.CONDR_IDSEQ WHERE "
+				+ "FROM  SBREXT.CON_DERIVATION_RULES_VIEW_EXT cdr inner join SBREXT.COMPONENT_CONCEPTS_VIEW_EXT cc on cdr.CONDR_IDSEQ = cc.CONDR_IDSEQ WHERE "
 				+ "(cc.CONCEPT_VALUE is NULL) "
 				+ "AND cdr.NAME = ? "
 				+ "ORDER BY cdr.CONDR_IDSEQ, cc.DISPLAY_ORDER";
 		
-		String currCdrIdseq = null;
 		Connection conn = data.getCurationServlet().getConn();
+		String cdrSql;
+		if (numOfConceptValues > 0) {				
+			cdrSql = cdrSql1 + strConceptValues + cdrSql11;
+		}
+		else {
+			cdrSql = cdrSql2;
+		}
+		logger.debug("searchExactMatchCdrIdseq cdrSql: " + cdrSql);
+		
+		foundCdrIdseq = retrieveExactMatchCdrIdseqFromDb(cdrSql, conn, strConcatConceptCodes, reversedConcepts);
+		
+		return foundCdrIdseq;
+	}
+	/**
+	 * This retrieve CDR ID SEQ from DB to find existed VMs which refers these CDRs.
+	 * This operation is related to exact match of VMs.
+	 * 
+	 * @param cdrSql
+	 * @param conn
+	 * @param strConcatConceptCodes
+	 * @param reversedConcepts
+	 * @return CONDR_IDSEQ set if any is found
+	 */
+	private static Set<String> retrieveExactMatchCdrIdseqFromDb(String cdrSql, Connection conn, String strConcatConceptCodes, List<EVS_Bean> reversedConcepts) {
+		//CURATNTOOL-471
+		String currCdrIdseq = null;
 		ResultSet rs = null;
 		PreparedStatement statement = null;
-		String cdrSql;
+		Set<String> foundCdrIdseq = new HashSet<>();
 		try {
-			if (conceptValues.size() > 0) {				
-				cdrSql = cdrSql1 + strConceptValues + cdrSql11;
-			}
-			else {
-				cdrSql = cdrSql2;
-			}
-			logger.debug("cdrSql: " + cdrSql);
 			statement = conn.prepareStatement(cdrSql);
-			statement.setString(1, concatConceptCodes.substring(0, concatConceptCodes.length() - 1));
+			statement.setString(1, strConcatConceptCodes);
 			rs = statement.executeQuery();
 			
 			String preCdrIdseq = "-1";//non-existed value
-			String currConceptValue = null;
 			int currDisplayOrder; //no nulls in DB;
+			String currConceptValue = null;
 			boolean groupMatch = false;
+			int groupSize = 0;
 			while (rs.next()) {
 				currCdrIdseq = rs.getString("CONDR_IDSEQ");
-				if (! currCdrIdseq.equals(preCdrIdseq)) {
+				if (! currCdrIdseq.equals(preCdrIdseq)) {//next CONDR_IDSEQ
 					//new CDR group started in COMPONENT_CONCEPTS_EXT table
-					if (groupMatch) {
+					if ((groupMatch) && ((groupSize == reversedConcepts.size()))) {
 						//the match happen in the previous group, we stop searching
-						break;
+						foundCdrIdseq.add(preCdrIdseq);
 					}
-					else {
-						groupMatch = true;//we hope for match
-						preCdrIdseq = currCdrIdseq;
-					}
+					groupMatch = true;//we hope for match
+					preCdrIdseq = currCdrIdseq;
+					groupSize = 0;
 				}
 				if (groupMatch) {//we compare the values if a group is a match candidate; otherwise we just need to loop through this group until the next group start 
 					currConceptValue = rs.getString("CONCEPT_VALUE");//could be null
+					currConceptValue = (currConceptValue != null) ? currConceptValue : "";//getNVP_CONCEPT_VALUE() never substitutes null for an empty string
 					currDisplayOrder = rs.getInt("DISPLAY_ORDER");
-					if (currDisplayOrder >= conceptList.size()) {//DISPLAY_ORDER is 0, 1, 2, ... sequential integers starts from 0
+					if (currDisplayOrder >= reversedConcepts.size()) {//DISPLAY_ORDER is 0, 1, 2, ... sequential integers starts from 0
 						groupMatch = false;//no match in this group
 					}
-					else {
-						if (! StringUtils.equals(conceptList.get(currDisplayOrder).getNVP_CONCEPT_VALUE(), currConceptValue)) {
+					else if (! StringUtils.equals(reversedConcepts.get(currDisplayOrder).getNVP_CONCEPT_VALUE(), currConceptValue)) {
 							groupMatch = false;//no match in this group
-						}
+					}
+					else {
+						//match candidate calculate group size we do not calculate if there is no match
+						groupSize++;
 					}
 				}
 			}
-			if (! groupMatch){
-				currCdrIdseq = null;
+			//we need to see all values are the same, and we have the same amount of concepts
+			if ((groupMatch) && (groupSize == reversedConcepts.size())) {
+				foundCdrIdseq.add(currCdrIdseq);
 			}
-			logger.debug("getExactMatchCdrIdseq, Cdr Idseq: " + currCdrIdseq);
+			
+			logger.debug("retrieveExactMatchCdrIdseqFromDb, CONDR_IDSEQ set: " + foundCdrIdseq);
 		}
 		catch (Exception e) {
-			logger.error("ERROR getExactMatchCdrIdseq : " + e.toString(), e);
-			data.setStatusMsg(data.getStatusMsg() + "\\tError : Unable to search VM."
-					+ e.toString());
-			data.setActionStatus(VMForm.ACTION_STATUS_FAIL);
+			logger.error("ERROR retrieveExactMatchCdrIdseqFromDb: " + e.toString(), e);
 		}
 		finally {
 			SQLHelper.closeResultSet(rs);
 			SQLHelper.closePreparedStatement(statement);
 		}		
-		return currCdrIdseq;
+		return foundCdrIdseq;
 	}
 	/**
 	 * To create a new version of the VM call the stored procedure
