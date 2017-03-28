@@ -264,10 +264,10 @@
         var writeContArray = new Array();
 
         function loadCSCSI()
-        {
+        {      
             <%
     Vector vCSIList = (Vector)session.getAttribute("CSCSIList");
-    if ((vCSIList != null) && (vACCSIList != null)){
+    if (vCSIList != null){
     for (int i=0; i<vCSIList.size(); i++)  //loop csi vector
     {
       thisCSI = (CSI_Bean)vCSIList.elementAt(i);  //get the csi bean
