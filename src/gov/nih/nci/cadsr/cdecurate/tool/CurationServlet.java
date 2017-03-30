@@ -5,32 +5,15 @@
 
 package gov.nih.nci.cadsr.cdecurate.tool;
 
-// import files
-
-import gov.nih.nci.cadsr.cdecurate.common.Security;
-import gov.nih.nci.cadsr.cdecurate.database.SQLHelper;
-import gov.nih.nci.cadsr.cdecurate.ui.AltNamesDefsServlet;
-import gov.nih.nci.cadsr.cdecurate.ui.DesDEServlet;
-import gov.nih.nci.cadsr.cdecurate.util.AdministeredItemUtil;
-import gov.nih.nci.cadsr.cdecurate.util.DataManager;
-import gov.nih.nci.cadsr.cdecurate.util.ErrorHelper;
-import gov.nih.nci.cadsr.cdecurate.util.ToolURL;
-import gov.nih.nci.cadsr.common.Constants;
-import gov.nih.nci.cadsr.common.StringUtil;
-import gov.nih.nci.cadsr.common.TestUtil;
-import gov.nih.nci.cadsr.persist.ac.Admin_Components_Mgr;
-import gov.nih.nci.cadsr.persist.ac.Tool_Options_View_Ext_Mgr;
-//import gov.nih.nci.cadsr.persist.evs.Evs_Mgr;
-import gov.nih.nci.cadsr.persist.exception.DBException;
-import gov.nih.nci.cadsr.persist.user.User_Accounts_Mgr;
-import gov.nih.nci.cadsr.sentinel.util.DSRAlert;
-import gov.nih.nci.cadsr.sentinel.util.DSRAlertImpl;
+import static gov.nih.nci.cadsr.common.StringUtil.resolveHex;
+import static gov.nih.nci.cadsr.common.StringUtil.unescapeHtmlEncodedValue;
 
 import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Vector;
@@ -45,15 +28,31 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.sql.DataSource;
 
-
 //import oracle.jdbc.driver.OracleTypes;
 //import oracle.jdbc.OracleTypes;        //GF30779
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 
-import static gov.nih.nci.cadsr.common.StringUtil.resolveHex;
-import static gov.nih.nci.cadsr.common.StringUtil.unescapeHtmlEncodedValue;
+// import files
+
+import gov.nih.nci.cadsr.cdecurate.common.Security;
+import gov.nih.nci.cadsr.cdecurate.database.SQLHelper;
+import gov.nih.nci.cadsr.cdecurate.ui.AltNamesDefsServlet;
+import gov.nih.nci.cadsr.cdecurate.ui.DesDEServlet;
+import gov.nih.nci.cadsr.cdecurate.util.AdministeredItemUtil;
+import gov.nih.nci.cadsr.cdecurate.util.DataManager;
+import gov.nih.nci.cadsr.cdecurate.util.ErrorHelper;
+import gov.nih.nci.cadsr.cdecurate.util.ToolURL;
+import gov.nih.nci.cadsr.common.Constants;
+import gov.nih.nci.cadsr.common.StringUtil;
+import gov.nih.nci.cadsr.persist.ac.Admin_Components_Mgr;
+import gov.nih.nci.cadsr.persist.ac.Tool_Options_View_Ext_Mgr;
+//import gov.nih.nci.cadsr.persist.evs.Evs_Mgr;
+import gov.nih.nci.cadsr.persist.exception.DBException;
+import gov.nih.nci.cadsr.persist.user.User_Accounts_Mgr;
+import gov.nih.nci.cadsr.sentinel.util.DSRAlert;
+import gov.nih.nci.cadsr.sentinel.util.DSRAlertImpl;
 
 /**
  * The CurationServlet is the main servlet for communicating between the client and the server.
@@ -1729,6 +1728,7 @@ public class CurationServlet
             //InsACService insAC = new InsACService(req, res, this);
             HttpSession session = req.getSession();
             DataManager.setAttribute( session, "PVAction", sPVAction );
+            String sAction = req.getParameter("pageAction");
             VD_Bean m_VD = ( VD_Bean ) session.getAttribute( "m_VD" ); // new VD_Bean();
             // get the existing pvs from the session
             Vector<PV_Bean> vVDPVList = m_VD.getVD_PV_List(); // (Vector)session.getAttribute("VDPVList");
@@ -1782,7 +1782,7 @@ public class CurationServlet
                     data.setCurationServlet( this );
                     eBean = conact.getCaDSRConcept( eBean, eUser, data );
                     //this.freeConnection(data.getDBConnection());
-                    String errMsg = data.getStatusMsg();
+                    String errMsg = data.getStatusMsg();     
                     if( !errMsg.equals( "" ) )
                         storeStatusMsg( errMsg + "\\n" );
                     String sValue = eBean.getLONG_NAME();
@@ -1804,14 +1804,17 @@ public class CurationServlet
                         VM_Bean vdVM = pvBean.getPV_VM();
                         String vdValue = pvBean.getPV_VALUE();
                         String vdMean = "";
-                        if( vdVM != null )
+                        if( vdVM != null ) {
                             vdMean = vdVM.getVM_LONG_NAME();//vdVM.getVM_SHORT_MEANING(); // pvBean.getPV_SHORT_MEANING();
+                            
+                        }
                         // check if value meaning was already existed
-                        if( vdMean != null && vdMean.equalsIgnoreCase( sMean ) )
+                        if( (vdMean != null) && ((vdMean.equalsIgnoreCase( sMean )) ||
+                        		(("addSelectedCon".equals(sAction)) && (compareVmEvs(eBean, vdVM)))))//CURATNTOOL-712 include compare by Concept Code
                         {
                             String pvSubmit = pvBean.getVP_SUBMIT_ACTION();
                             // put back the deleted pv if it has same value-vm pair
-                            if( pvSubmit != null && pvSubmit.equals( "DEL" ) && vdValue.equalsIgnoreCase( sValue ) )
+                            if( pvSubmit != null && pvSubmit.equals( "DEL" ) && vdValue.equalsIgnoreCase( sValue ))
                             {
                                 // set to update if idseq is non evs and is from cadsr
                                 if( pvBean.getPV_PV_IDSEQ() != null && !pvBean.getPV_PV_IDSEQ().equals( "EVS_" + sValue ) )
@@ -1823,7 +1826,8 @@ public class CurationServlet
                                 // updRow = j; //need this to update the vector
                                 this.storePVinVDPVList( vVDPVList, pvBean, eBean, parConcept, sValue, sMean, j, true );
                             }
-                            else if( pvSubmit != null && !pvSubmit.equals( "DEL" ) && vdValue.equalsIgnoreCase( sValue ) ) // was not deleted
+                            else if( (pvSubmit != null) && (!pvSubmit.equals( "DEL" )) && ((vdValue.equalsIgnoreCase( sValue)) // was not deleted
+                            		|| (("addSelectedCon".equals(sAction)) && (compareVmEvs(eBean, vdVM)))))//CURATNTOOL-712 include compare by Concept Code
                             {
                                 String sValMean = "\\tValue: " + sValue + " and Meaning: "
                                         + sMean + "\\n";
@@ -1859,7 +1863,30 @@ public class CurationServlet
             logger.error( "ERROR - ", e );
         }
     }
-
+    /**
+     * This method to help avoiding creating VMs duplicates when VM is created from EVS single concept.
+     * 
+     * @param eBean we try to use this bean from EVS search to create a new VM. 
+     * @param vdMean shall be not null
+     * @return boolean if VM Concept matches the given concept by concept code
+     */
+    private static boolean compareVmEvs (EVS_Bean eBean, VM_Bean vdMean) {
+    	//CURATNTOOL-712
+	    boolean res = false; 
+	    if (eBean != null) {
+		    Collection<EVS_Bean> candidateEvs = vdMean.getVM_CONCEPT_LIST();//never null
+	    	if ((candidateEvs != null) && (candidateEvs.size() == 1)) {//we interested in single concept only VMs at that point
+	    		for (EVS_Bean evsExisted : candidateEvs) {
+		    		res = eBean.getCONCEPT_IDENTIFIER().equals(evsExisted.getCONCEPT_IDENTIFIER());
+		    		if (res) {
+		    			logger.debug("CURATNTOOL-712 found VM with the same concept on the current PV page: " + eBean.getCONCEPT_IDENTIFIER());
+		    			break;
+		    		}
+	    		}
+	    	}
+	    }
+	    return res;
+    }
     /**
      * stores the selected pvs from concepts search in vdpv list
      * @param vVPList Vector<PV_Bean> object
