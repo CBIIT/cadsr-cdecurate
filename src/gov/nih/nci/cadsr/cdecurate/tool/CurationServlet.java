@@ -10,6 +10,7 @@ import static gov.nih.nci.cadsr.common.StringUtil.unescapeHtmlEncodedValue;
 
 import java.sql.CallableStatement;
 import java.sql.Connection;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -53,6 +54,7 @@ import gov.nih.nci.cadsr.persist.exception.DBException;
 import gov.nih.nci.cadsr.persist.user.User_Accounts_Mgr;
 import gov.nih.nci.cadsr.sentinel.util.DSRAlert;
 import gov.nih.nci.cadsr.sentinel.util.DSRAlertImpl;
+import oracle.jdbc.OracleTypes;
 
 /**
  * The CurationServlet is the main servlet for communicating between the client and the server.
@@ -1921,18 +1923,27 @@ public class CurationServlet
             if( pBean.getVP_SUBMIT_ACTION().equals( "INS" ) )
                 pBean.setPV_BEGIN_DATE( formatter.format( new java.util.Date() ) );
             // add evs bean to pv bean
-            VM_Bean vm = new VM_Bean();
-            //   vm.setVM_SHORT_MEANING(pBean.getPV_SHORT_MEANING());
-            logger.debug( "PV_SHORT_MEANING at Line 1895 of CurationServlet storePVinVDPVList: " + pBean.getPV_SHORT_MEANING() );
-            vm.setVM_LONG_NAME( AdministeredItemUtil.handleLongName( pBean.getPV_SHORT_MEANING() ) );    //GF32004;
-            logger.debug( "VM_LONG_NAME at Line 1897 of CurationServlet storePVinVDPVList: " + vm.getVM_LONG_NAME() );
-            // vm.setVM_DESCRIPTION(pBean.getPV_MEANING_DESCRIPTION());
-            vm.setVM_PREFERRED_DEFINITION( pBean.getPV_MEANING_DESCRIPTION() );
-            vm.setVM_CONDR_IDSEQ( eBean.getCONDR_IDSEQ() );
-            Vector<EVS_Bean> vmCon = new Vector<EVS_Bean>();
-            vmCon.addElement( eBean );
-            vm.setVM_CONCEPT_LIST( vmCon );
-            vm.setVM_SUBMIT_ACTION( VMForm.CADSR_ACTION_INS );
+            VM_Bean vm;
+            String conceptCode = eBean.getCONCEPT_IDENTIFIER();//CURATNTOOL-712
+            VM_Bean matchingByConcept = searchVMByConceptCode(conceptCode);
+            if (matchingByConcept != null) {
+            	vm = matchingByConcept;
+            	vm.setVM_SUBMIT_ACTION( VMForm.CADSR_ACTION_NONE);
+            }
+            else {
+            	vm = new VM_Bean();
+	            //   vm.setVM_SHORT_MEANING(pBean.getPV_SHORT_MEANING());
+	            logger.debug( "PV_SHORT_MEANING at Line 1895 of CurationServlet storePVinVDPVList: " + pBean.getPV_SHORT_MEANING() );
+	            vm.setVM_LONG_NAME( AdministeredItemUtil.handleLongName( pBean.getPV_SHORT_MEANING() ) );    //GF32004;
+	            logger.debug( "VM_LONG_NAME at Line 1897 of CurationServlet storePVinVDPVList: " + vm.getVM_LONG_NAME() );
+	            // vm.setVM_DESCRIPTION(pBean.getPV_MEANING_DESCRIPTION());
+	            vm.setVM_PREFERRED_DEFINITION( pBean.getPV_MEANING_DESCRIPTION() );
+	            vm.setVM_CONDR_IDSEQ( eBean.getCONDR_IDSEQ() );
+	            Vector<EVS_Bean> vmCon = new Vector<EVS_Bean>();
+	            vmCon.addElement( eBean );
+	            vm.setVM_CONCEPT_LIST( vmCon );
+	            vm.setVM_SUBMIT_ACTION( VMForm.CADSR_ACTION_INS );
+            }
             pBean.setPV_VM( vm );
             //System.out.println(eBean.getCONCEPT_IDENTIFIER() + " vm concepts " + vmCon.size());
             // pBean.setVM_CONCEPT(eBean);
@@ -1947,7 +1958,59 @@ public class CurationServlet
         }
         return vVPList;
     }
+	public VM_Bean searchVMByConceptCode(String conceptCode)
+	{
+		ResultSet rs = null;
+		CallableStatement cstmt = null;	//CADSRMETA-501
+		VM_Bean vmFound = null;
+		Connection conn = this.getConn();
+		if ((conn == null) ||(StringUtils.isEmpty(conceptCode)))
+			return null;
+		try
+		{
 
+			cstmt =
+					conn.prepareCall(
+									"{call SBREXT.SBREXT_CDE_CURATOR_PKG.SEARCH_VM(?,?,?,?,?,?,?,?,?,?)}");
+			// Now tie the placeholders for out parameters.
+			cstmt.registerOutParameter(5, OracleTypes.CURSOR);
+			// Now tie the placeholders for In parameters.
+			cstmt.setString(1, null); // name
+			cstmt.setString(2, null);
+			cstmt.setString(3, null);
+			cstmt.setString(4, null);
+			cstmt.setString(6, conceptCode);
+			cstmt.setString(7, null);
+			cstmt.setString(8, null);
+			cstmt.setString(9, null);
+			cstmt.setDouble(10, 0);
+			// Now we are ready to call the stored procedure
+			cstmt.execute();
+			// store the output in the resultset
+			rs = (ResultSet) cstmt.getObject(5);
+
+			if (rs != null)
+			{
+				// loop through the resultSet and add them to the bean
+				if (rs.next())
+				{
+					VM_Bean vmBean = VMAction.doSetVMAttributes(rs, conn);
+					vmFound = vmBean; // add the bean to a vector
+					logger.debug("searchMultipleVMByConceptCode: " + conceptCode + ", found matching VMs number: " + vmFound.getVM_LONG_NAME());
+				} // END WHILE
+			} // END IF
+		}
+		catch (Exception e)
+		{
+			logger.error("ERROR in searchMultipleVMByConceptCode: " + conceptCode + ", " + e.toString(), e);
+		}
+		finally
+		{
+			rs = SQLHelper.closeResultSet(rs);
+			cstmt = SQLHelper.closeCallableStatement(cstmt);
+		}
+		return (vmFound);
+	}
     /**
      * called after setDEC or setVD to reset EVS session attributes
      *

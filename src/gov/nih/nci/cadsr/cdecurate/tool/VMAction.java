@@ -1344,7 +1344,7 @@ public class VMAction implements Serializable
 	 *            Connection object
 	 * @return VM_Bean
 	 */
-	public VM_Bean doSetVMAttributes(ResultSet rs, Connection conn)
+	public static VM_Bean doSetVMAttributes(ResultSet rs, Connection conn)
 	{
 
 		VM_Bean vm = new VM_Bean();
@@ -1373,7 +1373,7 @@ public class VMAction implements Serializable
 			vm.setVM_CHANGE_NOTE(StringUtil.escapeHtmlEncodedValue(sChg));
 			vm.setASL_NAME(rs.getString("asl_name"));
 			// vm.setVM_DEFINITION_SOURCE(rs.getString("vm_definition_source"));
-			this.getVMVersion(rs, vm);
+			getVMVersion(rs, vm);
 			String sCondr = rs.getString("condr_idseq");
 			vm.setVM_CONDR_IDSEQ(sCondr);
 			// get vm concepts
@@ -2428,7 +2428,7 @@ public class VMAction implements Serializable
 	 * @param vm
 	 *            VM_Bean object
 	 */
-	private void getVMVersion(ResultSet rs, VM_Bean vm)
+	private static void getVMVersion(ResultSet rs, VM_Bean vm)
 	{
 
 		try
