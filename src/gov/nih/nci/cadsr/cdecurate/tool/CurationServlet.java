@@ -10,6 +10,7 @@ import static gov.nih.nci.cadsr.common.StringUtil.unescapeHtmlEncodedValue;
 
 import java.sql.CallableStatement;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
@@ -1958,58 +1959,72 @@ public class CurationServlet
         }
         return vVPList;
     }
+    /**
+     * Try to find an existed VM based on an exact match with single concept code.
+     * 
+     * @param conceptCode String as 'C16644'.
+     * @return VM_Bean if found or null
+     */
+    
 	public VM_Bean searchVMByConceptCode(String conceptCode)
 	{
-		ResultSet rs = null;
-		CallableStatement cstmt = null;	//CADSRMETA-501
-		VM_Bean vmFound = null;
+		//CURATNTOOL-471
+		if (conceptCode == null) {
+			return null;
+		}
 		Connection conn = this.getConn();
 		if ((conn == null) ||(StringUtils.isEmpty(conceptCode)))
 			return null;
-		try
-		{
-
-			cstmt =
-					conn.prepareCall(
-									"{call SBREXT.SBREXT_CDE_CURATOR_PKG.SEARCH_VM(?,?,?,?,?,?,?,?,?,?)}");
-			// Now tie the placeholders for out parameters.
-			cstmt.registerOutParameter(5, OracleTypes.CURSOR);
-			// Now tie the placeholders for In parameters.
-			cstmt.setString(1, null); // name
-			cstmt.setString(2, null);
-			cstmt.setString(3, null);
-			cstmt.setString(4, null);
-			cstmt.setString(6, conceptCode);
-			cstmt.setString(7, null);
-			cstmt.setString(8, null);
-			cstmt.setString(9, null);
-			cstmt.setDouble(10, 0);
-			// Now we are ready to call the stored procedure
-			cstmt.execute();
-			// store the output in the resultset
-			rs = (ResultSet) cstmt.getObject(5);
-
-			if (rs != null)
-			{
-				// loop through the resultSet and add them to the bean
-				if (rs.next())
-				{
-					VM_Bean vmBean = VMAction.doSetVMAttributes(rs, conn);
-					vmFound = vmBean; // add the bean to a vector
-					logger.debug("searchMultipleVMByConceptCode: " + conceptCode + ", found matching VMs number: " + vmFound.getVM_LONG_NAME());
-				} // END WHILE
-			} // END IF
+		ResultSet rs = null;
+		PreparedStatement statement = null;
+		VM_Bean vmBean = null;
+		String findVmSql = generateVmExactMatchConceptByCode(conceptCode);
+		try {
+			statement = conn.prepareStatement(findVmSql);
+			rs = statement.executeQuery();
+			if (rs.next()) {//we take here the first VM we found. They are ordered by Workflow Status RELEASED go first
+				vmBean = VMAction.doSetVMAttributes(rs, conn);
+				vmBean.setVM_BEGIN_DATE(rs.getString("begin_date"));
+				vmBean.setVM_END_DATE(rs.getString("end_date"));
+				vmBean.setVM_CD_NAME(rs.getString("cd_name"));
+			}
 		}
-		catch (Exception e)
-		{
-			logger.error("ERROR in searchMultipleVMByConceptCode: " + conceptCode + ", " + e.toString(), e);
+		catch (Exception e) {
+			logger.error("ERROR - CurationServlet searchVMByConceptCode: " + e, e);
 		}
-		finally
-		{
-			rs = SQLHelper.closeResultSet(rs);
-			cstmt = SQLHelper.closeCallableStatement(cstmt);
+		finally {
+			SQLHelper.closeResultSet(rs);
+			SQLHelper.closePreparedStatement(statement);
 		}
-		return (vmFound);
+		return vmBean;
+	}
+	private static String generateVmExactMatchConceptByCode(String singleConceptCodeStr)
+	{
+		//CURATNTOOL-471
+		final String vmFields = "SELECT " +
+	              "vm.VM_IDSEQ " + 
+	             ",vm.LONG_NAME " + 
+	             ",vm.PREFERRED_DEFINITION " + 
+	             ",sbrext_cde_curator_pkg.get_one_cd_name(vm.long_name) cd_name " + 
+	             ",vm.preferred_definition vm_description " + 
+	             ",vm.begin_date " + 
+	             ",vm.end_date " + 
+	             ",vm.condr_idseq " + 
+	             ",vm.long_name " + 
+	             ",vm.VERSION " + 
+	             ",vm.vm_id " + 
+	             ",vm.conte_idseq " + 
+	             ",vm.asl_name " + 
+	             ",vm.change_note " + 
+	             ",vm.comments " + 
+	             ",vm.latest_version_ind ";
+			StringBuilder cond = new StringBuilder();
+			cond.append(vmFields);
+			cond.append("FROM value_meanings_view vm INNER JOIN sbr.ac_status_lov_view asl ON asl.asl_name = vm.asl_name "
+					+ "INNER JOIN SBREXT.CON_DERIVATION_RULES_EXT_VIEW cdr on cdr.CONDR_IDSEQ = vm.CONDR_IDSEQ ");
+			cond.append("WHERE cdr.name = '").append(singleConceptCodeStr).append("' ");
+			cond.append("ORDER BY asl.display_order, vm.date_created desc");
+			return cond.toString();
 	}
     /**
      * called after setDEC or setVD to reset EVS session attributes
