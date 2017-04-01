@@ -1981,6 +1981,7 @@ public class CurationServlet
 		String findVmSql = generateVmExactMatchConceptByCode(conceptCode);
 		try {
 			statement = conn.prepareStatement(findVmSql);
+			statement.setString(1, conceptCode);
 			rs = statement.executeQuery();
 			if (rs.next()) {//we take here the first VM we found. They are ordered by Workflow Status RELEASED go first
 				vmBean = VMAction.doSetVMAttributes(rs, conn);
@@ -2021,10 +2022,12 @@ public class CurationServlet
 			StringBuilder cond = new StringBuilder();
 			cond.append(vmFields);
 			cond.append("FROM value_meanings_view vm INNER JOIN sbr.ac_status_lov_view asl ON asl.asl_name = vm.asl_name "
-					+ "INNER JOIN SBREXT.CON_DERIVATION_RULES_EXT_VIEW cdr on cdr.CONDR_IDSEQ = vm.CONDR_IDSEQ ");
-			cond.append("WHERE cdr.name = '").append(singleConceptCodeStr).append("' ");
-			cond.append("ORDER BY asl.display_order, vm.date_created desc");
-			return cond.toString();
+					+ "INNER JOIN SBREXT.CON_DERIVATION_RULES_VIEW_EXT cdr on cdr.CONDR_IDSEQ = vm.CONDR_IDSEQ ");
+			cond.append("WHERE cdr.name = ? ");
+			cond.append("ORDER BY asl.display_order asc, vm.date_created desc");
+			String resSql = cond.toString();
+			logger.debug("........generateVmExactMatchConceptByCode SQL: " + resSql);
+			return resSql;
 	}
     /**
      * called after setDEC or setVD to reset EVS session attributes
