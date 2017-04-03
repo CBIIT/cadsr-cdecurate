@@ -74,6 +74,7 @@ public class VMHelper {
 					{
 						data.setVMBean(existVM);//TODO this code is unclear - we just select an arbitrary returned VM if we have more than 1 VM returned; example VM Long name 'BioMaterialCharacteristicCategory'
 						ret = existVM;
+						break;
 					}
 				}
 			}
