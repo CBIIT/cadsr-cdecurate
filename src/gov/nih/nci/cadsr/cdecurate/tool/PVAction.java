@@ -23,6 +23,7 @@ import java.util.Vector;
 
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 
 import gov.nih.nci.cadsr.cdecurate.database.SQLHelper;
@@ -1470,24 +1471,41 @@ public class PVAction implements Serializable {
 		do {
 			int i = Integer.parseInt(vmHash.get(multiName));
 			PV_Bean pv = vdpv.elementAt(i);
-			//get the exact match
-			VMAction vmact = new VMAction();
-			if (vmact.checkExactMatch(vdpv.elementAt(i).getPV_VM(), vm) != null)
-				isExact = true;
-			//reset the pv
-			pv.setPV_VM(vm);
-			vdpv.setElementAt(pv, i);
-			//check if another with same vm exists
-			multi += 1;
-			multiName = vmName + "." + multi;
-		} while (vmHash.containsKey(multiName));
+			VM_Bean vmToReset = pv.getPV_VM();//CURATNTOOL-712 EVS
+			if ((StringUtils.isNotEmpty(vmToReset.getVM_IDSEQ())) &&//CURATNTOOL-712 EVS
+			    (VMForm.CADSR_ACTION_NONE.equals(vmToReset.getVM_SUBMIT_ACTION()))) {//if we assigned a VM to this PV based on Concept code we do not use those find by VM Long Name
+				if (pv.getPV_VALUE().equals(vmToReset.getVM_LONG_NAME())) {
+					isExact = true;
+					logger.debug("pv bean has a VM previously found to it by EVS Concept Code, Public ID: " + vmToReset.getVM_ID() + ", VM Long Name: " + vmToReset.getVM_LONG_NAME() + ", isExact: " + isExact);
+				}
+				else {
+					logger.debug("pv bean has a VM previously found to it by EVS Concept Code, Public ID: " + vmToReset.getVM_ID() + ", VM Long Name: " + vmToReset.getVM_LONG_NAME() + ", isExact: " + isExact);
+					vmName = pv.getPV_VALUE();
+				}
+				break;
+			}
+			else {
+				//get the exact match
+				VMAction vmact = new VMAction();
+				if (vmact.checkExactMatch(vdpv.elementAt(i).getPV_VM(), vm) != null) {//CURATNTOOL-712 EVS
+					isExact = true;
+				}
+				//reset the pv
+				pv.setPV_VM(vm);
+				logger.debug("...pv VM is reset to a VM found in DB by name, Public ID: " + vm.getVM_ID() + ", VM Long Name: " + vm.getVM_LONG_NAME() + ", isExact: " + isExact);
+				//vdpv.setElementAt(pv, i);//we do not need to set is again the same pv the same position it is already there
+				//check if another with same vm exists
+				multi += 1;
+				multiName = vmName + "." + multi;
+			}
+		} while ((! isExact) && (vmHash.containsKey(multiName)));//CURATNTOOL-712 EVS if the first match is found we do not continue the search in the VMs HashMap because we use order by in SELECT
 		//append the names to display if not the exact match
 		if (!isExact) {
 			if (!vNames.equals(""))
 				vNames += ", ";
 			vNames += vmName;
 		}
-		//return chagnged names to display
+		//return changed names to display
 		return vNames;
 	}
 

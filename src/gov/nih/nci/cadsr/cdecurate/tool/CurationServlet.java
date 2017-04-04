@@ -55,7 +55,7 @@ import gov.nih.nci.cadsr.persist.exception.DBException;
 import gov.nih.nci.cadsr.persist.user.User_Accounts_Mgr;
 import gov.nih.nci.cadsr.sentinel.util.DSRAlert;
 import gov.nih.nci.cadsr.sentinel.util.DSRAlertImpl;
-import oracle.jdbc.OracleTypes;
+
 
 /**
  * The CurationServlet is the main servlet for communicating between the client and the server.
