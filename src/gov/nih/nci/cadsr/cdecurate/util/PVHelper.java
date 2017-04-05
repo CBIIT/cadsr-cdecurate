@@ -130,6 +130,13 @@ public class PVHelper {
 	    //CURATNTOOL-1188
 	    String chgValue = (String)req.getParameter("currentPVValue");  //edited value
 	    String oldValue;
+	    //we need to check what action is here.
+	    //If it is not PV Pencil action on an existed PV we shall return false 
+	    String pvIdseq = pv.getPV_PV_IDSEQ();
+	    if ((StringUtils.isEmpty(pvIdseq)) || (pvIdseq.startsWith("EVS_"))) {
+	    	//CURATNTOOL-1287 This PV is not saved yet, returning false
+	    	return false;
+	    }
 
 	    boolean isPvValueSame = (pv != null) && ((oldValue = pv.getPV_VALUE()) != null) && (oldValue.equals(chgValue));
 	    
