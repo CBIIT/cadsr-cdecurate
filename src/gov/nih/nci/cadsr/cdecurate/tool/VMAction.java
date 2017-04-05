@@ -2484,26 +2484,21 @@ public class VMAction implements Serializable
 	}
 
 	/**
-	 * to get the sql query string
+	 * to get the sql query string with ? to set up parameter values in pstmt
 	 * 
-	 * @param sInput
-	 *            String vm value
+	 * @param numberOfCommas
+	 *           integer shall be more than 0
 	 * @return sql string
 	 */
-	private String makeSelectQuery(String sInput)
+	private String makeSelectQuery(int numberOfCommas)
 	{
-
-		StringTokenizer st = new StringTokenizer(sInput, ",");
-		StringBuffer inClause = new StringBuffer();
-		boolean firstValue = true;
-		while (st.hasMoreTokens())
+		StringBuilder inClause = new StringBuilder();
+		for (int idx = 0; idx < numberOfCommas; idx++ )
 		{
-			inClause.append('?');
-			if (st.hasMoreTokens())
-				inClause.append(',');
-			st.nextToken();
+			inClause.append("?,");
 		}
-		String clause = inClause.substring(0,inClause.lastIndexOf(","));
+		String clause = inClause.toString();
+		clause = clause.substring(0, clause.length() - 1);
 		String sSQL =
 				"SELECT vm.VM_IDSEQ, vm.LONG_NAME, vm.PREFERRED_DEFINITION"
 						+ ", vm.begin_date, vm.end_date, vm.condr_idseq, vm.VERSION, vm.vm_id, vm.conte_idseq"
@@ -2533,29 +2528,30 @@ public class VMAction implements Serializable
 	 * 
 	 * @param conn
 	 *            connection object
-	 * @param searchString
-	 *            String search string
-	 * @return vector of existing vm bean object
+	 * @param vmBeansToSearchByName
+	 *            search these VM long names in DB
+	 * @return List of existing vm bean object
 	 */
-	public Vector<VM_Bean> searchMultipleVM(Connection conn, String searchString)
+	public List<VM_Bean> searchMultipleVM(Connection conn, Collection<String> vmBeansToSearchByName)
 	{
-
 		ResultSet rs = null;
 		PreparedStatement pstmt = null;
-		Vector<VM_Bean> vVMs = new Vector<VM_Bean>();
+		List<VM_Bean> vVMs = new ArrayList<VM_Bean>();
+		if ((vmBeansToSearchByName == null) ||(vmBeansToSearchByName.isEmpty())) {
+			return vVMs;
+		}
 		try
 		{
 			// make sql
-			String sSQL = makeSelectQuery(searchString);
+			String sSQL = makeSelectQuery(vmBeansToSearchByName.size());
 			// prepare statement
 			pstmt = conn.prepareStatement(sSQL);
 			
-			StringTokenizer st = new StringTokenizer(searchString, ",");
 			int ii = 0;
-			while (st.hasMoreTokens())
+			for (String vmLongName : vmBeansToSearchByName)
 			{
 				ii++;
-				pstmt.setString(ii, st.nextToken());
+				pstmt.setString(ii, vmLongName);
 			}
 			// Now we are ready to call the function
 			rs = pstmt.executeQuery();
@@ -2564,7 +2560,7 @@ public class VMAction implements Serializable
 			{
 				VM_Bean vm = doSetVMAttributes(rs, conn);
 				// add the element
-				vVMs.addElement(vm);
+				vVMs.add(vm);
 			}
 		}
 		catch (Exception e)

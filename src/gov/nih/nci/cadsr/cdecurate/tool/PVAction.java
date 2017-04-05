@@ -18,7 +18,10 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
-import java.util.Hashtable;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Vector;
 
 import javax.servlet.http.HttpSession;
@@ -1383,15 +1386,16 @@ public class PVAction implements Serializable {
 	 */
 	public String readExistingVMs(Vector<PV_Bean> vdpvList, PVForm data) {
 		String vNames = "";
+		List<String> searchVmNames = new ArrayList<>();
 		try {
 			//make the string array of names
-			Hashtable<String, String> vmHash = new Hashtable<String, String>();
+			Map<String, String> vmHash = new HashMap<String, String>();
 			for (int i = 0; i < vdpvList.size(); i++) {
 				PV_Bean pv = vdpvList.elementAt(i);
 				if (pv.getPV_PV_IDSEQ().contains("EVS_")) {
 					//String vmName = pv.getPV_VM().getVM_SHORT_MEANING();
 					String vmName = pv.getPV_VM().getVM_LONG_NAME();
-					vNames = setName(vmHash, vmName, vNames, i);
+					searchVmNames = setName(vmHash, vmName, searchVmNames, i);
 				}
 			}
 
@@ -1401,18 +1405,18 @@ public class PVAction implements Serializable {
 			    vNames = vNames.substring(0,index);
 			  }
 			}
-
-			Vector<VM_Bean> vVMs = new Vector<VM_Bean>();
+ 
+			List<VM_Bean> vVMs = new ArrayList<>();;
 			//query the database
-			if (!vNames.equals("")) {
+			if (! searchVmNames.isEmpty()) {
 				//get the connection
 				VMAction vmact = new VMAction();
 				vVMs = vmact.searchMultipleVM(data.getCurationServlet()
-						.getConn(), vNames);
+						.getConn(), searchVmNames);
 				vNames = "";
 				//set the returned vms into the pv list
 				for (int i = 0; i < vVMs.size(); i++) {
-					VM_Bean vm = vVMs.elementAt(i);
+					VM_Bean vm = vVMs.get(i);
 					vNames = getName(vmHash, vm, vdpvList, vNames);
 				}
 			}
@@ -1426,15 +1430,15 @@ public class PVAction implements Serializable {
 	}
 
 	/**
-	 * to get the names to search for; if name alrady exists, it appends number to the name to store the pv index
+	 * Builds list of the names to search for; if name alrady exists, it appends number to the name to store the pv index
 	 * @param vmHash Hash table of vm names and pv index
 	 * @param vmName string to search for
-	 * @param vNames list of vm names to search for
+	 * @param vmNamesToSearch list of vm names to search for
 	 * @param i pv index number
-	 * @return list of vm names separated by comma
+	 * @return list of vm names
 	 */
-	private String setName(Hashtable<String, String> vmHash, String vmName,
-			String vNames, int i) {
+	private List<String> setName(Map<String, String> vmHash, String vmName, List<String> vmNamesToSearch, 
+			int i) {
 		String multiName = vmName;
 		int multi = 0;
 		//find the next one if multiple exists
@@ -1446,12 +1450,12 @@ public class PVAction implements Serializable {
 		//add name and index to the hashtable and to names since it doesn't exist
 		if (vmName.equals(multiName)) {
 			vmHash.put(vmName, ind);
-			vNames +=  vmName + ",";
-
-		} else
+			vmNamesToSearch.add(vmName);
+		} else {
 			vmHash.put(multiName, ind);
+		}
 
-		return vNames;
+		return vmNamesToSearch;
 	}
 
 	/**
@@ -1462,7 +1466,7 @@ public class PVAction implements Serializable {
 	 * @param vNames existed vm list
 	 * @return string existed vm list separated by comma
 	 */
-	private String getName(Hashtable<String, String> vmHash, VM_Bean vm,
+	private String getName(Map<String, String> vmHash, VM_Bean vm,
 			Vector<PV_Bean> vdpv, String vNames) {
 		String vmName = vm.getVM_LONG_NAME();
 		int multi = 0;
@@ -1476,10 +1480,10 @@ public class PVAction implements Serializable {
 			    (VMForm.CADSR_ACTION_NONE.equals(vmToReset.getVM_SUBMIT_ACTION()))) {//if we assigned a VM to this PV based on Concept code we do not use those find by VM Long Name
 				if (pv.getPV_VALUE().equals(vmToReset.getVM_LONG_NAME())) {
 					isExact = true;
-					logger.debug("pv bean has a VM previously found to it by EVS Concept Code, Public ID: " + vmToReset.getVM_ID() + ", VM Long Name: " + vmToReset.getVM_LONG_NAME() + ", isExact: " + isExact);
+					logger.debug("pv bean has a VM previously found to it by EVS Concept Code, Public ID: " + vmToReset.getVM_ID() + ", VM Long Name: '" + vmToReset.getVM_LONG_NAME() + "', isExact: " + isExact);
 				}
 				else {
-					logger.debug("pv bean has a VM previously found to it by EVS Concept Code, Public ID: " + vmToReset.getVM_ID() + ", VM Long Name: " + vmToReset.getVM_LONG_NAME() + ", isExact: " + isExact);
+					logger.debug("pv bean has a VM previously found to it by EVS Concept Code, Public ID: " + vmToReset.getVM_ID() + ", VM Long Name: '" + vmToReset.getVM_LONG_NAME() + "', isExact: " + isExact);
 					vmName = pv.getPV_VALUE();
 				}
 				break;
@@ -1492,7 +1496,7 @@ public class PVAction implements Serializable {
 				}
 				//reset the pv
 				pv.setPV_VM(vm);
-				logger.debug("...pv VM is reset to a VM found in DB by name, Public ID: " + vm.getVM_ID() + ", VM Long Name: " + vm.getVM_LONG_NAME() + ", isExact: " + isExact);
+				logger.debug("...pv VM is reset to a VM found in DB by name, Public ID: " + vm.getVM_ID() + ", VM Long Name: '" + vm.getVM_LONG_NAME() + "', isExact: " + isExact);
 				//vdpv.setElementAt(pv, i);//we do not need to set is again the same pv the same position it is already there
 				//check if another with same vm exists
 				multi += 1;
