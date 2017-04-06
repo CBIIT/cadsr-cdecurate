@@ -2504,7 +2504,7 @@ public class VMAction implements Serializable
 						+ ", vm.begin_date, vm.end_date, vm.condr_idseq, vm.VERSION, vm.vm_id, vm.conte_idseq"
 						+ ", vm.asl_name, vm.change_note, vm.comments, vm.latest_version_ind"
 						+ " FROM sbr.value_meanings_view vm INNER JOIN sbr.ac_status_lov_view asl ON asl.asl_name = vm.asl_name "
-						+ "WHERE vm.long_name IN ("+ clause + ") ORDER BY asl.display_order asc, vm.long_name, vm.date_created desc";
+						+ "WHERE vm.long_name IN ("+ clause + ") ORDER BY vm.long_name, asl.display_order asc, vm.date_created desc";
 		return sSQL;
 	}
 
