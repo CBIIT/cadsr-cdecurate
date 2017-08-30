@@ -19,7 +19,7 @@ String serverName = request.getServerName();
 //String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
 //I try to use https to avoid http:// URL on the page
 String basePath;
-if (!(serverName.contains("localhost"))) {
+if (!((serverName.contains("localhost")) || ("127.0.0.1".equals(serverName)))) {
 	basePath = "https://"+serverName+path+"/";
 }
 else {
