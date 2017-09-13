@@ -4754,7 +4754,9 @@ public class EVSSearch implements Serializable
 
         Mappings mappings = cs.getMappings();
         SupportedHierarchy[] hierarchies = mappings.getSupportedHierarchy();
-        SupportedHierarchy hierarchyDefn = hierarchies[0];
+        //SupportedHierarchy hierarchyDefn = hierarchies[0];
+        // Fix for Get sub concepts issue - CURATNTOOL-624
+        for (SupportedHierarchy hierarchyDefn : hierarchies) {
         String[] associationsToNavigate = hierarchyDefn.getAssociationNames();// associations
 
         for( String assn : associationsToNavigate )
@@ -4770,11 +4772,10 @@ public class EVSSearch implements Serializable
                 ret = assn;
                 break;
             }
-            if( ret.length() == 0 && hierarchyDefn.getLocalId().equals( "is_a" ) )
-                ret = assn;
-
+            	if( ret.length() == 0 && hierarchyDefn.getLocalId().equals( "is_a" ) )
+            		ret = assn;
+        	}
         }
-
         return ret;
 
     }
