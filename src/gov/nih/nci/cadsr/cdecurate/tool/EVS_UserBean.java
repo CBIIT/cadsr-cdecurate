@@ -164,6 +164,7 @@ public final class EVS_UserBean implements Serializable
   private String PrefVocabSrc;   //source of the preferred vocabulary
   private String PrefVocab;   //name of the preferred vocabulary
   private String _vocabAccess;
+  private String _curationTool = "CURATION";
 
   /**
    * initialize the logger for the class
@@ -1093,7 +1094,7 @@ public final class EVS_UserBean implements Serializable
       //get it again for all tools property
       if (vList == null || vList.size()<1)
       {
-        vList = getAC.getToolOptionData("LexEVSAPI", "ACCESS-URL", "");
+        vList = getAC.getToolOptionData(_curationTool, "LEXEVSURL", "");
         if (vList != null && vList.size()>0)
         {
           TOOL_OPTION_Bean tob = (TOOL_OPTION_Bean)vList.elementAt(0);
@@ -1105,7 +1106,7 @@ public final class EVS_UserBean implements Serializable
      // if (arrVocab == null) arrVocab = new java.util.List();
       //make sure of the matching before store it in he bean
       this.setDSRDispName("caDSR");
-      vList = getAC.getToolOptionData("CURATION", "EVS.DSRDISPLAY", "");
+      vList = getAC.getToolOptionData(_curationTool, "EVS.DSRDISPLAY", "");
       if (vList != null && vList.size()>0)
       {
         TOOL_OPTION_Bean tob = (TOOL_OPTION_Bean)vList.elementAt(0);
@@ -1113,7 +1114,7 @@ public final class EVS_UserBean implements Serializable
       }
       //get the source type for the preferred vocabulary
       this.setPrefVocab("");
-      vList = getAC.getToolOptionData("CURATION", "EVS.PREFERREDVOCAB", "");
+      vList = getAC.getToolOptionData(_curationTool, "EVS.PREFERREDVOCAB", "");
       if (vList != null && vList.size()>0)
       {
         TOOL_OPTION_Bean tob = (TOOL_OPTION_Bean)vList.elementAt(0);
@@ -1122,7 +1123,7 @@ public final class EVS_UserBean implements Serializable
       }
       //get the source type for the preferred vocabulary
       this.setPrefVocabSrc("");
-      vList = getAC.getToolOptionData("CURATION", "EVS.PREFERREDVOCAB.SOURCE", "");
+      vList = getAC.getToolOptionData(_curationTool, "EVS.PREFERREDVOCAB.SOURCE", "");
       if (vList != null && vList.size()>0)
       {
         TOOL_OPTION_Bean tob = (TOOL_OPTION_Bean)vList.elementAt(0);
@@ -1132,7 +1133,7 @@ public final class EVS_UserBean implements Serializable
 
       //get vocab names
       Vector<String> vocabname = new Vector<String>();
-      vList = getAC.getToolOptionData("CURATION", "EVS.VOCAB.%.EVSNAME", "");  //GF32723 the full name of the vocabularies
+      vList = getAC.getToolOptionData(_curationTool, "EVS.VOCAB.%.EVSNAME", "");  //GF32723 the full name of the vocabularies
       if (vList != null && vList.size() > 0)
       {
         for (int i=0; i<vList.size(); i++)
@@ -1144,7 +1145,7 @@ public final class EVS_UserBean implements Serializable
 
       //get vocab display
       Vector<String> vocabdisp = new Vector<String>();
-      vList = getAC.getToolOptionData("CURATION", "EVS.VOCAB.%.DISPLAY", "");  //GF32723 the name used by LexEVS API via EVSSearch
+      vList = getAC.getToolOptionData(_curationTool, "EVS.VOCAB.%.DISPLAY", "");  //GF32723 the name used by LexEVS API via EVSSearch
       if (vList != null && vList.size() > 0)
       {
         for (int i=0; i<vList.size(); i++)
@@ -1156,8 +1157,8 @@ public final class EVS_UserBean implements Serializable
       //get include meta vocabs
       Vector<String> metavocab = new Vector<String>();
       Vector metaVList = new Vector();
-      metaVList = getAC.getToolOptionData("CURATION", "%.INCLUDEMETA", "");  //GF32446
-      vList = getAC.getToolOptionData("CURATION", "%.INCLUDEMETA", "");
+      metaVList = getAC.getToolOptionData(_curationTool, "%.INCLUDEMETA", "");  //GF32446
+      vList = getAC.getToolOptionData(_curationTool, "%.INCLUDEMETA", "");
       if (vList != null && vList.size() > 0)
       {
         for (int i=0; i<vList.size(); i++)
@@ -1190,7 +1191,7 @@ public final class EVS_UserBean implements Serializable
       if (vocabdisp != null && vocabdisp.size()>0)
         this.setVocabDisplayList(vocabdisp);
       //store meta code separately
-      vList = getAC.getToolOptionData("CURATION", "EVS.METACODETYPE.%", "");
+      vList = getAC.getToolOptionData(_curationTool, "EVS.METACODETYPE.%", "");
       if (vList != null && vList.size()>0)
       {
         Hashtable<String, EVS_METACODE_Bean> hMeta = new Hashtable<String, EVS_METACODE_Bean>();
@@ -1220,7 +1221,7 @@ public final class EVS_UserBean implements Serializable
       // this.setDefDefaultValue("No Value Exists.");  //default value for the definition for all vocabs
 
       //store teh list of definition sources to filter out for duplicates store them in this order
-      vList = getAC.getToolOptionData("CURATION", "EVS.DEFSOURCE.%", "");  //
+      vList = getAC.getToolOptionData(_curationTool, "EVS.DEFSOURCE.%", "");  //
       if (vList != null && vList.size() > 0)
       {
         Vector<String> vDefSrc = new Vector<String>();
@@ -1235,7 +1236,7 @@ public final class EVS_UserBean implements Serializable
 
       //get vocab attributes
       Hashtable<String, EVS_UserBean> hvoc = new Hashtable<String, EVS_UserBean>();
-      vList = getAC.getToolOptionData("CURATION", "EVS.VOCAB.ALL.%", "");  //
+      vList = getAC.getToolOptionData(_curationTool, "EVS.VOCAB.ALL.%", "");  //
       //do the looping way right now
       if (vocabname != null)
       {
@@ -1262,7 +1263,7 @@ public final class EVS_UserBean implements Serializable
         	  vocabInd=i+1;*/
         String toolprop = getAC.getVocabInd(sVocab)+"%"; //"EVS.VOCAB." + vocabInd + "%";
       //System.out.println(sVocab + toolprop);
-          Vector vocabList = getAC.getToolOptionData("CURATION", toolprop,"");
+          Vector vocabList = getAC.getToolOptionData(_curationTool, toolprop,"");
           vBean = this.storeVocabAttr(vBean, vocabList);  //call method to add vocab specific attributges	
           vBean = this.storeVocabAttr(vBean, metaVList);  //call method to add metavocab specific attributges//GF32446
           //put this bean in the hash table
