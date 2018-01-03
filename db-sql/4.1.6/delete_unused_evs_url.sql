@@ -1,0 +1,9 @@
+delete from SBREXT.TOOL_OPTIONS_EXT where
+(TOOL_NAME = 'EVSAPI' and PROPERTY = 'URL')
+OR
+(TOOL_NAME = 'EVS' and PROPERTY = 'URL')
+OR
+(TOOL_NAME = 'LexEVSAPI' and PROPERTY = 'ACCESS-URL')
+/
+commit
+/
