@@ -233,7 +233,7 @@
         {
             vmDiv = document.getElementById("pvNewVMView");
             if (vmDiv !== null) {
-                txtVM = (vmDiv.innerText) ? vmDiv.innerText : vmDiv.textContent;
+                txtVM = (vmDiv.innerHTML) ? vmDiv.innerHTML : vmDiv.textContent;
             }
         }
         if (txtVM === null || txtVM === "") {
@@ -254,7 +254,7 @@
         {
             if (txtVM !== "")
             {
-                txtVM = txtVM.replace(/(\r\n)|(\n)/g, "");
+                txtVM = txtVM.replace(/(\r\n)|(\n)/g, "").replace(/&nbsp;/g,"");
                 document.PVForm.pvNewValue.value = txtVM;
                 txtPV = txtVM;
             }
