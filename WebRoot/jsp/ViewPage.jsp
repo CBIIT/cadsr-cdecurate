@@ -14,7 +14,7 @@ L--%>
 	//TODO remove this commented old line. We use HTTPS for all tiers besides localhost
 	//String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
 	String basePath;
-	if (!(serverName.contains("localhost"))) {
+	if (!((serverName.contains("localhost")) || (serverName.contains("127.0.0.1")))) {
 		basePath = "https://"+serverName+path+"/";
 	}
 	else {
