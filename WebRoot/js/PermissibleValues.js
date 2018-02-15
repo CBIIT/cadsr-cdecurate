@@ -1374,11 +1374,7 @@
   			{
   				txType = "Primary";
   			 	trCur = curTbl.rows[curTrCount];
-  			    if (navigator.userAgent.indexOf('Firefox') != -1){
-  			      trCur.deleteCell(trCur.firstChild.nextSibling); 
-  			    }else{
-  			      trCur.deleteCell();
-  			    } 
+                trCur.deleteCell(trCur.firstChild.nextSibling); 
   			}
   			else //if (trP != null)  //push forward the last one in the list
   			{
