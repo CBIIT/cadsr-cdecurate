@@ -762,4 +762,12 @@ public class Alternates
     {
         _root.addHierarchy(nodes_, levels_);
     }
+
+	@Override
+	public String toString() {
+		return "Alternates [" + "_name="
+				+ _name + ", _type=" + _type + ", _language=" + _language + ", _altIdseq=" + _altIdseq + ", _acIdseq="
+				+ _acIdseq + ", _conteIdseq=" + _conteIdseq + ", _conteName=" + _conteName + ", _changed=" + _changed
+				+ ", _delete=" + _delete + ", _editable=" + _editable  + "]";
+	}
 }

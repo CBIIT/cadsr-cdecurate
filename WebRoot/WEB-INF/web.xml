@@ -121,7 +121,8 @@ L-->
 	
 	<context-param>
 		<param-name>Owasp.CsrfGuard.Config.Print</param-name>
-		<param-value>true</param-value>
+		<!-- param-value>true</param-value -->
+		<param-value>false</param-value>
 	</context-param>
 	
 	<listener>

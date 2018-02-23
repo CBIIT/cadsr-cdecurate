@@ -44,6 +44,8 @@ import org.apache.log4j.Logger;
  */
 public class DBAccess
 {
+	 public static final Logger  logger  = Logger.getLogger(DBAccess.class.getName());
+
     /**
      * A class test method during development.
      *
