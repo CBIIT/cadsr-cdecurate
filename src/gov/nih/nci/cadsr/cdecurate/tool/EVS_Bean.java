@@ -832,9 +832,9 @@ public class EVS_Bean implements Serializable
       else if (filterAttr == EVSSearch.VOCAB_NAME)  //(sFilterAttr.equalsIgnoreCase("vocabName"))
         sValue = usrVocab.getVocabName();
       //do matching and return the value
-     // System.out.println(sFilterValue + " getvocab " + sValue);
-    //  if (sFilterValue.equalsIgnoreCase(sValue))  //check it later
-      if (sFilterValue.contains(sValue))
+      //System.out.println("...sFilterValue: " + sFilterValue + ", getvocab " + sValue);
+      if (sFilterValue.equalsIgnoreCase(sValue))  //check it later
+      //if (sFilterValue.contains(sValue))//we cannot use this condition, because it stopped working when added a new vocgb CTCAE_v5, and we have CTCAE
       {
         //get its value from teh bean for the return attr
         if (retAttr == EVSSearch.VOCAB_DISPLAY)  // (sRetAttr.equalsIgnoreCase("vocabDisplay"))
