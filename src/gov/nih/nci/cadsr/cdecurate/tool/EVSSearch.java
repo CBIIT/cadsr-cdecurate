@@ -2814,11 +2814,6 @@ public class EVSSearch implements Serializable
                             null,
                             null );
 
-//Given by Tracy - not sure how this helps, commented out
-//                                              ConceptReferenceList crl = new ConceptReferenceList();
-//                        crl.addConceptReference(ConvenienceMethods.createConceptReference(termStr, "NCI MetaThesaurus"));
-//                        nodeSet = nodeSet.restrictToCodes(crl);
-
                     //begin GF32723
                     nodeSet = nodeSet.restrictToMatchingProperties(
                             null, //the Property Name to match
@@ -2836,13 +2831,12 @@ public class EVSSearch implements Serializable
                     //end GF32723
                 }
                 else if( sSearchIn.equalsIgnoreCase( "ConCode" ) ) //meta cui search
-                    nodeSet = nodeSet.restrictToMatchingProperties(
-                            Constructors.createLocalNameList( "code" ), //the Property Name to match
-                            null, //the Property Type to match (null matches all)
-                            termStr, //the text to match
-                            "exactMatch", //the match algorithm to use
-                            null //the language to match (null matches all)
-                    );
+                {
+                	// Search by Concept code fix for CURATNTOOL-1311
+                	ConceptReferenceList crl = new ConceptReferenceList();
+            		crl.addConceptReference(ConvenienceMethods.createConceptReference(termStr, "NCI MetaThesaurus"));
+        			nodeSet = nodeSet.restrictToCodes(crl); 
+                }
                 else
                 {
                     //GF29786 Following lines of code added according to kim Ong's email ---------BEGIN
