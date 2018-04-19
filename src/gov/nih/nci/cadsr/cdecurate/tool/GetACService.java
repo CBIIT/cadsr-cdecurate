@@ -1397,7 +1397,7 @@ public class GetACService implements Serializable
         try
         {
             cstmt = db_.prepareCall("{call SBREXT_CDE_CURATOR_PKG.SEARCH_TOOL_OPTIONS(?,?,?,?,?)}");
-            logger.debug("GetACService:getToolOptionData calling Oracle function [" + String.format("SBREXT_CDE_CURATOR_PKG.SEARCH_TOOL_OPTIONS(?,?,%s,%s,%s)", tool_, prop_, value_) + "]");
+            //logger.debug("GetACService:getToolOptionData calling Oracle function [" + String.format("SBREXT_CDE_CURATOR_PKG.SEARCH_TOOL_OPTIONS(?,?,%s,%s,%s)", tool_, prop_, value_) + "]");
             cstmt.registerOutParameter(4, OracleTypes.CURSOR);
             cstmt.registerOutParameter(5, OracleTypes.VARCHAR);
             cstmt.setString(1, tool_);

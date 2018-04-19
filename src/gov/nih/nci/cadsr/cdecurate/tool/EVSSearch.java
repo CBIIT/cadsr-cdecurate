@@ -3136,8 +3136,8 @@ public class EVSSearch implements Serializable
         for( Property prop : properties )
         {
             String name = prop.getPropertyName();
-            logger.debug( new StringBuffer().append( "getMetaSemantics\tProperty name: " ).append( prop.getPropertyName() )
-                    .append( " Text: " ).append( prop.getValue().getContent() ).toString() );
+//            logger.debug( new StringBuffer().append( "getMetaSemantics\tProperty name: " ).append( prop.getPropertyName() )
+//                    .append( " Text: " ).append( prop.getValue().getContent() ).toString() );
             if( name != null && name.equals( "Semantic_Type" ) )
             {
                 if( !sSemantic.equals( "" ) )

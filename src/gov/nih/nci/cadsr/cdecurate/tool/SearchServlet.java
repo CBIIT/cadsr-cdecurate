@@ -353,10 +353,10 @@ public class SearchServlet extends CurationServlet {
             actType = "";
         String sSearchFor = StringUtil.cleanJavascriptAndHtml( (String) m_classReq.getParameter("listSearchFor") );
         String sKeyword = StringUtil.cleanJavascriptAndHtml( (String) m_classReq.getParameter("keyword") );
-        if(sKeyword!=null){
-        	if(!StringUtil.validateVersion(sKeyword))
-        		throw new Exception("keyword contains characters or combinations of characters that are not allowed because of security concerns.");
-        }
+//        if(sKeyword!=null){//removing this check, we already cleaned up possible HTML
+//        	if(!StringUtil.validateVersion(sKeyword))
+//        		throw new Exception("keyword contains characters or combinations of characters that are not allowed because of security concerns.");
+//        }
         String dtsVocab = /*CURATNTOOL-1046*/ StringUtil.cleanJavascriptAndHtml((String) m_classReq.getParameter("listContextFilterVocab"));
         // String sSearchInEVS = "";
        // String sUISearchType = "";

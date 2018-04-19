@@ -7537,12 +7537,12 @@ public class GetACSearch implements Serializable
                 intMetaLimit = 100;
             // do the keyword search for the selected component
             String sKeyword = StringUtil.cleanJavascriptAndHtml( ( String ) req.getParameter( "keyword" ) );
-            if( sKeyword != null )
-            {
-                if( !StringUtil.validateVersion( sKeyword ) ) {
-                    throw new Exception( "keyword contains characters or combinations of characters that are not allowed because of security concerns getACSearchForCreate");
-                }
-            }
+//            if( sKeyword != null )//removing this check for EVS search patterns
+//            {
+//                if( !StringUtil.validateVersion( sKeyword ) ) {
+//                    throw new Exception( "keyword contains characters or combinations of characters that are not allowed because of security concerns getACSearchForCreate");
+//                }
+//            }
             if( sKeyword == null )
                 sKeyword = "";
             if( isIntSearch == true )
