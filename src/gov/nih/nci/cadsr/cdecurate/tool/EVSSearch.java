@@ -2489,16 +2489,12 @@ public class EVSSearch implements Serializable
                     //GF32446 this cause Semantic_Type to not to be included
                     LocalNameList lnl = new LocalNameList();
                     lnl.addEntry( sPropIn );
-                    // Vikram // fix for CURATNTOOL-1313 - begin
-                    CodedNodeSet.PropertyType[] types = new CodedNodeSet.PropertyType[1];                
-                    types[0] = CodedNodeSet.PropertyType.PRESENTATION;                    
                     nodeSet = nodeSet.restrictToMatchingProperties( //JT b4 GF32723
-                            null, //the Property Name to match
-                            types, //the Property Type to match (null matches all)
+                            lnl, //the Property Name to match
+                            null, //the Property Type to match (null matches all)
                             termStr, //the text to match
                             algorithm, //the match algorithm to use
                             null );//the language to match (null matches all)
-                 // Vikram // fix for CURATNTOOL-1313  - End
                     //JT begin b4
 //                                              nodeSet = nodeSet.restrictToMatchingDesignations(termStr, SearchDesignationOption.ALL,LBConstants.MatchAlgorithms.exactMatch.name(), null);
 //                                              nodeSet = nodeSet.restrictToStatus(ActiveOption.ALL, null);
