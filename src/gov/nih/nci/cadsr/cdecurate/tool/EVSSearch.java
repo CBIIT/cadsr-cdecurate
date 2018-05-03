@@ -2441,6 +2441,7 @@ public class EVSSearch implements Serializable
             this.registerSecurityToken( ( LexEVSApplicationService ) evsService, dtsVocab, m_eUser );
 
             CodedNodeSet nodeSet = evsService.getNodeSet( dtsVocab, null, null );     //dtsVocab example value = Logical Observation Identifier Names and Codes
+            CodedNodeSet nodeSet2 = evsService.getNodeSet( dtsVocab, null, null );  
 
             if( sSearchIn.equals( "ConCode" ) )
             {
@@ -2489,12 +2490,25 @@ public class EVSSearch implements Serializable
                     //GF32446 this cause Semantic_Type to not to be included
                     LocalNameList lnl = new LocalNameList();
                     lnl.addEntry( sPropIn );
+                    // Vikram // fix for CURATNTOOL-1313 - begin
+                    CodedNodeSet.PropertyType[] types = new CodedNodeSet.PropertyType[1];                
+                    types[0] = CodedNodeSet.PropertyType.PRESENTATION;
                     nodeSet = nodeSet.restrictToMatchingProperties( //JT b4 GF32723
-                            lnl, //the Property Name to match
-                            null, //the Property Type to match (null matches all)
+                            null, //the Property Name to match
+                            types, //the Property Type to match (null matches all)
                             termStr, //the text to match
                             algorithm, //the match algorithm to use
                             null );//the language to match (null matches all)
+
+                    nodeSet2 = nodeSet2.restrictToMatchingProperties(
+                                 lnl, // the Property Name to match
+                                 null, // the Property Type to match (null matches all)
+                                 termStr, // the text to match
+                                 algorithm, // the match algorithm to use
+                                 null);
+                    // Combining two different nodeset results by using UNION
+                    nodeSet2.union(nodeSet);                    
+                 // Vikram // fix for CURATNTOOL-1313  - End
                     //JT begin b4
 //                                              nodeSet = nodeSet.restrictToMatchingDesignations(termStr, SearchDesignationOption.ALL,LBConstants.MatchAlgorithms.exactMatch.name(), null);
 //                                              nodeSet = nodeSet.restrictToStatus(ActiveOption.ALL, null);
@@ -2520,14 +2534,14 @@ public class EVSSearch implements Serializable
                             null, //Sorts used to sort results (null means sort by match score)
                             lnl, //PropertyNames to resolve (null resolves all)
                             new CodedNodeSet.PropertyType[]{ PropertyType.DEFINITION, PropertyType.PRESENTATION },  //PropertyTypess to resolve (null resolves all)  //PropertyTypess to resolve (null resolves all)
-                            100       //cap the number of results returned (-1 resolves all)
+                            0       //cap the number of results returned (-1 resolves all)
                     );
                 else
-                    lstResult = nodeSet.resolveToList(
+                    lstResult = nodeSet2.resolveToList(
                             null, //Sorts used to sort results (null means sort by match score)
                             null, //PropertyNames to resolve (null resolves all)
                             null,   //JT b4 new CodedNodeSet.PropertyType[] {PropertyType.DEFINITION, PropertyType.PRESENTATION},  //PropertyTypess to resolve (null resolves all)
-                            100       //cap the number of results returned (-1 resolves all)
+                            0       //cap the number of results returned (-1 resolves all)
                     );
 
             }
