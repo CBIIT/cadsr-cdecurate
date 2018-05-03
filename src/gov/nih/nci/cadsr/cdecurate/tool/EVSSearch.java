@@ -2820,21 +2820,27 @@ public class EVSSearch implements Serializable
 
                     CodedNodeSet.PropertyType[] types = new CodedNodeSet.PropertyType[1];
                     types[0] = CodedNodeSet.PropertyType.PRESENTATION;
+                    
+                    NameAndValueList qualifierList = new NameAndValueList();                  
+                    NameAndValue nv = new NameAndValue();                  
+                    nv.setName("source-code");
+                    nv.setContent(termStr);                
+                    qualifierList.addNameAndValue(nv);                    
 
                     nodeSet = nodeSet.restrictToProperties(
                             null, //Constructors.createLocalNameList("propertyType"),       //GF32446
                             types,
                             Constructors.createLocalNameList( sMetaSource ),
                             null,
-                            null );
-
+                            qualifierList );
                     //begin GF32723
-                    nodeSet = nodeSet.restrictToMatchingProperties(
+                    /*nodeSet = nodeSet.restrictToMatchingProperties(
                             null, //the Property Name to match
                             types, //the Property Type to match (null matches all)
                             termStr, //the text to match
                             "nonLeadingWildcardLiteralSubString", //the match algorithm to use
-                            null );//the language to match (null matches all)
+                            null );//the language to match (null matches all)*/
+                    
 
 //                                                nodeSet = nodeSet.restrictToMatchingProperties(
 //                                                                Constructors.createLocalNameList("value"), //the Property Name to match
@@ -2875,7 +2881,7 @@ public class EVSSearch implements Serializable
                             getAlgorithm(termStr), //  VS //"nonLeadingWildcardLiteralSubString", //the match algorithm to use
                             null ); //the language to match (null matches all)
                 }
-                nodeSet = nodeSet.restrictToStatus( ActiveOption.ACTIVE_ONLY, null );
+                //nodeSet = nodeSet.restrictToStatus( ActiveOption.ACTIVE_ONLY, null );
                 SortOptionList sortCriteria = Constructors.createSortOptionList(new String[] { "matchToQuery", "code" });                
                 concepts = nodeSet.resolveToList(
                 		sortCriteria, //Sorts used to sort results (null means sort by match score)
