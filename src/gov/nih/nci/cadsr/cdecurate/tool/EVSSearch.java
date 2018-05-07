@@ -2821,6 +2821,8 @@ public class EVSSearch implements Serializable
                     CodedNodeSet.PropertyType[] types = new CodedNodeSet.PropertyType[1];
                     types[0] = CodedNodeSet.PropertyType.PRESENTATION;
                     
+                    
+                    // Fix for search by 'code' not working - Begin
                     NameAndValueList qualifierList = new NameAndValueList();                  
                     NameAndValue nv = new NameAndValue();                  
                     nv.setName("source-code");
@@ -2833,6 +2835,7 @@ public class EVSSearch implements Serializable
                             Constructors.createLocalNameList( sMetaSource ),
                             null,
                             qualifierList );
+                 // Fix for search by 'code' not working - End
                     //begin GF32723
                     /*nodeSet = nodeSet.restrictToMatchingProperties(
                             null, //the Property Name to match
@@ -2881,7 +2884,7 @@ public class EVSSearch implements Serializable
                             getAlgorithm(termStr), //  VS //"nonLeadingWildcardLiteralSubString", //the match algorithm to use
                             null ); //the language to match (null matches all)
                 }
-                //nodeSet = nodeSet.restrictToStatus( ActiveOption.ACTIVE_ONLY, null );
+                //nodeSet = nodeSet.restrictToStatus( ActiveOption.ACTIVE_ONLY, null ); // Commented out to fix search by 'code'
                 SortOptionList sortCriteria = Constructors.createSortOptionList(new String[] { "matchToQuery", "code" });                
                 concepts = nodeSet.resolveToList(
                 		sortCriteria, //Sorts used to sort results (null means sort by match score)
