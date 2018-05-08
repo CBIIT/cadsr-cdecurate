@@ -59,7 +59,7 @@ public class VMAction implements Serializable
 	private static final Logger logger = Logger.getLogger(VMAction.class.getName());
 
 	private UtilService util = new UtilService();
-
+	public static final int VM_PREF_DEF_MAX_LENGTH = gov.nih.nci.cadsr.cdecurate.database.DBAccess._MAXDEFLEN; //CADSRMETA-731 
 	/** constructor */
 	public VMAction()
 	{
@@ -1218,7 +1218,7 @@ public class VMAction implements Serializable
 	 */
 	public Vector<ValidateBean> doValidateVM(VM_Bean vm, VMForm data)
 	{
-
+		
 		Vector<ValidateBean> vValidate = new Vector<ValidateBean>();
 
 		try
@@ -1244,13 +1244,13 @@ public class VMAction implements Serializable
 				String sAlt = vm.getVM_ALT_DEFINITION();
 				if (!sAlt.equals(""))
 					UtilService.setValPageVector(vValidate, VMForm.ELM_LBL_MAN_DESC, sAlt, false,
-							2000, strInValid, "");
+							VM_PREF_DEF_MAX_LENGTH, strInValid, "");//CADSRMETA-731
 				// system generated
-				UtilService.setValPageVector(vValidate, VMForm.ELM_LBL_SYS_DESC, s, true, 2000,
+				UtilService.setValPageVector(vValidate, VMForm.ELM_LBL_SYS_DESC, s, true, VM_PREF_DEF_MAX_LENGTH,//CADSRMETA-731
 						strInValid, "");
 			}
 			else
-				UtilService.setValPageVector(vValidate, VMForm.ELM_LBL_DESC, s, true, 2000,
+				UtilService.setValPageVector(vValidate, VMForm.ELM_LBL_DESC, s, true, VM_PREF_DEF_MAX_LENGTH,//CADSRMETA-731
 						strInValid, "");
 
 			s = vm.getVM_CHANGE_NOTE();

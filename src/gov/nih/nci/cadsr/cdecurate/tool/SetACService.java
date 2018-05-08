@@ -117,7 +117,8 @@ THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 public class SetACService implements Serializable
 {
-    /**
+	public static final int VM_PREF_DEF_MAX_LENGTH = VMAction.VM_PREF_DEF_MAX_LENGTH; //CADSRMETA-731 
+	/**
      *
      */
     private static final long serialVersionUID = 1L;
@@ -1466,7 +1467,7 @@ public class SetACService implements Serializable
 
                 s = m_PV.getPV_MEANING_DESCRIPTION();
                 if( s == null ) s = "";
-                UtilService.setValPageVector( vValidate, "Value Meaning Description", s, bNotMandatory, 2000, "", "" );
+                UtilService.setValPageVector( vValidate, "Value Meaning Description", s, bNotMandatory, VM_PREF_DEF_MAX_LENGTH, "", "" );//CADSRMETA-731
 
                 EVS_Bean evs = ( EVS_Bean ) m_PV.getVM_CONCEPT();
                 if( evs == null ) evs = new EVS_Bean();
@@ -5008,7 +5009,7 @@ public class SetACService implements Serializable
             sName = StringUtil.cleanJavascriptAndHtml( ( String ) req.getParameter( "CreateDescription" ) );
             if( sName == null ) sName = "";
             sName = m_util.removeNewLineChar( sName );   //replace newline with empty string
-            if( sName.length() > 2000 ) sName = sName.substring( 0, 2000 );
+            if( sName.length() > VM_PREF_DEF_MAX_LENGTH ) sName = sName.substring( 0, VM_PREF_DEF_MAX_LENGTH );//CADSRMETA-731
             m_PV.setPV_MEANING_DESCRIPTION( sName );
 
             //set PV_Origin

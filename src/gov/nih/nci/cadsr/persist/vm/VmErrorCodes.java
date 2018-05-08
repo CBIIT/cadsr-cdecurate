@@ -26,8 +26,8 @@ public enum VmErrorCodes{
 	API_VM_205("VM not found based on VM_ID , Version"),
 	
 	API_VM_111("Length of Short_Meaning(Long_Name) exceeds maximum length of 255"),
-	API_VM_113("Length of Description(preferred_Definition) exceeds maximum length of 2000"),
-	API_VM_114("Length of Comments(Change_Note) exceeds maximum length of 2000"),
+	API_VM_113("Length of Description(preferred_Definition) exceeds maximum length of " + VmValidationConstants.VM_PREFERRED_DEF_LENGTH),
+	API_VM_114("Length of Comments(Change_Note) exceeds maximum length of " + VmValidationConstants.VM_PREFERRED_DEF_LENGTH),
 	
 	API_VM_130("Value Meaning Short Meaning(Long_Name) has invalid characters"),
 	API_VM_133("Value Meaning Description(preferred_Definition) has invalid characters"),

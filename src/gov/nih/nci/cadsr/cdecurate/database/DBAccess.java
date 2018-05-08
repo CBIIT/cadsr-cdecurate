@@ -1906,7 +1906,7 @@ public class DBAccess
     private Connection _conn;
 
     public static final int _MAXNAMELEN = 255;
-    public static final int _MAXDEFLEN = 2000;
+    public static final int _MAXDEFLEN = 4000;//CADSRMETA-731 changed from 2000;
 
     public static final String _addDesigType = "USED_BY";
     public static final String _manuallyCuratedDef = "Manually-curated";
