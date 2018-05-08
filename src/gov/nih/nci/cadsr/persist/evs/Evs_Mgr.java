@@ -29,6 +29,7 @@ import gov.nih.nci.cadsr.persist.concept.Component_Concepts_Ext_Mgr;
 import gov.nih.nci.cadsr.persist.concept.ConVO;
 import gov.nih.nci.cadsr.persist.concept.Concepts_Ext_Mgr;
 import gov.nih.nci.cadsr.persist.exception.DBException;
+import gov.nih.nci.cadsr.persist.vm.VmValidationConstants;
 
 /**
  * @author hveerla
@@ -57,7 +58,7 @@ private Logger logger = Logger.getLogger(this.getClass());
 		evsVO.setIDSEQ(this.generatePrimaryKey(conn));
 		evsVO.setDeleted_ind(DBConstants.RECORD_DELETED_NO);
 		evsVO.setBegin_date(new java.sql.Timestamp(new java.util.Date().getTime()));
-		logger.debug("at line 55 of EVS_Mgr.java***"+evsVO.getBegin_date());	//GF32724
+		//logger.debug("at line 55 of EVS_Mgr.java***"+evsVO.getBegin_date());	//GF32724
 		try {
 			int column = 0;
 			statement = conn.prepareStatement(sql);
@@ -217,8 +218,8 @@ private Logger logger = Logger.getLogger(this.getClass());
 		if (longName != null && longName.length()>255){
 		    longName = longName.substring(0, 255);
 		}
-		if (prefferredDef != null && prefferredDef.length()>2000){
-		    prefferredDef =prefferredDef.substring(0,2000);
+		if (prefferredDef != null && prefferredDef.length()>VmValidationConstants.VM_PREFERRED_DEF_LENGTH){
+		    prefferredDef =prefferredDef.substring(0,VmValidationConstants.VM_PREFERRED_DEF_LENGTH);//CADSRMETA-731
 		}
 		if (defSource != null && defSource.length()>2000){
 		    defSource = defSource.substring(0,2000);
