@@ -3192,10 +3192,10 @@ FROM       value_domains_view vd
         --          comma-separated values in p_asl_name; added cs.asl_name,
         --          cs_id and cs.origin to query result  (per SPRF_2.0_12)
         -- 01-Jul-2003, W. Ver Hoef added variable definitions to support new code
-        v_sql        VARCHAR2;
-        v_where      VARCHAR2 := ' ';
-        v_asl_name   VARCHAR2;
-        v_asl_list   VARCHAR2;
+        v_sql        VARCHAR2(32767);
+        v_where      VARCHAR2(32767):= ' ';
+        v_asl_name   VARCHAR2(32767);
+        v_asl_list   VARCHAR2(32767);
         i            NUMBER           := 1;
     BEGIN
         IF p_csi_cur%ISOPEN THEN
