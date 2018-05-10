@@ -2003,7 +2003,7 @@ public class GetACSearch implements Serializable
                         VDBean.setVD_HIGH_VALUE_NUM( rs.getString( "high_value_num" ) );
                         VDBean.setVD_LOW_VALUE_NUM( rs.getString( "low_value_num" ) );
                         VDBean.setVD_REP_TERM( AdministeredItemUtil.handleLongName( rs.getString( "rep_term" ) ) );    //GF32004;
-                        logger.debug( "VD_REPTERM_LONG_NAME at Line 2004 of GetACSearch doVDSearch VDBean.getVD_REP_TERM(): " + VDBean.getVD_REP_TERM() );
+                        //logger.debug( "VD_REPTERM_LONG_NAME at Line 2004 of GetACSearch doVDSearch VDBean.getVD_REP_TERM(): " + VDBean.getVD_REP_TERM() );
 //                        VDBean.setVD_REP_TERM(rs.getString("rep_term"));
                         VDBean.setVD_REP_IDSEQ( rs.getString( "rep_idseq" ) );
                         // VDBean.setVD_REP_QUAL(rs.getString("qualifier_name"));
