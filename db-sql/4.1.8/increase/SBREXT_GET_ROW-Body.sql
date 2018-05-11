@@ -1,4 +1,4 @@
-create or replace PACKAGE BODY          "SBREXT_GET_ROW" AS
+create or replace PACKAGE BODY          SBREXT.SBREXT_GET_ROW AS
 
 /*
 ** Private program units
@@ -1512,7 +1512,7 @@ END GET_VM;
            END LOOP;
       END LOOP;
 
-      p_preferred_definition := SUBSTR(v_description,1,2000);
+      p_preferred_definition := SUBSTR(v_description,1,4000);
 
       --change name only if null
       if(p_long_name is null) then

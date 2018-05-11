@@ -1,4 +1,4 @@
-create or replace PACKAGE BODY        SBREXT_CDE_CURATOR_PKG AS
+create or replace PACKAGE BODY        SBREXT.SBREXT_CDE_CURATOR_PKG AS
     -- function to count CDs
     FUNCTION count_cds( p_pv_idseq IN permissible_values_view.pv_idseq%TYPE )
         RETURN NUMBER IS
@@ -233,7 +233,7 @@ create or replace PACKAGE BODY        SBREXT_CDE_CURATOR_PKG AS
         **       partent CDE(s) as a comma delimited string
         **  S. Alred; 12/16/2005
         */
-        v_return   VARCHAR2( 4000 ) := NULL;   -- needs to be big enough for multiple IDSEQ's
+        v_return   VARCHAR2(32767) := NULL;   -- needs to be big enough for multiple IDSEQ's
         i          NUMBER( 3, 0 )   := 0;   -- loop counter
         v_concat   VARCHAR2( 1 )    := ',';   -- variable for concatenation character
         CURSOR c_crtl_name( p_in data_elements_view.de_idseq%TYPE ) IS
@@ -303,14 +303,14 @@ create or replace PACKAGE BODY        SBREXT_CDE_CURATOR_PKG AS
         --
         v_de_idseq            CHAR( 36 );   -- := admincomponent_crud.cmr_guid; - 16-JUL-2003, W. Ver Hoef
         v_desig_idseq         CHAR( 36 );   -- := admincomponent_crud.cmr_guid;
-        v_des_name            VARCHAR2( 2000 );
-        v_detl_name           VARCHAR2( 20 )  := 'CONTEXT NAME';
-        v_des_date_created    VARCHAR2( 30 );
-        v_des_created_by      VARCHAR2( 30 );
-        v_des_date_modified   VARCHAR2( 30 );
-        v_des_modified_by     VARCHAR2( 30 );
+        v_des_name            VARCHAR2(32767);
+        v_detl_name           VARCHAR2(32767)  := 'CONTEXT NAME';
+        v_des_date_created    VARCHAR2(32767);
+        v_des_created_by      VARCHAR2(32767);
+        v_des_date_modified   VARCHAR2(32767);
+        v_des_modified_by     VARCHAR2(32767);
         v_deleted_ind         VARCHAR2( 3 );
-        v_language            VARCHAR2( 30 )  := p_de_language;
+        v_language            VARCHAR2(32767) := p_de_language;
     BEGIN
         IF p_action = 'INS' THEN   -- 16-Jul-2003, W. Ver Hoef
             v_de_idseq := NULL;
@@ -580,30 +580,30 @@ create or replace PACKAGE BODY        SBREXT_CDE_CURATOR_PKG AS
         -- Date:  29-DEC-2004
         -- Modified By: Prerna
         -- Reason:  added dec_idseq,pv_idseq,vd_idseq,cs_Csi_idseq as search criteria.
-        v_search_string   VARCHAR2( 255 )  := UPPER( REPLACE( p_search_string, '*', '%' ));
-        v_sql             VARCHAR2( 8000 );
-        v_where           VARCHAR2( 6000 ) := ' ';
-        v_asl_name        VARCHAR2( 2000 );
-        v_asl_list        VARCHAR2( 2000 );
-        v_context         VARCHAR2( 2000 );
-        v_context_list    VARCHAR2( 2000 );
+        v_search_string   VARCHAR2(32767)  := UPPER( REPLACE( p_search_string, '*', '%' ));
+        v_sql             VARCHAR2(32767);
+        v_where           VARCHAR2(32767) := ' ';
+        v_asl_name        VARCHAR2(32767);
+        v_asl_list        VARCHAR2(32767);
+        v_context         VARCHAR2(32767);
+        v_context_list    VARCHAR2(32767);
         i                 NUMBER           := 1;
-        v_origin          VARCHAR2( 240 )  := UPPER( REPLACE( p_origin, '*', '%' ));   -- 20-Feb-2004, W. Ver Hoef added
-        v_created_by      VARCHAR2( 255 )  := p_created_by;   -- 02-Mar-2004, W. Ver Hoef DLadino removed the replace and upper functions
-        v_modified_by     VARCHAR2( 255 )  := p_modified_by;   -- added "by" vars DLadino removed the replace and upper functions
-        v_perm_value      VARCHAR2( 255 )  := UPPER( REPLACE( p_permissible_value, '*', '%' ));   -- 03-Mar-2004, W. Ver Hoef
-        v_select          VARCHAR2( 4000 );   -- 03-Mar-2004, W. Ver Hoef added to hold parts of query
-        v_from            VARCHAR2( 4000 );
-        v_doc_text        VARCHAR2( 2000 ) := UPPER( REPLACE( p_doc_text, '*', '%' ));   -- 04-Mar-2004, W. Ver Hoef added
-        v_hist_cde_id     VARCHAR2( 2000 ) := UPPER( REPLACE( p_historical_cde_id, '*', '%' ));   -- 05-Mar-2004, W. Ver Hoef added
+        v_origin          VARCHAR2(32767)  := UPPER( REPLACE( p_origin, '*', '%' ));   -- 20-Feb-2004, W. Ver Hoef added
+        v_created_by      VARCHAR2(32767)  := p_created_by;   -- 02-Mar-2004, W. Ver Hoef DLadino removed the replace and upper functions
+        v_modified_by     VARCHAR2(32767)  := p_modified_by;   -- added "by" vars DLadino removed the replace and upper functions
+        v_perm_value      VARCHAR2(32767)  := UPPER( REPLACE( p_permissible_value, '*', '%' ));   -- 03-Mar-2004, W. Ver Hoef
+        v_select          VARCHAR2(32767);   -- 03-Mar-2004, W. Ver Hoef added to hold parts of query
+        v_from            VARCHAR2(32767);
+        v_doc_text        VARCHAR2(32767) := UPPER( REPLACE( p_doc_text, '*', '%' ));   -- 04-Mar-2004, W. Ver Hoef added
+        v_hist_cde_id     VARCHAR2(32767) := UPPER( REPLACE( p_historical_cde_id, '*', '%' ));   -- 05-Mar-2004, W. Ver Hoef added
         -- 12-Apr-2004, W. Ver Hoef took off upper func on latest version ind
-        v_lat_vers_ind    VARCHAR2( 2000 ) := p_latest_version_ind;   -- 05-Mar-2004, W. Ver Hoef added
-        v_doc_types       VARCHAR2( 2000 );   -- 15-Mar-2004, W. Ver Hoef added
-        v_doc_type_list   VARCHAR2( 2000 );   -- 15-Mar-2004, W. Ver Hoef added
-        v_context_use     VARCHAR2( 2000 ) := p_context_use;   -- 18-Mar-2004, W. Ver Hoef added
-        v_crf_name        VARCHAR2( 2000 ) := UPPER( REPLACE( p_crf_name, '*', '%' ));
-        v_protocol_id     VARCHAR2( 2000 ) := UPPER( REPLACE( p_protocol_id, '*', '%' ));
-        v_con_name        VARCHAR2( 1000 ) := UPPER( REPLACE( p_con_name, '*', '%' ));
+        v_lat_vers_ind    VARCHAR2(32767) := p_latest_version_ind;   -- 05-Mar-2004, W. Ver Hoef added
+        v_doc_types       VARCHAR2(32767);   -- 15-Mar-2004, W. Ver Hoef added
+        v_doc_type_list   VARCHAR2(32767);   -- 15-Mar-2004, W. Ver Hoef added
+        v_context_use     VARCHAR2(32767) := p_context_use;   -- 18-Mar-2004, W. Ver Hoef added
+        v_crf_name        VARCHAR2(32767) := UPPER( REPLACE( p_crf_name, '*', '%' ));
+        v_protocol_id     VARCHAR2(32767) := UPPER( REPLACE( p_protocol_id, '*', '%' ));
+        v_con_name        VARCHAR2(32767) := UPPER( REPLACE( p_con_name, '*', '%' ));
     BEGIN
         IF p_de_search_res%ISOPEN THEN
             CLOSE p_de_search_res;
@@ -1280,10 +1280,10 @@ WHERE '
         -- Modified By:  W. Ver Hoef
         -- Reason:  added used by context idseq per SPRF_2.1_30
         v_param_count   NUMBER           := 0;
-        v_select        VARCHAR2( 4000 ) := ' ';
-        v_from          VARCHAR2( 4000 ) := ' ';
-        v_where         VARCHAR2( 4000 ) := ' ';
-        v_sql           VARCHAR2( 4000 ) := NULL;
+        v_select        VARCHAR2(32767) := ' ';
+        v_from          VARCHAR2(32767) := ' ';
+        v_where         VARCHAR2(32767) := ' ';
+        v_sql           VARCHAR2(32767) := NULL;
     BEGIN
         IF p_assoc_de_res%ISOPEN THEN
             CLOSE p_assoc_de_res;
@@ -1568,16 +1568,16 @@ AND   vd.vd_idseq   = vc.vd_idseq    (+) ';   -- 31-Mar-2003, W. Ver Hoef added 
         -- Date:  12-May-2004
         -- Modified By: D Ladino
         -- Reason: Due to performance issues with the dynamic query we need to use the RULE based optimizer
-        v_sql            VARCHAR2( 4000 );
-        v_where          VARCHAR2( 2000 ) := ' ';
-        v_crf            VARCHAR2( 255 )  := UPPER( REPLACE( p_crf_name, '*', '%' ));
-        v_asl_name       VARCHAR2( 2000 );
-        v_asl_list       VARCHAR2( 2000 );
+        v_sql            VARCHAR2(32767);
+        v_where          VARCHAR2(32767) := ' ';
+        v_crf            VARCHAR2(32767)  := UPPER( REPLACE( p_crf_name, '*', '%' ));
+        v_asl_name       VARCHAR2(32767);
+        v_asl_list       VARCHAR2(32767);
         i                NUMBER           := 1;
-        v_created_by     VARCHAR2( 255 )  := p_created_by;   -- 02-Mar-2004, W. Ver Hoef
-        v_modified_by    VARCHAR2( 255 )  := p_modified_by;   -- added "by" vars
-        v_protocol_id    VARCHAR2( 255 )  := UPPER( REPLACE( p_protocol_id, '*', '%' ));   -- 04-Mar-2004, W. Ver Hoef added
-        v_lat_vers_ind   VARCHAR2( 2000 ) := p_latest_version_ind;   -- 10-Mar-2004, W. Ver Hoef added
+        v_created_by     VARCHAR2(32767)  := p_created_by;   -- 02-Mar-2004, W. Ver Hoef
+        v_modified_by    VARCHAR2(32767)  := p_modified_by;   -- added "by" vars
+        v_protocol_id    VARCHAR2(32767)  := UPPER( REPLACE( p_protocol_id, '*', '%' ));   -- 04-Mar-2004, W. Ver Hoef added
+        v_lat_vers_ind   VARCHAR2(32767) := p_latest_version_ind;   -- 10-Mar-2004, W. Ver Hoef added
     BEGIN
         IF p_de_crf_search_res%ISOPEN THEN
             CLOSE p_de_crf_search_res;
@@ -1891,20 +1891,20 @@ AND ar.registration_status = ''' || p_reg_status || ''' ';
         -- Modified By: D Ladino
         -- Reason: Due to performance issues with the dynamic query we need to use the RULE based optimizer
         -- 14-Nov-2005; S. Alred; Addec p_cs_csi parameter and related logic (TT1098)
-        v_search_string   VARCHAR2( 255 )  := UPPER( REPLACE( p_search_string, '*', '%' ));
-        v_sql             VARCHAR2( 6000 );
-        v_where           VARCHAR2( 4000 ) := ' ';
-        v_from            VARCHAR2( 2000 ) := ' ';
-        v_asl_name        VARCHAR2( 2000 );   -- 30-Jun-2003, W. Ver Hoef
-        v_asl_list        VARCHAR2( 2000 );
-        v_context         VARCHAR2( 2000 );
-        v_context_list    VARCHAR2( 2000 );
+        v_search_string   VARCHAR2(32767)  := UPPER( REPLACE( p_search_string, '*', '%' ));
+        v_sql             VARCHAR2(32767);
+        v_where           VARCHAR2(32767) := ' ';
+        v_from            VARCHAR2(32767) := ' ';
+        v_asl_name        VARCHAR2(32767);   -- 30-Jun-2003, W. Ver Hoef
+        v_asl_list        VARCHAR2(32767);
+        v_context         VARCHAR2(32767);
+        v_context_list    VARCHAR2(32767);
         i                 NUMBER           := 1;
-        v_origin          VARCHAR2( 240 )  := UPPER( REPLACE( p_origin, '*', '%' ));   -- 20-Feb-2004, W. Ver Hoef added
-        v_created_by      VARCHAR2( 255 )  := p_created_by;   -- 02-Mar-2004, W. Ver Hoef
-        v_modified_by     VARCHAR2( 255 )  := p_modified_by;   -- added "by" vars
-        v_lat_vers_ind    VARCHAR2( 2000 ) := p_latest_version_ind;   -- 05-Mar-2004, W. Ver Hoef added
-        v_con_name        VARCHAR2( 1000 ) := UPPER( REPLACE( p_con_name, '*', '%' ));
+        v_origin          VARCHAR2(32767)  := UPPER( REPLACE( p_origin, '*', '%' ));   -- 20-Feb-2004, W. Ver Hoef added
+        v_created_by      VARCHAR2(32767)  := p_created_by;   -- 02-Mar-2004, W. Ver Hoef
+        v_modified_by     VARCHAR2(32767)  := p_modified_by;   -- added "by" vars
+        v_lat_vers_ind    VARCHAR2(32767) := p_latest_version_ind;   -- 05-Mar-2004, W. Ver Hoef added
+        v_con_name        VARCHAR2(32767) := UPPER( REPLACE( p_con_name, '*', '%' ));
     BEGIN
         IF p_dec_search_res%ISOPEN THEN
             CLOSE p_dec_search_res;
@@ -2239,10 +2239,10 @@ WHERE '
         -- Modified By:  W. Ver Hoef
         -- Reason:  added created/modified columns per SPRF_2.1_22;
         --          commented out used by cols, tabs, joins, comparison per SRPF_2.1_23
-        v_select   VARCHAR2( 2000 ) := ' ';
-        v_from     VARCHAR2( 2000 ) := ' ';
-        v_where    VARCHAR2( 2000 ) := ' ';
-        v_sql      VARCHAR2( 4000 ) := NULL;
+        v_select   VARCHAR2(32767) := ' ';
+        v_from     VARCHAR2(32767) := ' ';
+        v_where    VARCHAR2(32767) := ' ';
+        v_sql      VARCHAR2(32767) := NULL;
     BEGIN
         IF p_assoc_dec_res%ISOPEN THEN
             CLOSE p_assoc_dec_res;
@@ -2449,24 +2449,24 @@ FROM       data_element_concepts_view DEC
         -- Modified By: Steve Alred
         -- Reason: TT#1684 -- add VD datatype as a query filter parameter (p_datatype)
         --
-        v_search_string   VARCHAR2( 255 )  := UPPER( REPLACE( p_search_string, '*', '%' ));
-        v_sql             VARCHAR2( 6000 );
-        v_where           VARCHAR2( 4000 ) := ' ';
-        v_asl_name        VARCHAR2( 2000 );   -- 01-Jul-2003, W. Ver Hoef
-        v_asl_list        VARCHAR2( 2000 );
-        v_context         VARCHAR2( 2000 );
-        v_context_list    VARCHAR2( 2000 );
+        v_search_string   VARCHAR2(32767)  := UPPER( REPLACE( p_search_string, '*', '%' ));
+        v_sql             VARCHAR2(32767);
+        v_where           VARCHAR2(32767) := ' ';
+        v_asl_name        VARCHAR2(32767);   -- 01-Jul-2003, W. Ver Hoef
+        v_asl_list        VARCHAR2(32767);
+        v_context         VARCHAR2(32767);
+        v_context_list    VARCHAR2(32767);
         i                 NUMBER           := 1;
-        v_origin          VARCHAR2( 240 )  := UPPER( REPLACE( p_origin, '*', '%' ));   -- 20-Feb-2004, W. Ver Hoef added
-        v_created_by      VARCHAR2( 255 )  := p_created_by;   -- 02-Mar-2004, W. Ver Hoef
-        v_modified_by     VARCHAR2( 255 )  := p_modified_by;   -- added "by" vars
-        v_perm_value      VARCHAR2( 255 )  := UPPER( REPLACE( p_permissible_value, '*', '%' ));   -- 03-Mar-2004, W. Ver Hoef
-        v_select          VARCHAR2( 2000 );   -- 03-Mar-2004, W. Ver Hoef added to hold parts of query
-        v_from            VARCHAR2( 2000 );
-        v_lat_vers_ind    VARCHAR2( 2000 ) := NVL( p_latest_version_ind, 'Yes' );   -- 05-Mar-2004, W. Ver Hoef added
+        v_origin          VARCHAR2(32767)  := UPPER( REPLACE( p_origin, '*', '%' ));   -- 20-Feb-2004, W. Ver Hoef added
+        v_created_by      VARCHAR2(32767)  := p_created_by;   -- 02-Mar-2004, W. Ver Hoef
+        v_modified_by     VARCHAR2(32767)  := p_modified_by;   -- added "by" vars
+        v_perm_value      VARCHAR2(32767)  := UPPER( REPLACE( p_permissible_value, '*', '%' ));   -- 03-Mar-2004, W. Ver Hoef
+        v_select          VARCHAR2(32767);   -- 03-Mar-2004, W. Ver Hoef added to hold parts of query
+        v_from            VARCHAR2(32767);
+        v_lat_vers_ind    VARCHAR2(32767) := NVL( p_latest_version_ind, 'Yes' );   -- 05-Mar-2004, W. Ver Hoef added
         v_vd_type_flag    VARCHAR2( 20 );   -- 23-Mar-2004, W. Ver Hoef added per SPRF_21_13
         v_vd_type_list    VARCHAR2( 20 );   -- 23-Mar-2004, W. Ver Hoef added per SPRF_21_13
-        v_con_name        VARCHAR2( 1000 ) := UPPER( REPLACE( p_con_name, '*', '%' ));
+        v_con_name        VARCHAR2(32767) := UPPER( REPLACE( p_con_name, '*', '%' ));
     BEGIN
         IF p_vd_search_res%ISOPEN THEN
             CLOSE p_vd_search_res;
@@ -2908,10 +2908,10 @@ AND cvp.vd_IDSEQ = vdv.vd_IDSEQ
         -- Date:  31-Mar-2004
         -- Modified By:  W. Ver Hoef
         -- Reason:  added min_value and value_count, vc pseudo-table and join per SPRF_2.1_09 mod
-        v_select   VARCHAR2( 2000 ) := ' ';
-        v_from     VARCHAR2( 2000 ) := ' ';
-        v_where    VARCHAR2( 2000 ) := ' ';
-        v_sql      VARCHAR2( 4000 ) := NULL;
+        v_select   VARCHAR2(32767) := ' ';
+        v_from     VARCHAR2(32767) := ' ';
+        v_where    VARCHAR2(32767) := ' ';
+        v_sql      VARCHAR2(32767) := NULL;
     BEGIN
         IF p_assoc_vd_res%ISOPEN THEN
             CLOSE p_assoc_vd_res;
@@ -3060,11 +3060,11 @@ FROM       value_domains_view      vd
         --          id; substituted original asl_name comparison for code that handles multiple
         --          comma-separated values; added vd_id and origin to query result
         --          (per SPRF_2.0_12)
-        v_sql        VARCHAR2( 4000 );
-        v_where      VARCHAR2( 2000 ) := ' ';
-        v_crf        VARCHAR2( 255 )  := UPPER( REPLACE( p_crf_name, '*', '%' ));
-        v_asl_name   VARCHAR2( 2000 );   --03-Jul-2003, W. Ver Hoef
-        v_asl_list   VARCHAR2( 2000 );
+        v_sql        VARCHAR2(32767);
+        v_where      VARCHAR2(32767) := ' ';
+        v_crf        VARCHAR2(32767)  := UPPER( REPLACE( p_crf_name, '*', '%' ));
+        v_asl_name   VARCHAR2(32767);   --03-Jul-2003, W. Ver Hoef
+        v_asl_list   VARCHAR2(32767);
         i            NUMBER           := 1;
     BEGIN
         IF p_vd_crf_search_res%ISOPEN THEN
@@ -3552,10 +3552,10 @@ end;
         -- Date:  30-Jul-2003
         -- Created By:  Prerna Aggarwal
         v_search_string   class_scheme_items_view.csi_name%TYPE  := ' ';
-        v_where           VARCHAR2( 2000 );
-        v_sql             VARCHAR2( 4000 );
-        v_context         VARCHAR2( 2000 );
-        v_context_list    VARCHAR2( 2000 );
+        v_where           VARCHAR2(32767);
+        v_sql             VARCHAR2(32767);
+        v_context         VARCHAR2(32767);
+        v_context_list    VARCHAR2(32767);
         i                 NUMBER           := 1;
     BEGIN
         IF p_csi_res%ISOPEN THEN
@@ -3642,7 +3642,7 @@ end;
     FUNCTION get_cs_name( p_cs_idseq IN CHAR )   -- 20-Feb-2004, W. Ver Hoef
         RETURN VARCHAR2 IS
         -- 16-Apr-2004, W. Ver Hoef added context name on the cs name value returned per SPRF_2.1_31
-        v_cs_name   VARCHAR2( 255 );
+        v_cs_name   VARCHAR2(32767);
     BEGIN
         SELECT NVL( cs.long_name, cs.preferred_name ) || ' - ' || c.NAME ||' - '||cs_id||'v' || cs.version
           INTO v_cs_name
@@ -3656,7 +3656,7 @@ end;
     END;
     FUNCTION get_csi_name( p_csi_idseq IN CHAR )   -- 20-Feb-2004, W. Ver Hoef
         RETURN VARCHAR2 IS
-        v_csi_name   VARCHAR2( 255 );
+        v_csi_name   VARCHAR2(32767);
     BEGIN
         SELECT csi.long_name || '  (' || csi.csi_id || ' v ' || csi.version || ')'
           INTO v_csi_name
@@ -3782,16 +3782,16 @@ end;
         -- 01-Jul-2003, W. Ver Hoef replaced variable definition for v_search_string and
         --                            added other variables to support new code
         -- v_search_string varchar2(255) := replace(p_search_string,'*','%');
-        v_search_string   VARCHAR2( 255 )  := UPPER( REPLACE( p_search_string, '*', '%' ));
-        v_con_name        VARCHAR2( 1000 ) := UPPER( REPLACE( p_con_name, '*', '%' ));
-        v_sql             VARCHAR2( 4000 );
-        v_where           VARCHAR2( 2000 ) := ' ';
-        v_from            VARCHAR2( 2000 ) := ' ';
-        v_asl_name        VARCHAR2( 2000 );
-        v_asl_list        VARCHAR2( 2000 );
+        v_search_string   VARCHAR2(32767)  := UPPER( REPLACE( p_search_string, '*', '%' ));
+        v_con_name        VARCHAR2(32767) := UPPER( REPLACE( p_con_name, '*', '%' ));
+        v_sql             VARCHAR2(32767);
+        v_where           VARCHAR2(32767) := ' ';
+        v_from            VARCHAR2(32767) := ' ';
+        v_asl_name        VARCHAR2(32767);
+        v_asl_list        VARCHAR2(32767);
         i                 NUMBER           := 1;
-        v_context         VARCHAR2( 2000 );
-        v_context_list    VARCHAR2( 2000 );
+        v_context         VARCHAR2(32767);
+        v_context_list    VARCHAR2(32767);
     BEGIN
         IF p_oc_search_res%ISOPEN THEN
             CLOSE p_oc_search_res;
@@ -3976,16 +3976,16 @@ AND CDR.CONDR_IDSEQ = OCV.CONDR_IDSEQ
         -- 01-Jul-2003, W. Ver Hoef replaced variable definition for v_search_string and
         --                            added other variables to support new code
         -- v_search_string varchar2(255) := replace(p_search_string,'*','%');
-        v_search_string   VARCHAR2( 255 )  := UPPER( REPLACE( p_search_string, '*', '%' ));
-        v_con_name        VARCHAR2( 1000 ) := UPPER( REPLACE( p_con_name, '*', '%' ));
-        v_sql             VARCHAR2( 4000 );
-        v_where           VARCHAR2( 2000 ) := ' ';
-        v_from            VARCHAR2( 2000 ) := ' ';
-        v_asl_name        VARCHAR2( 2000 );
-        v_asl_list        VARCHAR2( 2000 );
+        v_search_string   VARCHAR2(32767)  := UPPER( REPLACE( p_search_string, '*', '%' ));
+        v_con_name        VARCHAR2(32767) := UPPER( REPLACE( p_con_name, '*', '%' ));
+        v_sql             VARCHAR2(32767);
+        v_where           VARCHAR2(32767) := ' ';
+        v_from            VARCHAR2(32767) := ' ';
+        v_asl_name        VARCHAR2(32767);
+        v_asl_list        VARCHAR2(32767);
         i                 NUMBER           := 1;
-        v_context         VARCHAR2( 2000 );
-        v_context_list    VARCHAR2( 2000 );
+        v_context         VARCHAR2(32767);
+        v_context_list    VARCHAR2(32767);
     BEGIN
         IF p_prop_search_res%ISOPEN THEN
             CLOSE p_prop_search_res;
@@ -4139,7 +4139,7 @@ AND CDR.CONDR_IDSEQ = propv.CONDR_IDSEQ
     */
     END;
     PROCEDURE search_qual( p_search_string IN VARCHAR2, p_qual_search_res OUT type_qual_search ) IS
-        v_search_string   VARCHAR2( 255 ) := REPLACE( p_search_string, '*', '%' );
+        v_search_string   VARCHAR2(32767) := REPLACE( p_search_string, '*', '%' );
     BEGIN
         IF p_qual_search_res%ISOPEN THEN
             CLOSE p_qual_search_res;
@@ -4179,16 +4179,16 @@ AND CDR.CONDR_IDSEQ = propv.CONDR_IDSEQ
         -- 01-Jul-2003, W. Ver Hoef replaced variable definition for v_search_string and
         --                            added other variables to support new code
         -- v_search_string varchar2(255) := replace(p_search_string,'*','%');
-        v_search_string   VARCHAR2( 255 )  := UPPER( REPLACE( p_search_string, '*', '%' ));
-        v_con_name        VARCHAR2( 1000 ) := UPPER( REPLACE( p_con_name, '*', '%' ));
-        v_sql             VARCHAR2( 4000 );
-        v_where           VARCHAR2( 2000 ) := ' ';
-        v_from            VARCHAR2( 2000 ) := ' ';
-        v_asl_name        VARCHAR2( 2000 );
-        v_asl_list        VARCHAR2( 2000 );
+        v_search_string   VARCHAR2(32767)  := UPPER( REPLACE( p_search_string, '*', '%' ));
+        v_con_name        VARCHAR2(32767) := UPPER( REPLACE( p_con_name, '*', '%' ));
+        v_sql             VARCHAR2(32767);
+        v_where           VARCHAR2(32767) := ' ';
+        v_from            VARCHAR2(32767) := ' ';
+        v_asl_name        VARCHAR2(32767);
+        v_asl_list        VARCHAR2(32767);
         i                 NUMBER           := 1;
-        v_context         VARCHAR2( 2000 );
-        v_context_list    VARCHAR2( 2000 );
+        v_context         VARCHAR2(32767);
+        v_context_list    VARCHAR2(32767);
     BEGIN
         IF p_rep_search_res%ISOPEN THEN
             CLOSE p_rep_search_res;
@@ -4525,12 +4525,12 @@ AND CDR.CONDR_IDSEQ = rv.CONDR_IDSEQ
        ,p_con_name          IN       VARCHAR2 DEFAULT NULL   -- 6-DEC-2005, S. Hegde (TT1780)
        ,p_con_idseq         IN       VARCHAR2 DEFAULT NULL   -- 6-DEC-2005, S. Hegde (TT1780)
                                                           ) IS
-        v_search_string   VARCHAR2( 255 )  := REPLACE( p_search_string, '*', '%' );
-        v_con_name        VARCHAR2( 1000 ) := UPPER( REPLACE( p_con_name, '*', '%' ));
-        v_sql             VARCHAR2( 4000 );
-        v_from            VARCHAR2( 2000 ) := ' ';
-        v_where           VARCHAR2( 2000 ) := ' ';
-        v_order           VARCHAR2( 2000 );
+        v_search_string   VARCHAR2(32767)  := REPLACE( p_search_string, '*', '%' );
+        v_con_name        VARCHAR2(32767) := UPPER( REPLACE( p_con_name, '*', '%' ));
+        v_sql             VARCHAR2(32767);
+        v_from            VARCHAR2(32767) := ' ';
+        v_where           VARCHAR2(32767) := ' ';
+        v_order           VARCHAR2(32767);
     BEGIN
         IF p_pvvm_search_res%ISOPEN THEN
             CLOSE p_pvvm_search_res;
@@ -4642,12 +4642,12 @@ AND CDR.CONDR_IDSEQ = rv.CONDR_IDSEQ
                     ,p_version_ind IN     VARCHAR2 DEFAULT NULL
                                         ,p_version IN NUMBER DEFAULT NULL)
     IS
-        v_search_string   VARCHAR2( 255 ) := REPLACE( p_search_string, '*', '%' );
-        v_con_name        VARCHAR2( 1000 ) := UPPER( REPLACE( p_con_name, '*', '%' ));
-        v_sql             VARCHAR2( 4000 );
-        v_from            VARCHAR2( 2000 );
-        v_where           VARCHAR2( 2000 );
-        v_order           VARCHAR2( 2000 );
+        v_search_string   VARCHAR2(32767) := REPLACE( p_search_string, '*', '%' );
+        v_con_name        VARCHAR2(32767) := UPPER( REPLACE( p_con_name, '*', '%' ));
+        v_sql             VARCHAR2(32767);
+        v_from            VARCHAR2(32767);
+        v_where           VARCHAR2(32767);
+        v_order           VARCHAR2(32767);
     BEGIN
         IF p_vm_search_res%ISOPEN THEN
             CLOSE p_vm_search_res;
@@ -4805,10 +4805,10 @@ AND CDR.CONDR_IDSEQ = rv.CONDR_IDSEQ
         --          with a nvl function in the comparison in the sql in case it is null
         --          since during testing it was not returning any values
         --          (per SPRF_2.0_12)
-        v_sql        VARCHAR2( 4000 );
-        v_where      VARCHAR2( 2000 ) := ' ';
-        v_asl_name   VARCHAR2( 2000 );
-        v_asl_list   VARCHAR2( 2000 );
+        v_sql        VARCHAR2(32767);
+        v_where      VARCHAR2(32767) := ' ';
+        v_asl_name   VARCHAR2(32767);
+        v_asl_list   VARCHAR2(32767);
         i            NUMBER           := 1;
     BEGIN
         IF p_vv_search_res%ISOPEN THEN
@@ -4935,10 +4935,10 @@ AND CDR.CONDR_IDSEQ = rv.CONDR_IDSEQ
         -- Reason:  substituted default value of p_asl_name DRAFT NEW with function call
         v_crf_idseq              quest_contents_view_ext.qc_idseq%TYPE;
         v_has_update_privilege   VARCHAR2( 3 );
-        v_sql                    VARCHAR2( 4000 );   --03-Jul-2003, W. Ver Hoef
-        v_where                  VARCHAR2( 2000 )                        := ' ';
-        v_asl_name               VARCHAR2( 2000 );
-        v_asl_list               VARCHAR2( 2000 );
+        v_sql                    VARCHAR2(32767);   --03-Jul-2003, W. Ver Hoef
+        v_where                  VARCHAR2(32767)                        := ' ';
+        v_asl_name               VARCHAR2(32767);
+        v_asl_list               VARCHAR2(32767);
         i                        NUMBER                                  := 1;
     BEGIN
         SELECT qc_idseq
@@ -5050,21 +5050,21 @@ AND CDR.CONDR_IDSEQ = rv.CONDR_IDSEQ
        ,p_value_meaning            IN       value_meanings_view.long_name%TYPE
                 DEFAULT NULL   -- 13-Dec-2005; S. Alred; TT#1667
                             ) IS
-        v_search_string   VARCHAR2( 255 )  := UPPER( REPLACE( p_search_string, '*', '%' ));
-        v_con_name        VARCHAR2( 1000 ) := UPPER( REPLACE( p_con_name, '*', '%' ));
-        v_sql             VARCHAR2( 5000 );
-        v_from            VARCHAR2( 2000 ) := ' ';
-        v_where           VARCHAR2( 3000 ) := ' ';
-        v_asl_name        VARCHAR2( 2000 );
-        v_context         VARCHAR2( 2000 );
-        v_context_list    VARCHAR2( 2000 );
-        v_asl_list        VARCHAR2( 2000 );
+        v_search_string   VARCHAR2(32767)  := UPPER( REPLACE( p_search_string, '*', '%' ));
+        v_con_name        VARCHAR2(32767) := UPPER( REPLACE( p_con_name, '*', '%' ));
+        v_sql             VARCHAR2(32767);
+        v_from            VARCHAR2(32767) := ' ';
+        v_where           VARCHAR2(32767) := ' ';
+        v_asl_name        VARCHAR2(32767);
+        v_context         VARCHAR2(32767);
+        v_context_list    VARCHAR2(32767);
+        v_asl_list        VARCHAR2(32767);
         i                 NUMBER           := 1;
-        v_origin          VARCHAR2( 255 )  := UPPER( REPLACE( p_origin, '*', '%' ));
-        v_created_by      VARCHAR2( 255 )  := p_created_by;   -- 02-Mar-2004, W. Ver Hoef
-        v_modified_by     VARCHAR2( 255 )  := p_modified_by;   -- added "by" vars
-        v_lat_vers_ind    VARCHAR2( 2000 ) := p_latest_version_ind;   -- 05-Mar-2004, W. Ver Hoef added
-        v_value_meaning   VARCHAR2( 255 )  := REPLACE( p_value_meaning, '*', '%' );
+        v_origin          VARCHAR2(32767)  := UPPER( REPLACE( p_origin, '*', '%' ));
+        v_created_by      VARCHAR2(32767)  := p_created_by;   -- 02-Mar-2004, W. Ver Hoef
+        v_modified_by     VARCHAR2(32767)  := p_modified_by;   -- added "by" vars
+        v_lat_vers_ind    VARCHAR2(32767) := p_latest_version_ind;   -- 05-Mar-2004, W. Ver Hoef added
+        v_value_meaning   VARCHAR2(32767)  := REPLACE( p_value_meaning, '*', '%' );
     BEGIN
         IF p_cd_search_res%ISOPEN THEN
             CLOSE p_cd_search_res;
@@ -5270,7 +5270,7 @@ AND CDR.CONDR_IDSEQ = CDV.CONDR_IDSEQ
     -- name rather than login id
     FUNCTION get_ua_full_name( p_ua_name IN VARCHAR2 )
         RETURN VARCHAR2 IS
-        v_ua_full_name   VARCHAR2( 255 );
+        v_ua_full_name   VARCHAR2(32767);
     BEGIN
         SELECT NAME
           INTO v_ua_full_name
@@ -5330,13 +5330,13 @@ AND CDR.CONDR_IDSEQ = CDV.CONDR_IDSEQ
        ,p_de_id                   OUT      VARCHAR2
        ,p_de_version           OUT      VARCHAR2 ) IS
         v_de_idseq      CHAR( 36 )       := p_de_idseq;
-        v_methods       VARCHAR2( 4000 );
-        v_rule          VARCHAR2( 4000 );
+        v_methods       VARCHAR2(32767);
+        v_rule          VARCHAR2(32767);
         v_concat_char   VARCHAR2( 1 );
-        v_crtl_name     VARCHAR2( 30 );
-        v_de_name         VARCHAR2( 255 );
-        v_de_id         VARCHAR2( 30 );
-        v_de_version    VARCHAR2( 30 );
+        v_crtl_name     VARCHAR2(32767);
+        v_de_name         VARCHAR2(32767);
+        v_de_id         VARCHAR2(32767);
+        v_de_version    VARCHAR2(32767);
     BEGIN
         IF p_cdt_components_cur%ISOPEN THEN
             CLOSE p_cdt_components_cur;
@@ -5556,17 +5556,17 @@ AND CDR.CONDR_IDSEQ = CDV.CONDR_IDSEQ
        ,p_vd_idseq         IN       VARCHAR2 DEFAULT NULL   -- 7-DEC-2005, S. Hegde (TT1780)
        ,p_definition       IN        VARCHAR2 DEFAULT NULL    -- GF 634)
                                                          ) IS
-        v_search_string   VARCHAR2( 255 )  := UPPER( REPLACE( p_search_string, '*', '%' ));
-        v_definition      VARCHAR2( 2000 )  := UPPER(p_definition);
-        v_sql             VARCHAR2( 6000 );
-        v_where           VARCHAR2( 4000 ) := ' ';
-        v_from            VARCHAR2( 2000 ) := ' ';
-        v_sub             VARCHAR2( 4000 ) := ' ';
-        v_asl_name        VARCHAR2( 2000 );
-        v_asl_list        VARCHAR2( 2000 );
+        v_search_string   VARCHAR2(32767)  := UPPER( REPLACE( p_search_string, '*', '%' ));
+        v_definition      VARCHAR2(32767)  := UPPER(p_definition);
+        v_sql             VARCHAR2(32767);
+        v_where           VARCHAR2(32767) := ' ';
+        v_from            VARCHAR2(32767) := ' ';
+        v_sub             VARCHAR2(32767) := ' ';
+        v_asl_name        VARCHAR2(32767);
+        v_asl_list        VARCHAR2(32767);
         i                 NUMBER           := 1;
-        v_context         VARCHAR2( 2000 );
-        v_context_list    VARCHAR2( 2000 );
+        v_context         VARCHAR2(32767);
+        v_context_list    VARCHAR2(32767);
     BEGIN
         IF p_con_search_res%ISOPEN THEN
             CLOSE p_con_search_res;
@@ -6036,12 +6036,12 @@ ORDER BY asl.display_order, UPPER(con.long_name)';
         -- Date:  11-Nov-2005
         -- Modified By:  S. Alred
         -- Reason: No prior version; created to support TT1627
-        v_sql        VARCHAR2( 4000 );
-        v_where      VARCHAR2( 2000 ) := '
+        v_sql        VARCHAR2(32767);
+        v_where      VARCHAR2(32767) := '
 WHERE 1=1 ';
         v_order_by   VARCHAR2(1000)   := '
 ORDER BY TOOL_NAME, PROPERTY';
-        v_property   VARCHAR2( 255 );
+        v_property   VARCHAR2(32767);
     BEGIN
         -- standard wildcard substitution
         v_property := REPLACE( p_property, '*', '%' );
@@ -6088,9 +6088,9 @@ FROM       tool_options_view_ext tov';
         if either is NOT NULL
         ** Business rule -- at least one should be not null
         */
-        v_sql     VARCHAR2( 4000 );
-        v_where   VARCHAR2( 2000 );
-        v_order   VARCHAR2( 2000 );
+        v_sql     VARCHAR2(32767);
+        v_where   VARCHAR2(32767);
+        v_order   VARCHAR2(32767);
     BEGIN
         v_sql :=
             'SELECT acc_idseq
@@ -6137,9 +6137,9 @@ FROM       tool_options_view_ext tov';
         **  if any is NOT NULL
         ** Business rule -- at least one should be not null
         */
-        v_sql     VARCHAR2( 4000 );
-        v_where   VARCHAR2( 2000 );
-        v_order   VARCHAR2( 2000 );
+        v_sql     VARCHAR2(32767);
+        v_where   VARCHAR2(32767);
+        v_order   VARCHAR2(32767);
     BEGIN
         v_sql :=
             'SELECT ccomm_idseq
@@ -6186,9 +6186,9 @@ FROM       tool_options_view_ext tov';
         **  if any is NOT NULL
         ** Business rule -- at least one should be not null
         */
-        v_sql     VARCHAR2( 4000 );
-        v_where   VARCHAR2( 2000 );
-        v_order   VARCHAR2( 2000 );
+        v_sql     VARCHAR2(32767);
+        v_where   VARCHAR2(32767);
+        v_order   VARCHAR2(32767);
     BEGIN
         v_sql :=
             'SELECT caddr_idseq
@@ -6231,7 +6231,7 @@ FROM       tool_options_view_ext tov';
     END search_contact_addr;
     -- SPRF_3.1_16d (TT#1001)
     PROCEDURE get_contact_roles_list( p_con_role_res OUT type_con_role ) IS
-        v_sql   VARCHAR2( 4000 ) := NULL;
+        v_sql   VARCHAR2(32767) := NULL;
     BEGIN
         IF p_con_role_res%ISOPEN THEN
             CLOSE p_con_role_res;
@@ -6246,7 +6246,7 @@ FROM       tool_options_view_ext tov';
     END get_contact_roles_list;
     -- SPRF_3.1_16e (TT#1001)
     PROCEDURE get_organization_list( p_org_name_res OUT type_org_name ) IS
-        v_sql   VARCHAR2( 4000 ) := NULL;
+        v_sql   VARCHAR2(32767) := NULL;
     BEGIN
         IF p_org_name_res%ISOPEN THEN
             CLOSE p_org_name_res;
@@ -6261,7 +6261,7 @@ FROM       tool_options_view_ext tov';
     END get_organization_list;
     -- SPRF_3.1_16f (TT#1001)
     PROCEDURE get_persons_list( p_per_name_res OUT type_per_name ) IS
-        v_sql   VARCHAR2( 4000 ) := NULL;
+        v_sql   VARCHAR2(32767) := NULL;
     BEGIN
         IF p_per_name_res%ISOPEN THEN
             CLOSE p_per_name_res;
@@ -6279,7 +6279,7 @@ FROM       tool_options_view_ext tov';
     END get_persons_list;
     -- SPRF_3.1_16g (TT#1001)
     PROCEDURE get_comm_type_list( p_comm_type_res OUT type_comm_type ) IS
-        v_sql   VARCHAR2( 4000 ) := NULL;
+        v_sql   VARCHAR2(32767) := NULL;
     BEGIN
         IF p_comm_type_res%ISOPEN THEN
             CLOSE p_comm_type_res;
@@ -6294,7 +6294,7 @@ FROM       tool_options_view_ext tov';
     END get_comm_type_list;
     -- SPRF_3.1_16h (TT#1001)
     PROCEDURE get_addr_type_list( p_addr_type_res OUT type_addr_type ) IS
-        v_sql   VARCHAR2( 4000 ) := NULL;
+        v_sql   VARCHAR2(32767) := NULL;
     BEGIN
         IF p_addr_type_res%ISOPEN THEN
             CLOSE p_addr_type_res;
