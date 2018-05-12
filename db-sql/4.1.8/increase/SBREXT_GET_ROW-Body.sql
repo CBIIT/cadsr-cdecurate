@@ -1454,7 +1454,7 @@ END GET_VM;
               )  IS
 
         v_long_name VARCHAR2(2000);
-        v_description VARCHAR2(4000);
+        v_description VARCHAR2(32767);
         v_name VARCHAR2(255);
         v_crtl_name VARCHAR2(50);
         v_count number;
