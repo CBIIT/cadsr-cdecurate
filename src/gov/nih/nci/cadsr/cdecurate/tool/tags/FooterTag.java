@@ -55,7 +55,7 @@ public class FooterTag extends TagSupport {
 							+ "</span><span CLASS=\"footerItemSep\">|</span><span CLASS=\"footerItemNormal\""
 							+ "onmouseover=\"this.className = 'footerItemFocus';\""
 							+ "onmouseout=\"this.className = 'footerItemNormal';\""
-							+ "onclick=\"window.open('mailto:ncicbiit@mail.nih.gov?Subject=Support', '_blank');\">"
+							+ "onclick=\"window.open('mailto:NCIAppSupport@nih.gov?Subject=Support', '_blank');\">"
 							+ " APPLICATION SUPPORT"
 							+ "</span><span CLASS=\"footerItemSep\">|</span><span CLASS=\"footerItemNormal\""
 							+ "onmouseover=\"this.className = 'footerItemFocus';\""
