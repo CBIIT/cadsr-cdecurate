@@ -253,7 +253,7 @@ function callHelp()
 			</tr>
 			<tr>
 				<td colspan="3" align="center">
-					<a href="mailto:ncicb@pop.nci.nih.gov?subject=CDE%20Curation%20Tool">
+					<a href="mailto:NCIAppSupport@nih.gov?subject=CDE%20Curation%20Tool">
 						<span class="wdemail" title="Email NCICB Help Desk">
 							&#42;
 						</span>

@@ -350,7 +350,7 @@ function callHelp()
     <tr><td>&nbsp;</td></tr>
     <tr>
       <td colspan="3" align="center">
-          <a href="mailto:ncicb@pop.nci.nih.gov?subject=CDE%20Curation%20Tool"><span class="wdemail" title="Email NCICB Help Desk">&#42;</span></a>
+          <a href="mailto:NCIAppSupport@nih.gov?subject=CDE%20Curation%20Tool"><span class="wdemail" title="Email NCICB Help Desk">&#42;</span></a>
           <a target="_blank" href="https://www.cancer.gov/"><img border="0" src="images/footer_nci.gif" alt="National Cancer Institute Logo" title="National Cancer Institute"></a>
           <a target="_blank" href="https://www.dhhs.gov/"><img border="0" src="images/footer_hhs.gif" alt="Department of Health and Human Services Logo" title="Department of Health and Human Services"></a>
           <a target="_blank" href="https://www.nih.gov/"><img border="0" src="images/footer_nih.gif" alt="National Institutes of Health Logo" title="National Institutes of Health"></a>
