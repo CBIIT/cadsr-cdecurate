@@ -7,21 +7,11 @@
 
 package gov.nih.nci.cadsr.cdecurate.tool;
 
-import gov.nih.nci.cadsr.cdecurate.database.SQL;
-import gov.nih.nci.cadsr.cdecurate.util.AdministeredItemUtil;
-import gov.nih.nci.cadsr.cdecurate.util.ColumnHeaderTypeLoader;
-import gov.nih.nci.cadsr.cdecurate.util.DownloadHelper;
-import gov.nih.nci.cadsr.cdecurate.util.DownloadRowsArrayDataLoader;
-import gov.nih.nci.cadsr.cdecurate.util.DownloadedDataLoader;
-import gov.nih.nci.cadsr.cdecurate.util.ValueHolder;
-import gov.nih.nci.cadsr.common.Constants;
-import gov.nih.nci.cadsr.common.StringUtil;
-import java.math.BigDecimal;
-
 import java.io.File;
-import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.math.BigDecimal;
 import java.sql.Array;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -42,6 +32,11 @@ import javax.servlet.http.HttpServletResponse;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 
 import org.apache.log4j.Logger;
 //import org.apache.poi.hssf.usermodel.HSSFCellStyle;
@@ -56,8 +51,17 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import com.sun.org.apache.xml.internal.serialize.OutputFormat;
-import com.sun.org.apache.xml.internal.serialize.XMLSerializer;
+//import com.sun.org.apache.xml.internal.serialize.OutputFormat;
+//import com.sun.org.apache.xml.internal.serialize.XMLSerializer;
+
+import gov.nih.nci.cadsr.cdecurate.database.SQL;
+import gov.nih.nci.cadsr.cdecurate.util.AdministeredItemUtil;
+import gov.nih.nci.cadsr.cdecurate.util.ColumnHeaderTypeLoader;
+import gov.nih.nci.cadsr.cdecurate.util.DownloadHelper;
+import gov.nih.nci.cadsr.cdecurate.util.DownloadRowsArrayDataLoader;
+import gov.nih.nci.cadsr.cdecurate.util.DownloadedDataLoader;
+import gov.nih.nci.cadsr.cdecurate.util.ValueHolder;
+import gov.nih.nci.cadsr.common.StringUtil;
 
 
 public class CustomDownloadServlet extends CurationServlet
@@ -831,20 +835,21 @@ public class CustomDownloadServlet extends CurationServlet
             }
 
 
-            OutputFormat format = new OutputFormat( dom );
-            format.setIndenting( true );
+//            OutputFormat format = new OutputFormat( dom );
+//            format.setIndenting( true );
 
             //generate output
-            XMLSerializer serializer = new XMLSerializer();
+//            XMLSerializer serializer = new XMLSerializer();
 
             m_classRes.setContentType( "text/xml" );
             m_classRes.setHeader( "Content-Disposition", "attachment; filename=\"customDownload.xml\"" );
 
             OutputStream out = m_classRes.getOutputStream();
-
-            serializer.setOutputByteStream( out );
-            serializer.setOutputFormat( format );
-            serializer.serialize( dom );
+            transformXml(dom, out);
+            
+//            serializer.setOutputByteStream( out );
+//            serializer.setOutputFormat( format );
+//            serializer.serialize( dom );
 
             out.close();
 
@@ -865,7 +870,17 @@ public class CustomDownloadServlet extends CurationServlet
         }
 
     }
+    
+    private void transformXml(Document doc, OutputStream os) throws IOException, TransformerException {
+    	// write the content into xml file
+        DOMSource source = new DOMSource(doc);
+        StreamResult result = new StreamResult(os);
 
+        TransformerFactory transformerFactory = TransformerFactory.newInstance();
+        Transformer transformer = transformerFactory.newTransformer();
+        transformer.transform(source, result);
+    }
+    
     private Element createElement(
             String[] row, int rowNumber, Document dom, String[] columns, int[] colIndices,
             ArrayList<String> allTypes, HashMap<String, ArrayList<String[]>> typeMap, ArrayList<HashMap<String, ArrayList<String[]>>> arrayData, String elementType )
