@@ -123,7 +123,7 @@
 		</copy>
 
 		<copy todir="${dist.dir}">
-		   	<fileset file="${basedir}/lib/ojdbc6.jar"/>
+		   	<fileset file="${basedir}/lib/ojdbc7-12.1.0.2.0.jar"/>
 		</copy>
 		<copy todir="${dist.dir}" filtering="true" overwrite="true">
 		   	<fileset file="conf/cdecurate_modules.cli"/>
