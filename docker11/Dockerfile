@@ -30,11 +30,11 @@ COPY run.sh /usr/bin/run.sh
 RUN chown wildfly /usr/bin/run.sh && chmod 700 /usr/bin/run.sh
 
 # create local content directories, change owner to wildfly #
-RUN mkdir -p /local/content/cadsrsentinel/config /local/content/cadsrsentinel/bin /local/content/cadsrsentinel/htdocs/dtd /local/content/cadsrsentinel/reports /local/content/autorun_log \
-    && chown -RH wildfly /local/content/cadsrsentinel
+RUN mkdir -p /local/content/cdecurate/bin \
+    && chown -RH wildfly /local/content/cdecurate
 
 # make directory for pulling code from github and change owner to wildfly #
-RUN mkdir /usr/src/sentinel && chown -RH wildfly: /usr/src/sentinel
+RUN mkdir /usr/src/cdecurate && chown -RH wildfly: /usr/src/cdecurate
 
 # change user to wildfly #
 USER wildfly
@@ -43,9 +43,9 @@ USER wildfly
 RUN sed -i 's/9990/19990/g' /opt/wildfly/standalone/configuration/standalone.xml    
 
 # change to source code workdir #
-WORKDIR /usr/src/sentinel
-RUN git clone https://github.com/CBIIT/cadsr-sentinel
-WORKDIR /usr/src/sentinel/cadsr-sentinel
+WORKDIR /usr/src/cdecurate
+RUN git clone https://github.com/CBIIT/cadsr-cdecurate
+WORKDIR /usr/src/cdecurate/cadsr-cdecurate
 
 EXPOSE 8080
-ENTRYPOINT /usr/bin/run.sh 
+ENTRYPOINT /usr/bin/run.sh
