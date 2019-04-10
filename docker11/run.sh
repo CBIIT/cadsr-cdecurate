@@ -13,7 +13,7 @@ git pull
 
 # Function to check if wildfly is up #
 function wait_for_server() {
-  until `/opt/wildfly/bin/jboss-cli.sh -c --controller=localhost:19990 ":read-attribute(name=server-state)" 2> /dev/null | grep -q running`; do
+  until `/opt/wildfly/bin/jboss-cli.sh -c --controller=localhost:9990 ":read-attribute(name=server-state)" 2> /dev/null | grep -q running`; do
     sleep 1
   done
 }
