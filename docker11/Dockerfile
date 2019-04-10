@@ -40,7 +40,7 @@ RUN mkdir /usr/src/cdecurate && chown -RH wildfly: /usr/src/cdecurate
 USER wildfly
 
 # replace jboss port 9990 with 19990 #
-RUN sed -i 's/9990/19990/g' /opt/wildfly/standalone/configuration/standalone.xml    
+#RUN sed -i 's/9990/19990/g' /opt/wildfly/standalone/configuration/standalone.xml    
 
 # change to source code workdir #
 WORKDIR /usr/src/cdecurate
