@@ -33,7 +33,7 @@ echo "=> deploying modules"
 cp dist/cdecurate.war /local/content/cdecurate/bin
 cp dist/ojdbc7-12.1.0.2.0.jar /local/content/cdecurate/bin
 
-/opt/wildfly/bin/jboss-cli.sh --file=dist/cdecurate_modules.cli
+/opt/wildfly/bin/jboss-cli.sh -c --controller=localhost:9990 --file=dist/cdecurate_modules.cli
 
 echo "=> reloading wildfly"
 /opt/wildfly/bin/jboss-cli.sh --connect command=:reload
@@ -42,7 +42,7 @@ echo "=> Waiting for the server to reload"
 wait_for_server
 
 echo "=> deploying"
-/opt/wildfly/bin/jboss-cli.sh --file=dist/cdecurate_deploy.cli
+/opt/wildfly/bin/jboss-cli.sh -c --controller=localhost:9990 --file=dist/cdecurate_deploy.cli
 
 echo "=> shutting wildfly down"
 /opt/wildfly/bin/jboss-cli.sh --connect command=:shutdown
