@@ -1,5 +1,5 @@
 #~/bin/sh
-echo "we are in the /usr/src/cdecurate/cadsr-curation directory"
+echo "we are in the directory: " $PWD
 echo "tag: " $tag
 echo "BRANCH_OR_TAG: " $BRANCH_OR_TAG
 git pull
