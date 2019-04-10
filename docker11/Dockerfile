@@ -44,7 +44,7 @@ RUN sed -i 's/9990/19990/g' /opt/wildfly/standalone/configuration/standalone.xml
 
 # change to source code workdir #
 WORKDIR /usr/src/cdecurate
-RUN git clone https://github.com/CBIIT/cadsr-cdecurate
+RUN git clone -b curationtool-4.1.8-java11-20190405 https://github.com/CBIIT/cadsr-cdecurate
 WORKDIR /usr/src/cdecurate/cadsr-cdecurate
 
 EXPOSE 8080

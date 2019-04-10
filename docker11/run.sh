@@ -1,10 +1,11 @@
 #~/bin/sh
-echo "we are in the /usr/src/curation/cadsr-curation directory"
+echo "we are in the /usr/src/cdecurate/cadsr-curation directory"
 echo "tag: " $tag
 git pull
 if [ $tag != 'origin/master'  ] && [ $tag != 'master' ]; then
 #  git checkout tags/$tag
 #this is for branch checkout for now
+	echo checkout of $tag
 	git checkout $tag
 fi
 git pull
