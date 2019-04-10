@@ -42,7 +42,6 @@ build.properties
 build.xml.*
 README.p*
 ss.*
-.*
 ?
 ??
 *.cmd

@@ -1,11 +1,12 @@
 #~/bin/sh
 echo "we are in the /usr/src/cdecurate/cadsr-curation directory"
 echo "tag: " $tag
+echo "BRANCH_OR_TAG: " $BRANCH_OR_TAG
 git pull
 if [ $tag != 'origin/master'  ] && [ $tag != 'master' ]; then
 #  git checkout tags/$tag
 #this is for branch checkout for now
-	echo checkout of $tag
+	echo "checkout of" $tag
 	git checkout $tag
 fi
 git pull
@@ -20,7 +21,7 @@ function wait_for_server() {
 echo "=> build application"
 
 echo ant -file build.xml -Ddebug=false -DBRANCH_OR_TAG=${BRANCH_OR_TAG} -Dtiername=${tiername} -DCADSR.DS.USER=${CADSR_DS_USER} -DCADSR.DS.PSWD=******** -DCADSR.DS.TNS.HOST=${CADSR_DS_TNS_HOST} -DCADSR.DS.TNS.SID=${CADSR_DS_TNS_SID} -DJDEBUG=ON -DCADSR.DS.TNS.PORT=${CADSR_DS_TNS_PORT} -DLINKS.PCS.HOST.URL=${LINKS_PCS_HOST_URL} -LINKS.PCS.NAME=${LINKS_PCS_NAME} dist
-ant -file build.xml -Ddebug=false -DBRANCH_OR_TAG=${BRANCH_OR_TAG} -Dtiername=${tiername} -DCADSR.DS.USER=${CADSR_DS_USER} -DCADSR.DS.PSWD=${CADSR_DS_PSWD} -DCADSR.DS.TNS.HOST=${CADSR_DS_TNS_HOST} -DCADSR.DS.TNS.ENTRY=${CADSR_DS_TNS_ENTRY} -DJDEBUG=ON -DCADSR.DS.TNS.PORT=${CADSR_DS_TNS_PORT} -DLINKS.PCS.HOST.URL=${LINKS_PCS_HOST_URL} "-DLINKS.PCS.NAME=${LINKS_PCS_NAME}" dist
+ant -file build.xml -Ddebug=false -DBRANCH_OR_TAG=${BRANCH_OR_TAG} -Dtiername=${tiername} -DCADSR.DS.USER=${CADSR_DS_USER} -DCADSR.DS.PSWD=${CADSR_DS_PSWD} -DCADSR.DS.TNS.HOST=${CADSR_DS_TNS_HOST} -DCADSR.DS.TNS.ENTRY=${CADSR_DS_TNS_ENTRY} -DJDEBUG=ON -DCADSR.DS.TNS.PORT=${CADSR_DS_TNS_PORT} -DLINKS.PCS.HOST.URL=${LINKS_PCS_HOST_URL} -DLINKS.PCS.NAME=${LINKS_PCS_NAME} dist
 
 echo "=> starting wildfly in background"
 /opt/wildfly/bin/standalone.sh -b 0.0.0.0 -bmanagement 0.0.0.0 &
