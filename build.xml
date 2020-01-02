@@ -42,7 +42,19 @@
 		</else>
 	</if>
 	<property file="default.properties" />
-	<property file="project.properties" />
+
+	<if>
+		<isset property="oracle" />
+		<then>
+			<property name="oracle" value="${oracle}"/>
+			<echo message="project file: project${oracle}.properties" />
+			<property file="project${oracle}.properties" />
+		</then>
+		<else>
+			<property file="project.properties" />
+			<echo message="project file: project.properties" />
+		</else>
+	</if>
 
 	<property name="appl.version" value="${appl.release}.${DSTAMP}${TSTAMP}" />
 
@@ -100,9 +112,9 @@
 		<echo>Assembling artifacts ...</echo>
 
 		<filter token="connectionUrl" value="${CADSR.DS.URL}"/>		
-		<echo>connectionUrl = ${connectionUrl}</echo>		
+		<echo message="connectionUrl = ${CADSR.DS.URL}"/>		
 		<filter token="cdeCurateUser" value="${CADSR.DS.USER}"/>
-		<echo>cdeCurateUser = ${cdeCurateUser}</echo>
+		<echo message="cdeCurateUser = ${CADSR.DS.USER}"/>
 		<filter token="cdeCuratePassword" value="${CADSR.DS.PSWD}"/>
 		<echo>cdeCuratePassword not echoed</echo>
 		<filter token="logLevel" value="INFO"/>				
