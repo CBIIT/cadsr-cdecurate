@@ -233,7 +233,7 @@ session.setAttribute("ErrorMessage", "");
 											</h4>
 										</td>
 										<td width="231" valign="top">
-											<input type="text" name="Username" value="">
+											<input type="text" name="Username" value="" autocomplete="off">
 										</td>
 										<td width="20"></td>
 									</tr>
@@ -246,7 +246,7 @@ session.setAttribute("ErrorMessage", "");
 											</h4>
 										</td>
 										<td valign="top" width="231">
-											<input type="password" name="Password" value="">
+											<input type="password" name="Password" value="" autocomplete="off">
 										</td>
 										<td width="20"></td>
 									</tr>

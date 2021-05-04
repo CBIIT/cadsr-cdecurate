@@ -315,9 +315,9 @@ function callHelp()
             </tr>
             <tr>
 				<td colspan="2" align="right" >
-				<font face="Arial, Helvetica, sans-serif" style="font-size: 12pt font-weight: bold;"><b>User Name</b></font>&nbsp;<input type="text" name="Username" style="width: 4cm">
+				<font face="Arial, Helvetica, sans-serif" style="font-size: 12pt font-weight: bold;"><b>User Name</b></font>&nbsp;<input type="text" name="Username" style="width: 4cm" autocomplete="off">
 				<br><br>
-				<font face="Arial, Helvetica, sans-serif" style="font-size: 12pt font-weight: bold;"><b>Password</b></font>&nbsp;<input type="password" name="Password" style="width: 4cm">
+				<font face="Arial, Helvetica, sans-serif" style="font-size: 12pt font-weight: bold;"><b>Password</b></font>&nbsp;<input type="password" name="Password" style="width: 4cm" autocomplete="off">
 				</td>
 				<td>&nbsp;</td>
 			</tr>
